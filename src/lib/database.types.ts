@@ -174,6 +174,19 @@ export type CommunityRuleContribution = {
   updated_at: string
 }
 
+// Feedback / soporte enviado por el usuario (migración 014).
+// Solo-inserción desde el cliente; se lee por service role / backoffice.
+export type FeedbackType = 'suggestion' | 'complaint' | 'bug' | 'other'
+export type Feedback = {
+  id: string
+  user_id: string | null
+  email: string | null
+  type: FeedbackType
+  message: string
+  app_version: string | null
+  created_at: string
+}
+
 // Tipo genérico para la DB (compatible con supabase-js)
 export type Database = {
   public: {
@@ -190,6 +203,7 @@ export type Database = {
       keyword_rules: { Row: KeywordRule; Insert: Omit<KeywordRule, 'id' | 'created_at' | 'amount_min' | 'amount_max'> & { amount_min?: number | null; amount_max?: number | null }; Update: Partial<KeywordRule>; Relationships: [] }
       community_rules: { Row: CommunityRule; Insert: CommunityRule; Update: Partial<CommunityRule>; Relationships: [] }
       community_rule_contributions: { Row: CommunityRuleContribution; Insert: CommunityRuleContribution; Update: Partial<CommunityRuleContribution>; Relationships: [] }
+      feedback: { Row: Feedback; Insert: Omit<Feedback, 'id' | 'created_at'>; Update: Partial<Feedback>; Relationships: [] }
     }
     Views: Record<string, never>
     Functions: {

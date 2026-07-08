@@ -6,6 +6,7 @@ import { useProfiles, useCreateProfile } from '@/hooks/useProfiles'
 import { useUserSettings } from '@/hooks/useUserSettings'
 import { ProfileProvider } from '@/contexts/ProfileContext'
 import { Sidebar } from './Sidebar'
+import { MobileTopBar, MobileBottomNav } from './MobileNav'
 import { Skeleton } from '@/components/ui/skeleton'
 import Onboarding from '@/pages/Onboarding'
 import type { Session } from '@supabase/supabase-js'
@@ -75,9 +76,13 @@ export function AppShell() {
     <ProfileProvider profiles={profiles}>
       <div className="flex h-screen overflow-hidden bg-background">
         <Sidebar />
-        <main className="flex-1 overflow-y-auto">
-          <Outlet />
-        </main>
+        <div className="flex flex-1 flex-col overflow-hidden">
+          <MobileTopBar />
+          <main className="flex-1 overflow-y-auto">
+            <Outlet />
+          </main>
+          <MobileBottomNav />
+        </div>
       </div>
     </ProfileProvider>
   )

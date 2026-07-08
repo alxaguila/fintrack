@@ -1,87 +1,174 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { useUserSettings, useUpdateUserProfile } from '@/hooks/useUserSettings'
-import { personalDataSchema, fieldErrors } from '@/lib/validation'
-import { PersonalDataFields, emptyPersonalForm, type PersonalFormValue } from '@/components/PersonalDataFields'
+import { User, Lock, MessageSquare, LogOut, Trash2, ChevronRight, AlertTriangle } from 'lucide-react'
+import { supabase } from '@/lib/supabase'
+import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent } from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
+import {
+  Dialog, DialogContent, DialogHeader, DialogFooter, DialogTitle, DialogDescription,
+} from '@/components/ui/dialog'
 import { toast } from '@/hooks/useToast'
+
+// Palabra que el usuario debe teclear para confirmar el borrado (igual en ES/EN).
+const DELETE_WORD = 'delete'
 
 export default function Settings() {
   const { t } = useTranslation('settings')
-  const { t: tc } = useTranslation('common')
-  const { data: settings } = useUserSettings()
-  const updateProfile = useUpdateUserProfile()
-
-  const [form, setForm] = useState<PersonalFormValue>(emptyPersonalForm)
-  const [errors, setErrors] = useState<Record<string, string>>({})
-
-  // Precarga los datos guardados una vez llegan.
-  useEffect(() => {
-    if (!settings) return
-    setForm({
-      full_name: settings.full_name ?? '',
-      gender: settings.gender ?? '',
-      birth_date: settings.birth_date ?? '',
-      country: settings.country ?? '',
-      province: settings.province ?? '',
-      employment_status: settings.employment_status ?? '',
-      financial_goal: settings.financial_goal ?? '',
-    })
-  }, [settings])
-
-  function patch(p: Partial<PersonalFormValue>) {
-    setForm((f) => ({ ...f, ...p }))
-  }
-
-  async function handleSave(e: React.FormEvent) {
-    e.preventDefault()
-    const parsed = personalDataSchema.safeParse(form)
-    const errs = fieldErrors(parsed)
-    setErrors(errs)
-    if (!parsed.success) {
-      toast({ title: t('personal.errors.check'), variant: 'destructive' })
-      return
-    }
-    try {
-      await updateProfile.mutateAsync({
-        full_name: form.full_name.trim(),
-        gender: form.gender,
-        birth_date: form.birth_date,
-        country: form.country,
-        province: form.province.trim(),
-        employment_status: form.employment_status,
-        financial_goal: form.financial_goal || null,
-      })
-      toast({ title: t('personal.saved'), variant: 'success' })
-    } catch (err: any) {
-      toast({ title: tc('errors.save_failed'), description: err?.message, variant: 'destructive' })
-    }
-  }
 
   return (
     <div className="mx-auto max-w-2xl p-6 space-y-6">
       <h1 className="text-3xl font-extrabold tracking-tight">{t('title')}</h1>
 
-      <section className="space-y-4">
-        <div>
-          <p className="text-[15px] font-bold">{t('personal.title')}</p>
-          <p className="text-sm text-muted-foreground">{t('personal.description')}</p>
-        </div>
+      {/* Grupo principal: navegación */}
+      <nav className="overflow-hidden rounded-2xl border border-slate-200 bg-white">
+        <MenuLink to="/settings/profile" icon={User} label={t('menu.profile')} />
+        <MenuLink to="/settings/security" icon={Lock} label={t('menu.security')} />
+        <MenuLink to="/settings/feedback" icon={MessageSquare} label={t('menu.feedback')} />
+      </nav>
 
-        <Card className="rounded-2xl">
-          <CardContent className="pt-6">
-            <form onSubmit={handleSave} className="space-y-6">
-              <PersonalDataFields value={form} onChange={patch} errors={errors} />
-              <div className="flex justify-end">
-                <Button type="submit" disabled={updateProfile.isPending}>
-                  {updateProfile.isPending ? t('onboarding.saving') : t('personal.save')}
-                </Button>
-              </div>
-            </form>
-          </CardContent>
-        </Card>
-      </section>
+      {/* Grupo secundario: sesión y cuenta */}
+      <div className="space-y-3">
+        <LogoutRow />
+        <DeleteAccountRow />
+      </div>
     </div>
+  )
+}
+
+/** Fila de navegación: icono redondo + label + chevron. */
+function MenuLink({ to, icon: Icon, label }: { to: string; icon: typeof User; label: string }) {
+  return (
+    <Link
+      to={to}
+      className="flex items-center gap-4 border-b border-slate-100 px-4 py-4 transition-colors last:border-b-0 hover:bg-slate-50"
+    >
+      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-indigo-50 text-indigo-600">
+        <Icon className="h-5 w-5" />
+      </span>
+      <span className="flex-1 text-[15px] font-medium text-slate-800">{label}</span>
+      <ChevronRight className="h-5 w-5 shrink-0 text-slate-400" />
+    </Link>
+  )
+}
+
+/** Fila de acción: cerrar sesión. */
+function LogoutRow() {
+  const { t } = useTranslation('settings')
+  const [busy, setBusy] = useState(false)
+
+  async function handleLogout() {
+    setBusy(true)
+    await supabase.auth.signOut()
+    // onAuthStateChange (en Auth) redirige al login.
+  }
+
+  return (
+    <button
+      onClick={handleLogout}
+      disabled={busy}
+      className="flex w-full items-center gap-4 rounded-2xl border border-slate-200 bg-white px-4 py-4 text-left transition-colors hover:bg-slate-50 disabled:opacity-50"
+    >
+      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-rose-50 text-[#CB6391]">
+        <LogOut className="h-5 w-5" />
+      </span>
+      <span className="flex-1 text-[15px] font-medium text-[#CB6391]">{t('menu.logout')}</span>
+    </button>
+  )
+}
+
+/** Fila de peligro: eliminar cuenta con doble confirmación. */
+function DeleteAccountRow() {
+  const { t } = useTranslation('settings')
+  const navigate = useNavigate()
+  // 0 = cerrado, 1 = primer aviso, 2 = confirmación escribiendo "delete".
+  const [step, setStep] = useState(0)
+  const [word, setWord] = useState('')
+  const [deleting, setDeleting] = useState(false)
+
+  const canDelete = word.trim().toLowerCase() === DELETE_WORD
+
+  function close() {
+    if (deleting) return
+    setStep(0)
+    setWord('')
+  }
+
+  async function handleDelete() {
+    if (!canDelete) return
+    setDeleting(true)
+    try {
+      const { error } = await supabase.functions.invoke('delete-account', { method: 'POST' })
+      if (error) throw error
+      await supabase.auth.signOut()
+      navigate('/auth', { replace: true })
+    } catch (err: any) {
+      setDeleting(false)
+      toast({ title: t('delete.error'), description: err?.message, variant: 'destructive' })
+    }
+  }
+
+  return (
+    <>
+      <button
+        onClick={() => setStep(1)}
+        className="flex w-full items-center gap-4 rounded-2xl border border-rose-200 bg-white px-4 py-4 text-left transition-colors hover:bg-rose-50"
+      >
+        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-rose-50 text-rose-600">
+          <Trash2 className="h-5 w-5" />
+        </span>
+        <span className="flex-1 text-[15px] font-medium text-rose-600">{t('delete.title')}</span>
+      </button>
+
+      {/* Aviso 1: irreversibilidad */}
+      <Dialog open={step === 1} onOpenChange={(o) => !o && close()}>
+        <DialogContent className="rounded-2xl sm:rounded-2xl">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2 text-rose-600">
+              <AlertTriangle className="h-5 w-5" />
+              {t('delete.warn1.title')}
+            </DialogTitle>
+            <DialogDescription>{t('delete.warn1.body')}</DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="gap-2">
+            <Button variant="outline" onClick={close}>{t('delete.cancel')}</Button>
+            <Button variant="destructive" onClick={() => setStep(2)}>{t('delete.continue')}</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Aviso 2: escribir "delete" para confirmar */}
+      <Dialog open={step === 2} onOpenChange={(o) => !o && close()}>
+        <DialogContent className="rounded-2xl sm:rounded-2xl">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2 text-rose-600">
+              <AlertTriangle className="h-5 w-5" />
+              {t('delete.warn2.title')}
+            </DialogTitle>
+            <DialogDescription>{t('delete.warn2.body')}</DialogDescription>
+          </DialogHeader>
+          <div className="space-y-1.5">
+            <p className="text-sm text-slate-600">
+              {t('delete.warn2.prompt')}{' '}
+              <span className="font-mono font-bold text-rose-600">{DELETE_WORD}</span>
+            </p>
+            <Input
+              value={word}
+              onChange={(e) => setWord(e.target.value)}
+              placeholder={DELETE_WORD}
+              autoComplete="off"
+              className={cn('font-mono', canDelete && 'border-rose-400')}
+            />
+          </div>
+          <DialogFooter className="gap-2">
+            <Button variant="outline" onClick={close} disabled={deleting}>{t('delete.cancel')}</Button>
+            <Button variant="destructive" onClick={handleDelete} disabled={!canDelete || deleting}>
+              {deleting ? t('delete.deleting') : t('delete.confirm')}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </>
   )
 }

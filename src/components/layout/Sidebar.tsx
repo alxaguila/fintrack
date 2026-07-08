@@ -1,7 +1,6 @@
 import { NavLink, useLocation } from 'react-router-dom'
-import { Home, BarChart3, ArrowLeftRight, Upload, Wallet, Settings, LogOut, Tags, Sparkles, FileClock } from 'lucide-react'
+import { Home, BarChart3, ArrowLeftRight, Upload, Wallet, Settings, Tags, Sparkles, FileClock } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
-import { supabase } from '@/lib/supabase'
 import { cn } from '@/lib/utils'
 import { APP_VERSION } from '@/lib/version'
 import { LanguageSelector } from './LanguageSelector'
@@ -22,12 +21,8 @@ export function Sidebar() {
   const location = useLocation()
   const onTransactions = location.pathname.startsWith('/transactions')
 
-  async function handleLogout() {
-    await supabase.auth.signOut()
-  }
-
   return (
-    <aside className="flex h-screen w-60 flex-col bg-slate-900 text-slate-100">
+    <aside className="hidden h-screen w-60 flex-col bg-slate-900 text-slate-100 md:flex">
       {/* Logo */}
       <div className="flex h-16 items-center gap-2 px-6">
         <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-teal-500 text-white">
@@ -115,13 +110,6 @@ export function Sidebar() {
       {/* Footer */}
       <div className="border-t border-slate-700 p-3 space-y-1">
         <LanguageSelector />
-        <button
-          onClick={handleLogout}
-          className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-slate-400 transition-colors hover:bg-slate-800 hover:text-white"
-        >
-          <LogOut className="h-4 w-4" />
-          {t('auth:logout')}
-        </button>
       </div>
     </aside>
   )

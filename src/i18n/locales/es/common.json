@@ -8,7 +8,15 @@
     "import": "Importar extractos",
     "accounts": "Cuentas",
     "history": "Historial",
-    "settings": "Ajustes"
+    "settings": "Ajustes",
+    "menu": "Menú",
+    "short": {
+      "home": "Inicio",
+      "analysis": "Análisis",
+      "transactions": "Movimientos",
+      "accounts": "Cuentas",
+      "history": "Historial"
+    }
   },
   "actions": {
     "save": "Guardar",

@@ -8,7 +8,15 @@
     "import": "Import statements",
     "accounts": "Accounts",
     "history": "History",
-    "settings": "Settings"
+    "settings": "Settings",
+    "menu": "Menu",
+    "short": {
+      "home": "Home",
+      "analysis": "Analysis",
+      "transactions": "Transactions",
+      "accounts": "Accounts",
+      "history": "History"
+    }
   },
   "actions": {
     "save": "Save",

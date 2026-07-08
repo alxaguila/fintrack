@@ -11,6 +11,9 @@ import Import from '@/pages/Import'
 import Accounts from '@/pages/Accounts'
 import History from '@/pages/History'
 import Settings from '@/pages/Settings'
+import SettingsProfile from '@/pages/settings/Profile'
+import SettingsSecurity from '@/pages/settings/Security'
+import SettingsFeedback from '@/pages/settings/Feedback'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -33,6 +36,9 @@ export default function App() {
             <Route path="accounts" element={<Accounts />} />
             <Route path="history" element={<History />} />
             <Route path="settings" element={<Settings />} />
+            <Route path="settings/profile" element={<SettingsProfile />} />
+            <Route path="settings/security" element={<SettingsSecurity />} />
+            <Route path="settings/feedback" element={<SettingsFeedback />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Route>
         </Routes>

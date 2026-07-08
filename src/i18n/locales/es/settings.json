@@ -1,5 +1,63 @@
 {
   "title": "Ajustes",
+  "menu": {
+    "back": "Volver a Ajustes",
+    "profile": "Perfil",
+    "security": "Login y contraseña",
+    "feedback": "Feedback y soporte",
+    "logout": "Cerrar sesión"
+  },
+  "security": {
+    "title": "Login y contraseña",
+    "email": "Correo electrónico",
+    "email_hint": "Tu email no se puede cambiar.",
+    "change_password": "Cambiar contraseña",
+    "current_password": "Contraseña actual",
+    "new_password": "Nueva contraseña",
+    "confirm_password": "Confirmar nueva contraseña",
+    "save_password": "Cambiar contraseña",
+    "saving": "Guardando...",
+    "password_updated": "Contraseña actualizada",
+    "errors": {
+      "wrong_current": "La contraseña actual no es correcta",
+      "weak_password": "Debe tener 8+ caracteres, con mayúscula, minúscula y número",
+      "passwords_mismatch": "Las contraseñas no coinciden"
+    }
+  },
+  "feedback": {
+    "title": "Feedback y soporte",
+    "description": "¿Tienes una sugerencia, una queja o has encontrado un fallo? Cuéntanoslo y lo revisaremos.",
+    "type": "Tipo",
+    "types": {
+      "suggestion": "Sugerencia",
+      "complaint": "Queja",
+      "bug": "Error / fallo",
+      "other": "Otro"
+    },
+    "message": "Mensaje",
+    "message_placeholder": "Escribe aquí tu comentario...",
+    "submit": "Enviar",
+    "sending": "Enviando...",
+    "sent": "¡Gracias! Hemos recibido tu mensaje",
+    "error": "No se pudo enviar. Inténtalo de nuevo"
+  },
+  "delete": {
+    "title": "Eliminar cuenta",
+    "cancel": "Cancelar",
+    "continue": "Continuar",
+    "confirm": "Eliminar mi cuenta",
+    "deleting": "Eliminando...",
+    "error": "No se pudo eliminar la cuenta. Inténtalo de nuevo",
+    "warn1": {
+      "title": "Eliminar cuenta",
+      "body": "Esta acción es permanente y NO se puede deshacer. Se eliminarán tu cuenta y todos tus datos: movimientos, cuentas, perfiles, reglas y formatos."
+    },
+    "warn2": {
+      "title": "Confirmación final",
+      "body": "Estás a punto de eliminar tu cuenta para siempre. No podrás recuperar ninguna información.",
+      "prompt": "Para confirmar, escribe"
+    }
+  },
   "tabs": {
     "keyword_rules": "Reglas automáticas",
     "bank_formats": "Formatos de banco",

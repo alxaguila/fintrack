@@ -1,5 +1,63 @@
 {
   "title": "Settings",
+  "menu": {
+    "back": "Back to Settings",
+    "profile": "Profile",
+    "security": "Login & password",
+    "feedback": "Feedback & support",
+    "logout": "Sign out"
+  },
+  "security": {
+    "title": "Login & password",
+    "email": "Email",
+    "email_hint": "Your email can't be changed.",
+    "change_password": "Change password",
+    "current_password": "Current password",
+    "new_password": "New password",
+    "confirm_password": "Confirm new password",
+    "save_password": "Change password",
+    "saving": "Saving...",
+    "password_updated": "Password updated",
+    "errors": {
+      "wrong_current": "Current password is incorrect",
+      "weak_password": "Must be 8+ chars, with uppercase, lowercase and a number",
+      "passwords_mismatch": "Passwords don't match"
+    }
+  },
+  "feedback": {
+    "title": "Feedback & support",
+    "description": "Have a suggestion, a complaint or found a bug? Let us know and we'll look into it.",
+    "type": "Type",
+    "types": {
+      "suggestion": "Suggestion",
+      "complaint": "Complaint",
+      "bug": "Bug",
+      "other": "Other"
+    },
+    "message": "Message",
+    "message_placeholder": "Write your comment here...",
+    "submit": "Send",
+    "sending": "Sending...",
+    "sent": "Thanks! We received your message",
+    "error": "Couldn't send. Please try again"
+  },
+  "delete": {
+    "title": "Delete account",
+    "cancel": "Cancel",
+    "continue": "Continue",
+    "confirm": "Delete my account",
+    "deleting": "Deleting...",
+    "error": "Couldn't delete the account. Please try again",
+    "warn1": {
+      "title": "Delete account",
+      "body": "This action is permanent and CANNOT be undone. Your account and all your data will be deleted: transactions, accounts, profiles, rules and formats."
+    },
+    "warn2": {
+      "title": "Final confirmation",
+      "body": "You are about to delete your account forever. You won't be able to recover any information.",
+      "prompt": "To confirm, type"
+    }
+  },
   "tabs": {
     "keyword_rules": "Auto rules",
     "bank_formats": "Bank formats",
