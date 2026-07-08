@@ -1,0 +1,120 @@
+{
+  "title": "Ajustes",
+  "tabs": {
+    "keyword_rules": "Reglas automáticas",
+    "bank_formats": "Formatos de banco",
+    "profiles": "Perfiles"
+  },
+  "keyword_rules": {
+    "title": "Reglas de categorización",
+    "description": "Cuando el concepto de un movimiento coincida con una regla, se categorizará automáticamente al importar.",
+    "new_rule": "Nueva regla",
+    "edit_rule": "Editar regla",
+    "fields": {
+      "keyword": "Palabra clave",
+      "keyword_placeholder": "Ej: MERCADONA, BIZUM...",
+      "match_type": "Tipo de coincidencia",
+      "match_contains": "Contiene",
+      "match_starts_with": "Empieza por",
+      "match_ends_with": "Termina en",
+      "match_exact": "Exacto",
+      "match_regex": "Expresión regular",
+      "category_group": "Categoría",
+      "category": "Subcategoría",
+      "priority": "Prioridad (menor = antes)",
+      "profile": "Perfil (vacío = todos)",
+      "active": "Activa"
+    },
+    "empty": {
+      "title": "Sin reglas",
+      "description": "Crea reglas para que los movimientos se categoricen solos al importar."
+    },
+    "scope_all": "Todos los perfiles",
+    "scope_profile": "Solo {{name}}"
+  },
+  "bank_formats": {
+    "title": "Formatos guardados",
+    "description": "Configuraciones de importación guardadas para cada entidad bancaria.",
+    "empty": {
+      "title": "Sin formatos guardados",
+      "description": "Los formatos se guardan automáticamente al importar un extracto."
+    },
+    "delete_confirm": {
+      "title": "¿Eliminar formato?",
+      "description": "Tendrás que volver a configurar el mapeo de columnas para esta entidad."
+    }
+  },
+  "profiles": {
+    "title": "Perfiles",
+    "new_profile": "Nuevo perfil",
+    "edit_profile": "Editar perfil",
+    "fields": {
+      "name": "Nombre",
+      "name_placeholder": "Ej: Alex, Papá...",
+      "color": "Color del avatar",
+      "is_default": "Perfil por defecto"
+    },
+    "delete_confirm": {
+      "title": "¿Eliminar perfil?",
+      "description": "Se eliminarán todas las cuentas y movimientos de este perfil. Esta acción no se puede deshacer."
+    }
+  },
+  "language": {
+    "title": "Idioma de la aplicación",
+    "saved": "Idioma guardado"
+  },
+  "onboarding": {
+    "title": "Completar registro",
+    "subtitle": "Usaremos estos datos para personalizar tu experiencia. Podrás cambiarlos cuando quieras en Ajustes.",
+    "back": "Volver",
+    "submit": "Continuar",
+    "saving": "Guardando..."
+  },
+  "personal": {
+    "title": "Datos personales",
+    "description": "Información de tu cuenta. Puedes editarla cuando quieras.",
+    "full_name": "Nombre completo",
+    "gender": "Género",
+    "birth_date": "Fecha de nacimiento",
+    "country": "País",
+    "country_placeholder": "Selecciona país...",
+    "region": "Provincia / Estado / Región",
+    "region_placeholder": "Selecciona...",
+    "employment_status": "Situación laboral",
+    "financial_goal": "Objetivo financiero",
+    "optional": "(opcional)",
+    "select_placeholder": "Selecciona...",
+    "search_placeholder": "Buscar...",
+    "loading": "Cargando...",
+    "no_results": "Sin resultados",
+    "save": "Guardar cambios",
+    "saved": "Datos guardados",
+    "gender_options": {
+      "male": "Hombre",
+      "female": "Mujer",
+      "other": "Otro",
+      "prefer_not_say": "Prefiero no decirlo"
+    },
+    "employment_options": {
+      "employed": "Empleado/a",
+      "self_employed": "Autónomo/a",
+      "student": "Estudiante",
+      "retired": "Jubilado/a",
+      "unemployed": "Desempleado/a",
+      "other": "Otro"
+    },
+    "goal_options": {
+      "save": "Ahorrar",
+      "pay_off_debt": "Salir de deudas",
+      "invest": "Invertir",
+      "control_spending": "Controlar gastos",
+      "other": "Otro"
+    },
+    "errors": {
+      "required": "Obligatorio",
+      "too_long": "Demasiado largo",
+      "invalid": "No válido",
+      "check": "Revisa los campos obligatorios"
+    }
+  }
+}

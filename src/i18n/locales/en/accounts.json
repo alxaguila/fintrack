@@ -1,0 +1,64 @@
+{
+  "title": "Accounts",
+  "new_account": "New account",
+  "edit_account": "Edit account",
+  "fields": {
+    "entity": "Bank",
+    "entity_placeholder": "Choose a bank…",
+    "type": "Account type",
+    "type_placeholder": "Select a type…",
+    "alias": "Alias (optional)",
+    "alias_placeholder": "e.g. Joint account, Renfe Mastercard…",
+    "opening_balance": "Opening balance (optional)",
+    "opening_balance_placeholder": "e.g. 1250.00",
+    "opening_balance_hint": "Account balance before its first movement. The current balance is computed as opening balance + sum of movements.",
+    "color": "Color",
+    "logo": "Logo (optional)",
+    "logo_placeholder": "Paste an image URL…",
+    "logo_upload": "Upload",
+    "logo_remove": "Remove",
+    "logo_hint": "Transparent PNG, SVG or JPG (max 1 MB). You can also paste a URL.",
+    "logo_invalid_type": "The file must be an image.",
+    "logo_too_large": "The image exceeds 1 MB.",
+    "logo_upload_failed": "Couldn't upload the logo."
+  },
+  "debit_warning": {
+    "title": "Debit cards aren't created as accounts",
+    "body": "A debit card's transactions already show up in the checking account it's linked to. If you also created it as its own account, every expense would be counted twice and distort your totals and charts. That's why debit cards can't be created: their transactions are imported inside the checking account.",
+    "ok": "Got it"
+  },
+  "groups": {
+    "all": "All",
+    "checking": "Checking accounts",
+    "savings": "Savings accounts",
+    "cards": "Cards",
+    "securities": "Securities accounts"
+  },
+  "add_in": {
+    "checking": "Add checking account",
+    "savings": "Add savings account",
+    "cards": "Add card",
+    "securities": "Add securities account"
+  },
+  "empty": {
+    "title": "No accounts",
+    "description": "Add your first account or card to start importing transactions.",
+    "action": "Add account"
+  },
+  "delete_dialog": {
+    "title": "Delete \"{{name}}\"",
+    "archive": "Delete the account",
+    "archive_hint": "The account is hidden across the app, but its transactions are kept and still count toward the Dashboard and charts.",
+    "delete_all": "Delete the account and its transactions",
+    "delete_all_hint": "Permanently removes the account along with all its transactions and imports.",
+    "confirm_title": "Delete \"{{name}}\" and all its transactions?",
+    "confirm_warning": "All transactions for this account will be permanently deleted. This will affect your charts, balances and Dashboard totals, along with other useful insights based on your history. This action cannot be undone.",
+    "confirm_action": "Yes, delete everything",
+    "archived_toast": "Account archived",
+    "deleted_toast": "Account and transactions deleted"
+  },
+  "balance": "Estimated balance",
+  "transactions_count": "{{count}} transactions",
+  "last_import": "Last import: {{date}}",
+  "no_imports": "No imports yet"
+}

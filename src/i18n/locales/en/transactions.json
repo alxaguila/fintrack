@@ -1,0 +1,125 @@
+{
+  "title": "Transactions",
+  "filters": {
+    "all_accounts": "All accounts",
+    "all_categories": "All categories",
+    "all_types": "All types",
+    "date_from": "From",
+    "date_to": "To",
+    "search_placeholder": "Search concepts and categories...",
+    "amount_min": "Min amount",
+    "amount_max": "Max amount",
+    "clear_filters": "Clear filters"
+  },
+  "columns": {
+    "date": "Date",
+    "concept": "Description",
+    "account": "Account",
+    "entity": "Entity",
+    "category": "Category",
+    "subcategory": "Subcategory",
+    "type": "Type",
+    "amount": "Amount",
+    "reviewed": "Reviewed"
+  },
+  "reviewed_filter": {
+    "all": "All",
+    "unreviewed": "Unreviewed",
+    "reviewed": "Reviewed"
+  },
+  "auto_categorize": {
+    "button": "Auto-categorize",
+    "running": "Categorizing...",
+    "done": "{{count}} transactions categorized"
+  },
+  "row": {
+    "uncategorized": "Uncategorized",
+    "edit_category": "Change category",
+    "add_note": "Add note",
+    "mark_reviewed": "Mark as reviewed",
+    "reviewed": "Reviewed",
+    "pending": "Pending"
+  },
+  "pagination": {
+    "showing": "Showing {{from}}–{{to}} of {{total}}",
+    "previous": "Previous",
+    "next": "Next"
+  },
+  "empty": {
+    "title": "No transactions",
+    "description": "No transactions match the selected filters."
+  },
+  "category_dialog": {
+    "title": "Categorize transaction",
+    "concept": "Description",
+    "select_group": "Category",
+    "select_category": "Subcategory",
+    "type": "Type",
+    "save": "Save category",
+    "saved": "{{count}} transaction(s) updated",
+    "apply_only_this": "Apply to this transaction only",
+    "create_rule_button": "Create rule",
+    "rule_hint": "A rule will be created and applied to future imports.",
+    "rule_hint_similar": "It will apply to this and {{count}} similar transactions, and create a rule.",
+    "rule_apply_count": "Will apply to {{count}} transaction(s)",
+    "rule_counting": "Counting transactions…",
+    "combobox_search": "Search category…",
+    "combobox_empty": "No results"
+  },
+  "rules": {
+    "title": "Classification rules",
+    "subtitle": "Rules you apply to your transactions. Create them here or while classifying from Transactions.",
+    "search_placeholder": "Search by keyword or category...",
+    "count": "{{count}} rule(s)",
+    "empty_title": "You don't have any classification rules yet",
+    "empty_body1": "Rules teach FinTrack to categorize your transactions automatically. Every time you classify a transaction and click “Create rule”, the rule shows up here.",
+    "empty_body2": "The more rules you create, the better FinTrack will classify your future imports — over time almost everything gets categorized on its own and you'll barely need to review.",
+    "empty_body3": "On top of that, your rules anonymously help classify other users' transactions, and theirs help classify yours. The more people take part, the smarter classification gets for everyone.",
+    "empty_cta": "To create your first rule: go to Transactions, open a transaction and click “Create rule”.",
+    "no_results": "No rules match your search.",
+    "new_rule": "New rule",
+    "create_title": "New classification rule",
+    "create_done": "Rule created · {{count}} transaction(s) reclassified",
+    "priority": "Priority",
+    "active": "Active",
+    "inactive": "Inactive",
+    "edit": "Edit rule",
+    "delete_confirm": "Delete this rule? It will no longer apply to future imports.",
+    "community_hint": "This rule contributes to the community classification.",
+    "community_label": "Helps the community",
+    "cond": {
+      "contains": "Contains",
+      "amount": "Amount"
+    },
+    "match": {
+      "contains": "Contains",
+      "starts_with": "Starts with",
+      "ends_with": "Ends with",
+      "exact": "Exact",
+      "regex": "Regex"
+    },
+    "fields": {
+      "keyword": "Keywords",
+      "keyword_placeholder": "e.g. AMAZON, PAYROLL, GYM...",
+      "keyword_help": "The rule applies to transactions whose description contains this text.",
+      "type": "Type",
+      "amount": "Amount",
+      "optional": "optional",
+      "amount_min": "Greater than",
+      "amount_max": "Less than",
+      "amount_min_help": "Minimum amount, in €",
+      "amount_max_help": "Maximum amount, in €",
+      "amount_note": "Leave both empty to apply to any amount. The amount is compared in absolute value.",
+      "match_type": "Match type",
+      "category_group": "Category",
+      "category": "Subcategory",
+      "priority": "Priority",
+      "active": "Active"
+    }
+  },
+  "summary": {
+    "total_expenses": "Total expenses",
+    "total_income": "Total income",
+    "count": "{{count}} transactions"
+  }
+}

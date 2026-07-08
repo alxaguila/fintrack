@@ -1,0 +1,58 @@
+{
+  "title": "Análisis",
+  "month_selector": "Mes",
+  "kpis": {
+    "total_expenses": "Gastos del mes",
+    "total_income": "Ingresos del mes",
+    "balance": "Balance neto",
+    "vs_last_month": "vs mes anterior",
+    "vs_prev": {
+      "month": "vs mes anterior",
+      "quarter": "vs trimestre anterior",
+      "year": "vs año anterior"
+    },
+    "more": "más",
+    "less": "menos"
+  },
+  "sections": {
+    "by_category": "Gasto por categoría",
+    "by_subcategory": "Desglose por subcategoría",
+    "evolution": "Ingresos vs Gastos",
+    "monthly_evolution": "Evolución mensual",
+    "recent_transactions": "Últimos movimientos",
+    "account_balances": "Saldo por cuenta"
+  },
+  "granularity": {
+    "month": "Meses",
+    "quarter": "Trimestres",
+    "year": "Años"
+  },
+  "uncategorized": "Sin categoría",
+  "donut_other": "Otros",
+  "view_transactions": "Ver movimientos",
+  "evolution_by": {
+    "month": "Evolución por mes",
+    "quarter": "Evolución por trimestre",
+    "year": "Evolución por año"
+  },
+  "lens": {
+    "subcategory": "Subcategoría",
+    "category": "Categoría"
+  },
+  "charts": {
+    "expenses": "Gastos",
+    "income": "Ingresos",
+    "balance": "Balance",
+    "months": ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"]
+  },
+  "no_data": {
+    "title": "Sin movimientos este mes",
+    "description": "Importa un extracto para ver tu dashboard.",
+    "action": "Importar extracto"
+  },
+  "no_profile": {
+    "title": "Crea tu primer perfil",
+    "description": "Los perfiles te permiten gestionar las finanzas de distintas personas de forma independiente.",
+    "action": "Crear perfil"
+  }
+}

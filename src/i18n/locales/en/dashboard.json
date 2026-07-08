@@ -1,0 +1,58 @@
+{
+  "title": "Analysis",
+  "month_selector": "Month",
+  "kpis": {
+    "total_expenses": "Monthly expenses",
+    "total_income": "Monthly income",
+    "balance": "Net balance",
+    "vs_last_month": "vs last month",
+    "vs_prev": {
+      "month": "vs last month",
+      "quarter": "vs last quarter",
+      "year": "vs last year"
+    },
+    "more": "more",
+    "less": "less"
+  },
+  "sections": {
+    "by_category": "Expenses by category",
+    "by_subcategory": "Breakdown by subcategory",
+    "evolution": "Income vs Expenses",
+    "monthly_evolution": "Monthly evolution",
+    "recent_transactions": "Recent transactions",
+    "account_balances": "Account balances"
+  },
+  "granularity": {
+    "month": "Months",
+    "quarter": "Quarters",
+    "year": "Years"
+  },
+  "uncategorized": "Uncategorized",
+  "donut_other": "Other",
+  "view_transactions": "View transactions",
+  "evolution_by": {
+    "month": "Evolution by month",
+    "quarter": "Evolution by quarter",
+    "year": "Evolution by year"
+  },
+  "lens": {
+    "subcategory": "Subcategory",
+    "category": "Category"
+  },
+  "charts": {
+    "expenses": "Expenses",
+    "income": "Income",
+    "balance": "Balance",
+    "months": ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+  },
+  "no_data": {
+    "title": "No transactions this month",
+    "description": "Import a statement to see your dashboard.",
+    "action": "Import statement"
+  },
+  "no_profile": {
+    "title": "Create your first profile",
+    "description": "Profiles let you manage finances for different people independently.",
+    "action": "Create profile"
+  }
+}

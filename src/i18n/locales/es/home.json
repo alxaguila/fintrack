@@ -1,0 +1,42 @@
+{
+  "title": "Posición Global",
+  "no_profile": {
+    "title": "Sin perfil activo",
+    "description": "Selecciona o crea un perfil para ver tu resumen."
+  },
+  "empty": {
+    "title": "Aún no tienes cuentas",
+    "description": "Añade una cuenta para empezar a ver tu saldo y tu evolución.",
+    "action": "Añadir cuenta"
+  },
+  "accounts": {
+    "bank_section": "Cuentas",
+    "card_section": "Tarjetas de crédito",
+    "card_section_info": "Suma de gastos en los últimos 30 días",
+    "bank_total_label": "Mi posición total",
+    "card_total_label": "Mis gastos totales",
+    "no_balance": "Sin datos de saldo",
+    "no_spending": "Sin gastos",
+    "last_30_days": "últ. 30 días",
+    "updated_today": "Actualizado hoy",
+    "updated_days_ago_one": "Actualizado hace {{count}} día",
+    "updated_days_ago_other": "Actualizado hace {{count}} días",
+    "never_updated": "Sin importaciones todavía"
+  },
+  "alerts": {
+    "uncategorized_one": "{{count}} movimiento sin categoría",
+    "uncategorized_other": "{{count}} movimientos sin categoría",
+    "review_now": "Revisar ahora"
+  },
+  "evolution": {
+    "title": "Evolución",
+    "mode_saldo": "Saldo en cuentas",
+    "mode_gasto": "Gasto en tarjetas",
+    "range_3M": "3M",
+    "range_6M": "6M",
+    "range_1A": "1A",
+    "range_5A": "5A",
+    "range_Todo": "Todo",
+    "no_data": "Todavía no hay suficientes datos para el período seleccionado."
+  }
+}

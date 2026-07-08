@@ -1,0 +1,71 @@
+{
+  "app_name": "FinTrack",
+  "nav": {
+    "home": "Global Position",
+    "analysis": "Analysis",
+    "transactions": "Transactions",
+    "rules": "Classification rules",
+    "import": "Import statements",
+    "accounts": "Accounts",
+    "history": "History",
+    "settings": "Settings"
+  },
+  "actions": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "clear": "Clear",
+    "confirm": "Confirm",
+    "delete": "Delete",
+    "edit": "Edit",
+    "add": "Add",
+    "back": "Back",
+    "close": "Close",
+    "search": "Search",
+    "filter": "Filter",
+    "clear": "Clear",
+    "loading": "Loading...",
+    "retry": "Retry"
+  },
+  "account_type": {
+    "cuenta_corriente": "Checking account",
+    "ahorro": "Savings account",
+    "tarjeta_credito": "Credit card",
+    "tarjeta_debito": "Debit card",
+    "valores": "Securities account"
+  },
+  "transaction_type": {
+    "gasto": "Expense",
+    "ingreso": "Income",
+    "no_computable": "Non-computable"
+  },
+  "currency": {
+    "EUR": "€",
+    "USD": "$"
+  },
+  "errors": {
+    "generic": "Something went wrong. Please try again.",
+    "load_failed": "Failed to load data.",
+    "save_failed": "Failed to save changes.",
+    "delete_failed": "Failed to delete.",
+    "invalid_input": "Please check the fields: some values are invalid or too long."
+  },
+  "confirm_delete": {
+    "title": "Are you sure?",
+    "description": "This action cannot be undone.",
+    "confirm": "Yes, delete",
+    "cancel": "Cancel"
+  },
+  "empty_state": {
+    "no_data": "No data",
+    "no_results": "No results found"
+  },
+  "language": {
+    "es": "Español",
+    "en": "English"
+  },
+  "profile": {
+    "switch": "Switch profile",
+    "new": "New profile",
+    "select": "Select a profile"
+  }
+}

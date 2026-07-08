@@ -1,0 +1,46 @@
+{
+  "title": "Upload history",
+  "processing_note": "Applying the changes and recalculating balances. This may take a moment; please don't close this window.",
+  "filters": {
+    "all_entities": "All entities",
+    "all_types": "All types",
+    "all_aliases": "All aliases",
+    "date_from": "From",
+    "date_to": "To",
+    "clear": "Clear filters"
+  },
+  "columns": {
+    "date": "Date",
+    "time": "Time",
+    "type": "Account type",
+    "entity": "Entity",
+    "period_from": "From",
+    "period_to": "To",
+    "movements": "Movements",
+    "actions": "Actions"
+  },
+  "empty": {
+    "none": "You haven't uploaded any statements yet.",
+    "no_results": "No uploads match the filters."
+  },
+  "reassign_dialog": {
+    "title": "Reassign upload to another account",
+    "description": "You're about to move this {{entity}} upload and its {{count}} movements to another account. Use this if you uploaded the statement to the wrong account.",
+    "target_label": "Target account",
+    "target_placeholder": "Select an account",
+    "no_targets": "There are no other accounts to reassign to.",
+    "confirm": "Reassign",
+    "working": "Reassigning…",
+    "done_toast": "Upload reassigned",
+    "duplicate_error": "The target account already contains these movements. Nothing was moved."
+  },
+  "delete_dialog": {
+    "title": "Delete upload",
+    "warning": "This {{entity}} upload and its {{count}} movements will be deleted. The account balances will be recalculated.",
+    "confirm_title": "Are you sure you want to delete it?",
+    "confirm_warning": "This action cannot be undone. The movements imported in this upload will be permanently removed.",
+    "confirm_action": "Yes, delete",
+    "working": "Deleting…",
+    "deleted_toast": "Upload deleted"
+  }
+}

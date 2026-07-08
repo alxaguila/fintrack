@@ -1,0 +1,120 @@
+{
+  "title": "Settings",
+  "tabs": {
+    "keyword_rules": "Auto rules",
+    "bank_formats": "Bank formats",
+    "profiles": "Profiles"
+  },
+  "keyword_rules": {
+    "title": "Categorization rules",
+    "description": "When a transaction's description matches a rule, it will be automatically categorized on import.",
+    "new_rule": "New rule",
+    "edit_rule": "Edit rule",
+    "fields": {
+      "keyword": "Keyword",
+      "keyword_placeholder": "e.g. AMAZON, SALARY...",
+      "match_type": "Match type",
+      "match_contains": "Contains",
+      "match_starts_with": "Starts with",
+      "match_ends_with": "Ends with",
+      "match_exact": "Exact",
+      "match_regex": "Regular expression",
+      "category_group": "Category",
+      "category": "Subcategory",
+      "priority": "Priority (lower = first)",
+      "profile": "Profile (empty = all)",
+      "active": "Active"
+    },
+    "empty": {
+      "title": "No rules",
+      "description": "Create rules so transactions are categorized automatically on import."
+    },
+    "scope_all": "All profiles",
+    "scope_profile": "Only {{name}}"
+  },
+  "bank_formats": {
+    "title": "Saved formats",
+    "description": "Import configurations saved for each bank.",
+    "empty": {
+      "title": "No saved formats",
+      "description": "Formats are saved automatically when you import a statement."
+    },
+    "delete_confirm": {
+      "title": "Delete format?",
+      "description": "You will need to re-configure column mapping for this bank."
+    }
+  },
+  "profiles": {
+    "title": "Profiles",
+    "new_profile": "New profile",
+    "edit_profile": "Edit profile",
+    "fields": {
+      "name": "Name",
+      "name_placeholder": "e.g. Alex, Dad...",
+      "color": "Avatar color",
+      "is_default": "Default profile"
+    },
+    "delete_confirm": {
+      "title": "Delete profile?",
+      "description": "All accounts and transactions for this profile will be deleted. This cannot be undone."
+    }
+  },
+  "language": {
+    "title": "App language",
+    "saved": "Language saved"
+  },
+  "onboarding": {
+    "title": "Complete registration",
+    "subtitle": "We'll use this to personalize your experience. You can change it anytime in Settings.",
+    "back": "Back",
+    "submit": "Continue",
+    "saving": "Saving..."
+  },
+  "personal": {
+    "title": "Personal details",
+    "description": "Your account information. You can edit it anytime.",
+    "full_name": "Full name",
+    "gender": "Gender",
+    "birth_date": "Date of birth",
+    "country": "Country",
+    "country_placeholder": "Select country...",
+    "region": "State / Province / Region",
+    "region_placeholder": "Select...",
+    "employment_status": "Employment status",
+    "financial_goal": "Financial goal",
+    "optional": "(optional)",
+    "select_placeholder": "Select...",
+    "search_placeholder": "Search...",
+    "loading": "Loading...",
+    "no_results": "No results",
+    "save": "Save changes",
+    "saved": "Details saved",
+    "gender_options": {
+      "male": "Male",
+      "female": "Female",
+      "other": "Other",
+      "prefer_not_say": "Prefer not to say"
+    },
+    "employment_options": {
+      "employed": "Employed",
+      "self_employed": "Self-employed",
+      "student": "Student",
+      "retired": "Retired",
+      "unemployed": "Unemployed",
+      "other": "Other"
+    },
+    "goal_options": {
+      "save": "Save money",
+      "pay_off_debt": "Get out of debt",
+      "invest": "Invest",
+      "control_spending": "Control spending",
+      "other": "Other"
+    },
+    "errors": {
+      "required": "Required",
+      "too_long": "Too long",
+      "invalid": "Invalid",
+      "check": "Please check the required fields"
+    }
+  }
+}

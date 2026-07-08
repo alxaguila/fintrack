@@ -1,0 +1,71 @@
+{
+  "app_name": "FinTrack",
+  "nav": {
+    "home": "Posición Global",
+    "analysis": "Análisis",
+    "transactions": "Movimientos",
+    "rules": "Reglas de clasificación",
+    "import": "Importar extractos",
+    "accounts": "Cuentas",
+    "history": "Historial",
+    "settings": "Ajustes"
+  },
+  "actions": {
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "clear": "Borrar",
+    "confirm": "Confirmar",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "add": "Añadir",
+    "back": "Volver",
+    "close": "Cerrar",
+    "search": "Buscar",
+    "filter": "Filtrar",
+    "clear": "Limpiar",
+    "loading": "Cargando...",
+    "retry": "Reintentar"
+  },
+  "account_type": {
+    "cuenta_corriente": "Cuenta corriente",
+    "ahorro": "Cuenta de ahorro",
+    "tarjeta_credito": "Tarjeta de crédito",
+    "tarjeta_debito": "Tarjeta de débito",
+    "valores": "Cuenta de valores"
+  },
+  "transaction_type": {
+    "gasto": "Gasto",
+    "ingreso": "Ingreso",
+    "no_computable": "No computable"
+  },
+  "currency": {
+    "EUR": "€",
+    "USD": "$"
+  },
+  "errors": {
+    "generic": "Ha ocurrido un error. Inténtalo de nuevo.",
+    "load_failed": "Error al cargar los datos.",
+    "save_failed": "Error al guardar los cambios.",
+    "delete_failed": "Error al eliminar.",
+    "invalid_input": "Revisa los campos: hay datos no válidos o demasiado largos."
+  },
+  "confirm_delete": {
+    "title": "¿Eliminar?",
+    "description": "Esta acción no se puede deshacer.",
+    "confirm": "Sí, eliminar",
+    "cancel": "Cancelar"
+  },
+  "empty_state": {
+    "no_data": "Sin datos",
+    "no_results": "No hay resultados"
+  },
+  "language": {
+    "es": "Español",
+    "en": "English"
+  },
+  "profile": {
+    "switch": "Cambiar perfil",
+    "new": "Nuevo perfil",
+    "select": "Selecciona un perfil"
+  }
+}

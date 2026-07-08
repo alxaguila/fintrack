@@ -1,0 +1,135 @@
+{
+  "title": "Movimientos",
+  "filters": {
+    "all_accounts": "Todas las cuentas",
+    "all_categories": "Todas las categorías",
+    "all_types": "Todos los tipos",
+    "date_from": "Desde",
+    "date_to": "Hasta",
+    "search_placeholder": "Buscar en conceptos y categorías...",
+    "amount_min": "Importe mín.",
+    "amount_max": "Importe máx.",
+    "clear_filters": "Limpiar filtros",
+    "uncategorized": "Sin categoría"
+  },
+  "columns": {
+    "date": "Fecha",
+    "concept": "Concepto",
+    "account": "Cuenta",
+    "entity": "Entidad",
+    "category": "Categoría",
+    "subcategory": "Subcategoría",
+    "type": "Tipo",
+    "amount": "Importe",
+    "reviewed": "Leído"
+  },
+  "reviewed_filter": {
+    "all": "Todos",
+    "unreviewed": "No leídos",
+    "reviewed": "Leídos"
+  },
+  "mark_all_read": {
+    "button": "Marcar todo como leído",
+    "done": "Movimientos marcados como leídos"
+  },
+  "auto_categorize": {
+    "button": "Categorizar automáticamente",
+    "running": "Categorizando...",
+    "done": "{{count}} movimientos categorizados"
+  },
+  "row": {
+    "uncategorized": "Sin categoría",
+    "edit_category": "Cambiar categoría",
+    "add_note": "Añadir nota",
+    "mark_reviewed": "Marcar como leído",
+    "reviewed": "Leído",
+    "pending": "No leído"
+  },
+  "pagination": {
+    "showing": "Mostrando {{from}}–{{to}} de {{total}}",
+    "previous": "Anterior",
+    "next": "Siguiente"
+  },
+  "empty": {
+    "title": "Sin movimientos",
+    "description": "No hay movimientos que coincidan con los filtros seleccionados."
+  },
+  "category_dialog": {
+    "title": "Categorizar movimiento",
+    "concept": "Concepto",
+    "select_group": "Categoría",
+    "select_category": "Subcategoría",
+    "type": "Tipo",
+    "save": "Guardar categoría",
+    "saved": "{{count}} movimiento(s) actualizado(s)",
+    "add_note": "Añadir nota",
+    "note_label": "Nota",
+    "note_placeholder": "Una nota breve...",
+    "note_counter": "{{count}} restantes",
+    "note_saved": "Nota guardada",
+    "apply_only_this": "Aplicar solo a este movimiento",
+    "create_rule_button": "Crear regla",
+    "rule_hint": "Se creará una regla y se aplicará a futuras importaciones.",
+    "rule_hint_similar": "Se aplicará a este y a {{count}} movimientos similares, y se creará una regla.",
+    "rule_apply_count": "Se aplicará a {{count}} movimiento(s)",
+    "rule_counting": "Calculando movimientos…",
+    "combobox_search": "Buscar categoría…",
+    "combobox_empty": "Sin resultados"
+  },
+  "rules": {
+    "title": "Reglas de clasificación",
+    "subtitle": "Reglas que aplicas a tus movimientos. Créalas aquí o al clasificar desde Movimientos.",
+    "search_placeholder": "Buscar por palabra clave o categoría...",
+    "count": "{{count}} regla(s)",
+    "empty_title": "Aún no tienes reglas de clasificación",
+    "empty_body1": "Las reglas le enseñan a FinTrack a categorizar tus movimientos automáticamente. Cada vez que clasificas un movimiento y pulsas «Crear regla», la regla aparece aquí.",
+    "empty_body2": "Cuantas más reglas crees, mejor clasificará FinTrack tus próximas importaciones — con el tiempo, casi todo se categoriza solo y tendrás que revisar muy poco.",
+    "empty_body3": "Además, tus reglas ayudan (de forma anónima) a clasificar los movimientos de otros usuarios, y las suyas ayudan a clasificar los tuyos. Cuantas más personas participan, más lista se vuelve la clasificación para todos.",
+    "empty_cta": "Para crear tu primera regla: ve a Movimientos, abre un movimiento y pulsa «Crear regla».",
+    "no_results": "Ninguna regla coincide con la búsqueda.",
+    "new_rule": "Nueva regla",
+    "create_title": "Nueva regla de clasificación",
+    "create_done": "Regla creada · {{count}} movimiento(s) reclasificado(s)",
+    "priority": "Prioridad",
+    "active": "Activa",
+    "inactive": "Inactiva",
+    "edit": "Editar regla",
+    "delete_confirm": "¿Eliminar esta regla? Dejará de aplicarse a futuras importaciones.",
+    "community_hint": "Esta regla contribuye a la clasificación de la comunidad.",
+    "community_label": "Aporta a la comunidad",
+    "cond": {
+      "contains": "Contiene",
+      "amount": "Importe"
+    },
+    "match": {
+      "contains": "Contiene",
+      "starts_with": "Empieza por",
+      "ends_with": "Termina en",
+      "exact": "Exacta",
+      "regex": "Regex"
+    },
+    "fields": {
+      "keyword": "Palabras clave",
+      "keyword_placeholder": "Ej.: AMAZON, NÓMINA, GIMNASIO...",
+      "keyword_help": "La regla se aplicará a los movimientos cuyo concepto contenga este texto.",
+      "type": "Tipo",
+      "amount": "Importe",
+      "optional": "opcional",
+      "amount_min": "Mayor que",
+      "amount_max": "Menor que",
+      "amount_min_help": "Importe mínimo, en €",
+      "amount_max_help": "Importe máximo, en €",
+      "amount_note": "Déjalos vacíos para aplicar a cualquier importe. Se compara el importe en valor absoluto.",
+      "match_type": "Tipo de coincidencia",
+      "category_group": "Categoría",
+      "category": "Subcategoría",
+      "priority": "Prioridad",
+      "active": "Activa"
+    }
+  },
+  "summary": {
+    "total_expenses": "Total gastos",
+    "total_income": "Total ingresos",
+    "count": "{{count}} movimientos"
+  }
+}

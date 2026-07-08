@@ -1,0 +1,64 @@
+{
+  "title": "Cuentas",
+  "new_account": "Nueva cuenta",
+  "edit_account": "Editar cuenta",
+  "fields": {
+    "entity": "Entidad",
+    "entity_placeholder": "Elige una entidad…",
+    "type": "Tipo de cuenta",
+    "type_placeholder": "Selecciona el tipo…",
+    "alias": "Alias (opcional)",
+    "alias_placeholder": "Ej: Cuenta común, Renfe Mastercard…",
+    "opening_balance": "Saldo inicial (opcional)",
+    "opening_balance_placeholder": "Ej: 1250,00",
+    "opening_balance_hint": "Saldo de la cuenta antes de su primer movimiento. El saldo actual se calcula como saldo inicial + suma de los movimientos.",
+    "color": "Color",
+    "logo": "Logo (opcional)",
+    "logo_placeholder": "Pega una URL de imagen…",
+    "logo_upload": "Subir",
+    "logo_remove": "Quitar",
+    "logo_hint": "PNG con fondo transparente, SVG o JPG (máx. 1 MB). También puedes pegar una URL.",
+    "logo_invalid_type": "El archivo debe ser una imagen.",
+    "logo_too_large": "La imagen supera 1 MB.",
+    "logo_upload_failed": "No se pudo subir el logo."
+  },
+  "debit_warning": {
+    "title": "Las tarjetas de débito no se crean como cuenta",
+    "body": "Los movimientos de una tarjeta de débito ya aparecen en la cuenta corriente a la que está asociada. Si además la creases como cuenta propia, cada gasto se contaría dos veces y falsearía tus totales y gráficas. Por eso no permitimos crear tarjetas de débito: sus movimientos se importan dentro de la cuenta corriente.",
+    "ok": "Entendido"
+  },
+  "groups": {
+    "all": "Todas",
+    "checking": "Cuentas corrientes",
+    "savings": "Cuentas de ahorro",
+    "cards": "Tarjetas",
+    "securities": "Cuentas de valores"
+  },
+  "add_in": {
+    "checking": "Añadir cuenta corriente",
+    "savings": "Añadir cuenta de ahorro",
+    "cards": "Añadir tarjeta",
+    "securities": "Añadir cuenta de valores"
+  },
+  "empty": {
+    "title": "Sin cuentas",
+    "description": "Añade tu primera cuenta o tarjeta para empezar a importar movimientos.",
+    "action": "Añadir cuenta"
+  },
+  "delete_dialog": {
+    "title": "Eliminar «{{name}}»",
+    "archive": "Eliminar la cuenta",
+    "archive_hint": "La cuenta deja de mostrarse en la app, pero sus movimientos se conservan y siguen contando en el Dashboard y las gráficas.",
+    "delete_all": "Eliminar la cuenta y sus movimientos",
+    "delete_all_hint": "Borra la cuenta junto con todos sus movimientos e importaciones de forma permanente.",
+    "confirm_title": "¿Eliminar «{{name}}» y todos sus movimientos?",
+    "confirm_warning": "Se borrarán de forma permanente todos los movimientos de esta cuenta. Esto afectará a las gráficas, los saldos y los totales del Dashboard, y a otra información útil basada en tu histórico. Esta acción no se puede deshacer.",
+    "confirm_action": "Sí, eliminar todo",
+    "archived_toast": "Cuenta archivada",
+    "deleted_toast": "Cuenta y movimientos eliminados"
+  },
+  "balance": "Saldo estimado",
+  "transactions_count": "{{count}} movimientos",
+  "last_import": "Última importación: {{date}}",
+  "no_imports": "Sin importaciones"
+}

@@ -1,0 +1,46 @@
+{
+  "title": "Historial de subidas",
+  "processing_note": "Aplicando los cambios y recalculando los saldos. Esto puede tardar un momento; no cierres esta ventana.",
+  "filters": {
+    "all_entities": "Todas las entidades",
+    "all_types": "Todos los tipos",
+    "all_aliases": "Todos los alias",
+    "date_from": "Desde",
+    "date_to": "Hasta",
+    "clear": "Limpiar filtros"
+  },
+  "columns": {
+    "date": "Fecha",
+    "time": "Hora",
+    "type": "Tipo de cuenta",
+    "entity": "Entidad",
+    "period_from": "Desde",
+    "period_to": "Hasta",
+    "movements": "Nº movimientos",
+    "actions": "Acciones"
+  },
+  "empty": {
+    "none": "Todavía no has subido ningún extracto.",
+    "no_results": "No hay subidas que coincidan con los filtros."
+  },
+  "reassign_dialog": {
+    "title": "Reasignar subida a otra cuenta",
+    "description": "Vas a mover esta subida de {{entity}} y sus {{count}} movimientos a otra cuenta. Úsalo si subiste el extracto a la cuenta equivocada.",
+    "target_label": "Cuenta destino",
+    "target_placeholder": "Selecciona una cuenta",
+    "no_targets": "No hay otras cuentas a las que reasignar.",
+    "confirm": "Reasignar",
+    "working": "Reasignando…",
+    "done_toast": "Subida reasignada",
+    "duplicate_error": "La cuenta destino ya contiene estos movimientos. No se ha movido nada."
+  },
+  "delete_dialog": {
+    "title": "Eliminar subida",
+    "warning": "Se eliminarán esta subida de {{entity}} y sus {{count}} movimientos. Los saldos de la cuenta se recalcularán.",
+    "confirm_title": "¿Seguro que quieres eliminarla?",
+    "confirm_warning": "Esta acción no se puede deshacer. Los movimientos importados en esta subida se borrarán definitivamente.",
+    "confirm_action": "Sí, eliminar",
+    "working": "Eliminando…",
+    "deleted_toast": "Subida eliminada"
+  }
+}
