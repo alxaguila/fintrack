@@ -1,16 +1,16 @@
-# Graph Report - alx_FinTrack  (2026-07-09)
+# Graph Report - alx_FinTrack  (2026-07-08)
 
 ## Corpus Check
-- 158 files · ~63,343 words
+- 150 files · ~61,027 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 614 nodes · 781 edges · 71 communities (56 shown, 15 thin omitted)
-- Extraction: 82% EXTRACTED · 18% INFERRED · 0% AMBIGUOUS · INFERRED: 141 edges (avg confidence: 0.79)
+- 600 nodes · 769 edges · 68 communities (53 shown, 15 thin omitted)
+- Extraction: 82% EXTRACTED · 18% INFERRED · 0% AMBIGUOUS · INFERRED: 139 edges (avg confidence: 0.79)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `f4acb271`
+- Built from commit: `38637605`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -66,8 +66,6 @@
 - [[_COMMUNITY_Settings.tsx|Settings.tsx]]
 - [[_COMMUNITY_index.ts|index.ts]]
 - [[_COMMUNITY_PopoverContent|PopoverContent]]
-- [[_COMMUNITY_Security.tsx|Security.tsx]]
-- [[_COMMUNITY_Informe de auditoría RLS — Fase 0 (Arquitectura de administración)|Informe de auditoría RLS — Fase 0 (Arquitectura de administración)]]
 
 ## God Nodes (most connected - your core abstractions)
 1. `cn()` - 40 edges
@@ -96,7 +94,7 @@
 ## Import Cycles
 - None detected.
 
-## Communities (71 total, 15 thin omitted)
+## Communities (68 total, 15 thin omitted)
 
 ### Community 0 - "Transactions"
 Cohesion: 0.18
@@ -107,24 +105,24 @@ Cohesion: 0.04
 Nodes (44): dependencies, class-variance-authority, clsx, country-region-data, date-fns, @hookform/resolvers, i18next, i18next-browser-languagedetector (+36 more)
 
 ### Community 2 - "database.types.ts"
-Cohesion: 0.06
-Nodes (40): ACCOUNT_SECTIONS, ACCOUNT_TYPE_META, AccountFilter, AccountSection, FILTER_TYPES, applyKeywordRules(), matches(), ALWAYS_RULES (+32 more)
+Cohesion: 0.05
+Nodes (38): ACCOUNT_SECTIONS, ACCOUNT_TYPE_META, AccountFilter, AccountSection, FILTER_TYPES, AMOUNT_PAT, autoDetectColumns(), AutoMapResult (+30 more)
 
 ### Community 3 - "Sidebar.tsx"
-Cohesion: 0.08
-Nodes (20): AdminRoute(), AppShell(), LanguageSelector(), bottomItems, MobileBottomNav(), MobileTopBar(), ProfileAvatar(), ProfileSwitcher() (+12 more)
+Cohesion: 0.07
+Nodes (22): AppShell(), LanguageSelector(), bottomItems, MobileBottomNav(), MobileTopBar(), ProfileAvatar(), ProfileSwitcher(), importItem (+14 more)
 
 ### Community 4 - "Home.tsx"
 Cohesion: 0.10
-Nodes (23): AccountBalanceInfo, BalanceHistoryPoint, calendarDaysSince(), round2(), SpendingHistoryPoint, useAccountBalanceHistory(), useAccountBalances(), useCardSpending30Days() (+15 more)
+Nodes (22): AccountBalanceInfo, BalanceHistoryPoint, calendarDaysSince(), round2(), SpendingHistoryPoint, useAccountBalanceHistory(), useAccountBalances(), useCardSpending30Days() (+14 more)
 
 ### Community 5 - "Dashboard"
 Cohesion: 0.27
 Nodes (8): CategoryCombobox(), CategoryComboboxProps, normalize(), categoryIcon(), categoryLabel(), iconCache, LUCIDE, toPascalCase()
 
 ### Community 6 - "useImport.ts"
-Cohesion: 0.09
-Nodes (28): DATE_PARSE_FORMATS, ensureOpeningBalance(), fetchAllAccountMovements(), ManualBalance, normalizeTime(), parseAmount(), ParsedRow, reconcileProfileTransfers() (+20 more)
+Cohesion: 0.12
+Nodes (20): DATE_PARSE_FORMATS, ensureOpeningBalance(), fetchAllAccountMovements(), ManualBalance, normalizeTime(), parseAmount(), parseDate(), ParsedRow (+12 more)
 
 ### Community 7 - "validation.ts"
 Cohesion: 0.09
@@ -175,8 +173,8 @@ Cohesion: 0.18
 Nodes (11): devDependencies, autoprefixer, postcss, tailwindcss, @types/node, @types/papaparse, @types/react, @types/react-dom (+3 more)
 
 ### Community 19 - "transferMatch.ts"
-Cohesion: 0.16
-Nodes (13): AMOUNT_PAT, autoDetectColumns(), AutoMapResult, BALANCE_PAT, CONCEPT_PAT, CREDIT_PAT, DATE_PAT, DEBIT_PAT (+5 more)
+Cohesion: 0.38
+Nodes (9): daysBetween(), findTransferPairs(), haveSharedToken(), isTransferConcept(), normalizeConcept(), STOPWORDS, TRANSFER_ROOTS, transferTokens() (+1 more)
 
 ### Community 20 - "dropdown-menu.tsx"
 Cohesion: 0.22
@@ -203,8 +201,8 @@ Cohesion: 0.43
 Nodes (6): dispatch(), listeners, memToasts, toast(), ToastMessage, useToast()
 
 ### Community 26 - "useCommunityRules.ts"
-Cohesion: 0.43
-Nodes (6): deleteCommunityVote(), ruleCommunityKey(), RuleLike, syncCommunityVoteOnEdit(), upsertCommunityVote(), useCommunityRuleMap()
+Cohesion: 0.14
+Nodes (21): deleteCommunityVote(), ruleCommunityKey(), RuleLike, syncCommunityVoteOnEdit(), upsertCommunityVote(), useCommunityRuleMap(), applyKeywordRules(), matches() (+13 more)
 
 ### Community 27 - "Auth.tsx"
 Cohesion: 0.29
@@ -242,16 +240,8 @@ Nodes (3): ProfileContext, ProfileContextValue, useProfile()
 Cohesion: 0.40
 Nodes (4): EMPTY_FORM, parseAmount(), RuleForm, RuleType
 
-### Community 68 - "Security.tsx"
-Cohesion: 0.27
-Nodes (4): TYPES, ChangePasswordData, changePasswordSchema, SettingsHeader()
-
-### Community 69 - "Informe de auditoría RLS — Fase 0 (Arquitectura de administración)"
-Cohesion: 0.25
-Nodes (7): Agujeros cerrados, Auditoría tabla por tabla, Clasificación de tablas, Criterio de aceptación (prueba de fuego), Informe de auditoría RLS — Fase 0 (Arquitectura de administración), Modelo de roles, Pasos manuales pendientes (owner)
-
 ## Knowledge Gaps
-- **248 isolated node(s):** `root`, `$schema`, `UserPromptSubmit`, `name`, `private` (+243 more)
+- **242 isolated node(s):** `root`, `$schema`, `UserPromptSubmit`, `name`, `private` (+237 more)
   These have ≤1 connection - possible missing edges or undocumented components.
 - **15 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
@@ -259,11 +249,11 @@ Nodes (7): Agujeros cerrados, Auditoría tabla por tabla, Clasificación de tabl
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `cn()` connect `cn` to `date-picker-field.tsx`, `Settings.tsx`, `Sidebar.tsx`, `PopoverContent`, `Dashboard`, `Separator`, `Skeleton`, `TooltipContent`, `AccountForm.tsx`, `geo.ts`, `toast.tsx`, `utils.ts`, `dropdown-menu.tsx`, `PasswordStrengthBar`, `Auth.tsx`, `badge.tsx`, `tabs.tsx`?**
-  _High betweenness centrality (0.191) - this node is a cross-community bridge._
+  _High betweenness centrality (0.197) - this node is a cross-community bridge._
 - **Why does `useProfile()` connect `useProfile` to `Sidebar.tsx`, `Home.tsx`, `useTransactions.ts`, `AccountForm.tsx`, `History`, `automap.ts`, `ClassificationRules`, `Transactions`?**
-  _High betweenness centrality (0.127) - this node is a cross-community bridge._
+  _High betweenness centrality (0.128) - this node is a cross-community bridge._
 - **Why does `ImportInner()` connect `automap.ts` to `Transactions`, `ClassificationRules.tsx`, `useImport.ts`, `AccountForm.tsx`, `History`, `useCommunityRules.ts`, `ClassificationRules`, `useProfile`, `utils.ts`?**
-  _High betweenness centrality (0.095) - this node is a cross-community bridge._
+  _High betweenness centrality (0.098) - this node is a cross-community bridge._
 - **Are the 39 inferred relationships involving `cn()` (e.g. with `LanguageSelector()` and `MobileBottomNav()`) actually correct?**
   _`cn()` has 39 INFERRED edges - model-reasoned connections that need verification._
 - **Are the 14 inferred relationships involving `Transactions()` (e.g. with `useProfile()` and `useAccounts()`) actually correct?**
@@ -271,4 +261,4 @@ _Questions this graph is uniquely positioned to answer:_
 - **Are the 14 inferred relationships involving `ImportInner()` (e.g. with `useProfile()` and `useAccounts()`) actually correct?**
   _`ImportInner()` has 14 INFERRED edges - model-reasoned connections that need verification._
 - **What connects `root`, `$schema`, `UserPromptSubmit` to the rest of the system?**
-  _248 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _242 weakly-connected nodes found - possible documentation gaps or missing edges._

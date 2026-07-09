@@ -14,6 +14,8 @@ import Settings from '@/pages/Settings'
 import SettingsProfile from '@/pages/settings/Profile'
 import SettingsSecurity from '@/pages/settings/Security'
 import SettingsFeedback from '@/pages/settings/Feedback'
+import Admin from '@/pages/Admin'
+import { AdminRoute } from '@/components/auth/AdminRoute'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -39,6 +41,7 @@ export default function App() {
             <Route path="settings/profile" element={<SettingsProfile />} />
             <Route path="settings/security" element={<SettingsSecurity />} />
             <Route path="settings/feedback" element={<SettingsFeedback />} />
+            <Route path="admin" element={<AdminRoute><Admin /></AdminRoute>} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Route>
         </Routes>
