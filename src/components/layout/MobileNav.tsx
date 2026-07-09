@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react'
 import { NavLink, useLocation } from 'react-router-dom'
-import { Home, BarChart3, ArrowLeftRight, Wallet, FileClock, Upload, Settings, Sparkles, Menu, X } from 'lucide-react'
+import { Home, BarChart3, ArrowLeftRight, Wallet, FileClock, Upload, Settings, Shield, Sparkles, Menu, X } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { cn } from '@/lib/utils'
 import { APP_VERSION } from '@/lib/version'
+import { useIsAdmin } from '@/hooks/useIsAdmin'
 import { LanguageSelector } from './LanguageSelector'
 
 // Destinos principales: van en la barra inferior con scroll horizontal.
@@ -48,6 +49,7 @@ export function MobileTopBar() {
   const { t } = useTranslation('common')
   const [open, setOpen] = useState(false)
   const location = useLocation()
+  const { isAdmin } = useIsAdmin()
 
   // Cerrar el drawer al navegar.
   useEffect(() => { setOpen(false) }, [location.pathname])
@@ -126,6 +128,21 @@ export function MobileTopBar() {
                 <Settings className="h-4 w-4 shrink-0" />
                 {t('nav.settings')}
               </NavLink>
+
+              {isAdmin && (
+                <NavLink
+                  to="/admin"
+                  className={({ isActive }) =>
+                    cn(
+                      'flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors',
+                      isActive ? 'bg-indigo-600 text-white' : 'text-slate-400 hover:bg-slate-800 hover:text-white'
+                    )
+                  }
+                >
+                  <Shield className="h-4 w-4 shrink-0" />
+                  {t('nav.admin')}
+                </NavLink>
+              )}
             </div>
 
             <div className="border-t border-slate-700 p-3 space-y-1">

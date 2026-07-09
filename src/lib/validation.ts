@@ -175,6 +175,66 @@ const todayISO = () => new Date().toISOString().slice(0, 10)
  * Datos demográficos del onboarding. Todos obligatorios salvo `financial_goal`.
  * Los mensajes son claves i18n (`settings:personal.errors.*`).
  */
+// ------------------------------------------------------------
+// Backoffice /admin (migración 016)
+// ------------------------------------------------------------
+
+/** Tope de longitudes del backoffice (<= CHECK de BD donde aplique). */
+export const ADMIN_LIMITS = {
+  bankName: 80,
+  catSlug: 80,
+  catLabel: 120,
+  iconName: 60,
+} as const
+
+const CATEGORY_TYPES = ['gasto', 'ingreso', 'no_computable'] as const
+
+/** Slug de categoría/grupo: minúsculas, dígitos y guion bajo (clave i18n). */
+export const slugSchema = z
+  .string()
+  .trim()
+  .min(1, 'required')
+  .max(ADMIN_LIMITS.catSlug, 'too_long')
+  .regex(/^[a-z0-9_]+$/, 'invalid_slug')
+
+/** Nombre de icono lucide en kebab/snake-case (opcional). */
+export const iconNameSchema = z
+  .string()
+  .trim()
+  .max(ADMIN_LIMITS.iconName, 'too_long')
+  .regex(/^[a-z0-9-]*$/, 'invalid_icon')
+
+/** Formulario de entidad bancaria (admin). */
+export const bankEntityFormSchema = z.object({
+  name: z.string().trim().min(1, 'required').max(ADMIN_LIMITS.bankName, 'too_long'),
+  logo_url: safeUrlSchema,
+  sort_order: z.number().int('invalid').min(0, 'out_of_range').max(32767, 'out_of_range'),
+})
+
+const labelEsEn = {
+  label_es: z.string().trim().min(1, 'required').max(ADMIN_LIMITS.catLabel, 'too_long'),
+  label_en: z.string().trim().min(1, 'required').max(ADMIN_LIMITS.catLabel, 'too_long'),
+}
+
+/** Formulario de grupo de categorías (admin). */
+export const categoryGroupFormSchema = z.object({
+  slug: slugSchema,
+  type: z.enum(CATEGORY_TYPES, { errorMap: () => ({ message: 'required' }) }),
+  icon: iconNameSchema,
+  color: z.union([hexColorSchema, z.literal('')]),
+  sort_order: z.number().int('invalid').min(0, 'out_of_range').max(32767, 'out_of_range'),
+  ...labelEsEn,
+})
+
+/** Formulario de subcategoría (admin). */
+export const categoryFormSchema = z.object({
+  slug: slugSchema,
+  group_id: z.string().uuid('required'),
+  icon: iconNameSchema,
+  sort_order: z.number().int('invalid').min(0, 'out_of_range').max(32767, 'out_of_range'),
+  ...labelEsEn,
+})
+
 export const personalDataSchema = z.object({
   full_name: z.string().trim().min(1, 'required').max(PERSONAL_LIMITS.fullName, 'too_long'),
   gender: z.enum(GENDERS, { errorMap: () => ({ message: 'required' }) }),

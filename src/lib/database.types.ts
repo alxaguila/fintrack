@@ -83,6 +83,16 @@ export type Category = {
   group?: CategoryGroup
 }
 
+// Traducción (ES/EN) de un grupo o subcategoría, editable por admin en runtime
+// (migración 016). Se fusiona sobre el bundle categories.json en el cliente.
+export type CategoryTranslation = {
+  key_type: 'group' | 'category'
+  slug: string
+  lang: string
+  label: string
+  updated_at: string
+}
+
 export type BankFormat = {
   id: string
   user_id: string
@@ -199,7 +209,8 @@ export type Database = {
       accounts: { Row: Account; Insert: Omit<Account, 'id' | 'created_at' | 'updated_at' | 'logo_url' | 'opening_balance'> & { logo_url?: string | null; opening_balance?: number | null }; Update: Partial<Account>; Relationships: [] }
       bank_entities: { Row: BankEntity; Insert: Omit<BankEntity, 'id' | 'created_at'>; Update: Partial<BankEntity>; Relationships: [] }
       category_groups: { Row: CategoryGroup; Insert: Omit<CategoryGroup, 'id'>; Update: Partial<CategoryGroup>; Relationships: [] }
-      categories: { Row: Category; Insert: Omit<Category, 'id'>; Update: Partial<Category>; Relationships: [] }
+      categories: { Row: Category; Insert: Omit<Category, 'id' | 'group'>; Update: Partial<Omit<Category, 'group'>>; Relationships: [] }
+      category_translations: { Row: CategoryTranslation; Insert: Omit<CategoryTranslation, 'updated_at'> & { updated_at?: string }; Update: Partial<CategoryTranslation>; Relationships: [] }
       bank_formats: { Row: BankFormat; Insert: Omit<BankFormat, 'id' | 'created_at' | 'updated_at'>; Update: Partial<BankFormat>; Relationships: [] }
       import_batches: { Row: ImportBatch; Insert: Omit<ImportBatch, 'id' | 'imported_at' | 'file_hash'> & { file_hash?: string | null }; Update: Partial<ImportBatch>; Relationships: [] }
       transactions: { Row: Transaction; Insert: Omit<Transaction, 'id' | 'created_at' | 'updated_at'>; Update: Partial<Transaction>; Relationships: [] }

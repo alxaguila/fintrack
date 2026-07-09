@@ -1,8 +1,9 @@
 import { NavLink, useLocation } from 'react-router-dom'
-import { Home, BarChart3, ArrowLeftRight, Upload, Wallet, Settings, Tags, Sparkles, FileClock } from 'lucide-react'
+import { Home, BarChart3, ArrowLeftRight, Upload, Wallet, Settings, Tags, Sparkles, FileClock, Shield } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { cn } from '@/lib/utils'
 import { APP_VERSION } from '@/lib/version'
+import { useIsAdmin } from '@/hooks/useIsAdmin'
 import { LanguageSelector } from './LanguageSelector'
 
 const navItems = [
@@ -20,6 +21,7 @@ export function Sidebar() {
   const { t } = useTranslation('common')
   const location = useLocation()
   const onTransactions = location.pathname.startsWith('/transactions')
+  const { isAdmin } = useIsAdmin()
 
   return (
     <aside className="hidden h-screen w-60 flex-col bg-slate-900 text-slate-100 md:flex">
@@ -105,6 +107,24 @@ export function Sidebar() {
           <settingsItem.icon className="h-4 w-4 shrink-0" />
           {t(settingsItem.label)}
         </NavLink>
+
+        {/* Panel de administración — solo visible para admins. */}
+        {isAdmin && (
+          <NavLink
+            to="/admin"
+            className={({ isActive }) =>
+              cn(
+                'flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors',
+                isActive
+                  ? 'bg-indigo-600 text-white'
+                  : 'text-slate-400 hover:bg-slate-800 hover:text-white'
+              )
+            }
+          >
+            <Shield className="h-4 w-4 shrink-0" />
+            {t('nav.admin')}
+          </NavLink>
+        )}
       </div>
 
       {/* Footer */}

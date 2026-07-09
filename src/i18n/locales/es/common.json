@@ -9,6 +9,7 @@
     "accounts": "Cuentas",
     "history": "Historial",
     "settings": "Ajustes",
+    "admin": "Administración",
     "menu": "Menú",
     "short": {
       "home": "Inicio",
@@ -26,6 +27,7 @@
     "delete": "Eliminar",
     "edit": "Editar",
     "add": "Añadir",
+    "remove": "Quitar",
     "back": "Volver",
     "close": "Cerrar",
     "search": "Buscar",
@@ -55,7 +57,15 @@
     "load_failed": "Error al cargar los datos.",
     "save_failed": "Error al guardar los cambios.",
     "delete_failed": "Error al eliminar.",
-    "invalid_input": "Revisa los campos: hay datos no válidos o demasiado largos."
+    "invalid_input": "Revisa los campos: hay datos no válidos o demasiado largos.",
+    "required": "Obligatorio",
+    "too_long": "Demasiado largo",
+    "invalid": "Valor no válido",
+    "invalid_slug": "Solo minúsculas, números y guion bajo",
+    "invalid_icon": "Nombre de icono no válido (kebab-case)",
+    "invalid_color": "Color no válido",
+    "invalid_url": "URL no válida",
+    "out_of_range": "Fuera de rango"
   },
   "confirm_delete": {
     "title": "¿Eliminar?",

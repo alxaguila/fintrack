@@ -9,6 +9,7 @@
     "accounts": "Accounts",
     "history": "History",
     "settings": "Settings",
+    "admin": "Administration",
     "menu": "Menu",
     "short": {
       "home": "Home",
@@ -26,6 +27,7 @@
     "delete": "Delete",
     "edit": "Edit",
     "add": "Add",
+    "remove": "Remove",
     "back": "Back",
     "close": "Close",
     "search": "Search",
@@ -55,7 +57,15 @@
     "load_failed": "Failed to load data.",
     "save_failed": "Failed to save changes.",
     "delete_failed": "Failed to delete.",
-    "invalid_input": "Please check the fields: some values are invalid or too long."
+    "invalid_input": "Please check the fields: some values are invalid or too long.",
+    "required": "Required",
+    "too_long": "Too long",
+    "invalid": "Invalid value",
+    "invalid_slug": "Lowercase letters, numbers and underscore only",
+    "invalid_icon": "Invalid icon name (kebab-case)",
+    "invalid_color": "Invalid color",
+    "invalid_url": "Invalid URL",
+    "out_of_range": "Out of range"
   },
   "confirm_delete": {
     "title": "Are you sure?",

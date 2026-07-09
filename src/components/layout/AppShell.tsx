@@ -4,6 +4,7 @@ import { supabase } from '@/lib/supabase'
 import i18n from '@/i18n'
 import { useProfiles, useCreateProfile } from '@/hooks/useProfiles'
 import { useUserSettings } from '@/hooks/useUserSettings'
+import { useMergeCategoryTranslations } from '@/hooks/useCategoryTranslations'
 import { ProfileProvider } from '@/contexts/ProfileContext'
 import { Sidebar } from './Sidebar'
 import { MobileTopBar, MobileBottomNav } from './MobileNav'
@@ -17,6 +18,9 @@ export function AppShell() {
   const { data: settings, isLoading: settingsLoading } = useUserSettings()
   const createProfile = useCreateProfile()
   const creatingRef = useRef(false)
+
+  // Fusiona en i18n las traducciones de categorías definidas por el admin en BD.
+  useMergeCategoryTranslations()
 
   // Aplica el idioma preferido guardado en BD la primera vez en este navegador
   // (si ya hay una elección local explícita, esa manda y no la pisamos).

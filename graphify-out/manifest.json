@@ -30,8 +30,8 @@
     "semantic_hash": ""
   },
   "src/App.tsx": {
-    "mtime": 1783590334.6274016,
-    "ast_hash": "a1566469547475d36abd6c99edfc4af1",
+    "mtime": 1783593004.773199,
+    "ast_hash": "3b4b0668d6cd67b084d91abb89b36881",
     "semantic_hash": ""
   },
   "src/components/PasswordStrengthBar.tsx": {
@@ -85,8 +85,8 @@
     "semantic_hash": ""
   },
   "src/components/layout/AppShell.tsx": {
-    "mtime": 1783526970.9380858,
-    "ast_hash": "45c283f9ed152b8a3ee88e382cbefcae",
+    "mtime": 1783592717.7480042,
+    "ast_hash": "ce4e9458ff76fff3d0bb01f280a2c433",
     "semantic_hash": ""
   },
   "src/components/layout/LanguageSelector.tsx": {
@@ -95,8 +95,8 @@
     "semantic_hash": ""
   },
   "src/components/layout/MobileNav.tsx": {
-    "mtime": 1783532296.6052265,
-    "ast_hash": "e14ca8ddd0ed411a488baea72c8b6fe3",
+    "mtime": 1783593126.9221144,
+    "ast_hash": "0aca529d14531347686466c19f6bce3f",
     "semantic_hash": ""
   },
   "src/components/layout/ProfileSwitcher.tsx": {
@@ -105,8 +105,8 @@
     "semantic_hash": ""
   },
   "src/components/layout/Sidebar.tsx": {
-    "mtime": 1783532284.1946392,
-    "ast_hash": "ec39152aac59607e23e0b3f5d2a279fc",
+    "mtime": 1783593023.943189,
+    "ast_hash": "5082d6da96a18df08d24b584717d7b96",
     "semantic_hash": ""
   },
   "src/components/settings/BankFormatForm.tsx": {
@@ -335,8 +335,8 @@
     "semantic_hash": ""
   },
   "src/i18n/locales/en/common.json": {
-    "mtime": 1783526915.846714,
-    "ast_hash": "deabcd3f32e28be6418b89f173c81885",
+    "mtime": 1783593071.4120414,
+    "ast_hash": "ab45882f10e7a2be7f8bc736a89db2f0",
     "semantic_hash": ""
   },
   "src/i18n/locales/en/dashboard.json": {
@@ -385,8 +385,8 @@
     "semantic_hash": ""
   },
   "src/i18n/locales/es/common.json": {
-    "mtime": 1783526913.8223884,
-    "ast_hash": "57e2e9526214e70cf75454a85744088a",
+    "mtime": 1783593053.7698991,
+    "ast_hash": "5ad398fa49112ed0b70d3d01fffeb1a2",
     "semantic_hash": ""
   },
   "src/i18n/locales/es/dashboard.json": {
@@ -460,8 +460,8 @@
     "semantic_hash": ""
   },
   "src/lib/database.types.ts": {
-    "mtime": 1783590265.1413085,
-    "ast_hash": "1cbab563d5f9570d0e7f8c79d2c62035",
+    "mtime": 1783592675.4154925,
+    "ast_hash": "432a2e7235c53ec787b3618dfde9cb4a",
     "semantic_hash": ""
   },
   "src/lib/dedup.ts": {
@@ -520,13 +520,13 @@
     "semantic_hash": ""
   },
   "src/lib/validation.ts": {
-    "mtime": 1783359178.5509827,
-    "ast_hash": "7d6c5af4150751b98c145974d499d644",
+    "mtime": 1783592755.4417057,
+    "ast_hash": "49c0c317a657c4111cd40dbacf478ed0",
     "semantic_hash": ""
   },
   "src/lib/version.ts": {
-    "mtime": 1783590169.827047,
-    "ast_hash": "be99c540fdbd3336cca0cb71add76242",
+    "mtime": 1783592634.5765445,
+    "ast_hash": "a3be1574972c1ff0c561e238c7841636",
     "semantic_hash": ""
   },
   "src/main.tsx": {
@@ -760,38 +760,78 @@
     "semantic_hash": ""
   },
   "src/hooks/useIsAdmin.ts": {
-    "mtime": 1783590272.2419746,
-    "ast_hash": "cac4b7c25e4bb45b8abdac59ceaee241",
+    "mtime": 1783590528.574011,
+    "ast_hash": "e2f13a78b23d6c2a45f4a0c09b4dd7e9",
     "semantic_hash": ""
   },
   "src/i18n/locales/en/admin.json": {
-    "mtime": 1783590305.231296,
-    "ast_hash": "9bb92d84bcf5665b88210c2b2d088f9a",
+    "mtime": 1783593105.0949707,
+    "ast_hash": "cd6a7f9487b5f39ab78a65b62b5538ca",
     "semantic_hash": ""
   },
   "src/i18n/locales/es/admin.json": {
-    "mtime": 1783590304.0338025,
-    "ast_hash": "84a8714978f29a841f2eea707091f0da",
+    "mtime": 1783593097.2876153,
+    "ast_hash": "b568edd0c475a01493a6ba35f97e54e5",
     "semantic_hash": ""
   },
   "src/pages/Admin.tsx": {
-    "mtime": 1783590294.243636,
-    "ast_hash": "5f868bfcc4bfc7e0a9cf7770ebbb58cb",
-    "semantic_hash": ""
-  },
-  "supabase/migrations/014_admin_role.sql": {
-    "mtime": 1783590203.28046,
-    "ast_hash": "5a8267085d39444b515bd6b4bfaf1b55",
-    "semantic_hash": ""
-  },
-  "supabase/migrations/014_admin_role_rollback.sql": {
-    "mtime": 1783590215.4890556,
-    "ast_hash": "71bfae7382ad79d662bbba6cdec877d1",
+    "mtime": 1783592839.582318,
+    "ast_hash": "5a837e2a1b2db4d0ce9674785b4d7ad4",
     "semantic_hash": ""
   },
   "supabase/migrations/AUDIT_RLS_fase0.md": {
-    "mtime": 1783590246.3740344,
-    "ast_hash": "5e8d40c47854e5bfd4056a894749e11c",
+    "mtime": 1783590510.056681,
+    "ast_hash": "7e650c73914db09bb7f0a56dd4fb138c",
+    "semantic_hash": ""
+  },
+  "src/hooks/useAdminBankEntities.ts": {
+    "mtime": 1783592768.8598764,
+    "ast_hash": "b560c52b1f2d2a91fe541b078522f9bb",
+    "semantic_hash": ""
+  },
+  "src/hooks/useAdminCategories.ts": {
+    "mtime": 1783592790.2333765,
+    "ast_hash": "3344be8b315f9a539a14d5db55b447a6",
+    "semantic_hash": ""
+  },
+  "src/hooks/useCategoryTranslations.ts": {
+    "mtime": 1783593163.7320178,
+    "ast_hash": "34d6207015666b5e0d8f11cf826853ec",
+    "semantic_hash": ""
+  },
+  "src/pages/admin/AdminHeader.tsx": {
+    "mtime": 1783592825.0623667,
+    "ast_hash": "096554df817e3d8f5d8d064746722455",
+    "semantic_hash": ""
+  },
+  "src/pages/admin/Bancos.tsx": {
+    "mtime": 1783593084.0182283,
+    "ast_hash": "a3f4d9a447916046f13cdb36f051b4a1",
+    "semantic_hash": ""
+  },
+  "src/pages/admin/Categorias.tsx": {
+    "mtime": 1783592990.2891204,
+    "ast_hash": "8802e3beb8bce2a8b855f753fb2f51fa",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/015_admin_role.sql": {
+    "mtime": 1783590498.4381769,
+    "ast_hash": "1f704c96b3840b7c2697197f043f9bab",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/015_admin_role_rollback.sql": {
+    "mtime": 1783590501.0849748,
+    "ast_hash": "2b3fb700bae37730f4aa215cf18d9e11",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/016_admin_backoffice.sql": {
+    "mtime": 1783592656.5965593,
+    "ast_hash": "51bd550ef2c2317ca1fab5abade7b758",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/016_admin_backoffice_rollback.sql": {
+    "mtime": 1783592661.2817912,
+    "ast_hash": "3bc0406dfb386c96544147a32860a025",
     "semantic_hash": ""
   }
 }
