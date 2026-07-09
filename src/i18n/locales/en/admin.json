@@ -61,5 +61,41 @@
     "pick_group": "Select a group",
     "delete_title": "Delete?",
     "delete_body": "“{{name}}” will be deleted. This action cannot be undone."
+  },
+  "users": {
+    "title": "Users",
+    "search": "Search by email or name…",
+    "empty": "No users.",
+    "joined": "Joined {{date}}",
+    "joined_label": "Joined",
+    "tx_count": "{{count}} txns",
+    "pending": "Onboarding pending",
+    "country": "Country",
+    "employment": "Employment",
+    "profiles": "Profiles",
+    "accounts": "Accounts",
+    "movements": "Transactions",
+    "masked_note": "Only aggregated data is shown. Individual concepts and amounts are never accessed.",
+    "monthly": "Activity by month",
+    "by_category": "Breakdown by category",
+    "uncategorized": "Uncategorized",
+    "no_activity": "No recorded activity."
+  },
+  "stats": {
+    "title": "Statistics",
+    "users": "Users",
+    "onboarding": "Onboarding",
+    "onboarding_sub": "{{done}} of {{total}} completed",
+    "admins": "Admins",
+    "profiles": "Profiles",
+    "accounts": "Accounts",
+    "movements": "Transactions",
+    "imported": "Imported",
+    "manual": "Manual",
+    "avg_tx": "Txns per user",
+    "signups": "Signups by month",
+    "by_country": "By country",
+    "by_employment": "By employment",
+    "by_goal": "By goal"
   }
 }

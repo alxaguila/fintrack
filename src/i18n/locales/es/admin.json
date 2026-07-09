@@ -61,5 +61,41 @@
     "pick_group": "Selecciona un grupo",
     "delete_title": "¿Eliminar?",
     "delete_body": "Se eliminará «{{name}}». Esta acción no se puede deshacer."
+  },
+  "users": {
+    "title": "Usuarios",
+    "search": "Buscar por email o nombre…",
+    "empty": "No hay usuarios.",
+    "joined": "Alta {{date}}",
+    "joined_label": "Alta",
+    "tx_count": "{{count}} mov.",
+    "pending": "Onboarding pendiente",
+    "country": "País",
+    "employment": "Situación laboral",
+    "profiles": "Perfiles",
+    "accounts": "Cuentas",
+    "movements": "Movimientos",
+    "masked_note": "Se muestran solo datos agregados. No se accede a conceptos ni importes individuales.",
+    "monthly": "Actividad por mes",
+    "by_category": "Desglose por categoría",
+    "uncategorized": "Sin categoría",
+    "no_activity": "Sin actividad registrada."
+  },
+  "stats": {
+    "title": "Estadísticas",
+    "users": "Usuarios",
+    "onboarding": "Onboarding",
+    "onboarding_sub": "{{done}} de {{total}} completado",
+    "admins": "Administradores",
+    "profiles": "Perfiles",
+    "accounts": "Cuentas",
+    "movements": "Movimientos",
+    "imported": "Importados",
+    "manual": "Manuales",
+    "avg_tx": "Mov. por usuario",
+    "signups": "Altas por mes",
+    "by_country": "Por país",
+    "by_employment": "Por situación laboral",
+    "by_goal": "Por objetivo"
   }
 }

@@ -1,0 +1,123 @@
+import { useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
+import {
+  ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid,
+} from 'recharts'
+import { useAdminStats } from '@/hooks/useAdminAnalytics'
+import type { AdminDemographicRow } from '@/lib/database.types'
+import { AdminHeader } from './AdminHeader'
+
+export default function Estadisticas() {
+  const { t } = useTranslation('admin')
+  const { t: tc } = useTranslation('common')
+  const { data, isLoading } = useAdminStats()
+  const ov = data?.overview
+
+  const pctOnboarding = ov && ov.total_users > 0 ? Math.round((ov.onboarded_users / ov.total_users) * 100) : 0
+  const avgTx = ov && ov.total_users > 0 ? Math.round(ov.total_transactions / ov.total_users) : 0
+
+  const signups = useMemo(
+    () => (data?.signups ?? []).map((s) => ({ month: s.month.slice(0, 7), cnt: s.cnt })),
+    [data],
+  )
+
+  const demoByDim = useMemo(() => groupDemographics(data?.demographics ?? []), [data])
+
+  return (
+    <div className="mx-auto max-w-4xl p-6 space-y-6">
+      <AdminHeader title={t('stats.title')} />
+
+      {isLoading || !ov ? (
+        <p className="text-sm text-slate-500">{tc('actions.loading')}</p>
+      ) : (
+        <>
+          {/* KPIs */}
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+            <Kpi label={t('stats.users')} value={ov.total_users} />
+            <Kpi label={t('stats.onboarding')} value={`${pctOnboarding}%`} sub={t('stats.onboarding_sub', { done: ov.onboarded_users, total: ov.total_users })} />
+            <Kpi label={t('stats.admins')} value={ov.admin_users} />
+            <Kpi label={t('stats.profiles')} value={ov.total_profiles} />
+            <Kpi label={t('stats.accounts')} value={ov.total_accounts} />
+            <Kpi label={t('stats.movements')} value={ov.total_transactions} />
+            <Kpi label={t('stats.imported')} value={ov.imported_transactions} />
+            <Kpi label={t('stats.manual')} value={ov.manual_transactions} />
+            <Kpi label={t('stats.avg_tx')} value={avgTx} />
+          </div>
+
+          {/* Altas por mes */}
+          <section className="space-y-3 rounded-2xl border border-slate-200 bg-white p-4">
+            <h2 className="text-[15px] font-bold">{t('stats.signups')}</h2>
+            {signups.length === 0 ? (
+              <p className="text-sm text-slate-500">{tc('empty_state.no_data')}</p>
+            ) : (
+              <div className="h-64 w-full">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={signups} margin={{ top: 8, right: 8, left: -16, bottom: 0 }}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" vertical={false} />
+                    <XAxis dataKey="month" tick={{ fontSize: 11, fill: '#64748b' }} tickLine={false} axisLine={false} />
+                    <YAxis allowDecimals={false} tick={{ fontSize: 11, fill: '#64748b' }} tickLine={false} axisLine={false} />
+                    <Tooltip cursor={{ fill: '#14B8A611' }} contentStyle={{ borderRadius: 12, border: '1px solid #e2e8f0', fontSize: 12 }} />
+                    <Bar dataKey="cnt" name={t('stats.signups')} fill="#14B8A6" radius={[6, 6, 0, 0]} />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            )}
+          </section>
+
+          {/* Demografía */}
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+            <DemoBlock title={t('stats.by_country')} rows={demoByDim.country} />
+            <DemoBlock title={t('stats.by_employment')} rows={demoByDim.employment} />
+            <DemoBlock title={t('stats.by_goal')} rows={demoByDim.goal} />
+          </div>
+        </>
+      )}
+    </div>
+  )
+}
+
+function Kpi({ label, value, sub }: { label: string; value: string | number; sub?: string }) {
+  return (
+    <div className="rounded-2xl border border-slate-200 bg-white p-4">
+      <p className="text-xs text-slate-400">{label}</p>
+      <p className="mt-1 text-2xl font-extrabold tracking-tight tabular-nums">{value}</p>
+      {sub && <p className="mt-0.5 text-xs text-slate-400">{sub}</p>}
+    </div>
+  )
+}
+
+function DemoBlock({ title, rows }: { title: string; rows: { bucket: string; cnt: number }[] }) {
+  const max = Math.max(1, ...rows.map((r) => r.cnt))
+  return (
+    <section className="space-y-2 rounded-2xl border border-slate-200 bg-white p-4">
+      <h2 className="text-[15px] font-bold">{title}</h2>
+      {rows.length === 0 ? (
+        <p className="text-sm text-slate-500">—</p>
+      ) : (
+        <div className="space-y-1.5">
+          {rows.map((r) => (
+            <div key={r.bucket} className="flex items-center gap-2">
+              <span className="w-20 shrink-0 truncate text-xs text-slate-500">{r.bucket}</span>
+              <div className="h-3 flex-1 overflow-hidden rounded-full bg-slate-100">
+                <div className="h-full rounded-full bg-[#CB6391]" style={{ width: `${(r.cnt / max) * 100}%` }} />
+              </div>
+              <span className="w-8 shrink-0 text-right text-xs tabular-nums text-slate-500">{r.cnt}</span>
+            </div>
+          ))}
+        </div>
+      )}
+    </section>
+  )
+}
+
+function groupDemographics(rows: AdminDemographicRow[]) {
+  const out: Record<'country' | 'employment' | 'goal', { bucket: string; cnt: number }[]> = {
+    country: [], employment: [], goal: [],
+  }
+  for (const r of rows) {
+    if (r.dimension === 'country') out.country.push({ bucket: r.bucket, cnt: r.cnt })
+    else if (r.dimension === 'employment') out.employment.push({ bucket: r.bucket, cnt: r.cnt })
+    else if (r.dimension === 'goal') out.goal.push({ bucket: r.bucket, cnt: r.cnt })
+  }
+  return out
+}

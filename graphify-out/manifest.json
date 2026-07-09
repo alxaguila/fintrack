@@ -30,8 +30,8 @@
     "semantic_hash": ""
   },
   "src/App.tsx": {
-    "mtime": 1783593004.773199,
-    "ast_hash": "3b4b0668d6cd67b084d91abb89b36881",
+    "mtime": 1783596285.062024,
+    "ast_hash": "19f399e99c58e2f58f88514d635fc1cf",
     "semantic_hash": ""
   },
   "src/components/PasswordStrengthBar.tsx": {
@@ -460,8 +460,8 @@
     "semantic_hash": ""
   },
   "src/lib/database.types.ts": {
-    "mtime": 1783592675.4154925,
-    "ast_hash": "432a2e7235c53ec787b3618dfde9cb4a",
+    "mtime": 1783596156.0358005,
+    "ast_hash": "a237aa526485b739c0b91344f697d4fa",
     "semantic_hash": ""
   },
   "src/lib/dedup.ts": {
@@ -525,8 +525,8 @@
     "semantic_hash": ""
   },
   "src/lib/version.ts": {
-    "mtime": 1783592634.5765445,
-    "ast_hash": "a3be1574972c1ff0c561e238c7841636",
+    "mtime": 1783596076.517095,
+    "ast_hash": "13527ecab6d49c2ddf199fb565e3aa62",
     "semantic_hash": ""
   },
   "src/main.tsx": {
@@ -765,18 +765,18 @@
     "semantic_hash": ""
   },
   "src/i18n/locales/en/admin.json": {
-    "mtime": 1783593105.0949707,
-    "ast_hash": "cd6a7f9487b5f39ab78a65b62b5538ca",
+    "mtime": 1783596307.538384,
+    "ast_hash": "20347a949b42ed813852fb9235733638",
     "semantic_hash": ""
   },
   "src/i18n/locales/es/admin.json": {
-    "mtime": 1783593097.2876153,
-    "ast_hash": "b568edd0c475a01493a6ba35f97e54e5",
+    "mtime": 1783596302.0483544,
+    "ast_hash": "eadda7495dd277c79d74595dea6b3513",
     "semantic_hash": ""
   },
   "src/pages/Admin.tsx": {
-    "mtime": 1783592839.582318,
-    "ast_hash": "5a837e2a1b2db4d0ce9674785b4d7ad4",
+    "mtime": 1783596276.6406832,
+    "ast_hash": "458923c30ba26ed44a29109522bc1b00",
     "semantic_hash": ""
   },
   "supabase/migrations/AUDIT_RLS_fase0.md": {
@@ -832,6 +832,31 @@
   "supabase/migrations/016_admin_backoffice_rollback.sql": {
     "mtime": 1783592661.2817912,
     "ast_hash": "3bc0406dfb386c96544147a32860a025",
+    "semantic_hash": ""
+  },
+  "src/hooks/useAdminAnalytics.ts": {
+    "mtime": 1783596169.5368428,
+    "ast_hash": "f29d534d7ba8e19fa2692b6cfa01877d",
+    "semantic_hash": ""
+  },
+  "src/pages/admin/Estadisticas.tsx": {
+    "mtime": 1783596256.4863398,
+    "ast_hash": "d74cbb82c058eab4da52fc66df3eaffa",
+    "semantic_hash": ""
+  },
+  "src/pages/admin/Usuarios.tsx": {
+    "mtime": 1783596219.2492995,
+    "ast_hash": "7bd31d99c15023437e6952c1ebeda897",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/017_admin_analytics.sql": {
+    "mtime": 1783596114.267464,
+    "ast_hash": "3dcc0f29421eec506bede3f790a05a3a",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/017_admin_analytics_rollback.sql": {
+    "mtime": 1783596116.663459,
+    "ast_hash": "fa5451376fe3063d55873fc116fd8f82",
     "semantic_hash": ""
   }
 }

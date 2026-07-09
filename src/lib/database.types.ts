@@ -93,6 +93,61 @@ export type CategoryTranslation = {
   updated_at: string
 }
 
+// ------------------------------------------------------------
+// Filas devueltas por las RPC de administración (migración 017)
+// ------------------------------------------------------------
+export type AdminUserRow = {
+  user_id: string
+  email: string
+  created_at: string
+  last_sign_in_at: string | null
+  full_name: string | null
+  country: string | null
+  province: string | null
+  gender: string | null
+  birth_date: string | null
+  employment_status: string | null
+  financial_goal: string | null
+  onboarding_completed: boolean
+  is_admin: boolean
+  profiles_count: number
+  accounts_count: number
+  transactions_count: number
+  first_tx: string | null
+  last_tx: string | null
+  last_import: string | null
+}
+
+export type AdminCategoryBreakdownRow = {
+  category_id: string | null
+  category_slug: string | null
+  group_slug: string | null
+  transaction_type: TransactionType | null
+  total_abs: number
+  cnt: number
+}
+
+export type AdminMonthlyRow = {
+  month: string
+  transaction_type: TransactionType | null
+  total_abs: number
+  cnt: number
+}
+
+export type AdminStatsOverview = {
+  total_users: number
+  onboarded_users: number
+  admin_users: number
+  total_profiles: number
+  total_accounts: number
+  total_transactions: number
+  imported_transactions: number
+  manual_transactions: number
+}
+
+export type AdminSignupRow = { month: string; cnt: number }
+export type AdminDemographicRow = { dimension: string; bucket: string; cnt: number }
+
 export type BankFormat = {
   id: string
   user_id: string
@@ -224,6 +279,12 @@ export type Database = {
       upsert_community_vote: { Args: { p_merchant_key: string; p_category_id: string }; Returns: undefined }
       delete_community_vote: { Args: { p_merchant_key: string }; Returns: undefined }
       recompute_community_rule: { Args: { p_merchant_key: string }; Returns: undefined }
+      admin_list_users: { Args: Record<string, never>; Returns: AdminUserRow[] }
+      admin_user_category_breakdown: { Args: { p_user_id: string }; Returns: AdminCategoryBreakdownRow[] }
+      admin_user_monthly: { Args: { p_user_id: string }; Returns: AdminMonthlyRow[] }
+      admin_stats_overview: { Args: Record<string, never>; Returns: AdminStatsOverview[] }
+      admin_signups_by_month: { Args: Record<string, never>; Returns: AdminSignupRow[] }
+      admin_demographics: { Args: Record<string, never>; Returns: AdminDemographicRow[] }
     }
     Enums: Record<string, never>
   }

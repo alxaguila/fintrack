@@ -17,8 +17,8 @@ export default function Admin() {
       <nav className="overflow-hidden rounded-2xl border border-slate-200 bg-white">
         <MenuLink to="/admin/bancos" icon={Landmark} label={t('hub.banks')} desc={t('hub.banks_desc')} />
         <MenuLink to="/admin/categorias" icon={Tags} label={t('hub.categories')} desc={t('hub.categories_desc')} />
-        <MenuRowSoon icon={Users} label={t('hub.users')} desc={t('hub.users_desc')} soon={t('hub.soon')} />
-        <MenuRowSoon icon={BarChart3} label={t('hub.stats')} desc={t('hub.stats_desc')} soon={t('hub.soon')} />
+        <MenuLink to="/admin/usuarios" icon={Users} label={t('hub.users')} desc={t('hub.users_desc')} />
+        <MenuLink to="/admin/estadisticas" icon={BarChart3} label={t('hub.stats')} desc={t('hub.stats_desc')} />
       </nav>
     </div>
   )
@@ -39,20 +39,5 @@ function MenuLink({ to, icon: Icon, label, desc }: { to: string; icon: LucideIco
       </div>
       <ChevronRight className="h-5 w-5 shrink-0 text-slate-400" />
     </Link>
-  )
-}
-
-function MenuRowSoon({ icon: Icon, label, desc, soon }: { icon: LucideIcon; label: string; desc: string; soon: string }) {
-  return (
-    <div className="flex items-center gap-4 border-b border-slate-100 px-4 py-4 opacity-60 last:border-b-0">
-      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-slate-100 text-slate-400">
-        <Icon className="h-5 w-5" />
-      </span>
-      <div className="min-w-0 flex-1">
-        <p className="text-[15px] font-bold">{label}</p>
-        <p className="truncate text-sm text-slate-500">{desc}</p>
-      </div>
-      <span className="shrink-0 rounded-full bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-500">{soon}</span>
-    </div>
   )
 }
