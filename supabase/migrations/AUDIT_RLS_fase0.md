@@ -1,6 +1,6 @@
 # Informe de auditoría RLS — Fase 0 (Arquitectura de administración)
 
-Fecha: 2026-07-09 · Migración asociada: `014_admin_role.sql`
+Fecha: 2026-07-09 · Migración asociada: `015_admin_role.sql`
 
 Objetivo: auditar tabla por tabla el estado de Row Level Security, cerrar los
 agujeros y dejar el backend en **deny-by-default** (RLS activada + sin política
@@ -24,7 +24,7 @@ no en el frontend.
 
 ## Auditoría tabla por tabla
 
-| Tabla | Clasificación | RLS | Estado previo | Acción (014) | Estado final |
+| Tabla | Clasificación | RLS | Estado previo | Acción (015) | Estado final |
 |---|---|---|---|---|---|
 | `user_settings` | Usuario | ✅ | `own_settings` FOR ALL `user_id = auth.uid()` | Sin cambios (+ columna `is_admin`) | Acotado a `auth.uid()` ✅ |
 | `financial_profiles` | Usuario | ✅ | `own_profiles` FOR ALL `user_id = auth.uid()` | Sin cambios | Acotado a `auth.uid()` ✅ |
@@ -61,7 +61,7 @@ PostgREST (saltándose la interfaz):
 
 ## Pasos manuales pendientes (owner)
 
-1. Ejecutar `014_admin_role.sql` en el SQL Editor de Supabase.
+1. Ejecutar `015_admin_role.sql` en el SQL Editor de Supabase.
 2. Descomentar y ejecutar el `UPDATE ... SET is_admin = true` para
    `alex.delaguila83@gmail.com` (requiere que la fila de `user_settings` exista;
    se crea al iniciar sesión esa cuenta al menos una vez).

@@ -17,7 +17,7 @@ export type UserSettings = {
   employment_status: string | null
   financial_goal: string | null
   onboarding_completed: boolean
-  // Rol de administrador (migración 014). Gobierna la escritura de catálogos
+  // Rol de administrador (migración 015). Gobierna la escritura de catálogos
   // globales vía RLS + el acceso a /admin en el frontend.
   is_admin: boolean
   created_at: string

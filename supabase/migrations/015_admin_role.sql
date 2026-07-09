@@ -1,6 +1,6 @@
 -- ============================================================
--- FinTrack — Migración 014: Rol de administrador + cierre RLS (Fase 0)
--- Ejecutar en el SQL Editor de Supabase (después de 001–013)
+-- FinTrack — Migración 015: Rol de administrador + cierre RLS (Fase 0)
+-- Ejecutar en el SQL Editor de Supabase (después de 001–014)
 -- ============================================================
 --
 -- Objetivo: montar el cimiento de seguridad de la administración.

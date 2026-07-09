@@ -1,9 +1,9 @@
 -- ============================================================
--- FinTrack — Rollback de la migración 014 (Rol admin + cierre RLS)
--- Ejecutar en el SQL Editor de Supabase para revertir 014_admin_role.sql
+-- FinTrack — Rollback de la migración 015 (Rol admin + cierre RLS)
+-- Ejecutar en el SQL Editor de Supabase para revertir 015_admin_role.sql
 -- ============================================================
 --
--- Deja el estado de seguridad EXACTAMENTE como estaba antes de la 014, incluida
+-- Deja el estado de seguridad EXACTAMENTE como estaba antes de la 015, incluida
 -- la política abierta de bank_entities y la lectura pública de catálogos. Solo
 -- usar si hay que dar marcha atrás; reintroduce el agujero conocido.
 -- ------------------------------------------------------------
