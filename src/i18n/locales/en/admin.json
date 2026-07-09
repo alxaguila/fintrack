@@ -16,6 +16,7 @@
     "title": "Bank entities",
     "add": "New entity",
     "empty": "No entities yet.",
+    "pending": "Pending review (created by a user)",
     "saved": "Entity saved",
     "deleted": "Entity deleted",
     "duplicate": "An entity with that name already exists.",

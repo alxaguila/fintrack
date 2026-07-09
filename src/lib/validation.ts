@@ -22,9 +22,24 @@ export const LIMITS = {
   logoUrl: 1000,
   keyword: 80,
   note: 50,
+  /** Nombre de una entidad sugerida por un usuario desde el formulario de cuenta. */
+  bankSuggestionName: 30,
   /** Tope defensivo del valor absoluto de un importe (mil millones). */
   amountAbs: 1_000_000_000,
 } as const
+
+/**
+ * Nombre de entidad sugerida por un usuario (popup "Añadir nueva entidad").
+ * Defensa en profundidad: longitud acotada y sin caracteres de marcado (`<`/`>`)
+ * ni de control. El almacenamiento va parametrizado por PostgREST y React escapa
+ * el texto al pintarlo, así que esto valida formato, no "escapa".
+ */
+export const bankSuggestionSchema = z
+  .string()
+  .trim()
+  .min(1, 'required')
+  .max(LIMITS.bankSuggestionName, 'too_long')
+  .refine((v) => !/[<>]/.test(v), 'invalid')
 
 /** Color hex (#rgb o #rrggbb). */
 export const hexColorSchema = z

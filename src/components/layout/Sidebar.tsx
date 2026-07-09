@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { cn } from '@/lib/utils'
 import { APP_VERSION } from '@/lib/version'
 import { useIsAdmin } from '@/hooks/useIsAdmin'
+import { useUnreviewedBankCount } from '@/hooks/useAdminBankEntities'
 import { LanguageSelector } from './LanguageSelector'
 
 const navItems = [
@@ -22,6 +23,7 @@ export function Sidebar() {
   const location = useLocation()
   const onTransactions = location.pathname.startsWith('/transactions')
   const { isAdmin } = useIsAdmin()
+  const { data: pendingEntities = 0 } = useUnreviewedBankCount(isAdmin)
 
   return (
     <aside className="hidden h-screen w-60 flex-col bg-slate-900 text-slate-100 md:flex">
@@ -123,6 +125,9 @@ export function Sidebar() {
           >
             <Shield className="h-4 w-4 shrink-0" />
             {t('nav.admin')}
+            {pendingEntities > 0 && (
+              <span className="ml-auto h-2 w-2 shrink-0 rounded-full bg-red-500" aria-label={t('nav.admin_pending')} />
+            )}
           </NavLink>
         )}
       </div>

@@ -1,16 +1,15 @@
 import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Upload, X, Loader2, AlertTriangle, ChevronDown } from 'lucide-react'
+import { AlertTriangle, ChevronDown, Plus } from 'lucide-react'
 import { useCreateAccount, useUpdateAccount } from '@/hooks/useAccounts'
-import { useBankEntities } from '@/hooks/useBankEntities'
-import { supabase } from '@/lib/supabase'
+import { useBankEntities, useCreateBankSuggestion } from '@/hooks/useBankEntities'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog'
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select'
 import { toast } from '@/hooks/useToast'
-import { accountFormSchema, firstError, LIMITS } from '@/lib/validation'
+import { accountFormSchema, bankSuggestionSchema, firstError, LIMITS } from '@/lib/validation'
 import type { Account, AccountType } from '@/lib/database.types'
 
 const ACCOUNT_TYPES: AccountType[] = ['cuenta_corriente', 'ahorro', 'tarjeta_credito', 'tarjeta_debito', 'valores']
@@ -22,11 +21,8 @@ const COLORS = [
   '#6ee7b7', '#5eead4', '#7dd3fc', '#93c5fd', '#cbd5e1',
 ]
 
-const LOGO_BUCKET = 'account-logos'
-const MAX_LOGO_BYTES = 1024 * 1024 // 1 MB
-
-interface FormState { entity: string; type: AccountType | ''; alias: string; color: string; logo_url: string; openingBalance: string }
-const emptyForm: FormState = { entity: '', type: '', alias: '', color: COLORS[0], logo_url: '', openingBalance: '' }
+interface FormState { entity: string; type: AccountType | ''; alias: string; color: string; openingBalance: string }
+const emptyForm: FormState = { entity: '', type: '', alias: '', color: COLORS[0], openingBalance: '' }
 
 /** Cuentas cuyo saldo se calcula por suma y que llevan saldo inicial. */
 function isBankType(type: AccountType | ''): boolean {
@@ -69,11 +65,14 @@ export function AccountFormDialog({
   const createAccount = useCreateAccount()
   const updateAccount = useUpdateAccount()
   const { data: entities = [] } = useBankEntities()
+  const createSuggestion = useCreateBankSuggestion()
 
   const [form, setForm] = useState<FormState>(emptyForm)
-  const [uploading, setUploading] = useState(false)
   const [debitWarnOpen, setDebitWarnOpen] = useState(false)
-  const fileInputRef = useRef<HTMLInputElement>(null)
+  // Popup "Añadir nueva entidad" (crear entidad que no está en el catálogo).
+  const [newEntityOpen, setNewEntityOpen] = useState(false)
+  const [newEntityName, setNewEntityName] = useState('')
+  const [newEntityError, setNewEntityError] = useState<string | null>(null)
 
   // Sync form whenever the dialog opens (or the edited account changes)
   useEffect(() => {
@@ -85,7 +84,6 @@ export function AccountFormDialog({
         // El alias solo tiene sentido si difiere de la entidad (así se guardó si estaba vacío).
         alias: editing.name.trim().toLowerCase() === editing.entity.trim().toLowerCase() ? '' : editing.name,
         color: editing.color,
-        logo_url: editing.logo_url ?? '',
         openingBalance: editing.opening_balance != null ? String(editing.opening_balance) : '',
       })
     } else {
@@ -103,31 +101,38 @@ export function AccountFormDialog({
     setForm(f => ({ ...f, type: value as AccountType }))
   }
 
-  async function handleLogoFile(file: File) {
-    if (!file.type.startsWith('image/')) {
-      toast({ title: t('fields.logo_invalid_type'), variant: 'destructive' })
-      return
-    }
-    if (file.size > MAX_LOGO_BYTES) {
-      toast({ title: t('fields.logo_too_large'), variant: 'destructive' })
-      return
-    }
-    setUploading(true)
+  // El usuario crea una entidad que no está en el catálogo (solo texto). Entra
+  // como pendiente de revisión; el logo lo pone el admin. Si ya existe, se usa.
+  async function handleCreateEntity(name: string) {
+    const n = name.trim()
+    if (!n) return
+    setForm(f => ({ ...f, entity: n }))
     try {
-      const ext = file.name.split('.').pop()?.toLowerCase() || 'png'
-      const path = `${profileId}/${crypto.randomUUID()}.${ext}`
-      const { error } = await supabase.storage
-        .from(LOGO_BUCKET)
-        .upload(path, file, { cacheControl: '3600', upsert: true })
-      if (error) throw error
-      const { data } = supabase.storage.from(LOGO_BUCKET).getPublicUrl(path)
-      setForm(f => ({ ...f, logo_url: data.publicUrl }))
+      await createSuggestion.mutateAsync(n)
+      toast({ title: t('entity_created'), variant: 'success' })
     } catch (err: any) {
-      toast({ title: t('fields.logo_upload_failed'), description: err?.message, variant: 'destructive' })
-    } finally {
-      setUploading(false)
-      if (fileInputRef.current) fileInputRef.current.value = ''
+      const dup = String(err?.message ?? '').includes('duplicate') || err?.code === '23505'
+      if (!dup) toast({ title: t('entity_create_failed'), description: err?.message, variant: 'destructive' })
     }
+  }
+
+  function openNewEntity(seed: string) {
+    setNewEntityName(seed.slice(0, LIMITS.bankSuggestionName))
+    setNewEntityError(null)
+    setNewEntityOpen(true)
+  }
+
+  function confirmNewEntity() {
+    const name = newEntityName.trim()
+    // Validación de seguridad (longitud + sin caracteres de marcado).
+    if (!bankSuggestionSchema.safeParse(name).success) {
+      setNewEntityError(t('new_entity.invalid'))
+      return
+    }
+    setNewEntityOpen(false)
+    setNewEntityName('')
+    setNewEntityError(null)
+    handleCreateEntity(name)
   }
 
   async function handleSubmit() {
@@ -138,10 +143,11 @@ export function AccountFormDialog({
     const name = form.alias.trim() || entity
     // Saldo inicial: solo cuentas bancarias; en el resto siempre null.
     const openingBalance = isBankType(type) ? parseOpeningBalance(form.openingBalance) : null
-    // Validación (defensa en profundidad): longitud, URL segura, color, importe.
+    // Validación (defensa en profundidad): longitud, color, importe.
+    // El logo ya no se sube por cuenta (lo gestiona el admin por entidad).
     const invalid = firstError(accountFormSchema.safeParse({
       type, entity, alias: form.alias, color: form.color,
-      logo_url: form.logo_url.trim(), openingBalance,
+      logo_url: '', openingBalance,
     }))
     if (invalid) {
       toast({ title: tc('errors.invalid_input'), variant: 'destructive' })
@@ -157,7 +163,7 @@ export function AccountFormDialog({
           type,
           name,
           color: form.color,
-          logo_url: form.logo_url || null,
+          logo_url: null,
           opening_balance: openingBalance,
         })
       } else {
@@ -167,7 +173,7 @@ export function AccountFormDialog({
           type,
           name,
           color: form.color,
-          logo_url: form.logo_url || null,
+          logo_url: null,
           currency: 'EUR',
           is_active: true,
           sort_order: sortOrder,
@@ -211,6 +217,8 @@ export function AccountFormDialog({
             <EntityCombobox
               value={form.entity}
               onChange={v => setForm(f => ({ ...f, entity: v }))}
+              onAddNew={openNewEntity}
+              addLabel={t('entity_create_cta')}
               options={entities.map(e => e.name).sort((a, b) => a.localeCompare(b, 'es'))}
               placeholder={t('fields.entity_placeholder')}
               maxLength={LIMITS.accountEntity}
@@ -259,61 +267,10 @@ export function AccountFormDialog({
             </div>
           </div>
 
-          {/* 5. Logo (opcional) */}
-          <div className="space-y-1.5">
-            <Label>{t('fields.logo')}</Label>
-            <div className="flex items-center gap-3">
-              <div className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-slate-200 bg-slate-50">
-                {form.logo_url
-                  ? <img src={form.logo_url} alt="" className="h-full w-full object-contain p-1" />
-                  : <Upload className="h-4 w-4 text-slate-400" />}
-              </div>
-              <div className="flex-1 space-y-1.5">
-                <Input
-                  value={form.logo_url}
-                  onChange={e => setForm(f => ({ ...f, logo_url: e.target.value }))}
-                  placeholder={t('fields.logo_placeholder')}
-                  maxLength={LIMITS.logoUrl}
-                />
-                <div className="flex items-center gap-2">
-                  <Button
-                    type="button"
-                    variant="outline"
-                    size="sm"
-                    disabled={uploading}
-                    onClick={() => fileInputRef.current?.click()}
-                  >
-                    {uploading
-                      ? <Loader2 className="h-4 w-4 animate-spin" />
-                      : <Upload className="h-4 w-4" />}
-                    {t('fields.logo_upload')}
-                  </Button>
-                  {form.logo_url && (
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => setForm(f => ({ ...f, logo_url: '' }))}
-                    >
-                      <X className="h-4 w-4" /> {t('fields.logo_remove')}
-                    </Button>
-                  )}
-                </div>
-              </div>
-            </div>
-            <input
-              ref={fileInputRef}
-              type="file"
-              accept="image/png,image/svg+xml,image/jpeg,image/webp"
-              className="hidden"
-              onChange={e => { const f = e.target.files?.[0]; if (f) handleLogoFile(f) }}
-            />
-            <p className="text-xs text-muted-foreground">{t('fields.logo_hint')}</p>
-          </div>
         </div>
         <DialogFooter>
           <Button variant="outline" onClick={() => onOpenChange(false)}>{tc('actions.cancel')}</Button>
-          <Button onClick={handleSubmit} disabled={!form.entity.trim() || !form.type || uploading}>{tc('actions.save')}</Button>
+          <Button onClick={handleSubmit} disabled={!form.entity.trim() || !form.type}>{tc('actions.save')}</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
@@ -333,6 +290,32 @@ export function AccountFormDialog({
         </DialogFooter>
       </DialogContent>
     </Dialog>
+
+    {/* Popup: añadir una entidad nueva (solo nombre, máx. 30) */}
+    <Dialog open={newEntityOpen} onOpenChange={setNewEntityOpen}>
+      <DialogContent className="sm:rounded-2xl">
+        <DialogHeader>
+          <DialogTitle>{t('new_entity.title')}</DialogTitle>
+        </DialogHeader>
+        <div className="space-y-1.5">
+          <Label>{t('new_entity.name')}</Label>
+          <Input
+            autoFocus
+            value={newEntityName}
+            onChange={e => { setNewEntityName(e.target.value); setNewEntityError(null) }}
+            onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); confirmNewEntity() } }}
+            placeholder={t('new_entity.placeholder')}
+            maxLength={LIMITS.bankSuggestionName}
+          />
+          <p className="text-xs text-muted-foreground">{t('new_entity.hint')}</p>
+          {newEntityError && <p className="text-xs text-[#CB6391]">{newEntityError}</p>}
+        </div>
+        <DialogFooter>
+          <Button variant="outline" onClick={() => setNewEntityOpen(false)}>{tc('actions.cancel')}</Button>
+          <Button onClick={confirmNewEntity} disabled={!newEntityName.trim()}>{t('new_entity.create')}</Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
     </>
   )
 }
@@ -341,9 +324,11 @@ export function AccountFormDialog({
  * Combobox de entidad con el mismo estilo visual que el Select de tipo, pero que
  * permite escribir una entidad libre además de elegir del catálogo.
  */
-function EntityCombobox({ value, onChange, options, placeholder, maxLength }: {
+function EntityCombobox({ value, onChange, onAddNew, addLabel, options, placeholder, maxLength }: {
   value: string
   onChange: (v: string) => void
+  onAddNew: (seed: string) => void
+  addLabel: string
   options: string[]
   placeholder?: string
   maxLength?: number
@@ -375,8 +360,19 @@ function EntityCombobox({ value, onChange, options, placeholder, maxLength }: {
         className="flex h-9 w-full items-center justify-between rounded-md border border-input bg-white px-3 py-2 pr-9 text-sm shadow-sm placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring"
       />
       <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 opacity-50" />
-      {open && filtered.length > 0 && (
+      {open && (
         <div className="absolute left-0 right-0 z-50 mt-1 max-h-56 overflow-auto rounded-md border bg-popover p-1 text-popover-foreground shadow-md">
+          {/* Acción destacada: abrir el popup para añadir una entidad nueva */}
+          <button
+            type="button"
+            onMouseDown={e => { e.preventDefault(); setOpen(false); onAddNew(value) }}
+            className="flex w-full items-center gap-2 rounded-md bg-teal-50 px-2 py-2 text-left text-sm font-semibold text-teal-700 outline-none transition-colors hover:bg-teal-100"
+          >
+            <Plus className="h-4 w-4 shrink-0" />
+            {addLabel}
+          </button>
+          {/* Separador con el resto del catálogo */}
+          <div className="my-1 h-px bg-slate-200" />
           {filtered.map(opt => (
             <button
               key={opt}

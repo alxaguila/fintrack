@@ -1,4 +1,4 @@
-import { Outlet, Navigate } from 'react-router-dom'
+import { Navigate } from 'react-router-dom'
 import { useEffect, useRef, useState } from 'react'
 import { supabase } from '@/lib/supabase'
 import i18n from '@/i18n'
@@ -6,6 +6,7 @@ import { useProfiles, useCreateProfile } from '@/hooks/useProfiles'
 import { useUserSettings } from '@/hooks/useUserSettings'
 import { useMergeCategoryTranslations } from '@/hooks/useCategoryTranslations'
 import { ProfileProvider } from '@/contexts/ProfileContext'
+import { OnboardingGate } from '@/components/OnboardingGate'
 import { Sidebar } from './Sidebar'
 import { MobileTopBar, MobileBottomNav } from './MobileNav'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -83,7 +84,7 @@ export function AppShell() {
         <div className="flex flex-1 flex-col overflow-hidden">
           <MobileTopBar />
           <main className="flex-1 overflow-y-auto">
-            <Outlet />
+            <OnboardingGate />
           </main>
           <MobileBottomNav />
         </div>

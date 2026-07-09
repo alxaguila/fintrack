@@ -594,6 +594,8 @@ export function useConfirmImport() {
       qc.invalidateQueries({ queryKey: ['account_balance_history'] })
       qc.invalidateQueries({ queryKey: ['card_spending_30d'] })
       qc.invalidateQueries({ queryKey: ['card_spending_history'] })
+      // Historial de extractos + onboarding "sube tu primer extracto".
+      qc.invalidateQueries({ queryKey: ['import_batches'] })
     },
   })
 }

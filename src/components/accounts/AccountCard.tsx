@@ -6,15 +6,19 @@ import type { Account } from '@/lib/database.types'
 
 interface AccountCardProps {
   account: Account
+  /** Logo heredado de la entidad del catálogo (match por nombre). */
+  entityLogoUrl?: string | null
   onEdit: (account: Account) => void
   onDelete: (account: Account) => void
 }
 
-export function AccountCard({ account, onEdit, onDelete }: AccountCardProps) {
+export function AccountCard({ account, entityLogoUrl, onEdit, onDelete }: AccountCardProps) {
   const { t: tc } = useTranslation('common')
   const [logoError, setLogoError] = useState(false)
   const { color: typeColor, icon: Icon } = accountTypeMeta(account.type)
-  const showLogo = !!account.logo_url && !logoError
+  // El logo lo pone el admin por entidad; se conserva el propio de la cuenta si aún lo tuviera (legado).
+  const logo = account.logo_url || entityLogoUrl || null
+  const showLogo = !!logo && !logoError
   // Alias = nombre de la cuenta, salvo que sea igual a la entidad (entonces se deja en blanco).
   const alias = account.name.trim().toLowerCase() !== account.entity.trim().toLowerCase()
     ? account.name
@@ -44,7 +48,7 @@ export function AccountCard({ account, onEdit, onDelete }: AccountCardProps) {
       {showLogo && (
         <div className="pointer-events-none absolute right-4 top-5 z-0 h-11 w-11 overflow-hidden rounded-xl bg-white shadow-sm ring-1 ring-black/5">
           <img
-            src={account.logo_url!}
+            src={logo!}
             alt={account.entity}
             onError={() => setLogoError(true)}
             className="h-full w-full object-cover"

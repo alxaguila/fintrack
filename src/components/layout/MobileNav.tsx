@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next'
 import { cn } from '@/lib/utils'
 import { APP_VERSION } from '@/lib/version'
 import { useIsAdmin } from '@/hooks/useIsAdmin'
+import { useUnreviewedBankCount } from '@/hooks/useAdminBankEntities'
 import { LanguageSelector } from './LanguageSelector'
 
 // Destinos principales: van en la barra inferior con scroll horizontal.
@@ -50,6 +51,7 @@ export function MobileTopBar() {
   const [open, setOpen] = useState(false)
   const location = useLocation()
   const { isAdmin } = useIsAdmin()
+  const { data: pendingEntities = 0 } = useUnreviewedBankCount(isAdmin)
 
   // Cerrar el drawer al navegar.
   useEffect(() => { setOpen(false) }, [location.pathname])
@@ -141,6 +143,9 @@ export function MobileTopBar() {
                 >
                   <Shield className="h-4 w-4 shrink-0" />
                   {t('nav.admin')}
+                  {pendingEntities > 0 && (
+                    <span className="ml-auto h-2 w-2 shrink-0 rounded-full bg-red-500" aria-label={t('nav.admin_pending')} />
+                  )}
                 </NavLink>
               )}
             </div>

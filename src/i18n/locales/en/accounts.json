@@ -2,6 +2,17 @@
   "title": "Accounts",
   "new_account": "New account",
   "edit_account": "Edit account",
+  "entity_create_cta": "Can't find yours? Add a new bank",
+  "entity_created": "Bank created. We'll review it soon.",
+  "entity_create_failed": "Couldn't create the bank.",
+  "new_entity": {
+    "title": "Add a new bank",
+    "name": "Bank name",
+    "placeholder": "e.g. My local bank",
+    "hint": "Up to 30 characters. We'll review it and add its logo.",
+    "invalid": "Invalid name (max 30 characters, no < >).",
+    "create": "Add"
+  },
   "fields": {
     "entity": "Bank",
     "entity_placeholder": "Choose a bank…",

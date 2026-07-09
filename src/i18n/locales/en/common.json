@@ -10,6 +10,7 @@
     "history": "History",
     "settings": "Settings",
     "admin": "Administration",
+    "admin_pending": "There are entities pending review",
     "menu": "Menu",
     "short": {
       "home": "Home",
@@ -76,6 +77,11 @@
   "empty_state": {
     "no_data": "No data",
     "no_results": "No results found"
+  },
+  "onboarding_upload": {
+    "title": "Upload your first statement",
+    "body": "FinTrack analyzes your finances from your bank statements. Upload them in Excel or CSV; the older it is, the more complete your analysis.",
+    "cta": "Upload statement"
   },
   "language": {
     "es": "Español",

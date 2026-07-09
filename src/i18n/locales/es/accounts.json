@@ -2,6 +2,17 @@
   "title": "Cuentas",
   "new_account": "Nueva cuenta",
   "edit_account": "Editar cuenta",
+  "entity_create_cta": "¿No encuentras la tuya? Añadir nueva entidad",
+  "entity_created": "Entidad creada. La revisaremos pronto.",
+  "entity_create_failed": "No se pudo crear la entidad.",
+  "new_entity": {
+    "title": "Añadir nueva entidad",
+    "name": "Nombre de la entidad",
+    "placeholder": "Ej: Mi banco local",
+    "hint": "Máximo 30 caracteres. La revisaremos y le añadiremos el logo.",
+    "invalid": "Nombre no válido (máx. 30 caracteres, sin < >).",
+    "create": "Añadir"
+  },
   "fields": {
     "entity": "Entidad",
     "entity_placeholder": "Elige una entidad…",

@@ -16,6 +16,7 @@
     "title": "Entidades bancarias",
     "add": "Nueva entidad",
     "empty": "Todavía no hay entidades.",
+    "pending": "Pendiente de revisión (creada por un usuario)",
     "saved": "Entidad guardada",
     "deleted": "Entidad eliminada",
     "duplicate": "Ya existe una entidad con ese nombre.",

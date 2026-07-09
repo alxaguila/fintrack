@@ -56,6 +56,26 @@ export function useImportBatches(profileId?: string) {
 }
 
 /**
+ * ¿El perfil tiene al menos un extracto subido? Conteo ligero (head) para el
+ * onboarding: mientras sea `false` se muestra la pastilla "sube tu primer
+ * extracto". Se invalida con la clave `['import_batches']` (tras importar/borrar).
+ */
+export function useHasStatements(profileId?: string) {
+  return useQuery({
+    queryKey: ['import_batches', 'has', profileId],
+    enabled: !!profileId,
+    queryFn: async () => {
+      const { count, error } = await supabase
+        .from('import_batches')
+        .select('id', { count: 'exact', head: true })
+        .eq('profile_id', profileId!)
+      if (error) throw error
+      return (count ?? 0) > 0
+    },
+  })
+}
+
+/**
  * Purga de la caché toda query que dependa de movimientos, saldos o lotes tras un
  * borrado/reasignación. Usamos `removeQueries` (no `invalidateQueries`) a propósito:
  * `invalidateQueries` solo refresca las queries ACTIVAS (montadas); pantallas como

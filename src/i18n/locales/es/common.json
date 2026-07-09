@@ -10,6 +10,7 @@
     "history": "Historial",
     "settings": "Ajustes",
     "admin": "Administración",
+    "admin_pending": "Hay entidades pendientes de revisión",
     "menu": "Menú",
     "short": {
       "home": "Inicio",
@@ -76,6 +77,11 @@
   "empty_state": {
     "no_data": "Sin datos",
     "no_results": "No hay resultados"
+  },
+  "onboarding_upload": {
+    "title": "Sube tu primer extracto",
+    "body": "FinTrack analiza tus finanzas desde tus extractos. Súbelos en Excel o CSV; cuanto más antiguo, más completo será tu análisis.",
+    "cta": "Subir extracto"
   },
   "language": {
     "es": "Español",

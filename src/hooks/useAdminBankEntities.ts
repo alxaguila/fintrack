@@ -1,9 +1,28 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { supabase } from '@/lib/supabase'
 import type { BankEntity } from '@/lib/database.types'
 
 export const BANK_LOGO_BUCKET = 'bank-logos'
 export const MAX_BANK_LOGO_BYTES = 1024 * 1024 // 1 MB
+
+/**
+ * Nº de entidades pendientes de revisión (creadas por usuarios). Alimenta los
+ * puntitos rojos de aviso del admin. Solo se lanza cuando `enabled` (admin).
+ */
+export function useUnreviewedBankCount(enabled: boolean) {
+  return useQuery({
+    queryKey: ['bank_entities', 'unreviewed_count'],
+    enabled,
+    queryFn: async () => {
+      const { count, error } = await supabase
+        .from('bank_entities')
+        .select('id', { count: 'exact', head: true })
+        .eq('reviewed', false)
+      if (error) throw error
+      return count ?? 0
+    },
+  })
+}
 
 /** Sube un logo de entidad al bucket bank-logos y devuelve su URL pública. */
 export async function uploadBankLogo(file: File): Promise<string> {
@@ -17,7 +36,7 @@ export async function uploadBankLogo(file: File): Promise<string> {
   return data.publicUrl
 }
 
-type BankEntityInput = { name: string; logo_url: string | null; sort_order: number }
+type BankEntityInput = { name: string; logo_url: string | null; sort_order: number; reviewed?: boolean }
 
 export function useCreateBankEntity() {
   const qc = useQueryClient()

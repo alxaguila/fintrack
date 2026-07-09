@@ -54,9 +54,11 @@ export default function Bancos() {
                   ? <img src={e.logo_url} alt="" className="h-full w-full object-contain" />
                   : <Landmark className="h-4 w-4 text-slate-400" />}
               </span>
-              <span className="min-w-0 flex-1 break-words font-medium">{e.name}</span>
-              <span className="shrink-0 rounded-full bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-500">
-                #{e.sort_order}
+              <span className="flex min-w-0 flex-1 items-center gap-2 break-words font-medium">
+                {e.name}
+                {!e.reviewed && (
+                  <span className="h-2 w-2 shrink-0 rounded-full bg-red-500" title={t('banks.pending')} />
+                )}
               </span>
               <button
                 onClick={() => setEditing(e)}
@@ -84,7 +86,8 @@ export default function Bancos() {
           onClose={() => setEditing(undefined)}
           onSave={async (values) => {
             try {
-              if (editing) await updateM.mutateAsync({ id: editing.id, ...values })
+              // Al guardar una edición se marca como revisada (apaga el aviso rojo).
+              if (editing) await updateM.mutateAsync({ id: editing.id, ...values, reviewed: true })
               else await createM.mutateAsync(values)
               toast({ title: t('banks.saved') })
               setEditing(undefined)
@@ -221,15 +224,6 @@ function BankDialog({
             />
           </div>
 
-          <div className="space-y-1.5">
-            <Label>{t('banks.order')}</Label>
-            <Input
-              type="number"
-              value={form.sort_order}
-              onChange={(e) => setForm((f) => ({ ...f, sort_order: e.target.value }))}
-            />
-            {errors.sort_order && <p className="text-xs text-[#CB6391]">{tc(`errors.${errors.sort_order}`)}</p>}
-          </div>
         </div>
 
         <DialogFooter>

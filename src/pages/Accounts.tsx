@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { Plus, Archive, Trash2, AlertTriangle } from 'lucide-react'
 import { useProfile } from '@/contexts/ProfileContext'
 import { useAccounts, useDeleteAccount, useUpdateAccount } from '@/hooks/useAccounts'
+import { useBankEntities } from '@/hooks/useBankEntities'
 import { AccountFormDialog } from '@/components/accounts/AccountForm'
 import { AccountCard } from '@/components/accounts/AccountCard'
 import { Button } from '@/components/ui/button'
@@ -19,8 +20,16 @@ export default function Accounts() {
   const { t: tc } = useTranslation('common')
   const { activeProfile } = useProfile()
   const { data: accounts = [] } = useAccounts(activeProfile?.id)
+  const { data: entities = [] } = useBankEntities()
   const deleteAccount = useDeleteAccount()
   const updateAccount = useUpdateAccount()
+
+  // Mapa entidad (minúsculas) → logo, para que la tarjeta herede el logo del catálogo.
+  const entityLogoByName = useMemo(() => {
+    const m = new Map<string, string | null>()
+    for (const e of entities) m.set(e.name.trim().toLowerCase(), e.logo_url)
+    return m
+  }, [entities])
 
   const [dialogOpen, setDialogOpen] = useState(false)
   const [editing, setEditing] = useState<Account | null>(null)
@@ -138,6 +147,7 @@ export default function Accounts() {
                   <AccountCard
                     key={account.id}
                     account={account}
+                    entityLogoUrl={entityLogoByName.get(account.entity.trim().toLowerCase()) ?? null}
                     onEdit={openEdit}
                     onDelete={openDelete}
                   />

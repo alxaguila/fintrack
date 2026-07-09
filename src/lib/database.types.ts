@@ -61,6 +61,9 @@ export type BankEntity = {
   name: string
   logo_url: string | null
   sort_order: number
+  /** false = entidad creada por un usuario, pendiente de revisión del admin. */
+  reviewed: boolean
+  created_by: string | null
   created_at: string
 }
 
@@ -262,7 +265,7 @@ export type Database = {
       user_settings: { Row: UserSettings; Insert: Partial<UserSettings>; Update: Partial<UserSettings>; Relationships: [] }
       financial_profiles: { Row: FinancialProfile; Insert: Omit<FinancialProfile, 'id' | 'created_at' | 'updated_at' | 'sort_order'> & { sort_order?: number }; Update: Partial<FinancialProfile>; Relationships: [] }
       accounts: { Row: Account; Insert: Omit<Account, 'id' | 'created_at' | 'updated_at' | 'logo_url' | 'opening_balance'> & { logo_url?: string | null; opening_balance?: number | null }; Update: Partial<Account>; Relationships: [] }
-      bank_entities: { Row: BankEntity; Insert: Omit<BankEntity, 'id' | 'created_at'>; Update: Partial<BankEntity>; Relationships: [] }
+      bank_entities: { Row: BankEntity; Insert: Omit<BankEntity, 'id' | 'created_at' | 'sort_order' | 'reviewed' | 'created_by'> & { sort_order?: number; reviewed?: boolean; created_by?: string | null }; Update: Partial<BankEntity>; Relationships: [] }
       category_groups: { Row: CategoryGroup; Insert: Omit<CategoryGroup, 'id'>; Update: Partial<CategoryGroup>; Relationships: [] }
       categories: { Row: Category; Insert: Omit<Category, 'id' | 'group'>; Update: Partial<Omit<Category, 'group'>>; Relationships: [] }
       category_translations: { Row: CategoryTranslation; Insert: Omit<CategoryTranslation, 'updated_at'> & { updated_at?: string }; Update: Partial<CategoryTranslation>; Relationships: [] }
