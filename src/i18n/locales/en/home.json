@@ -1,5 +1,11 @@
 {
   "title": "Global Position",
+  "greeting": {
+    "morning": "Good morning",
+    "afternoon": "Good afternoon",
+    "evening": "Good evening"
+  },
+  "greeting_subtitle": "Here's what happened with your money.",
   "no_profile": {
     "title": "No active profile",
     "description": "Select or create a profile to see your overview."

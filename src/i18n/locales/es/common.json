@@ -91,5 +91,10 @@
     "switch": "Cambiar perfil",
     "new": "Nuevo perfil",
     "select": "Selecciona un perfil"
+  },
+  "sidebar": {
+    "section_main": "Principal",
+    "trust_title": "Tus datos, cifrados",
+    "trust_body": "Sin conexión a tu banco. Solo tú ves tus extractos."
   }
 }

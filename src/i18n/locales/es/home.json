@@ -1,5 +1,11 @@
 {
   "title": "Posición Global",
+  "greeting": {
+    "morning": "Buenos días",
+    "afternoon": "Buenas tardes",
+    "evening": "Buenas noches"
+  },
+  "greeting_subtitle": "Esto es lo que pasó con tu dinero.",
   "no_profile": {
     "title": "Sin perfil activo",
     "description": "Selecciona o crea un perfil para ver tu resumen."

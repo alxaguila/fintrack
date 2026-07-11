@@ -79,7 +79,7 @@ export function AppShell() {
 
   return (
     <ProfileProvider profiles={profiles}>
-      <div className="flex h-screen overflow-hidden bg-background">
+      <div className="flex h-[100dvh] overflow-hidden bg-background">
         <Sidebar />
         <div className="flex flex-1 flex-col overflow-hidden">
           <MobileTopBar />

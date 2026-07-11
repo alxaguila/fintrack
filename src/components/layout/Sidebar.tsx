@@ -1,11 +1,11 @@
 import { NavLink, useLocation } from 'react-router-dom'
-import { Home, BarChart3, ArrowLeftRight, Upload, Wallet, Settings, Tags, Sparkles, FileClock, Shield } from 'lucide-react'
+import { Home, BarChart3, ArrowLeftRight, Upload, Wallet, Settings, Tags, FileClock, Shield, ShieldCheck } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { cn } from '@/lib/utils'
 import { APP_VERSION } from '@/lib/version'
 import { useIsAdmin } from '@/hooks/useIsAdmin'
 import { useUnreviewedBankCount } from '@/hooks/useAdminBankEntities'
-import { LanguageSelector } from './LanguageSelector'
+import { Logo } from '@/components/Logo'
 
 const navItems = [
   { to: '/',             icon: Home,           label: 'nav.home' },
@@ -15,8 +15,21 @@ const navItems = [
   { to: '/history',      icon: FileClock,      label: 'nav.history' },
 ]
 
-const importItem = { to: '/import', icon: Upload, label: 'nav.import' }
 const settingsItem = { to: '/settings', icon: Settings, label: 'nav.settings' }
+
+// Estilo compartido de item de nav (dolfin): activo = navy elevado + barra coral.
+const itemClass = (isActive: boolean) =>
+  cn(
+    'relative flex items-center gap-3 rounded-[11px] px-3 py-[11px] text-sm transition-colors',
+    isActive
+      ? 'bg-[var(--brand-ink-2)] font-medium text-white'
+      : 'font-normal text-[var(--side-text-muted)] hover:bg-[var(--side-hover-bg)] hover:text-[#E7F0F5]',
+  )
+
+// Barra coral del item activo (indicador a la izquierda).
+function ActiveBar() {
+  return <span className="absolute bottom-[9px] left-0 top-[9px] w-[3px] rounded-[3px] bg-[var(--brand-accent)]" />
+}
 
 export function Sidebar() {
   const { t } = useTranslation('common')
@@ -26,36 +39,27 @@ export function Sidebar() {
   const { data: pendingEntities = 0 } = useUnreviewedBankCount(isAdmin)
 
   return (
-    <aside className="hidden h-screen w-60 flex-col bg-slate-900 text-slate-100 md:flex">
-      {/* Logo */}
-      <div className="flex h-16 items-center gap-2 px-6">
-        <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-teal-500 text-white">
-          <Sparkles className="h-4 w-4" />
-        </span>
-        <div className="flex items-baseline gap-1.5">
-          <span className="text-xl font-bold lowercase tracking-tight text-white">fintrack</span>
-          <span className="text-[10px] font-medium text-slate-500">{APP_VERSION}</span>
-        </div>
+    <aside className="hidden h-screen w-[242px] flex-col bg-[var(--brand-ink)] px-[18px] pb-[22px] pt-[26px] text-[var(--side-text)] md:flex">
+      {/* Logo — la versión va en la baseline del wordmark */}
+      <div className="flex items-center px-2 pb-1 text-white">
+        <Logo size={30} version={APP_VERSION} />
       </div>
 
-      {/* Navegación */}
-      <nav className="flex-1 space-y-1 px-3 py-2">
+      {/* Navegación principal */}
+      <div className="mt-[30px] px-2 text-[10px] font-semibold uppercase tracking-[0.14em] text-[var(--side-heading)]" style={{ fontFamily: '"Space Grotesk", sans-serif' }}>
+        {t('sidebar.section_main')}
+      </div>
+      <nav className="mt-3 flex flex-col gap-[3px]">
         {navItems.map(({ to, icon: Icon, label }) => (
           <div key={to}>
-            <NavLink
-              to={to}
-              end={to === '/'}
-              className={({ isActive }) =>
-                cn(
-                  'flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors',
-                  isActive
-                    ? 'bg-indigo-600 text-white'
-                    : 'text-slate-400 hover:bg-slate-800 hover:text-white'
-                )
-              }
-            >
-              <Icon className="h-4 w-4 shrink-0" />
-              {t(label)}
+            <NavLink to={to} end={to === '/'} className="block">
+              {({ isActive }) => (
+                <span className={itemClass(isActive)}>
+                  {isActive && <ActiveBar />}
+                  <Icon className="h-[18px] w-[18px] shrink-0" strokeWidth={1.7} />
+                  {t(label)}
+                </span>
+              )}
             </NavLink>
 
             {/* Submenú: Reglas de clasificación (visible al estar en Movimientos) */}
@@ -64,14 +68,14 @@ export function Sidebar() {
                 to="/transactions/rules"
                 className={({ isActive }) =>
                   cn(
-                    'mt-1 ml-4 flex items-center gap-3 rounded-lg border-l border-slate-700 px-3 py-2 text-sm font-medium transition-colors',
+                    'ml-4 mt-1 flex items-center gap-3 rounded-[11px] border-l border-[var(--brand-ink-2)] px-3 py-2 text-sm transition-colors',
                     isActive
-                      ? 'bg-slate-800 text-white'
-                      : 'text-slate-400 hover:bg-slate-800 hover:text-white'
+                      ? 'bg-[var(--brand-ink-2)] font-medium text-white'
+                      : 'font-normal text-[var(--side-text-muted)] hover:bg-[var(--side-hover-bg)] hover:text-[#E7F0F5]',
                   )
                 }
               >
-                <Tags className="h-4 w-4 shrink-0" />
+                <Tags className="h-[18px] w-[18px] shrink-0" strokeWidth={1.7} />
                 {t('nav.rules')}
               </NavLink>
             )}
@@ -79,62 +83,58 @@ export function Sidebar() {
         ))}
       </nav>
 
-      {/* Grupo inferior: Importar (CTA) justo encima de Ajustes */}
-      <div className="px-3 pb-1 space-y-1">
-        {/* CTA: Importar extractos — funcionalidad básica de la app */}
-        <NavLink
-          to={importItem.to}
-          className={({ isActive }) =>
-            cn(
-              'flex items-center gap-3 rounded-lg bg-teal-500 px-3 py-2.5 text-sm font-bold text-white shadow-md transition-colors hover:bg-teal-400',
-              isActive && 'ring-2 ring-teal-300'
-            )
-          }
-        >
-          <importItem.icon className="h-5 w-5 shrink-0" />
-          {t(importItem.label)}
-        </NavLink>
+      {/* Parte inferior: tarjeta de confianza + Importar (CTA) / Ajustes / Admin */}
+      <div className="mt-auto flex flex-col gap-[14px] pt-4">
+        <div className="rounded-[14px] border border-[#1A4763] bg-[var(--brand-ink-2)] p-[15px]">
+          <div className="flex items-center gap-2 text-xs font-medium text-[var(--brand-primary-3)]">
+            <ShieldCheck className="h-[15px] w-[15px] shrink-0" strokeWidth={1.6} />
+            {t('sidebar.trust_title')}
+          </div>
+          <p className="mt-[7px] text-[11.5px] leading-relaxed text-[#8FA9B8]">{t('sidebar.trust_body')}</p>
+        </div>
 
-        <NavLink
-          to={settingsItem.to}
-          className={({ isActive }) =>
-            cn(
-              'flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors',
-              isActive
-                ? 'bg-indigo-600 text-white'
-                : 'text-slate-400 hover:bg-slate-800 hover:text-white'
-            )
-          }
-        >
-          <settingsItem.icon className="h-4 w-4 shrink-0" />
-          {t(settingsItem.label)}
-        </NavLink>
-
-        {/* Panel de administración — solo visible para admins. */}
-        {isAdmin && (
+        <div className="flex flex-col gap-[3px]">
+          {/* CTA: Importar extractos — acción primaria de la app */}
           <NavLink
-            to="/admin"
+            to="/import"
             className={({ isActive }) =>
               cn(
-                'flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors',
-                isActive
-                  ? 'bg-indigo-600 text-white'
-                  : 'text-slate-400 hover:bg-slate-800 hover:text-white'
+                'flex items-center gap-3 rounded-[11px] bg-[var(--brand-accent)] px-3 py-[11px] text-sm font-semibold text-white transition-colors hover:bg-[#F55E3E]',
+                isActive && 'ring-2 ring-[#FF9784]',
               )
             }
+            style={{ boxShadow: 'var(--shadow-cta)' }}
           >
-            <Shield className="h-4 w-4 shrink-0" />
-            {t('nav.admin')}
-            {pendingEntities > 0 && (
-              <span className="ml-auto h-2 w-2 shrink-0 rounded-full bg-red-500" aria-label={t('nav.admin_pending')} />
+            <Upload className="h-[18px] w-[18px] shrink-0" strokeWidth={1.8} />
+            {t('nav.import')}
+          </NavLink>
+
+          <NavLink to={settingsItem.to} className="block">
+            {({ isActive }) => (
+              <span className={itemClass(isActive)}>
+                {isActive && <ActiveBar />}
+                <settingsItem.icon className="h-[18px] w-[18px] shrink-0" strokeWidth={1.7} />
+                {t(settingsItem.label)}
+              </span>
             )}
           </NavLink>
-        )}
-      </div>
 
-      {/* Footer */}
-      <div className="border-t border-slate-700 p-3 space-y-1">
-        <LanguageSelector />
+          {/* Panel de administración — solo visible para admins. */}
+          {isAdmin && (
+            <NavLink to="/admin" className="block">
+              {({ isActive }) => (
+                <span className={itemClass(isActive)}>
+                  {isActive && <ActiveBar />}
+                  <Shield className="h-[18px] w-[18px] shrink-0" strokeWidth={1.7} />
+                  {t('nav.admin')}
+                  {pendingEntities > 0 && (
+                    <span className="ml-auto h-2 w-2 shrink-0 rounded-full bg-[var(--brand-accent)]" aria-label={t('nav.admin_pending')} />
+                  )}
+                </span>
+              )}
+            </NavLink>
+          )}
+        </div>
       </div>
     </aside>
   )

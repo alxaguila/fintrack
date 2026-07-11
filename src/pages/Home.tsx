@@ -448,9 +448,17 @@ export default function Home() {
     )
   }
 
+  const hour = new Date().getHours()
+  const greetingKey = hour >= 6 && hour < 14 ? 'morning' : hour >= 14 && hour < 21 ? 'afternoon' : 'evening'
+
   return (
     <div className="flex flex-col gap-5 p-6 h-full">
-      <h1 className="text-3xl font-extrabold tracking-tight shrink-0">{t('title')}</h1>
+      <div className="shrink-0">
+        <h1 className="font-serif text-[32px] leading-tight tracking-tight text-foreground">
+          {t(`greeting.${greetingKey}`)}, <span className="italic">{activeProfile.name}</span>
+        </h1>
+        <p className="mt-1 text-sm text-muted-foreground">{t('greeting_subtitle')}</p>
+      </div>
 
       {/* Banner sin categorizar */}
       {!!counts?.uncategorized && (

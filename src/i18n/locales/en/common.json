@@ -91,5 +91,10 @@
     "switch": "Switch profile",
     "new": "New profile",
     "select": "Select a profile"
+  },
+  "sidebar": {
+    "section_main": "Main",
+    "trust_title": "Your data, encrypted",
+    "trust_body": "No bank connection. Only you see your statements."
   }
 }

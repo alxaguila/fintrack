@@ -1,8 +1,9 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { User, Lock, MessageSquare, LogOut, Trash2, ChevronRight, AlertTriangle } from 'lucide-react'
+import { User, Lock, MessageSquare, LogOut, Trash2, ChevronRight, AlertTriangle, Languages } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
+import { useUpdateLanguage } from '@/hooks/useUserSettings'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -26,6 +27,7 @@ export default function Settings() {
         <MenuLink to="/settings/profile" icon={User} label={t('menu.profile')} />
         <MenuLink to="/settings/security" icon={Lock} label={t('menu.security')} />
         <MenuLink to="/settings/feedback" icon={MessageSquare} label={t('menu.feedback')} />
+        <LanguageRow />
       </nav>
 
       {/* Grupo secundario: sesión y cuenta */}
@@ -50,6 +52,26 @@ function MenuLink({ to, icon: Icon, label }: { to: string; icon: typeof User; la
       <span className="flex-1 text-[15px] font-medium text-slate-800">{label}</span>
       <ChevronRight className="h-5 w-5 shrink-0 text-slate-400" />
     </Link>
+  )
+}
+
+/** Fila de idioma: alterna ES/EN mostrando el idioma actual a la derecha. */
+function LanguageRow() {
+  const { t } = useTranslation('settings')
+  const { i18n, t: tc } = useTranslation('common')
+  const updateLanguage = useUpdateLanguage()
+  const current = i18n.language.startsWith('es') ? 'es' : 'en'
+  return (
+    <button
+      onClick={() => updateLanguage.mutate(current === 'es' ? 'en' : 'es')}
+      className="flex w-full items-center gap-4 border-b border-slate-100 px-4 py-4 text-left transition-colors last:border-b-0 hover:bg-slate-50"
+    >
+      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-indigo-50 text-indigo-600">
+        <Languages className="h-5 w-5" />
+      </span>
+      <span className="flex-1 text-[15px] font-medium text-slate-800">{t('language.title')}</span>
+      <span className="text-sm font-medium text-slate-500">{tc(`language.${current}`)}</span>
+    </button>
   )
 }
 

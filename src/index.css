@@ -4,32 +4,45 @@
 
 @layer base {
   :root {
-    --background: 220 60% 98%;
-    --foreground: 222.2 84% 4.9%;
+    /* Tokens shadcn remapeados a la paleta dolfin (toda la app converge aquí) */
+    --background: 40 27% 94%;        /* bg-app #F5F2EC (neutro cálido, no blanco frío) */
+    --foreground: 210 73% 15%;       /* navy #0A2540 */
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 210 73% 15%;
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-    --primary: 221.2 83.2% 53.3%;
-    --primary-foreground: 210 40% 98%;
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 221.2 83.2% 53.3%;
-    --radius: 0.5rem;
+    --popover-foreground: 210 73% 15%;
+    --primary: 199 89% 36%;          /* azul dolfin #0A7BAE */
+    --primary-foreground: 0 0% 100%;
+    --secondary: 40 24% 93%;         /* surface-tint #F2EFE8 */
+    --secondary-foreground: 210 73% 15%;
+    --muted: 40 24% 93%;
+    --muted-foreground: 209 13% 48%; /* text-muted #6B7C8C */
+    --accent: 40 24% 93%;
+    --accent-foreground: 210 73% 15%;
+    --destructive: 18 88% 40%;       /* negative #C2410C */
+    --destructive-foreground: 0 0% 100%;
+    --border: 39 27% 90%;            /* #ECE7DD */
+    --input: 40 27% 87%;             /* #E7E0D4 */
+    --ring: 199 89% 36%;
+    --radius: 0.75rem;
+
+    /* Tokens dolfin exactos (uso directo en sidebar/dashboard) */
+    --brand-ink: #0A2540; --brand-ink-2: #0F3350;
+    --brand-primary: #0A7BAE; --brand-primary-2: #38B0D6; --brand-primary-3: #7ED6E7;
+    --brand-accent: #FF6B4A;
+    --bg-app: #F5F2EC; --bg-app-alt: #EDE9E1; --surface: #FFFFFF; --surface-tint: #F2EFE8;
+    --dl-border: #ECE7DD; --dl-border-2: #E7E0D4;
+    --text-strong: #0A2540; --text-body: #46586B; --text-muted: #6B7C8C; --text-faint: #94A3B8; --text-decimals: #B4BEC9;
+    --positive: #16A34A; --negative: #C2410C; --info: #0A7BAE;
+    --side-text: #C7D6E0; --side-text-muted: #9FB6C4; --side-heading: #5B7A8F; --side-hover-bg: #0E2E48;
+    --shadow-card: 0 4px 18px rgba(10,37,64,.04);
+    --shadow-cta: 0 6px 16px rgba(255,107,74,.32);
   }
 }
 
 @layer base {
   * { @apply border-border; }
-  body { @apply bg-background text-foreground; }
+  body { @apply bg-background text-foreground; font-variant-numeric: tabular-nums; -webkit-font-smoothing: antialiased; }
 }
 
 @layer utilities {
