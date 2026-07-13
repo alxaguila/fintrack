@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { AlertTriangle, ChevronDown, Plus } from 'lucide-react'
+import { AlertTriangle, ChevronDown, Plus, Landmark } from 'lucide-react'
 import { useCreateAccount, useUpdateAccount } from '@/hooks/useAccounts'
 import { useBankEntities, useCreateBankSuggestion } from '@/hooks/useBankEntities'
 import { Button } from '@/components/ui/button'
@@ -219,7 +219,9 @@ export function AccountFormDialog({
               onChange={v => setForm(f => ({ ...f, entity: v }))}
               onAddNew={openNewEntity}
               addLabel={t('entity_create_cta')}
-              options={entities.map(e => e.name).sort((a, b) => a.localeCompare(b, 'es'))}
+              options={[...entities]
+                .sort((a, b) => a.name.localeCompare(b.name, 'es'))
+                .map(e => ({ name: e.name, logo_url: e.logo_url }))}
               placeholder={t('fields.entity_placeholder')}
               maxLength={LIMITS.accountEntity}
             />
@@ -324,12 +326,14 @@ export function AccountFormDialog({
  * Combobox de entidad con el mismo estilo visual que el Select de tipo, pero que
  * permite escribir una entidad libre además de elegir del catálogo.
  */
+interface EntityOption { name: string; logo_url: string | null }
+
 function EntityCombobox({ value, onChange, onAddNew, addLabel, options, placeholder, maxLength }: {
   value: string
   onChange: (v: string) => void
   onAddNew: (seed: string) => void
   addLabel: string
-  options: string[]
+  options: EntityOption[]
   placeholder?: string
   maxLength?: number
 }) {
@@ -337,7 +341,10 @@ function EntityCombobox({ value, onChange, onAddNew, addLabel, options, placehol
   const wrapRef = useRef<HTMLDivElement>(null)
 
   const q = value.trim().toLowerCase()
-  const filtered = q ? options.filter(o => o.toLowerCase().includes(q)) : options
+  // Si el valor coincide EXACTAMENTE con una entidad (ya elegida), mostramos todo
+  // el catálogo para poder cambiar a otra; solo filtramos mientras se teclea.
+  const exact = options.some(o => o.name.toLowerCase() === q)
+  const filtered = q && !exact ? options.filter(o => o.name.toLowerCase().includes(q)) : options
 
   useEffect(() => {
     if (!open) return
@@ -354,6 +361,9 @@ function EntityCombobox({ value, onChange, onAddNew, addLabel, options, placehol
         value={value}
         onChange={e => { onChange(e.target.value); setOpen(true) }}
         onFocus={() => setOpen(true)}
+        // También al clicar: si ya estaba enfocado (tras elegir una entidad),
+        // onFocus no se dispara, así que reabrimos aquí.
+        onClick={() => setOpen(true)}
         onKeyDown={e => { if (e.key === 'Escape') setOpen(false) }}
         placeholder={placeholder}
         maxLength={maxLength}
@@ -375,16 +385,28 @@ function EntityCombobox({ value, onChange, onAddNew, addLabel, options, placehol
           <div className="my-1 h-px bg-slate-200" />
           {filtered.map(opt => (
             <button
-              key={opt}
+              key={opt.name}
               type="button"
-              onMouseDown={e => { e.preventDefault(); onChange(opt); setOpen(false) }}
-              className="flex w-full cursor-default items-center rounded-sm px-2 py-1.5 text-left text-sm outline-none hover:bg-accent hover:text-accent-foreground"
+              onMouseDown={e => { e.preventDefault(); onChange(opt.name); setOpen(false) }}
+              className="flex w-full cursor-default items-center gap-2 rounded-sm px-2 py-1.5 text-left text-sm outline-none hover:bg-accent hover:text-accent-foreground"
             >
-              {opt}
+              <EntityLogo url={opt.logo_url} />
+              <span className="truncate">{opt.name}</span>
             </button>
           ))}
         </div>
       )}
     </div>
+  )
+}
+
+/** Miniatura del logo de una entidad (o icono de banco si no tiene). */
+function EntityLogo({ url }: { url: string | null }) {
+  return (
+    <span className="flex h-5 w-5 shrink-0 items-center justify-center overflow-hidden rounded bg-slate-100">
+      {url
+        ? <img src={url} alt="" className="h-full w-full object-contain" />
+        : <Landmark className="h-3 w-3 text-slate-400" />}
+    </span>
   )
 }

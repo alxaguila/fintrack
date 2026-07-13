@@ -46,7 +46,7 @@ export function AccountCard({ account, entityLogoUrl, onEdit, onDelete }: Accoun
           para todos) y object-cover rellena el tile recortando a los bordes redondeados.
           Va en posición absoluta → no altera el tamaño de la tarjeta. */}
       {showLogo && (
-        <div className="pointer-events-none absolute right-4 top-5 z-0 h-11 w-11 overflow-hidden rounded-xl bg-white shadow-sm ring-1 ring-black/5">
+        <div className="pointer-events-none absolute right-4 top-5 z-0 h-11 w-11 overflow-hidden rounded-xl bg-white">
           <img
             src={logo!}
             alt={account.entity}

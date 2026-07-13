@@ -141,7 +141,7 @@ export default function Accounts() {
                 {t(`groups.${section.key}`)}
                 <span className="ml-2 font-medium text-slate-400">{items.length}</span>
               </h2>
-              <div className="grid grid-flow-col gap-4 overflow-x-auto pb-2
+              <div className="no-scrollbar grid grid-flow-col gap-4 overflow-x-auto pb-2
                               auto-cols-[85%] sm:auto-cols-[46%] lg:auto-cols-[31%] xl:auto-cols-[22%]">
                 {items.map(account => (
                   <AccountCard
