@@ -1,5 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { supabase } from '@/lib/supabase'
+import { reanchorOpeningBalance } from '@/lib/openingBalance'
 import type { AccountType, ImportBatch } from '@/lib/database.types'
 
 /** Lote de importación con la cuenta destino embebida (para la tabla de Historial). */
@@ -100,68 +101,6 @@ function invalidateAfterBatchChange(qc: ReturnType<typeof useQueryClient>) {
   for (const key of keys) qc.removeQueries({ queryKey: key })
 }
 
-// ── Mantenimiento de `opening_balance` (modelo de saldo por suma) ──────────────
-// El saldo inicial vive en la CUENTA, no en el extracto. Al mover/borrar hay que
-// hacer que la referencia siga a los datos: si una cuenta se queda sin movimientos,
-// su saldo inicial pierde sentido → NULL; si una cuenta recibe movimientos y no
-// tenía saldo inicial, se deriva de los saldos por fila importados.
-
-/** Trae los movimientos de la cuenta en orden cronológico (paginado a 1000). */
-async function fetchAccountMovementsChrono(accountId: string) {
-  const pageSize = 1000
-  const out: { amount: number; balance: number | null }[] = []
-  for (let from = 0; ; from += pageSize) {
-    const { data, error } = await supabase
-      .from('transactions')
-      .select('amount, balance')
-      .eq('account_id', accountId)
-      .order('date', { ascending: true })
-      .order('created_at', { ascending: true })
-      .range(from, from + pageSize - 1)
-    if (error) throw error
-    if (!data || data.length === 0) break
-    out.push(...data.map(r => ({ amount: Number(r.amount), balance: r.balance == null ? null : Number(r.balance) })))
-    if (data.length < pageSize) break
-  }
-  return out
-}
-
-/** Deriva y fija `opening_balance` si es cuenta bancaria y aún no lo tiene. */
-async function deriveOpeningIfMissing(accountId: string) {
-  const { data: acc, error } = await supabase
-    .from('accounts')
-    .select('type, opening_balance')
-    .eq('id', accountId)
-    .maybeSingle()
-  if (error) throw error
-  if (!acc) return
-  const isBank = acc.type === 'cuenta_corriente' || acc.type === 'ahorro'
-  if (!isBank || acc.opening_balance != null) return
-
-  const movs = await fetchAccountMovementsChrono(accountId)
-  let anchorIdx = -1
-  for (let i = movs.length - 1; i >= 0; i--) { if (movs[i].balance != null) { anchorIdx = i; break } }
-  if (anchorIdx === -1) return
-  let sum = 0
-  for (let i = 0; i <= anchorIdx; i++) sum += movs[i].amount
-  const opening = Math.round((movs[anchorIdx].balance! - sum + Number.EPSILON) * 100) / 100
-  const { error: upErr } = await supabase.from('accounts').update({ opening_balance: opening }).eq('id', accountId)
-  if (upErr) throw upErr
-}
-
-/** Si la cuenta se queda sin movimientos, su `opening_balance` deja de tener base → NULL. */
-async function nullOpeningIfEmpty(accountId: string) {
-  const { count, error } = await supabase
-    .from('transactions')
-    .select('id', { count: 'exact', head: true })
-    .eq('account_id', accountId)
-  if (error) throw error
-  if ((count ?? 0) === 0) {
-    const { error: upErr } = await supabase.from('accounts').update({ opening_balance: null }).eq('id', accountId)
-    if (upErr) throw upErr
-  }
-}
-
 /** Error lanzado cuando la cuenta destino ya contiene esos movimientos. */
 export const REASSIGN_DUPLICATE_ERROR = 'REASSIGN_DUPLICATE_ERROR'
 
@@ -207,12 +146,12 @@ export function useReassignBatch() {
         .eq('id', batchId)
       if (batchErr) throw batchErr
 
-      // La referencia (saldo inicial) sigue a los datos: si el origen se queda vacío
-      // pierde su saldo inicial; el destino, si no tenía, lo deriva de lo recibido.
+      // La referencia (saldo inicial) sigue a los datos: ambas cuentas se re-anclan
+      // al saldo conocido más reciente que les quede (o NULL si quedan vacías).
       // No bloqueante: el movimiento ya está hecho, no lo abortamos si esto falla.
       try {
-        await nullOpeningIfEmpty(fromAccountId)
-        await deriveOpeningIfMissing(toAccountId)
+        await reanchorOpeningBalance(fromAccountId)
+        await reanchorOpeningBalance(toAccountId)
       } catch (e) {
         console.error('Mantenimiento de saldo inicial tras reasignar falló:', e)
       }
@@ -250,10 +189,10 @@ export function useDeleteBatch() {
         .eq('id', batchId)
       if (batchErr) throw batchErr
 
-      // Si la cuenta se queda sin movimientos, su saldo inicial deja de tener base.
-      // No bloqueante: el borrado ya está hecho.
+      // Re-anclar el saldo inicial al saldo conocido más reciente que quede en la
+      // cuenta (o NULL si queda vacía). No bloqueante: el borrado ya está hecho.
       try {
-        await nullOpeningIfEmpty(accountId)
+        await reanchorOpeningBalance(accountId)
       } catch (e) {
         console.error('Mantenimiento de saldo inicial tras borrar falló:', e)
       }

@@ -37,7 +37,9 @@ export default function Onboarding() {
     }
     try {
       await updateProfile.mutateAsync({
-        full_name: form.full_name.trim(),
+        first_name: form.first_name.trim(),
+        last_name: form.last_name.trim(),
+        full_name: `${form.first_name.trim()} ${form.last_name.trim()}`.trim(),
         gender: form.gender,
         birth_date: form.birth_date,
         country: form.country,

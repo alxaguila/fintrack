@@ -21,7 +21,8 @@ export default function SettingsProfile() {
   useEffect(() => {
     if (!settings) return
     setForm({
-      full_name: settings.full_name ?? '',
+      first_name: settings.first_name ?? '',
+      last_name: settings.last_name ?? '',
       gender: settings.gender ?? '',
       birth_date: settings.birth_date ?? '',
       country: settings.country ?? '',
@@ -46,7 +47,9 @@ export default function SettingsProfile() {
     }
     try {
       await updateProfile.mutateAsync({
-        full_name: form.full_name.trim(),
+        first_name: form.first_name.trim(),
+        last_name: form.last_name.trim(),
+        full_name: `${form.first_name.trim()} ${form.last_name.trim()}`.trim(),
         gender: form.gender,
         birth_date: form.birth_date,
         country: form.country,

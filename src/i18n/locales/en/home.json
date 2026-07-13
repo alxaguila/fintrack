@@ -5,7 +5,7 @@
     "afternoon": "Good afternoon",
     "evening": "Good evening"
   },
-  "greeting_subtitle": "Here's what happened with your money.",
+  "greeting_subtitle": "Your net worth at a glance.",
   "no_profile": {
     "title": "No active profile",
     "description": "Select or create a profile to see your overview."
@@ -15,19 +15,26 @@
     "description": "Add an account to start seeing your balance and its evolution.",
     "action": "Add account"
   },
+  "total": {
+    "label": "My total position",
+    "change_this_month": "this month"
+  },
   "accounts": {
-    "bank_section": "Accounts",
-    "card_section": "Credit cards",
-    "card_section_info": "Total spending over the last 30 days",
-    "bank_total_label": "My total position",
-    "card_total_label": "My total spending",
+    "section": "Accounts",
+    "count_one": "{{count}} account",
+    "count_other": "{{count}} accounts",
     "no_balance": "No balance data",
-    "no_spending": "No spending",
-    "last_30_days": "last 30 days",
     "updated_today": "Updated today",
     "updated_days_ago_one": "Updated {{count}} day ago",
     "updated_days_ago_other": "Updated {{count}} days ago",
     "never_updated": "No imports yet"
+  },
+  "cards": {
+    "section": "Credit cards",
+    "summary": "{{amount}} spent · last 30 days",
+    "count_one": "{{count}} card",
+    "count_other": "{{count}} cards",
+    "no_spending": "No spending"
   },
   "alerts": {
     "uncategorized_one": "{{count}} uncategorized transaction",
@@ -35,14 +42,14 @@
     "review_now": "Review now"
   },
   "evolution": {
-    "title": "Evolution",
-    "mode_saldo": "Account balance",
-    "mode_gasto": "Card spending",
+    "title": "Net worth evolution",
+    "subtitle": "Add accounts to compare them with the total",
+    "series_total": "Total",
     "range_3M": "3M",
     "range_6M": "6M",
     "range_1A": "1Y",
     "range_5A": "5Y",
     "range_Todo": "All",
-    "no_data": "Not enough data for the selected period."
+    "no_data": "Not enough data for the selected period yet."
   }
 }

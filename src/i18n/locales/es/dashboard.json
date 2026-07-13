@@ -1,5 +1,10 @@
 {
   "title": "Análisis",
+  "uncategorized": {
+    "count_one": "{{count}} movimiento sin categoría",
+    "count_other": "{{count}} movimientos sin categoría",
+    "review": "Revisar ahora"
+  },
   "month_selector": "Mes",
   "kpis": {
     "total_expenses": "Gastos del mes",

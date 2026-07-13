@@ -182,7 +182,7 @@ export const FINANCIAL_GOALS = [
   'other',
 ] as const
 
-const PERSONAL_LIMITS = { fullName: 80, province: 100 } as const
+const PERSONAL_LIMITS = { firstName: 80, lastName: 80, province: 100 } as const
 const MIN_BIRTH_DATE = '1900-01-01'
 const todayISO = () => new Date().toISOString().slice(0, 10)
 
@@ -251,7 +251,8 @@ export const categoryFormSchema = z.object({
 })
 
 export const personalDataSchema = z.object({
-  full_name: z.string().trim().min(1, 'required').max(PERSONAL_LIMITS.fullName, 'too_long'),
+  first_name: z.string().trim().min(1, 'required').max(PERSONAL_LIMITS.firstName, 'too_long'),
+  last_name: z.string().trim().min(1, 'required').max(PERSONAL_LIMITS.lastName, 'too_long'),
   gender: z.enum(GENDERS, { errorMap: () => ({ message: 'required' }) }),
   birth_date: z
     .string()

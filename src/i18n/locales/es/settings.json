@@ -132,6 +132,8 @@
     "title": "Datos personales",
     "description": "Información de tu cuenta. Puedes editarla cuando quieras.",
     "full_name": "Nombre completo",
+    "first_name": "Nombre",
+    "last_name": "Apellidos",
     "gender": "Género",
     "birth_date": "Fecha de nacimiento",
     "country": "País",

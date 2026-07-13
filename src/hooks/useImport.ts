@@ -9,6 +9,7 @@ import { invalidateTransactionData } from '@/hooks/useTransactions'
 import { findTransferPairs } from '@/lib/transferMatch'
 import { isCardSettlementConcept } from '@/lib/cardSettlement'
 import { propagateBalances } from '@/lib/computeBalances'
+import { reanchorOpeningBalance } from '@/lib/openingBalance'
 import type { AccountType, BankFormat, Category, CategoryGroup, KeywordRule, Transaction, TransactionType } from '@/lib/database.types'
 import { parse, isValid, format } from 'date-fns'
 
@@ -445,44 +446,6 @@ async function resolveComputedBalances(
   return result
 }
 
-/**
- * Fija el `opening_balance` (saldo inicial) de una cuenta bancaria si aún no está.
- * Modelo de saldo por suma: saldo = opening_balance + Σ(importes). Se deriva de los
- * saldos por fila que la importación acaba de guardar:
- *   opening = balance(ancla) − Σ(importes hasta e incluyendo el ancla),
- * donde el ancla es el movimiento con saldo no nulo más reciente.
- *
- * Solo el PRIMER import lo fija; los siguientes no lo tocan (los nuevos movimientos
- * simplemente suman). Si no hay ningún saldo de referencia, se deja sin fijar.
- */
-async function ensureOpeningBalance(accountId: string, accountType: AccountType) {
-  if (accountType !== 'cuenta_corriente' && accountType !== 'ahorro') return
-  const { data: acc, error } = await supabase
-    .from('accounts')
-    .select('opening_balance')
-    .eq('id', accountId)
-    .maybeSingle()
-  if (error) throw error
-  if (!acc || acc.opening_balance != null) return
-
-  const movements = await fetchAllAccountMovements(accountId) // orden cronológico asc
-  let anchorIdx = -1
-  for (let i = movements.length - 1; i >= 0; i--) {
-    if (movements[i].balance != null) { anchorIdx = i; break }
-  }
-  if (anchorIdx === -1) return // sin saldo de referencia
-
-  let sumUpToAnchor = 0
-  for (let i = 0; i <= anchorIdx; i++) sumUpToAnchor += Number(movements[i].amount)
-  const opening = Math.round((Number(movements[anchorIdx].balance) - sumUpToAnchor + Number.EPSILON) * 100) / 100
-
-  const { error: upErr } = await supabase
-    .from('accounts')
-    .update({ opening_balance: opening })
-    .eq('id', accountId)
-  if (upErr) throw upErr
-}
-
 export function useConfirmImport() {
   const qc = useQueryClient()
 
@@ -564,12 +527,14 @@ export function useConfirmImport() {
         throw txError
       }
 
-      // Fijar el saldo inicial de la cuenta si aún no está (modelo de saldo por
-      // suma). No bloquea un import ya confirmado si falla.
+      // Re-anclar el saldo inicial al saldo conocido más reciente (modelo de saldo
+      // por suma): se recalcula en CADA import para que el saldo mostrado cuadre
+      // aunque el extracto solape, haga backfill o llegue desordenado.
+      // No bloquea un import ya confirmado si falla.
       try {
-        await ensureOpeningBalance(accountId, accountType)
+        await reanchorOpeningBalance(accountId)
       } catch (e) {
-        console.error('No se pudo fijar el saldo inicial (opening_balance):', e)
+        console.error('No se pudo re-anclar el saldo inicial (opening_balance):', e)
       }
 
       // Detectar transferencias entre cuentas propias y marcarlas no computables.

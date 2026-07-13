@@ -36,7 +36,7 @@ React 18 + TypeScript + Vite · Supabase (PostgreSQL + Auth, con RLS) · Tailwin
 ## Comandos / setup
 
 - Primer arranque: `npm install && npm run dev`.
-- Supabase: ejecutar en orden `supabase/migrations/001_schema.sql` → `002_trigger.sql` → `003_community_rules.sql` → `004_keyword_rule_amount.sql` → `004_dashboard_aggregation.sql` → `005_account_logos.sql` → `006_account_type_valores.sql` → `007_bank_entities.sql` → `008_taxonomy_v2.sql` → `009_card_settlement_category.sql` → `010_opening_balance.sql` → `011_input_constraints.sql` → … → `018_security_linter_fixes.sql` → `019_user_bank_suggestions.sql` + `supabase/seed.sql`, y rellenar `.env.local` con URL y anon key reales.
+- Supabase: ejecutar en orden `supabase/migrations/001_schema.sql` → `002_trigger.sql` → `003_community_rules.sql` → `004_keyword_rule_amount.sql` → `004_dashboard_aggregation.sql` → `005_account_logos.sql` → `006_account_type_valores.sql` → `007_bank_entities.sql` → `008_taxonomy_v2.sql` → `009_card_settlement_category.sql` → `010_opening_balance.sql` → `011_input_constraints.sql` → … → `018_security_linter_fixes.sql` → `019_user_bank_suggestions.sql` → `020_user_name_split.sql` + `supabase/seed.sql`, y rellenar `.env.local` con URL y anon key reales.
 - Reset de datos de prueba (simular usuario nuevo): `supabase/reset_data.sql` en el SQL Editor de Supabase (conserva `auth.users`, `user_settings` y taxonomía de categorías).
 - Build: `npm run build` (pasa solo con warning de tamaño de chunk >500kB).
 

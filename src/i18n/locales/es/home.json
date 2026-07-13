@@ -5,7 +5,7 @@
     "afternoon": "Buenas tardes",
     "evening": "Buenas noches"
   },
-  "greeting_subtitle": "Esto es lo que pasó con tu dinero.",
+  "greeting_subtitle": "Tu patrimonio de un vistazo.",
   "no_profile": {
     "title": "Sin perfil activo",
     "description": "Selecciona o crea un perfil para ver tu resumen."
@@ -15,19 +15,26 @@
     "description": "Añade una cuenta para empezar a ver tu saldo y tu evolución.",
     "action": "Añadir cuenta"
   },
+  "total": {
+    "label": "Mi posición total",
+    "change_this_month": "este mes"
+  },
   "accounts": {
-    "bank_section": "Cuentas",
-    "card_section": "Tarjetas de crédito",
-    "card_section_info": "Suma de gastos en los últimos 30 días",
-    "bank_total_label": "Mi posición total",
-    "card_total_label": "Mis gastos totales",
+    "section": "Cuentas",
+    "count_one": "{{count}} cuenta",
+    "count_other": "{{count}} cuentas",
     "no_balance": "Sin datos de saldo",
-    "no_spending": "Sin gastos",
-    "last_30_days": "últ. 30 días",
     "updated_today": "Actualizado hoy",
     "updated_days_ago_one": "Actualizado hace {{count}} día",
     "updated_days_ago_other": "Actualizado hace {{count}} días",
     "never_updated": "Sin importaciones todavía"
+  },
+  "cards": {
+    "section": "Tarjetas de crédito",
+    "summary": "{{amount}} gastados · últimos 30 días",
+    "count_one": "{{count}} tarjeta",
+    "count_other": "{{count}} tarjetas",
+    "no_spending": "Sin gastos"
   },
   "alerts": {
     "uncategorized_one": "{{count}} movimiento sin categoría",
@@ -35,9 +42,9 @@
     "review_now": "Revisar ahora"
   },
   "evolution": {
-    "title": "Evolución",
-    "mode_saldo": "Saldo en cuentas",
-    "mode_gasto": "Gasto en tarjetas",
+    "title": "Evolución de tu patrimonio",
+    "subtitle": "Añade cuentas para compararlas con el total",
+    "series_total": "Total",
     "range_3M": "3M",
     "range_6M": "6M",
     "range_1A": "1A",

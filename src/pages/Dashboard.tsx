@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import { BarChart, Bar, XAxis, YAxis, Tooltip, Cell, PieChart, Pie, Sector, AreaChart, Area, ResponsiveContainer } from 'recharts'
 import { ArrowUp, ArrowDown, Minus, Eye } from 'lucide-react'
 import { useProfile } from '@/contexts/ProfileContext'
-import { useDashboardTotals, useDashboardBreakdown, useDashboardCategorySeries } from '@/hooks/useTransactions'
+import { useDashboardTotals, useDashboardBreakdown, useDashboardCategorySeries, useTransactionCounts } from '@/hooks/useTransactions'
 import { useCategories } from '@/hooks/useCategories'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -112,6 +112,7 @@ export default function Dashboard() {
   const [selectedCat, setSelectedCat] = useState<{ key: string; categoryId: string | null; name: string } | null>(null)
 
   const { data: totals = [], isLoading } = useDashboardTotals(activeProfile?.id)
+  const { data: counts } = useTransactionCounts(activeProfile?.id)
   const { data: categories = [] } = useCategories()
   const monthNames = t('charts.months', { returnObjects: true }) as string[]
   const scrollRef = useRef<HTMLDivElement>(null)
@@ -291,6 +292,20 @@ export default function Dashboard() {
           ))}
         </div>
       </div>
+
+      {/* Aviso de movimientos sin categoría (movido desde Posición Global) */}
+      {!!counts?.uncategorized && (
+        <button
+          onClick={() => navigate('/transactions?uncategorized=true')}
+          className="flex shrink-0 items-center gap-[11px] rounded-xl border border-[#EDDCA8] bg-[#FBF3DC] px-4 py-[10px] text-left transition-colors hover:bg-[#F8ECC8]"
+        >
+          <svg width="17" height="17" viewBox="0 0 20 20" className="shrink-0"><path d="M10 2 L18.5 17 H1.5 Z" fill="none" stroke="#B5842E" strokeWidth="1.6" strokeLinejoin="round" /><line x1="10" y1="8" x2="10" y2="12" stroke="#B5842E" strokeWidth="1.7" strokeLinecap="round" /><circle cx="10" cy="14.5" r="1" fill="#B5842E" /></svg>
+          <span className="text-[13.5px] text-[#6B5A2B]">
+            <span className="font-semibold text-[#4A3D18]">{t('uncategorized.count', { count: counts.uncategorized })}</span>
+          </span>
+          <span className="ml-auto text-[13px] font-semibold text-[#B5842E]">{t('uncategorized.review')} →</span>
+        </button>
+      )}
 
       {totals.length === 0 && !isLoading ? (
         <div className="flex flex-1 flex-col items-center justify-center gap-3 text-center">

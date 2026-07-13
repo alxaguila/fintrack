@@ -1,5 +1,10 @@
 {
   "title": "Analysis",
+  "uncategorized": {
+    "count_one": "{{count}} uncategorized transaction",
+    "count_other": "{{count}} uncategorized transactions",
+    "review": "Review now"
+  },
   "month_selector": "Month",
   "kpis": {
     "total_expenses": "Monthly expenses",

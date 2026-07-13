@@ -10,7 +10,8 @@ import { cn } from '@/lib/utils'
 
 /** Todos los campos como string (el formulario los normaliza al validar). */
 export type PersonalFormValue = {
-  full_name: string
+  first_name: string
+  last_name: string
   gender: string
   birth_date: string
   country: string
@@ -20,7 +21,8 @@ export type PersonalFormValue = {
 }
 
 export const emptyPersonalForm: PersonalFormValue = {
-  full_name: '',
+  first_name: '',
+  last_name: '',
   gender: '',
   birth_date: '',
   country: '',
@@ -79,13 +81,23 @@ export function PersonalDataFields({ value, onChange, errors }: Props) {
 
   return (
     <div className="space-y-4">
-      {/* Nombre completo */}
-      <Field label={t('personal.full_name')} error={err('full_name')}>
+      {/* Nombre */}
+      <Field label={t('personal.first_name')} error={err('first_name')}>
         <Input
-          value={value.full_name}
-          onChange={(e) => onChange({ full_name: e.target.value })}
+          value={value.first_name}
+          onChange={(e) => onChange({ first_name: e.target.value })}
           maxLength={80}
-          autoComplete="name"
+          autoComplete="given-name"
+        />
+      </Field>
+
+      {/* Apellidos */}
+      <Field label={t('personal.last_name')} error={err('last_name')}>
+        <Input
+          value={value.last_name}
+          onChange={(e) => onChange({ last_name: e.target.value })}
+          maxLength={80}
+          autoComplete="family-name"
         />
       </Field>
 

@@ -9,7 +9,10 @@ export type UserSettings = {
   user_id: string
   preferred_language: string
   // Datos demográficos del onboarding (migración 012). Null hasta completarlos.
+  // `full_name` = `first_name + ' ' + last_name` (derivado, migración 020).
   full_name: string | null
+  first_name: string | null
+  last_name: string | null
   gender: string | null
   birth_date: string | null
   country: string | null
