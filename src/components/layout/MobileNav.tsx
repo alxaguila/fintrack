@@ -11,11 +11,11 @@ import { LanguageSelector } from './LanguageSelector'
 
 // Destinos principales: van en la barra inferior con scroll horizontal.
 const bottomItems = [
-  { to: '/',             icon: Home,           label: 'nav.short.home' },
-  { to: '/analysis',     icon: BarChart3,      label: 'nav.short.analysis' },
-  { to: '/transactions', icon: ArrowLeftRight, label: 'nav.short.transactions' },
-  { to: '/accounts',     icon: Wallet,         label: 'nav.short.accounts' },
-  { to: '/history',      icon: FileClock,      label: 'nav.short.history' },
+  { to: '/app',              icon: Home,           label: 'nav.short.home' },
+  { to: '/app/analysis',     icon: BarChart3,      label: 'nav.short.analysis' },
+  { to: '/app/transactions', icon: ArrowLeftRight, label: 'nav.short.transactions' },
+  { to: '/app/accounts',     icon: Wallet,         label: 'nav.short.accounts' },
+  { to: '/app/history',      icon: FileClock,      label: 'nav.short.history' },
 ]
 
 /** Barra inferior de navegación (solo móvil). Mismo lenguaje que el sidebar de
@@ -29,7 +29,7 @@ export function MobileBottomNav() {
         <NavLink
           key={to}
           to={to}
-          end={to === '/'}
+          end={to === '/app'}
           className={({ isActive }) =>
             cn(
               'relative flex min-w-[76px] shrink-0 flex-col items-center justify-center gap-1 rounded-xl px-2 py-1.5 text-[11px] font-medium transition-colors',
@@ -106,7 +106,7 @@ export function MobileTopBar() {
 
             <div className="flex-1 space-y-1 overflow-y-auto px-3 py-2">
               <NavLink
-                to="/import"
+                to="/app/import"
                 className={({ isActive }) =>
                   cn(
                     'flex items-center gap-3 rounded-[11px] bg-[var(--brand-accent)] px-3 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#F55E3E]',
@@ -120,7 +120,7 @@ export function MobileTopBar() {
               </NavLink>
 
               <NavLink
-                to="/settings"
+                to="/app/settings"
                 className={({ isActive }) =>
                   cn(
                     'flex items-center gap-3 rounded-[11px] px-3 py-2 text-sm transition-colors',
@@ -136,7 +136,7 @@ export function MobileTopBar() {
 
               {isAdmin && (
                 <NavLink
-                  to="/admin"
+                  to="/app/admin"
                   className={({ isActive }) =>
                     cn(
                       'flex items-center gap-3 rounded-[11px] px-3 py-2 text-sm transition-colors',

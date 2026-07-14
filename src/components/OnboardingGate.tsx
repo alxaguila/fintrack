@@ -44,7 +44,7 @@ function UploadFirstStatement() {
         <p className="mx-auto mt-2 max-w-sm text-sm text-teal-800">{t('onboarding_upload.body')}</p>
         <Button
           className="mt-5 bg-teal-600 text-white hover:bg-teal-500"
-          onClick={() => navigate('/import')}
+          onClick={() => navigate('/app/import')}
         >
           <Upload className="h-4 w-4" /> {t('onboarding_upload.cta')}
         </Button>

@@ -24,9 +24,9 @@ export default function Settings() {
 
       {/* Grupo principal: navegación */}
       <nav className="overflow-hidden rounded-2xl border border-slate-200 bg-white">
-        <MenuLink to="/settings/profile" icon={User} label={t('menu.profile')} />
-        <MenuLink to="/settings/security" icon={Lock} label={t('menu.security')} />
-        <MenuLink to="/settings/feedback" icon={MessageSquare} label={t('menu.feedback')} />
+        <MenuLink to="/app/settings/profile" icon={User} label={t('menu.profile')} />
+        <MenuLink to="/app/settings/security" icon={Lock} label={t('menu.security')} />
+        <MenuLink to="/app/settings/feedback" icon={MessageSquare} label={t('menu.feedback')} />
         <LanguageRow />
       </nav>
 
@@ -124,7 +124,7 @@ function DeleteAccountRow() {
       const { error } = await supabase.functions.invoke('delete-account', { method: 'POST' })
       if (error) throw error
       await supabase.auth.signOut()
-      navigate('/auth', { replace: true })
+      navigate('/', { replace: true })
     } catch (err: any) {
       setDeleting(false)
       toast({ title: t('delete.error'), description: err?.message, variant: 'destructive' })

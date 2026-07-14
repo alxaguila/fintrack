@@ -24,7 +24,7 @@ export function AdminRoute({ children }: { children: ReactNode }) {
     )
   }
 
-  if (!isAdmin) return <Navigate to="/" replace />
+  if (!isAdmin) return <Navigate to="/app" replace />
 
   return <>{children}</>
 }

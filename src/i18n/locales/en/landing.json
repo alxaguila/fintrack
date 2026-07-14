@@ -1,0 +1,172 @@
+{
+  "nav": {
+    "product": "Product",
+    "security": "Security",
+    "pricing": "Pricing",
+    "login": "Log in",
+    "cta": "Get started free"
+  },
+  "hero": {
+    "badge": "No bank connection · you upload your statements",
+    "line1": "Your finances.",
+    "line2": "Your control.",
+    "emph": "Your data.",
+    "sub": "We never ask for your bank credentials. Export the statement your online bank already gives you, upload it to fintrack and get all your money in order in seconds — without handing access to anyone.",
+    "cta": "Get started free",
+    "note": "Free forever on the Free plan · no card"
+  },
+  "marquee": {
+    "label": "Works with your bank’s CSV — with every bank"
+  },
+  "excel": {
+    "eyebrow": "The same old problem",
+    "title": "Hasn’t your budgeting spreadsheet been opened in months?",
+    "sub": "You started it full of good intentions. Then updating it by hand every week got tedious… and you gave up. fintrack updates itself: you upload the statement and you’re done.",
+    "pt1": "No broken formulas, no manual cells",
+    "pt2": "Catches up the moment you upload a CSV",
+    "pt3": "Categories, charts and net worth, automatic",
+    "oldEdited": "Edited 3 months ago",
+    "newLabel": "Total net worth",
+    "newStatus": "Updated 2 minutes ago"
+  },
+  "features": {
+    "title": "Meet fintrack.",
+    "sub": "A clear picture of your money that catches itself up every time you upload a statement.",
+    "f1title": "Upload your CSV, done",
+    "f1body": "Drag in the statement you export from your online bank. fintrack reads, sorts and classifies it instantly.",
+    "uploadHint1": "Drag your statement here",
+    "uploadHint2": ".csv · .xlsx · .ofn — from any bank",
+    "uploadBrowse": "Browse",
+    "f2title": "We never ask for your credentials",
+    "f2body": "No connection to your bank or third parties. No credentials to hand over, no doubts about what happens to them.",
+    "f3title": "Automatic classification",
+    "f3body": "A dictionary, your own rules and the Haiku engine label every transaction for you. You just review."
+  },
+  "steps": {
+    "eyebrow": "Three steps",
+    "title": "From statement to control in a minute.",
+    "s1title": "Export your statement",
+    "s1body": "Download the CSV your online bank already offers. Nothing else needed from your bank.",
+    "s2title": "Upload it to fintrack",
+    "s2body": "Drag and drop. We detect duplicates and transfers between your accounts automatically.",
+    "s3title": "Everything in order",
+    "s3body": "Dashboards, global position and analysis up to date. Never touch a spreadsheet again."
+  },
+  "security": {
+    "eyebrow": "Privacy by design",
+    "title": "Your data never leaves your control.",
+    "sub": "Most apps ask for your bank credentials and nobody tells you what they do with them. fintrack doesn’t. You decide what you upload and when — and you can wipe it all in one click.",
+    "s1t": "Zero bank credentials",
+    "s1d": "No connection to your bank. We never ask for a username or password.",
+    "s2t": "End-to-end encryption",
+    "s2d": "Your statements travel and are stored encrypted. Only you see them.",
+    "s3t": "You own your data",
+    "s3d": "Export or delete all your information whenever you want, no questions asked."
+  },
+  "pricing": {
+    "eyebrow": "Plans",
+    "title": "Start free. Grow when you want.",
+    "sub": "Three tiers. The Free plan is free forever and asks for no card.",
+    "monthly": "Monthly",
+    "annual": "Annual",
+    "save": "-20%",
+    "unit": "/mo",
+    "forever": "forever",
+    "billNote": "Billed annually",
+    "recommended": "Recommended",
+    "comingSoon": "Coming soon",
+    "free": {
+      "name": "FREE",
+      "desc": "To start tidying up your money",
+      "cta": "Start free",
+      "inherits": "Includes:",
+      "features": [
+        "1 financial profile",
+        "3 accounts",
+        "5 imports per month",
+        "200 transactions per month",
+        "Engine: dictionary + community",
+        "50 classification rules",
+        "Dashboard with 6-month history"
+      ]
+    },
+    "pro": {
+      "name": "PRO",
+      "desc": "For those who check it often",
+      "cta": "Choose Pro",
+      "inherits": "Everything in Free, plus:",
+      "features": [
+        "3 financial profiles",
+        "10 accounts",
+        "Unlimited imports",
+        "3,000 transactions per month",
+        "Engine + Haiku AI",
+        "100 rules",
+        "Budgets",
+        "Unlimited dashboard history",
+        "Export to Excel / CSV"
+      ]
+    },
+    "premium": {
+      "name": "PREMIUM",
+      "desc": "Full net worth and investments",
+      "inherits": "Everything in Pro, plus:",
+      "features": [
+        "Unlimited profiles & accounts",
+        "Unlimited transactions & rules",
+        "Advanced budgets",
+        "Unlimited dashboard + forecasts",
+        "Scheduled exports",
+        "Investment portfolio",
+        "Net worth"
+      ]
+    }
+  },
+  "cta": {
+    "title": "Your finances, without giving up your data.",
+    "sub": "Upload your first statement today. Free, no card and no credentials for anyone.",
+    "btn": "Get started free",
+    "note": "Set up in under a minute"
+  },
+  "footer": {
+    "privacy": "Privacy",
+    "help": "Help",
+    "copy": "© 2026 fintrack · You upload, you’re in control."
+  },
+  "mock": {
+    "greeting": "Good morning, Marta",
+    "subtitle": "Here’s what happened with your money in June 2026.",
+    "search": "Search transactions",
+    "month": "June 2026",
+    "upload": "Upload statement",
+    "navSummary": "Summary",
+    "navMovements": "Transactions",
+    "navBudgets": "Budgets",
+    "navGoals": "Savings goals",
+    "navReports": "Reports",
+    "navAccounts": "Accounts",
+    "netWorth": "Total net worth",
+    "netWorthDelta": "+€1,480 this month",
+    "income": "Income",
+    "expenses": "Expenses",
+    "monthBalance": "Month balance",
+    "goal": "Target: 30% of income ✓",
+    "evolution": "Net worth trend",
+    "evolutionSub": "Last 12 months",
+    "byCategory": "Spending by category",
+    "catHousing": "Housing",
+    "catFood": "Groceries",
+    "catOther": "Other",
+    "catLeisure": "Leisure",
+    "catTransport": "Transport",
+    "recent": "Recent transactions",
+    "seeAll": "See all",
+    "txPayroll": "Payroll — Acme Inc.",
+    "txPayrollSub": "Income · Jun 1",
+    "txMortgage": "Mortgage",
+    "txMortgageSub": "Housing · Jun 3",
+    "txGrocery": "Grocery store",
+    "txGrocerySub": "Groceries · Jun 6",
+    "budgets": "Budgets"
+  }
+}

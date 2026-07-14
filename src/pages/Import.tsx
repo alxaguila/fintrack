@@ -307,7 +307,7 @@ function ImportInner() {
           : null,
       })
       toast({ title: t('step3.success', { count: result.imported }), variant: 'success' })
-      navigate('/transactions')
+      navigate('/app/transactions')
     } catch (err: any) {
       console.error('[Import] confirm failed:', err)
       const detail = err?.message || err?.error_description || err?.hint || JSON.stringify(err)

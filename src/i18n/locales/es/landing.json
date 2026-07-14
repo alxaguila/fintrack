@@ -1,0 +1,172 @@
+{
+  "nav": {
+    "product": "Producto",
+    "security": "Seguridad",
+    "pricing": "Precios",
+    "login": "Entrar",
+    "cta": "Empieza gratis"
+  },
+  "hero": {
+    "badge": "Sin conectar tu banco · tú subes tus extractos",
+    "line1": "Tus finanzas.",
+    "line2": "Tu control.",
+    "emph": "Tus datos.",
+    "sub": "Nunca te pedimos las claves de tu banco. Exportas el extracto que ya te da tu banca online, lo subes a fintrack y en segundos tienes todo tu dinero ordenado — sin ceder acceso a nadie.",
+    "cta": "Empieza gratis",
+    "note": "Gratis para siempre en el plan Free · sin tarjeta"
+  },
+  "marquee": {
+    "label": "Compatible con el CSV de tu banco — funciona con todos"
+  },
+  "excel": {
+    "eyebrow": "El problema de siempre",
+    "title": "¿Tu Excel de gastos lleva meses sin abrir?",
+    "sub": "Lo empezaste con toda la ilusión. Luego actualizarlo a mano cada semana dio pereza… y lo abandonaste. fintrack se actualiza solo: subes el extracto y ya está.",
+    "pt1": "Cero fórmulas rotas ni celdas a mano",
+    "pt2": "Se pone al día en el momento que subes un CSV",
+    "pt3": "Categorías, gráficos y patrimonio, automáticos",
+    "oldEdited": "Editado hace 3 meses",
+    "newLabel": "Patrimonio total",
+    "newStatus": "Actualizado hace 2 minutos"
+  },
+  "features": {
+    "title": "Conoce fintrack.",
+    "sub": "Una cuenta clara de tu dinero que se pone al día sola cada vez que subes un extracto.",
+    "f1title": "Sube tu CSV y listo",
+    "f1body": "Arrastra el extracto que exportas de tu banca online. fintrack lo lee, ordena y clasifica al instante.",
+    "uploadHint1": "Arrastra tu extracto aquí",
+    "uploadHint2": ".csv · .xlsx · .ofn — de cualquier banco",
+    "uploadBrowse": "Examinar",
+    "f2title": "Nunca pedimos tus claves",
+    "f2body": "No conectamos con tu banco ni con terceros. Sin credenciales que ceder, sin dudas de qué hacen con ellas.",
+    "f3title": "Clasificación automática",
+    "f3body": "Diccionario, reglas propias y el motor Haiku etiquetan cada movimiento por ti. Tú solo revisas."
+  },
+  "steps": {
+    "eyebrow": "Tres pasos",
+    "title": "Del extracto al control en un minuto.",
+    "s1title": "Exporta tu extracto",
+    "s1body": "Descarga el CSV que ya te ofrece tu banca online. No hace falta nada más de tu banco.",
+    "s2title": "Súbelo a fintrack",
+    "s2body": "Arrástralo y déjalo. Detectamos duplicados y transferencias entre tus cuentas automáticamente.",
+    "s3title": "Todo ordenado",
+    "s3body": "Dashboards, posición global y análisis al día. Sin tocar una hoja de cálculo nunca más."
+  },
+  "security": {
+    "eyebrow": "Privacidad por diseño",
+    "title": "Tus datos no salen de tu control.",
+    "sub": "La mayoría de apps te piden las claves de tu banco y nadie te dice qué hacen con ellas. fintrack no. Tú decides qué subes y cuándo — y puedes borrarlo todo en un clic.",
+    "s1t": "Cero claves bancarias",
+    "s1d": "No hay conexión con tu banco. No pedimos usuario ni contraseña, nunca.",
+    "s2t": "Cifrado de extremo a extremo",
+    "s2d": "Tus extractos viajan y se guardan cifrados. Solo tú los ves.",
+    "s3t": "Tú mandas sobre tus datos",
+    "s3d": "Exporta o elimina toda tu información cuando quieras, sin preguntas."
+  },
+  "pricing": {
+    "eyebrow": "Planes",
+    "title": "Empieza gratis. Crece cuando quieras.",
+    "sub": "Tres modalidades. El plan Free es gratis para siempre y no pide tarjeta.",
+    "monthly": "Mensual",
+    "annual": "Anual",
+    "save": "-20%",
+    "unit": "/mes",
+    "forever": "para siempre",
+    "billNote": "Facturado anualmente",
+    "recommended": "Recomendado",
+    "comingSoon": "Próximamente",
+    "free": {
+      "name": "FREE",
+      "desc": "Para empezar a ordenar tu dinero",
+      "cta": "Empezar gratis",
+      "inherits": "Incluye:",
+      "features": [
+        "1 perfil financiero",
+        "3 cuentas",
+        "5 importaciones al mes",
+        "200 movimientos al mes",
+        "Motor: diccionario + comunidad",
+        "50 reglas de clasificación",
+        "Dashboard con histórico de 6 meses"
+      ]
+    },
+    "pro": {
+      "name": "PRO",
+      "desc": "Para quien lo revisa a menudo",
+      "cta": "Elegir Pro",
+      "inherits": "Todo lo de Free, y además:",
+      "features": [
+        "3 perfiles financieros",
+        "10 cuentas",
+        "Importaciones ilimitadas",
+        "3.000 movimientos al mes",
+        "Motor + IA Haiku",
+        "100 reglas",
+        "Presupuestos",
+        "Dashboard histórico ilimitado",
+        "Exportación a Excel / CSV"
+      ]
+    },
+    "premium": {
+      "name": "PREMIUM",
+      "desc": "Patrimonio completo e inversiones",
+      "inherits": "Todo lo de Pro, y además:",
+      "features": [
+        "Perfiles y cuentas ilimitados",
+        "Movimientos y reglas ilimitados",
+        "Presupuestos avanzados",
+        "Dashboard ilimitado + previsiones",
+        "Exportación programada",
+        "Cartera de valores",
+        "Mi patrimonio"
+      ]
+    }
+  },
+  "cta": {
+    "title": "Tus finanzas, sin ceder tus datos.",
+    "sub": "Sube tu primer extracto hoy. Gratis, sin tarjeta y sin dar tus claves a nadie.",
+    "btn": "Empieza gratis",
+    "note": "Se configura en menos de un minuto"
+  },
+  "footer": {
+    "privacy": "Privacidad",
+    "help": "Ayuda",
+    "copy": "© 2026 fintrack · Tú subes, tú controlas."
+  },
+  "mock": {
+    "greeting": "Buenos días, Marta",
+    "subtitle": "Esto es lo que pasó con tu dinero en junio 2026.",
+    "search": "Buscar movimientos",
+    "month": "Junio 2026",
+    "upload": "Subir extracto",
+    "navSummary": "Resumen",
+    "navMovements": "Movimientos",
+    "navBudgets": "Presupuestos",
+    "navGoals": "Metas de ahorro",
+    "navReports": "Informes",
+    "navAccounts": "Cuentas",
+    "netWorth": "Patrimonio total",
+    "netWorthDelta": "+€1.480 este mes",
+    "income": "Ingresos",
+    "expenses": "Gastos",
+    "monthBalance": "Balance del mes",
+    "goal": "Objetivo: 30% de ingresos ✓",
+    "evolution": "Evolución del patrimonio",
+    "evolutionSub": "Últimos 12 meses",
+    "byCategory": "Gastos por categoría",
+    "catHousing": "Vivienda",
+    "catFood": "Alimentación",
+    "catOther": "Otros",
+    "catLeisure": "Ocio",
+    "catTransport": "Transporte",
+    "recent": "Movimientos recientes",
+    "seeAll": "Ver todos",
+    "txPayroll": "Nómina — Acme S.L.",
+    "txPayrollSub": "Ingreso · 1 jun",
+    "txMortgage": "Hipoteca",
+    "txMortgageSub": "Vivienda · 3 jun",
+    "txGrocery": "Mercadona",
+    "txGrocerySub": "Alimentación · 6 jun",
+    "budgets": "Presupuestos"
+  }
+}

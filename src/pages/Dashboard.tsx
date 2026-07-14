@@ -261,7 +261,7 @@ export default function Dashboard() {
     // Movimientos no aplicaría filtro de categoría y saldrían todos).
     if (categoryId) params.set('categoryId', categoryId)
     else params.set('uncategorized', 'true')
-    navigate(`/transactions?${params.toString()}`)
+    navigate(`/app/transactions?${params.toString()}`)
   }
 
   if (!activeProfile) {
@@ -296,7 +296,7 @@ export default function Dashboard() {
       {/* Aviso de movimientos sin categoría (movido desde Posición Global) */}
       {!!counts?.uncategorized && (
         <button
-          onClick={() => navigate('/transactions?uncategorized=true')}
+          onClick={() => navigate('/app/transactions?uncategorized=true')}
           className="flex shrink-0 items-center gap-[11px] rounded-xl border border-[#EDDCA8] bg-[#FBF3DC] px-4 py-[10px] text-left transition-colors hover:bg-[#F8ECC8]"
         >
           <svg width="17" height="17" viewBox="0 0 20 20" className="shrink-0"><path d="M10 2 L18.5 17 H1.5 Z" fill="none" stroke="#B5842E" strokeWidth="1.6" strokeLinejoin="round" /><line x1="10" y1="8" x2="10" y2="12" stroke="#B5842E" strokeWidth="1.7" strokeLinecap="round" /><circle cx="10" cy="14.5" r="1" fill="#B5842E" /></svg>
@@ -311,7 +311,7 @@ export default function Dashboard() {
         <div className="flex flex-1 flex-col items-center justify-center gap-3 text-center">
           <p className="text-lg font-medium">{t('no_data.title')}</p>
           <p className="text-muted-foreground text-sm">{t('no_data.description')}</p>
-          <Button onClick={() => navigate('/import')}>{t('no_data.action')}</Button>
+          <Button onClick={() => navigate('/app/import')}>{t('no_data.action')}</Button>
         </div>
       ) : (
         <>

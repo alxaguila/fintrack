@@ -59,8 +59,8 @@ export function AppShell() {
     )
   }
 
-  // No autenticado
-  if (!session) return <Navigate to="/auth" replace />
+  // No autenticado → landing pública
+  if (!session) return <Navigate to="/" replace />
 
   // Esperar a los ajustes del usuario para decidir el onboarding
   if (settingsLoading || !settings) {

@@ -345,7 +345,7 @@ export default function Home() {
         <Wallet className="h-12 w-12 text-muted-foreground/40" />
         <p className="font-medium">{t('empty.title')}</p>
         <p className="text-sm text-muted-foreground">{t('empty.description')}</p>
-        <Button onClick={() => navigate('/accounts')}>{t('empty.action')}</Button>
+        <Button onClick={() => navigate('/app/accounts')}>{t('empty.action')}</Button>
       </div>
     )
   }
@@ -405,7 +405,7 @@ export default function Home() {
               isLoading={balancesLoading}
               typeLabel={tc(`account_type.${acc.type}`)}
               updatedText={updatedText(balances?.get(acc.id)?.daysSinceImport ?? null)}
-              onClick={() => navigate(`/transactions?accountId=${acc.id}`)}
+              onClick={() => navigate(`/app/transactions?accountId=${acc.id}`)}
               onEdit={() => openEdit(acc)}
             />
           ))}
@@ -426,7 +426,7 @@ export default function Home() {
           {creditOpen && (
             <div className="flex flex-col gap-3 px-[18px] pb-4 md:flex-row">
               {creditSorted.map(c => (
-                <div key={c.id} onClick={() => navigate(`/transactions?accountId=${c.id}`)} className="flex flex-1 cursor-pointer items-center gap-[10px] rounded-xl border border-[#EFEBE2] bg-[#FAF7F1] p-[11px_13px]">
+                <div key={c.id} onClick={() => navigate(`/app/transactions?accountId=${c.id}`)} className="flex flex-1 cursor-pointer items-center gap-[10px] rounded-xl border border-[#EFEBE2] bg-[#FAF7F1] p-[11px_13px]">
                   <BankLogo entity={c.entity} color={c.color} logoUrl={logoFor(c)} size={26} radius={7} />
                   <div className="min-w-0 flex-1 leading-[1.2]">
                     <div className="truncate text-[12px] font-semibold text-[#0A2540]">{accountLabel(c)}</div>

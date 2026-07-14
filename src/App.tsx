@@ -2,7 +2,8 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { AppShell } from '@/components/layout/AppShell'
 import { Toaster } from '@/components/ui/toaster'
-import Auth from '@/pages/Auth'
+import Landing from '@/pages/Landing'
+import Register from '@/pages/Register'
 import Home from '@/pages/Home'
 import Dashboard from '@/pages/Dashboard'
 import Transactions from '@/pages/Transactions'
@@ -32,8 +33,14 @@ export default function App() {
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
         <Routes>
-          <Route path="/auth" element={<Auth />} />
-          <Route element={<AppShell />}>
+          {/* Puerta pública */}
+          <Route path="/" element={<Landing />} />
+          <Route path="/register" element={<Register />} />
+          {/* Compatibilidad con enlaces antiguos a /auth */}
+          <Route path="/auth" element={<Navigate to="/" replace />} />
+
+          {/* App autenticada (bajo /app) */}
+          <Route path="/app" element={<AppShell />}>
             <Route index element={<Home />} />
             <Route path="analysis" element={<Dashboard />} />
             <Route path="transactions" element={<Transactions />} />
@@ -50,8 +57,9 @@ export default function App() {
             <Route path="admin/categorias" element={<AdminRoute><AdminCategorias /></AdminRoute>} />
             <Route path="admin/usuarios" element={<AdminRoute><AdminUsuarios /></AdminRoute>} />
             <Route path="admin/estadisticas" element={<AdminRoute><AdminEstadisticas /></AdminRoute>} />
-            <Route path="*" element={<Navigate to="/" replace />} />
           </Route>
+
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </BrowserRouter>
       <Toaster />

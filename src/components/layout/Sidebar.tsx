@@ -8,14 +8,14 @@ import { useUnreviewedBankCount } from '@/hooks/useAdminBankEntities'
 import { Logo } from '@/components/Logo'
 
 const navItems = [
-  { to: '/',             icon: Home,           label: 'nav.home' },
-  { to: '/analysis',     icon: BarChart3,      label: 'nav.analysis' },
-  { to: '/transactions', icon: ArrowLeftRight, label: 'nav.transactions' },
-  { to: '/accounts',     icon: Wallet,         label: 'nav.accounts' },
-  { to: '/history',      icon: FileClock,      label: 'nav.history' },
+  { to: '/app',              icon: Home,           label: 'nav.home' },
+  { to: '/app/analysis',     icon: BarChart3,      label: 'nav.analysis' },
+  { to: '/app/transactions', icon: ArrowLeftRight, label: 'nav.transactions' },
+  { to: '/app/accounts',     icon: Wallet,         label: 'nav.accounts' },
+  { to: '/app/history',      icon: FileClock,      label: 'nav.history' },
 ]
 
-const settingsItem = { to: '/settings', icon: Settings, label: 'nav.settings' }
+const settingsItem = { to: '/app/settings', icon: Settings, label: 'nav.settings' }
 
 // Estilo compartido de item de nav (dolfin): activo = navy elevado + barra coral.
 const itemClass = (isActive: boolean) =>
@@ -34,7 +34,7 @@ function ActiveBar() {
 export function Sidebar() {
   const { t } = useTranslation('common')
   const location = useLocation()
-  const onTransactions = location.pathname.startsWith('/transactions')
+  const onTransactions = location.pathname.startsWith('/app/transactions')
   const { isAdmin } = useIsAdmin()
   const { data: pendingEntities = 0 } = useUnreviewedBankCount(isAdmin)
 
@@ -52,7 +52,7 @@ export function Sidebar() {
       <nav className="mt-3 flex flex-col gap-[3px]">
         {navItems.map(({ to, icon: Icon, label }) => (
           <div key={to}>
-            <NavLink to={to} end={to === '/'} className="block">
+            <NavLink to={to} end={to === '/app'} className="block">
               {({ isActive }) => (
                 <span className={itemClass(isActive)}>
                   {isActive && <ActiveBar />}
@@ -63,9 +63,9 @@ export function Sidebar() {
             </NavLink>
 
             {/* Submenú: Reglas de clasificación (visible al estar en Movimientos) */}
-            {to === '/transactions' && onTransactions && (
+            {to === '/app/transactions' && onTransactions && (
               <NavLink
-                to="/transactions/rules"
+                to="/app/transactions/rules"
                 className={({ isActive }) =>
                   cn(
                     'ml-4 mt-1 flex items-center gap-3 rounded-[11px] border-l border-[var(--brand-ink-2)] px-3 py-2 text-sm transition-colors',
@@ -96,7 +96,7 @@ export function Sidebar() {
         <div className="flex flex-col gap-[3px]">
           {/* CTA: Importar extractos — acción primaria de la app */}
           <NavLink
-            to="/import"
+            to="/app/import"
             className={({ isActive }) =>
               cn(
                 'flex items-center gap-3 rounded-[11px] bg-[var(--brand-accent)] px-3 py-[11px] text-sm font-semibold text-white transition-colors hover:bg-[#F55E3E]',
@@ -121,7 +121,7 @@ export function Sidebar() {
 
           {/* Panel de administración — solo visible para admins. */}
           {isAdmin && (
-            <NavLink to="/admin" className="block">
+            <NavLink to="/app/admin" className="block">
               {({ isActive }) => (
                 <span className={itemClass(isActive)}>
                   {isActive && <ActiveBar />}

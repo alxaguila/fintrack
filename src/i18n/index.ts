@@ -13,6 +13,7 @@ import esSettings from './locales/es/settings.json'
 import esCategories from './locales/es/categories.json'
 import esHome from './locales/es/home.json'
 import esAdmin from './locales/es/admin.json'
+import esLanding from './locales/es/landing.json'
 
 import enCommon from './locales/en/common.json'
 import enAuth from './locales/en/auth.json'
@@ -25,6 +26,7 @@ import enSettings from './locales/en/settings.json'
 import enCategories from './locales/en/categories.json'
 import enHome from './locales/en/home.json'
 import enAdmin from './locales/en/admin.json'
+import enLanding from './locales/en/landing.json'
 
 i18n
   .use(LanguageDetector)
@@ -46,6 +48,7 @@ i18n
         categories: esCategories,
         home: esHome,
         admin: esAdmin,
+        landing: esLanding,
       },
       en: {
         common: enCommon,
@@ -59,6 +62,7 @@ i18n
         categories: enCategories,
         home: enHome,
         admin: enAdmin,
+        landing: enLanding,
       },
     },
     interpolation: { escapeValue: false },

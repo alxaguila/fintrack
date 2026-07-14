@@ -8,7 +8,7 @@ export function SettingsHeader({ title }: { title: string }) {
   return (
     <div className="flex items-center gap-3">
       <Link
-        to="/settings"
+        to="/app/settings"
         aria-label={t('menu.back')}
         className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-slate-600 transition-colors hover:bg-slate-100"
       >
