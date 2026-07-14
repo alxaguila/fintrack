@@ -17,11 +17,11 @@ export function OnboardingGate() {
   const location = useLocation()
   const { activeProfile } = useProfile()
   const { data: hasStatements } = useHasStatements(activeProfile?.id)
-  // Pantallas exentas de la pastilla:
-  //  - /import: es donde se sube (y se puede crear la cuenta) → redundante y bloquearía.
-  //  - /settings: el usuario necesita poder entrar (cerrar sesión, idioma, cuenta…).
+  // Pantallas exentas de la pastilla (rutas bajo /app):
+  //  - /app/import: es donde se sube (y se puede crear la cuenta) → redundante y bloquearía.
+  //  - /app/settings: el usuario necesita poder entrar (cerrar sesión, idioma, cuenta…).
   const path = location.pathname
-  const exempt = path.startsWith('/import') || path.startsWith('/settings')
+  const exempt = path.startsWith('/app/import') || path.startsWith('/app/settings')
 
   // Solo sustituimos el contenido cuando SABEMOS que no hay extractos (===false),
   // nunca durante la carga (undefined) para no parpadear.
