@@ -8,12 +8,15 @@
   },
   "hero": {
     "badge": "No bank connection · you upload your statements",
-    "line1": "Your finances.",
-    "line2": "Your control.",
-    "emph": "Your data.",
-    "sub": "We never ask for your bank credentials. Export the statement your online bank already gives you, upload it to fintrack and get all your money in order in seconds — without handing access to anyone.",
+    "line1": "All your accounts,",
+    "line2": "without sharing your",
+    "emph": "bank logins.",
+    "sub": "No bank connection, no access handed to anyone. Upload the statement your online bank already gives you and get all your accounts in order in seconds — the control your spreadsheet never delivered.",
     "cta": "Get started free",
-    "note": "Free forever on the Free plan · no card"
+    "note": "Free forever on the Free plan · no card",
+    "trust1": "No bank credentials",
+    "trust2": "End-to-end encryption",
+    "trust3": "Wipe it all in one click"
   },
   "marquee": {
     "label": "Works with your bank’s CSV — with every bank"
@@ -70,6 +73,7 @@
     "monthly": "Monthly",
     "annual": "Annual",
     "save": "-20%",
+    "swipeHint": "Swipe to compare plans →",
     "unit": "/mo",
     "forever": "forever",
     "billNote": "Billed annually",

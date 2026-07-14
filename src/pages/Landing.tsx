@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { supabase } from '@/lib/supabase'
@@ -13,7 +13,7 @@ const CSS = `
 .ftl h1,.ftl h2,.ftl h3{text-wrap:pretty}
 .ftl-nlink{transition:color .2s ease}
 .ftl-nlink:hover{color:#fff}
-.ftl-foot a{color:#66757F;transition:color .2s ease}
+.ftl-foot a{color:#586470;transition:color .2s ease}
 .ftl-foot a:hover{color:${BRAND.ink}}
 .ftl-primary{transition:background .2s ease}
 .ftl-primary:hover{background:${BRAND.accentHover}!important}
@@ -28,25 +28,44 @@ const CSS = `
 @keyframes ftChev{0%,100%{opacity:.35;transform:translateX(0)}50%{opacity:1;transform:translateX(5px)}}
 .ftl-heromock{animation:ftTilt 7s ease-in-out infinite}
 .ftl-up{animation:ftUp .7s cubic-bezier(.2,.7,.2,1) both}
+.ftl-reveal{transition:opacity .7s cubic-bezier(.2,.7,.2,1),transform .7s cubic-bezier(.2,.7,.2,1)}
+.ftl-anim .ftl-reveal{opacity:0;transform:translateY(28px)}
+.ftl-anim .ftl-reveal.ftl-in{opacity:1;transform:none}
+@keyframes ftDraw{to{stroke-dashoffset:0}}
+@keyframes ftDot{to{opacity:1}}
+.ftl-draw{stroke-dasharray:1;stroke-dashoffset:1;animation:ftDraw 1.5s cubic-bezier(.4,.6,.2,1) .35s forwards}
+.ftl-dot{opacity:0;animation:ftDot .4s ease 1.5s forwards}
+.ftl-price-hint{display:none}
+.ftl-price-grid::-webkit-scrollbar{display:none}
 @media (max-width:1024px){
   .ftl-hero-card{min-height:auto!important}
   .ftl-hero-body{flex-direction:column!important;gap:36px!important;padding:32px 24px 40px!important}
   .ftl-hero-left{flex:1 1 auto!important;width:100%!important}
   .ftl-heromock{animation:none!important;transform:none!important}
   .ftl-h1{font-size:52px!important}
-  .ftl-grid-2,.ftl-grid-3,.ftl-price-grid,.ftl-sec-grid{grid-template-columns:1fr!important}
-  .ftl-price-pro{transform:none!important}
+  .ftl-grid-2,.ftl-grid-3,.ftl-sec-grid{grid-template-columns:1fr!important}
   .ftl-steps{flex-direction:column!important;align-items:center!important}
   .ftl-chev{transform:rotate(90deg)!important;padding-top:0!important}
+  .ftl-price-hint{display:block!important}
+  .ftl-price-grid{display:grid!important;grid-auto-flow:column!important;grid-template-columns:none!important;grid-auto-columns:minmax(0,84%)!important;max-width:none!important;overflow-x:auto!important;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;gap:16px!important;padding:8px 2px 20px!important;scrollbar-width:none}
+  .ftl-price-grid>*{scroll-snap-align:start;scroll-snap-stop:always}
+  .ftl-price-pro{transform:none!important}
 }
 @media (max-width:768px){
   .ftl-navcenter{display:none!important}
   .ftl-h1{font-size:42px!important}
   .ftl-sec-inner,.ftl-cta-inner{padding:44px 24px!important}
+  .ftl-mock-tools>:not(:last-child){display:none!important}
 }
 @media (max-width:520px){
   .ftl-h1{font-size:34px!important}
   .ftl-navcta{display:none!important}
+  .ftl-price-grid{grid-auto-columns:minmax(0,88%)!important}
+  .ftl-mock-side{display:none!important}
+}
+@media (prefers-reduced-motion: reduce){
+  .ftl *{animation-duration:.001ms!important;animation-iteration-count:1!important;animation-delay:0ms!important;transition-duration:.001ms!important}
+  .ftl-anim .ftl-reveal{opacity:1!important;transform:none!important}
 }
 `
 
@@ -58,6 +77,35 @@ export default function Landing() {
   const [searchParams, setSearchParams] = useSearchParams()
   const [annual, setAnnual] = useState(true)
   const [loginOpen, setLoginOpen] = useState(false)
+  const rootRef = useRef<HTMLDivElement>(null)
+
+  // Reveal al hacer scroll. Se gatea con la clase `ftl-anim` puesta ANTES del primer
+  // paint (useLayoutEffect) para que sin JS o con reduced-motion el contenido quede
+  // visible por defecto y nunca se envíe en blanco.
+  useLayoutEffect(() => {
+    const root = rootRef.current
+    if (!root) return
+    const els = Array.from(root.querySelectorAll<HTMLElement>('.ftl-reveal'))
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    if (reduce || !('IntersectionObserver' in window)) {
+      els.forEach((e) => e.classList.add('ftl-in'))
+      return
+    }
+    root.classList.add('ftl-anim')
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((en) => {
+          if (en.isIntersecting) {
+            en.target.classList.add('ftl-in')
+            io.unobserve(en.target)
+          }
+        })
+      },
+      { rootMargin: '0px 0px -12% 0px', threshold: 0.12 },
+    )
+    els.forEach((e) => io.observe(e))
+    return () => io.disconnect()
+  }, [])
 
   // Enlace "Inicia sesión" del registro (/?login=1) → abre el popup y limpia la URL.
   useEffect(() => {
@@ -120,8 +168,22 @@ export default function Landing() {
     </span>
   )
 
+  // Icono por paso: 1) descarga de extracto, 2) subida, 3) tick final.
+  const stepIcon = (n: number) => {
+    const p: React.SVGProps<SVGSVGElement> = { fill: 'none', stroke: '#fff', strokeWidth: 1.7, strokeLinecap: 'round', strokeLinejoin: 'round' }
+    if (n === 1) return (
+      <svg width="42" height="42" viewBox="0 0 24 24" {...p}><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z" /><path d="M14 3v5h5" /><path d="M12 11.5v5" /><path d="M9.5 14l2.5 2.5L14.5 14" /></svg>
+    )
+    if (n === 2) return (
+      <svg width="42" height="42" viewBox="0 0 24 24" {...p}><path d="M12 16V4" /><path d="M8 8l4-4 4 4" /><path d="M4 15v4a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-4" /></svg>
+    )
+    return (
+      <svg width="44" height="44" viewBox="0 0 24 24" {...p} strokeWidth={2}><path d="M5 12.5l5 5 9-11" /></svg>
+    )
+  }
+
   return (
-    <div className="ftl" style={{ width: '100%', background: BRAND.cream, color: BRAND.ink, overflowX: 'hidden', fontFamily: BRAND.sans, WebkitFontSmoothing: 'antialiased' }}>
+    <div ref={rootRef} className="ftl" style={{ width: '100%', background: BRAND.cream, color: BRAND.ink, overflowX: 'hidden', fontFamily: BRAND.sans, WebkitFontSmoothing: 'antialiased' }}>
       <style>{CSS}</style>
       <LoginDialog open={loginOpen} onOpenChange={setLoginOpen} onGoRegister={() => { setLoginOpen(false); goRegister() }} />
 
@@ -169,6 +231,16 @@ export default function Landing() {
                 </button>
               </div>
               <div className="ftl-up" style={{ marginTop: 30, font: `400 13px ${BRAND.sans}`, color: '#6E8FA2', animationDelay: '.42s' }}>{t('hero.note')}</div>
+              <div className="ftl-up" style={{ display: 'flex', flexWrap: 'wrap', gap: '10px 20px', marginTop: 22, animationDelay: '.5s' }}>
+                {['hero.trust1', 'hero.trust2', 'hero.trust3'].map((k) => (
+                  <span key={k} style={{ display: 'inline-flex', alignItems: 'center', gap: 7, font: `500 12.5px ${BRAND.sans}`, color: '#9FBAC9' }}>
+                    <span style={{ width: 16, height: 16, borderRadius: '50%', background: 'rgba(126,230,192,.16)', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', flex: 'none' }}>
+                      <svg width="9" height="9" viewBox="0 0 18 18"><path d="M4 9.5 L7.5 13 L14 5.5" fill="none" stroke="#7EE6C0" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" /></svg>
+                    </span>
+                    {t(k)}
+                  </span>
+                ))}
+              </div>
             </div>
 
             <div style={{ flex: 1, minWidth: 0, perspective: 1700 }}>
@@ -180,7 +252,7 @@ export default function Landing() {
 
       {/* ==================== BANK MARQUEE ==================== */}
       <div style={{ maxWidth: 1408, margin: '0 auto', padding: '44px 34px 8px', boxSizing: 'border-box' }}>
-        <div style={{ textAlign: 'center', font: `500 12px ${BRAND.sans}`, letterSpacing: '.14em', textTransform: 'uppercase', color: '#9AA6A0' }}>{t('marquee.label')}</div>
+        <div style={{ textAlign: 'center', font: `500 12px ${BRAND.sans}`, letterSpacing: '.14em', textTransform: 'uppercase', color: '#6E7A72' }}>{t('marquee.label')}</div>
         <div style={{ marginTop: 22, overflow: 'hidden', WebkitMaskImage: 'linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent)', maskImage: 'linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent)' }}>
           <div style={{ display: 'flex', width: 'max-content', animation: 'ftMarquee 34s linear infinite' }}>
             {[0, 1].map((k) => (
@@ -194,9 +266,9 @@ export default function Landing() {
 
       {/* ==================== EXCEL PROBLEM ==================== */}
       <section style={{ maxWidth: 1408, margin: '0 auto', padding: '96px 34px 40px', boxSizing: 'border-box' }}>
-        <div className="ftl-grid-2" style={{ display: 'grid', gridTemplateColumns: '1fr 1.05fr', gap: 64, alignItems: 'center' }}>
+        <div className="ftl-grid-2 ftl-reveal" style={{ display: 'grid', gridTemplateColumns: '1fr 1.05fr', gap: 64, alignItems: 'center' }}>
           <div>
-            <div style={{ font: `500 12px ${BRAND.sans}`, letterSpacing: '.16em', textTransform: 'uppercase', color: '#9AA6A0' }}>{t('excel.eyebrow')}</div>
+            <div style={{ font: `500 12px ${BRAND.sans}`, letterSpacing: '.16em', textTransform: 'uppercase', color: '#6E7A72' }}>{t('excel.eyebrow')}</div>
             <h2 style={{ margin: '16px 0 0', font: `500 48px/1.08 ${BRAND.display}`, letterSpacing: '-.035em', color: BRAND.ink }}>{t('excel.title')}</h2>
             <p style={{ margin: '20px 0 0', maxWidth: 460, font: `400 18px/1.6 ${BRAND.sans}`, color: '#5A6B77' }}>{t('excel.sub')}</p>
             <div style={{ marginTop: 26, display: 'flex', flexDirection: 'column', gap: 14 }}>
@@ -256,15 +328,15 @@ export default function Landing() {
 
       {/* ==================== FEATURES ==================== */}
       <section id="producto" style={{ maxWidth: 1408, margin: '0 auto', padding: '80px 34px 40px', boxSizing: 'border-box' }}>
-        <div style={{ maxWidth: 640, margin: '0 auto 46px', textAlign: 'center' }}>
+        <div className="ftl-reveal" style={{ maxWidth: 640, margin: '0 auto 46px', textAlign: 'center' }}>
           <h2 style={{ margin: 0, font: `500 48px/1.05 ${BRAND.display}`, letterSpacing: '-.035em', color: BRAND.ink }}>{t('features.title')}</h2>
           <p style={{ margin: '16px 0 0', font: `400 18px/1.55 ${BRAND.sans}`, color: '#5A6B77' }}>{t('features.sub')}</p>
         </div>
-        <div className="ftl-grid-3" style={{ display: 'grid', gridTemplateColumns: '1.7fr 1fr 1fr', gap: 18 }}>
+        <div className="ftl-grid-3 ftl-reveal" style={{ display: 'grid', gridTemplateColumns: '1.7fr 1fr 1fr', gap: 18 }}>
           <div className="ftl-card" style={{ background: '#EDE9E1', border: '1px solid #E1DACC', borderRadius: 20, padding: '26px 28px', minHeight: 312, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
             <div>
               <h3 style={{ margin: 0, font: `500 25px/1.15 ${BRAND.display}`, letterSpacing: '-.02em', color: BRAND.ink }}>{t('features.f1title')}</h3>
-              <p style={{ margin: '11px 0 0', maxWidth: 320, font: `400 15px/1.55 ${BRAND.sans}`, color: '#66757F' }}>{t('features.f1body')}</p>
+              <p style={{ margin: '11px 0 0', maxWidth: 320, font: `400 15px/1.55 ${BRAND.sans}`, color: '#586470' }}>{t('features.f1body')}</p>
             </div>
             <div style={{ marginTop: 22, background: '#fff', border: '1.5px dashed #C4CDBF', borderRadius: 14, padding: 20, display: 'flex', alignItems: 'center', gap: 15 }}>
               <span style={{ width: 44, height: 44, borderRadius: 12, background: '#EAF4FA', display: 'flex', alignItems: 'center', justifyContent: 'center', flex: 'none' }}>
@@ -298,19 +370,19 @@ export default function Landing() {
 
       {/* ==================== 3 STEPS ==================== */}
       <section style={{ maxWidth: 1408, margin: '0 auto', padding: '80px 34px 40px', boxSizing: 'border-box' }}>
-        <div style={{ textAlign: 'center', maxWidth: 620, margin: '0 auto 60px' }}>
-          <div style={{ font: `500 12px ${BRAND.sans}`, letterSpacing: '.16em', textTransform: 'uppercase', color: '#9AA6A0' }}>{t('steps.eyebrow')}</div>
-          <h2 style={{ margin: '14px 0 0', font: `500 44px/1.08 ${BRAND.display}`, letterSpacing: '-.035em', color: BRAND.ink }}>{t('steps.title')}</h2>
+        <div className="ftl-reveal" style={{ textAlign: 'center', maxWidth: 620, margin: '0 auto 60px' }}>
+          <h2 style={{ margin: 0, font: `500 44px/1.08 ${BRAND.display}`, letterSpacing: '-.035em', color: BRAND.ink }}>{t('steps.title')}</h2>
         </div>
-        <div className="ftl-steps" style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'center', gap: 14 }}>
+        <div className="ftl-steps ftl-reveal" style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'center', gap: 14 }}>
           {[1, 2, 3].map((n, idx) => (
             <div key={n} style={{ display: 'contents' }}>
               <div style={{ flex: 1, maxWidth: 320, textAlign: 'center' }}>
                 <div style={{ width: 96, height: 96, margin: '0 auto', borderRadius: '50%', background: n === 3 ? accent : BRAND.ink, display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', boxShadow: n === 3 ? '0 18px 40px rgba(255,107,74,.32)' : '0 18px 40px rgba(10,37,64,.24)' }}>
-                  <span style={{ font: `600 40px ${BRAND.display}`, color: '#fff' }}>{n}</span>
+                  {stepIcon(n)}
+                  <span style={{ position: 'absolute', top: -3, right: -3, width: 27, height: 27, borderRadius: '50%', background: '#fff', color: n === 3 ? accent : BRAND.ink, font: `700 13px ${BRAND.display}`, display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 10px rgba(10,37,64,.18)' }}>{n}</span>
                 </div>
                 <h3 style={{ margin: '26px 0 0', font: `500 22px ${BRAND.display}`, letterSpacing: '-.02em', color: BRAND.ink }}>{t(`steps.s${n}title`)}</h3>
-                <p style={{ margin: '10px auto 0', maxWidth: 260, font: `400 15px/1.55 ${BRAND.sans}`, color: '#66757F' }}>{t(`steps.s${n}body`)}</p>
+                <p style={{ margin: '10px auto 0', maxWidth: 260, font: `400 15px/1.55 ${BRAND.sans}`, color: '#586470' }}>{t(`steps.s${n}body`)}</p>
               </div>
               {idx < 2 && (
                 <div className="ftl-chev" style={{ flex: 'none', paddingTop: 32, color: accent }}>
@@ -324,7 +396,7 @@ export default function Landing() {
 
       {/* ==================== SECURITY ==================== */}
       <section id="seguridad" style={{ maxWidth: 1408, margin: '0 auto', padding: '70px 34px', boxSizing: 'border-box' }}>
-        <div className="ftl-sec-inner" style={{ background: BRAND.ink, borderRadius: 26, padding: '64px 60px', position: 'relative', overflow: 'hidden' }}>
+        <div className="ftl-sec-inner ftl-reveal" style={{ background: BRAND.ink, borderRadius: 26, padding: '64px 60px', position: 'relative', overflow: 'hidden' }}>
           <div style={{ position: 'absolute', left: -120, top: -120, width: 420, height: 420, borderRadius: '50%', background: 'radial-gradient(circle,rgba(10,123,174,.3),transparent 70%)' }} />
           <div style={{ position: 'relative', maxWidth: 760 }}>
             <div style={{ font: `500 12px ${BRAND.sans}`, letterSpacing: '.16em', textTransform: 'uppercase', color: '#5F9DBE' }}>{t('security.eyebrow')}</div>
@@ -344,10 +416,9 @@ export default function Landing() {
 
       {/* ==================== PRICING ==================== */}
       <section id="precios" style={{ maxWidth: 1408, margin: '0 auto', padding: '80px 34px 40px', boxSizing: 'border-box' }}>
-        <div style={{ textAlign: 'center', maxWidth: 640, margin: '0 auto 30px' }}>
-          <div style={{ font: `500 12px ${BRAND.sans}`, letterSpacing: '.16em', textTransform: 'uppercase', color: '#9AA6A0' }}>{t('pricing.eyebrow')}</div>
-          <h2 style={{ margin: '14px 0 0', font: `500 46px/1.06 ${BRAND.display}`, letterSpacing: '-.035em', color: BRAND.ink }}>{t('pricing.title')}</h2>
-          <p style={{ margin: '16px 0 0', font: `400 17px/1.55 ${BRAND.sans}`, color: '#66757F' }}>{t('pricing.sub')}</p>
+        <div className="ftl-reveal" style={{ textAlign: 'center', maxWidth: 640, margin: '0 auto 30px' }}>
+          <h2 style={{ margin: 0, font: `500 46px/1.06 ${BRAND.display}`, letterSpacing: '-.035em', color: BRAND.ink }}>{t('pricing.title')}</h2>
+          <p style={{ margin: '16px 0 0', font: `400 17px/1.55 ${BRAND.sans}`, color: '#586470' }}>{t('pricing.sub')}</p>
         </div>
         <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 42 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 4, background: '#EAE5DA', borderRadius: 12, padding: 4 }}>
@@ -357,6 +428,8 @@ export default function Landing() {
             </button>
           </div>
         </div>
+
+        <div className="ftl-price-hint" style={{ textAlign: 'center', margin: '-16px 0 20px', font: `500 13px ${BRAND.sans}`, color: '#8B98A2' }}>{t('pricing.swipeHint')}</div>
 
         <div className="ftl-price-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 20, maxWidth: 1080, margin: '0 auto', alignItems: 'start' }}>
           {/* FREE */}
@@ -422,7 +495,7 @@ export default function Landing() {
 
       {/* ==================== CTA FINAL ==================== */}
       <section style={{ maxWidth: 1408, margin: '0 auto', padding: '60px 34px 80px', boxSizing: 'border-box' }}>
-        <div className="ftl-cta-inner" style={{ background: BRAND.ink, borderRadius: 26, padding: '72px 40px', textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
+        <div className="ftl-cta-inner ftl-reveal" style={{ background: BRAND.ink, borderRadius: 26, padding: '72px 40px', textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
           <div style={{ position: 'absolute', right: -100, top: -120, width: 420, height: 420, borderRadius: '50%', background: 'radial-gradient(circle,rgba(56,176,214,.28),transparent 70%)' }} />
           <div style={{ position: 'relative' }}>
             <h2 style={{ margin: 0, font: `500 48px/1.08 ${BRAND.display}`, letterSpacing: '-.04em', color: '#EAF4FA' }}>{t('cta.title')}</h2>
@@ -441,12 +514,10 @@ export default function Landing() {
           <div style={{ display: 'flex', alignItems: 'center', gap: 11 }}>
             <BrandMark size={28} /><span style={{ font: `600 21px ${BRAND.display}`, letterSpacing: '-.03em', color: BRAND.ink }}>fintrack</span>
           </div>
-          <div style={{ display: 'flex', gap: 30, flexWrap: 'wrap', font: `400 14px ${BRAND.sans}`, color: '#66757F' }}>
+          <div style={{ display: 'flex', gap: 30, flexWrap: 'wrap', font: `400 14px ${BRAND.sans}`, color: '#586470' }}>
             <a href="#producto">{t('nav.product')}</a>
             <a href="#seguridad">{t('nav.security')}</a>
             <a href="#precios">{t('nav.pricing')}</a>
-            <a href="#">{t('footer.privacy')}</a>
-            <a href="#">{t('footer.help')}</a>
           </div>
           <div style={{ font: `400 13px ${BRAND.sans}`, color: '#93A1AB' }}>{t('footer.copy')}</div>
         </div>

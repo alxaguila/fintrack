@@ -1,5 +1,35 @@
+import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { BRAND, BrandMark } from './brand'
+
+// Cuenta ascendente para la cifra de patrimonio del mock. Respeta reduced-motion
+// (muestra el valor final) e inicializa a 0 para no mostrar un flash del total.
+function useCountUp(target: number, duration = 1500) {
+  const [val, setVal] = useState(() => {
+    if (typeof window === 'undefined') return target
+    return window.matchMedia('(prefers-reduced-motion: reduce)').matches ? target : 0
+  })
+  const started = useRef(false)
+  useEffect(() => {
+    if (started.current) return
+    started.current = true
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      setVal(target)
+      return
+    }
+    let raf = 0
+    const t0 = performance.now()
+    const tick = (now: number) => {
+      const p = Math.min(1, (now - t0) / duration)
+      const eased = 1 - Math.pow(1 - p, 3) // easeOutCubic
+      setVal(target * eased)
+      if (p < 1) raf = requestAnimationFrame(tick)
+    }
+    raf = requestAnimationFrame(tick)
+    return () => cancelAnimationFrame(raf)
+  }, [target, duration])
+  return val
+}
 
 /**
  * Maqueta puramente decorativa del dashboard para el hero de la landing.
@@ -9,6 +39,7 @@ import { BRAND, BrandMark } from './brand'
 export function HeroDashboardMock() {
   const { t } = useTranslation('landing')
   const m = (k: string) => t(`mock.${k}`)
+  const nwStr = Math.round(useCountUp(48240)).toLocaleString('es-ES')
 
   const donut = [
     { color: BRAND.ink, frac: 0.36, label: m('catHousing'), val: '€780' },
@@ -51,7 +82,7 @@ export function HeroDashboardMock() {
       }}
     >
       {/* Sidebar */}
-      <div style={{ width: '19%', minWidth: 118, background: BRAND.ink, padding: '14px 12px', flex: 'none' }}>
+      <div className="ftl-mock-side" style={{ width: '19%', minWidth: 118, background: BRAND.ink, padding: '14px 12px', flex: 'none' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 7, marginBottom: 18 }}>
           <BrandMark size={18} />
           <span style={{ font: `600 13px ${BRAND.display}`, color: '#fff', letterSpacing: '-.02em' }}>fintrack</span>
@@ -83,7 +114,7 @@ export function HeroDashboardMock() {
             <div style={{ font: `600 15px ${BRAND.display}`, letterSpacing: '-.02em' }}>{m('greeting')}</div>
             <div style={{ font: `400 9.5px ${BRAND.sans}`, color: '#7C8A96', marginTop: 2 }}>{m('subtitle')}</div>
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 6, flex: 'none' }}>
+          <div className="ftl-mock-tools" style={{ display: 'flex', alignItems: 'center', gap: 6, flex: 'none' }}>
             <div style={{ font: `400 9px ${BRAND.sans}`, color: '#9AA6B0', background: '#fff', border: '1px solid #E7EBEF', borderRadius: 7, padding: '5px 9px' }}>
               {m('search')}
             </div>
@@ -101,7 +132,7 @@ export function HeroDashboardMock() {
           <div style={{ ...card, padding: '9px 10px' }}>
             <div style={tileLabel}>{m('netWorth')}</div>
             <div style={{ font: `600 16px ${BRAND.mono}`, marginTop: 3 }}>
-              €48.240<span style={{ fontSize: 10, color: '#94A3B8' }}>,50</span>
+              €{nwStr}<span style={{ fontSize: 10, color: '#94A3B8' }}>,50</span>
             </div>
             <div style={{ font: `500 8px ${BRAND.sans}`, color: '#16A34A', marginTop: 2 }}>▲ {m('netWorthDelta')}</div>
           </div>
@@ -143,6 +174,8 @@ export function HeroDashboardMock() {
                 </linearGradient>
               </defs>
               <path
+                className="ftl-draw"
+                pathLength={1}
                 d="M0 58 L26 54 L52 55 L78 46 L104 48 L130 38 L156 40 L182 30 L208 26 L234 18 L260 10"
                 fill="none"
                 stroke={BRAND.blue}
@@ -151,7 +184,7 @@ export function HeroDashboardMock() {
                 strokeLinejoin="round"
               />
               <path d="M0 58 L26 54 L52 55 L78 46 L104 48 L130 38 L156 40 L182 30 L208 26 L234 18 L260 10 L260 70 L0 70 Z" fill="url(#ftl-area)" />
-              <circle cx="260" cy="10" r="3" fill={BRAND.blue} />
+              <circle className="ftl-dot" cx="260" cy="10" r="3" fill={BRAND.blue} />
             </svg>
           </div>
           <div style={{ ...card, padding: '10px 11px' }}>

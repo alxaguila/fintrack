@@ -8,12 +8,15 @@
   },
   "hero": {
     "badge": "Sin conectar tu banco · tú subes tus extractos",
-    "line1": "Tus finanzas.",
-    "line2": "Tu control.",
-    "emph": "Tus datos.",
-    "sub": "Nunca te pedimos las claves de tu banco. Exportas el extracto que ya te da tu banca online, lo subes a fintrack y en segundos tienes todo tu dinero ordenado — sin ceder acceso a nadie.",
+    "line1": "Todas tus cuentas,",
+    "line2": "sin dar las claves",
+    "emph": "de tu banco.",
+    "sub": "Sin conectar tu banco ni ceder acceso a nadie. Subes el extracto que ya te da tu banca online y en segundos tienes todas tus cuentas ordenadas — el control que tu Excel nunca te dio.",
     "cta": "Empieza gratis",
-    "note": "Gratis para siempre en el plan Free · sin tarjeta"
+    "note": "Gratis para siempre en el plan Free · sin tarjeta",
+    "trust1": "Sin claves bancarias",
+    "trust2": "Cifrado de extremo a extremo",
+    "trust3": "Bórralo todo en 1 clic"
   },
   "marquee": {
     "label": "Compatible con el CSV de tu banco — funciona con todos"
@@ -70,6 +73,7 @@
     "monthly": "Mensual",
     "annual": "Anual",
     "save": "-20%",
+    "swipeHint": "Desliza para comparar los planes →",
     "unit": "/mes",
     "forever": "para siempre",
     "billNote": "Facturado anualmente",
