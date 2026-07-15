@@ -1,5 +1,6 @@
 {
   "title": "Análisis",
+  "subtitle": "¿Qué está pasando con tu dinero?",
   "uncategorized": {
     "count_one": "{{count}} movimiento sin categoría",
     "count_other": "{{count}} movimientos sin categoría",
@@ -10,6 +11,10 @@
     "total_expenses": "Gastos del mes",
     "total_income": "Ingresos del mes",
     "balance": "Balance neto",
+    "savings": "Ahorro del mes",
+    "savings_rate": "Tasa de ahorro",
+    "savings_of": "de {{amount}} ingresados",
+    "saved_amount": "{{amount}} ahorrados",
     "vs_last_month": "vs mes anterior",
     "vs_prev": {
       "month": "vs mes anterior",
@@ -22,6 +27,9 @@
   "sections": {
     "by_category": "Gasto por categoría",
     "by_subcategory": "Desglose por subcategoría",
+    "spending_distribution": "Distribución de gasto",
+    "relevant_changes": "Cambios relevantes",
+    "observations": "Insights",
     "evolution": "Ingresos vs Gastos",
     "monthly_evolution": "Evolución mensual",
     "recent_transactions": "Últimos movimientos",
@@ -32,8 +40,17 @@
     "quarter": "Trimestres",
     "year": "Años"
   },
-  "uncategorized": "Sin categoría",
+  "no_category": "Sin categoría",
   "donut_other": "Otros",
+  "observations": {
+    "good_savings": "Tu tasa de ahorro es del {{rate}}%. ¡Buen ritmo!",
+    "negative_balance": "Este periodo gastaste más de lo que ingresaste.",
+    "top_category": "Tu mayor gasto es {{name}} ({{pct}}%).",
+    "rose": "{{name}} subió un {{pct}}% respecto al periodo anterior.",
+    "fell": "{{name}} bajó un {{pct}}% respecto al periodo anterior.",
+    "uncategorized": "Tienes {{count}} movimientos sin categorizar.",
+    "none": "Aún no hay observaciones para este periodo."
+  },
   "view_transactions": "Ver movimientos",
   "evolution_by": {
     "month": "Evolución por mes",

@@ -1,5 +1,6 @@
 {
   "title": "Analysis",
+  "subtitle": "What's happening with your money?",
   "uncategorized": {
     "count_one": "{{count}} uncategorized transaction",
     "count_other": "{{count}} uncategorized transactions",
@@ -10,6 +11,10 @@
     "total_expenses": "Monthly expenses",
     "total_income": "Monthly income",
     "balance": "Net balance",
+    "savings": "Monthly savings",
+    "savings_rate": "Savings rate",
+    "savings_of": "of {{amount}} earned",
+    "saved_amount": "{{amount}} saved",
     "vs_last_month": "vs last month",
     "vs_prev": {
       "month": "vs last month",
@@ -22,6 +27,9 @@
   "sections": {
     "by_category": "Expenses by category",
     "by_subcategory": "Breakdown by subcategory",
+    "spending_distribution": "Spending distribution",
+    "relevant_changes": "Relevant changes",
+    "observations": "Insights",
     "evolution": "Income vs Expenses",
     "monthly_evolution": "Monthly evolution",
     "recent_transactions": "Recent transactions",
@@ -32,8 +40,17 @@
     "quarter": "Quarters",
     "year": "Years"
   },
-  "uncategorized": "Uncategorized",
+  "no_category": "Uncategorized",
   "donut_other": "Other",
+  "observations": {
+    "good_savings": "Your savings rate is {{rate}}%. Nice pace!",
+    "negative_balance": "This period you spent more than you earned.",
+    "top_category": "Your biggest expense is {{name}} ({{pct}}%).",
+    "rose": "{{name}} rose {{pct}}% vs the previous period.",
+    "fell": "{{name}} fell {{pct}}% vs the previous period.",
+    "uncategorized": "You have {{count}} uncategorized transactions.",
+    "none": "No observations for this period yet."
+  },
   "view_transactions": "View transactions",
   "evolution_by": {
     "month": "Evolution by month",
