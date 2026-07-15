@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { supabase } from '@/lib/supabase'
 import { BRAND, BrandMark } from '@/components/landing/brand'
 import { HeroDashboardMock } from '@/components/landing/HeroDashboardMock'
+import { CsvFlowArt, VaultArt, BrainArt } from '@/components/landing/FeatureArt'
 import { LoginDialog } from '@/components/auth/LoginDialog'
 
 // Copia local de estilos de la landing (keyframes, hover y responsive). Se inyecta
@@ -35,6 +36,19 @@ const CSS = `
 @keyframes ftDot{to{opacity:1}}
 .ftl-draw{stroke-dasharray:1;stroke-dashoffset:1;animation:ftDraw 1.5s cubic-bezier(.4,.6,.2,1) .35s forwards}
 .ftl-dot{opacity:0;animation:ftDot .4s ease 1.5s forwards}
+@keyframes ftNode{to{opacity:1}}
+@keyframes ftGlow{0%,100%{opacity:.4}50%{opacity:.82}}
+.ftl-fdraw{stroke-dasharray:1;stroke-dashoffset:0}
+.ftl-anim .ftl-fdraw{stroke-dashoffset:1}
+.ftl-anim .ftl-in .ftl-fdraw{animation:ftDraw 1.1s cubic-bezier(.4,.6,.2,1) forwards}
+.ftl-fnode{opacity:1}
+.ftl-anim .ftl-fnode{opacity:.18}
+.ftl-anim .ftl-in .ftl-fnode{animation:ftNode .5s ease forwards}
+.ftl-in .ftl-fglow{animation:ftGlow 3.4s ease-in-out infinite}
+@keyframes ftFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+.ftl-float{animation:ftFloat 5.5s ease-in-out infinite}
+.ftl-ctacard{transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease}
+.ftl-ctacard:hover{transform:translateY(-2px);box-shadow:0 12px 28px rgba(10,37,64,.12);border-color:#CBD9E4}
 .ftl-price-hint{display:none}
 .ftl-price-grid::-webkit-scrollbar{display:none}
 @media (max-width:1024px){
@@ -335,29 +349,26 @@ export default function Landing() {
         <div className="ftl-grid-3 ftl-reveal" style={{ display: 'grid', gridTemplateColumns: '1.7fr 1fr 1fr', gap: 18 }}>
           <div className="ftl-card" style={{ background: '#EDE9E1', border: '1px solid #E1DACC', borderRadius: 20, padding: '26px 28px', minHeight: 312, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
             <div>
+              <div style={{ marginBottom: 20 }}><CsvFlowArt /></div>
               <h3 style={{ margin: 0, font: `500 25px/1.15 ${BRAND.display}`, letterSpacing: '-.02em', color: BRAND.ink }}>{t('features.f1title')}</h3>
               <p style={{ margin: '11px 0 0', maxWidth: 320, font: `400 15px/1.55 ${BRAND.sans}`, color: '#586470' }}>{t('features.f1body')}</p>
             </div>
-            <div style={{ marginTop: 22, background: '#fff', border: '1.5px dashed #C4CDBF', borderRadius: 14, padding: 20, display: 'flex', alignItems: 'center', gap: 15 }}>
-              <span style={{ width: 44, height: 44, borderRadius: 12, background: '#EAF4FA', display: 'flex', alignItems: 'center', justifyContent: 'center', flex: 'none' }}>
-                <svg width="21" height="21" viewBox="0 0 18 18"><path d="M9 12.5 V3 M5 6.5 L9 2.5 L13 6.5" fill="none" stroke={BRAND.blue} strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" /><path d="M3 12 V14.5 H15 V12" fill="none" stroke={BRAND.blue} strokeWidth="1.6" strokeLinecap="round" /></svg>
+            <button onClick={goRegister} className="ftl-ctacard" style={{ marginTop: 22, width: '100%', display: 'flex', alignItems: 'center', gap: 14, background: '#fff', border: '1px solid #E1DACC', borderRadius: 14, padding: '13px 15px', cursor: 'pointer', textAlign: 'left' }}>
+              <span style={{ width: 42, height: 42, borderRadius: 11, background: accent, display: 'flex', alignItems: 'center', justifyContent: 'center', flex: 'none' }}>
+                <svg width="20" height="20" viewBox="0 0 18 18"><path d="M9 12.5 V3 M5 6.5 L9 2.5 L13 6.5" fill="none" stroke="#fff" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" /><path d="M3 12 V14.5 H15 V12" fill="none" stroke="#fff" strokeWidth="1.7" strokeLinecap="round" /></svg>
               </span>
-              <div style={{ flex: 1 }}>
-                <div style={{ font: `500 14px ${BRAND.sans}`, color: BRAND.ink }}>{t('features.uploadHint1')}</div>
-                <div style={{ font: `400 12.5px ${BRAND.sans}`, color: '#93A1AB' }}>{t('features.uploadHint2')}</div>
-              </div>
-              <span style={{ font: `600 13px ${BRAND.sans}`, color: accent }}>{t('features.uploadBrowse')}</span>
-            </div>
+              <span style={{ flex: 1, minWidth: 0 }}>
+                <span style={{ display: 'block', font: `600 14.5px ${BRAND.sans}`, color: BRAND.ink }}>{t('features.uploadCta')}</span>
+                <span style={{ display: 'block', font: `400 12.5px ${BRAND.sans}`, color: '#7C8A96', marginTop: 2 }}>{t('features.uploadFormats')}</span>
+              </span>
+              <svg width="18" height="18" viewBox="0 0 18 18" style={{ flex: 'none' }}><path d="M3 9 H14 M10 5 L14 9 L10 13" fill="none" stroke={accent} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
+            </button>
           </div>
           {[{ t: 'features.f2title', b: 'features.f2body', tr: true }, { t: 'features.f3title', b: 'features.f3body', tr: false }].map((f, i) => (
             <div key={i} className="ftl-card" style={{ background: BRAND.ink, borderRadius: 20, padding: '26px 28px', minHeight: 312, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', position: 'relative', overflow: 'hidden' }}>
               <div style={{ position: 'absolute', right: -40, [f.tr ? 'top' : 'bottom']: -40, width: 150, height: 150, borderRadius: '50%', background: f.tr ? 'radial-gradient(circle,rgba(56,176,214,.3),transparent 70%)' : 'radial-gradient(circle,rgba(10,123,174,.35),transparent 70%)' } as React.CSSProperties} />
-              <div style={{ position: 'relative' }}>
-                <span style={{ width: 44, height: 44, borderRadius: 12, background: 'rgba(126,214,231,.14)', display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}>
-                  {f.tr
-                    ? <svg width="22" height="22" viewBox="0 0 18 18"><path d="M9 1.5 L15.5 4 V9 C15.5 13 12.5 15.5 9 16.5 C5.5 15.5 2.5 13 2.5 9 V4 Z" fill="none" stroke="#7ED6E7" strokeWidth="1.4" strokeLinejoin="round" /><path d="M6.3 9 L8.2 10.9 L11.8 6.7" fill="none" stroke="#7ED6E7" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" /></svg>
-                    : <svg width="22" height="22" viewBox="0 0 18 18"><circle cx="9" cy="9" r="3.2" fill="none" stroke="#7ED6E7" strokeWidth="1.4" /><path d="M9 1.5 v2 M9 14.5 v2 M1.5 9 h2 M14.5 9 h2 M3.8 3.8 l1.4 1.4 M12.8 12.8 l1.4 1.4 M14.2 3.8 l-1.4 1.4 M5.2 12.8 l-1.4 1.4" stroke="#7ED6E7" strokeWidth="1.4" strokeLinecap="round" /></svg>}
-                </span>
+              <div style={{ position: 'relative', display: 'flex', justifyContent: 'center', minHeight: 230, alignItems: 'center' }}>
+                {f.tr ? <VaultArt /> : <BrainArt />}
               </div>
               <div style={{ position: 'relative' }}>
                 <h3 style={{ margin: 0, font: `500 24px/1.18 ${BRAND.display}`, letterSpacing: '-.02em', color: '#EAF4FA' }}>{t(f.t)}</h3>
