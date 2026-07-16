@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Plus, Pencil, Trash2, Search } from 'lucide-react'
+import { Plus, Trash2, Search } from 'lucide-react'
 import i18n from '@/i18n'
 import { useCategoryGroups, useCategories } from '@/hooks/useCategories'
 import {
@@ -40,6 +40,11 @@ function typeBadgeColor(type: CategoryType): string {
 
 function normalize(s: string): string {
   return s.toLowerCase().normalize('NFD').replace(/\p{Diacritic}/gu, '')
+}
+
+/** Próximo sort_order al crear: añade el elemento nuevo al final de la lista. */
+function nextSortOrder(list: { sort_order: number }[]): number {
+  return list.length ? Math.max(...list.map((x) => x.sort_order)) + 10 : 10
 }
 
 export default function Categorias() {
@@ -119,7 +124,14 @@ function GroupsPanel({ groups, searching }: { groups: CategoryGroup[]; searching
         {groups.map((g) => {
           const Icon = categoryIcon(g.icon)
           return (
-            <div key={g.id} className="flex items-center gap-3 border-b border-slate-100 px-4 py-3 last:border-b-0">
+            <div
+              key={g.id}
+              role="button"
+              tabIndex={0}
+              onClick={() => setEditing(g)}
+              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setEditing(g) } }}
+              className="flex cursor-pointer items-center gap-3 border-b border-slate-100 px-4 py-3 transition-colors last:border-b-0 hover:bg-slate-50"
+            >
               <span
                 className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full"
                 style={{ backgroundColor: `${g.color ?? '#64748b'}1f`, color: g.color ?? '#64748b' }}
@@ -136,10 +148,11 @@ function GroupsPanel({ groups, searching }: { groups: CategoryGroup[]; searching
               >
                 {tc(`transaction_type.${g.type}`)}
               </span>
-              <button onClick={() => setEditing(g)} aria-label={tc('actions.edit')} className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-500 hover:bg-slate-100">
-                <Pencil className="h-4 w-4" />
-              </button>
-              <button onClick={() => setToDelete(g)} aria-label={tc('actions.delete')} className="flex h-8 w-8 items-center justify-center rounded-lg text-[#CB6391] hover:bg-[#CB6391]/10">
+              <button
+                onClick={(e) => { e.stopPropagation(); setToDelete(g) }}
+                aria-label={tc('actions.delete')}
+                className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-[#CB6391] hover:bg-[#CB6391]/10"
+              >
                 <Trash2 className="h-4 w-4" />
               </button>
             </div>
@@ -151,6 +164,7 @@ function GroupsPanel({ groups, searching }: { groups: CategoryGroup[]; searching
       {editing !== undefined && (
         <GroupDialog
           group={editing}
+          existingGroups={groups}
           saving={saveM.isPending}
           onClose={() => setEditing(undefined)}
           onSave={async (values) => {
@@ -229,7 +243,14 @@ function CategoriesPanel({ groups, categories, searching }: { groups: CategoryGr
           const Icon = categoryIcon(c.icon)
           const group = groups.find((g) => g.id === c.group_id)
           return (
-            <div key={c.id} className="flex items-center gap-3 border-b border-slate-100 px-4 py-3 last:border-b-0">
+            <div
+              key={c.id}
+              role="button"
+              tabIndex={0}
+              onClick={() => setEditing(c)}
+              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setEditing(c) } }}
+              className="flex cursor-pointer items-center gap-3 border-b border-slate-100 px-4 py-3 transition-colors last:border-b-0 hover:bg-slate-50"
+            >
               <span
                 className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full"
                 style={{ backgroundColor: `${group?.color ?? '#64748b'}1f`, color: group?.color ?? '#64748b' }}
@@ -245,10 +266,11 @@ function CategoriesPanel({ groups, categories, searching }: { groups: CategoryGr
                   {currentLabel('group', group.slug, lang) || group.slug}
                 </span>
               )}
-              <button onClick={() => setEditing(c)} aria-label={tc('actions.edit')} className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-500 hover:bg-slate-100">
-                <Pencil className="h-4 w-4" />
-              </button>
-              <button onClick={() => setToDelete(c)} aria-label={tc('actions.delete')} className="flex h-8 w-8 items-center justify-center rounded-lg text-[#CB6391] hover:bg-[#CB6391]/10">
+              <button
+                onClick={(e) => { e.stopPropagation(); setToDelete(c) }}
+                aria-label={tc('actions.delete')}
+                className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-[#CB6391] hover:bg-[#CB6391]/10"
+              >
                 <Trash2 className="h-4 w-4" />
               </button>
             </div>
@@ -261,6 +283,7 @@ function CategoriesPanel({ groups, categories, searching }: { groups: CategoryGr
         <CategoryDialog
           category={editing}
           groups={groups}
+          existingCategories={categories}
           defaultGroupId={groupFilter !== 'all' ? groupFilter : groups[0]?.id}
           saving={saveM.isPending}
           onClose={() => setEditing(undefined)}
@@ -354,9 +377,10 @@ function SlugField({ slug, setSlug, readOnly, error }: { slug: string; setSlug: 
 }
 
 function GroupDialog({
-  group, saving, onClose, onSave,
+  group, existingGroups, saving, onClose, onSave,
 }: {
   group: CategoryGroup | null
+  existingGroups: CategoryGroup[]
   saving: boolean
   onClose: () => void
   onSave: (v: { slug: string; type: CategoryType; icon: string | null; color: string | null; sort_order: number; labels: { es: string; en: string } }) => void
@@ -368,20 +392,22 @@ function GroupDialog({
   const [type, setType] = useState<CategoryType>(group?.type ?? 'gasto')
   const [icon, setIcon] = useState(group?.icon ?? '')
   const [color, setColor] = useState(group?.color ?? '#64748b')
-  const [sortOrder, setSortOrder] = useState(String(group?.sort_order ?? 0))
   const [labels, setLabels] = useState(group
     ? { es: currentLabel('group', group.slug, 'es'), en: currentLabel('group', group.slug, 'en') }
     : { es: '', en: '' })
   const [errors, setErrors] = useState<Record<string, string>>({})
 
+  // Orden ya no es editable: al crear se añade al final; al editar se conserva.
+  const sortOrder = group ? group.sort_order : nextSortOrder(existingGroups)
+
   function submit() {
-    const values = { slug, type, icon, color, sort_order: Number(sortOrder) || 0, label_es: labels.es, label_en: labels.en }
+    const values = { slug, type, icon, color, sort_order: sortOrder, label_es: labels.es, label_en: labels.en }
     const parsed = categoryGroupFormSchema.safeParse(values)
     setErrors(fieldErrors(parsed))
     if (!parsed.success) return
     onSave({
       slug: slug.trim(), type, icon: icon.trim() || null, color: color || null,
-      sort_order: Number(sortOrder) || 0, labels: { es: labels.es.trim(), en: labels.en.trim() },
+      sort_order: sortOrder, labels: { es: labels.es.trim(), en: labels.en.trim() },
     })
   }
 
@@ -415,10 +441,6 @@ function GroupDialog({
             </div>
           </div>
           <IconField icon={icon} setIcon={setIcon} error={errors.icon} />
-          <div className="space-y-1.5">
-            <Label>{t('categories.order')}</Label>
-            <Input type="number" value={sortOrder} onChange={(e) => setSortOrder(e.target.value)} />
-          </div>
         </div>
 
         <DialogFooter>
@@ -431,10 +453,11 @@ function GroupDialog({
 }
 
 function CategoryDialog({
-  category, groups, defaultGroupId, saving, onClose, onSave,
+  category, groups, existingCategories, defaultGroupId, saving, onClose, onSave,
 }: {
   category: Category | null
   groups: CategoryGroup[]
+  existingCategories: Category[]
   defaultGroupId?: string
   saving: boolean
   onClose: () => void
@@ -446,20 +469,22 @@ function CategoryDialog({
   const [slug, setSlug] = useState(category?.slug ?? '')
   const [groupId, setGroupId] = useState(category?.group_id ?? defaultGroupId ?? '')
   const [icon, setIcon] = useState(category?.icon ?? '')
-  const [sortOrder, setSortOrder] = useState(String(category?.sort_order ?? 0))
   const [labels, setLabels] = useState(category
     ? { es: currentLabel('category', category.slug, 'es'), en: currentLabel('category', category.slug, 'en') }
     : { es: '', en: '' })
   const [errors, setErrors] = useState<Record<string, string>>({})
 
+  // Orden ya no es editable: al crear se añade al final; al editar se conserva.
+  const sortOrder = category ? category.sort_order : nextSortOrder(existingCategories)
+
   function submit() {
-    const values = { slug, group_id: groupId, icon, sort_order: Number(sortOrder) || 0, label_es: labels.es, label_en: labels.en }
+    const values = { slug, group_id: groupId, icon, sort_order: sortOrder, label_es: labels.es, label_en: labels.en }
     const parsed = categoryFormSchema.safeParse(values)
     setErrors(fieldErrors(parsed))
     if (!parsed.success) return
     onSave({
       slug: slug.trim(), group_id: groupId, icon: icon.trim() || null,
-      sort_order: Number(sortOrder) || 0, labels: { es: labels.es.trim(), en: labels.en.trim() },
+      sort_order: sortOrder, labels: { es: labels.es.trim(), en: labels.en.trim() },
     })
   }
 
@@ -486,10 +511,6 @@ function CategoryDialog({
             {errors.group_id && <p className="text-xs text-[#CB6391]">{tc(`errors.${errors.group_id}`)}</p>}
           </div>
           <IconField icon={icon} setIcon={setIcon} error={errors.icon} />
-          <div className="space-y-1.5">
-            <Label>{t('categories.order')}</Label>
-            <Input type="number" value={sortOrder} onChange={(e) => setSortOrder(e.target.value)} />
-          </div>
         </div>
 
         <DialogFooter>

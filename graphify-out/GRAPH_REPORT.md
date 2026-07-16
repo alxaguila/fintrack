@@ -1,16 +1,16 @@
 # Graph Report - alx_FinTrack  (2026-07-16)
 
 ## Corpus Check
-- 209 files · ~137,517 words
+- 209 files · ~137,670 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 840 nodes · 1093 edges · 82 communities (64 shown, 18 thin omitted)
+- 841 nodes · 1096 edges · 83 communities (66 shown, 17 thin omitted)
 - Extraction: 82% EXTRACTED · 18% INFERRED · 0% AMBIGUOUS · INFERRED: 200 edges (avg confidence: 0.79)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `e6f6211f`
+- Built from commit: `e2131366`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -76,6 +76,7 @@
 - [[_COMMUNITY_Skeleton|Skeleton]]
 - [[_COMMUNITY_TooltipContent|TooltipContent]]
 - [[_COMMUNITY_lucideCatalog.ts|lucideCatalog.ts]]
+- [[_COMMUNITY_useUnreviewedBankCount|useUnreviewedBankCount]]
 - [[_COMMUNITY_Product|Product]]
 
 ## God Nodes (most connected - your core abstractions)
@@ -105,7 +106,7 @@
 ## Import Cycles
 - None detected.
 
-## Communities (82 total, 18 thin omitted)
+## Communities (83 total, 17 thin omitted)
 
 ### Community 0 - "Transactions"
 Cohesion: 0.06
@@ -144,8 +145,8 @@ Cohesion: 0.09
 Nodes (21): compilerOptions, allowImportingTsExtensions, baseUrl, isolatedModules, jsx, lib, module, moduleDetection (+13 more)
 
 ### Community 9 - "useTransactions.ts"
-Cohesion: 0.07
-Nodes (39): App(), queryClient, fmtAmount(), invalidatePlanUsage(), applyConceptSearch(), applyTransactionFilters(), DashboardBreakdownRow, DashboardTotalRow (+31 more)
+Cohesion: 0.08
+Nodes (36): fmtAmount(), applyConceptSearch(), applyTransactionFilters(), DashboardBreakdownRow, DashboardTotalRow, escapePgRegex(), invalidateTransactionData(), num() (+28 more)
 
 ### Community 10 - "AccountForm.tsx"
 Cohesion: 0.08
@@ -153,19 +154,19 @@ Nodes (21): ACCOUNT_TYPES, AccountFormDialog(), AccountFormDialogProps, COLORS, 
 
 ### Community 11 - "History"
 Cohesion: 0.06
-Nodes (27): PlanEvolutionGranularity, useAdminPlanEvolution(), useAdminSetPlan(), useAdminStats(), useAdminUserActivity(), useAdminUsers(), useAdminFeedback(), useMarkFeedbackRead() (+19 more)
+Nodes (26): PlanEvolutionGranularity, useAdminPlanEvolution(), useAdminSetPlan(), useAdminStats(), useAdminUserActivity(), useAdminUsers(), useAdminFeedback(), useMarkFeedbackRead() (+18 more)
 
 ### Community 12 - "xlsx.ts"
 Cohesion: 0.20
 Nodes (14): file, root, xlsx, parseCSV(), ParsedFile, detectHeaderRowIndex(), HEADER_KEYWORDS, buildRows() (+6 more)
 
 ### Community 14 - "cn"
-Cohesion: 0.24
-Nodes (12): DialogContent(), DialogDescription(), DialogFooter(), DialogHeader(), DialogOverlay(), DialogTitle(), SelectContent(), SelectItem() (+4 more)
+Cohesion: 0.16
+Nodes (16): DialogContent(), DialogDescription(), DialogFooter(), DialogHeader(), DialogOverlay(), DialogTitle(), SelectContent(), SelectItem() (+8 more)
 
 ### Community 15 - "automap.ts"
 Cohesion: 0.06
-Nodes (39): IconPicker(), CategoryCombobox(), CategoryComboboxProps, normalize(), CategoryInput, deleteTranslations(), GroupInput, invalidateAll() (+31 more)
+Nodes (40): IconPicker(), CategoryCombobox(), CategoryComboboxProps, normalize(), CategoryInput, deleteTranslations(), GroupInput, invalidateAll() (+32 more)
 
 ### Community 16 - "compilerOptions"
 Cohesion: 0.14
@@ -184,8 +185,8 @@ Cohesion: 0.16
 Nodes (13): AMOUNT_PAT, autoDetectColumns(), AutoMapResult, BALANCE_PAT, CONCEPT_PAT, CREDIT_PAT, DATE_PAT, DEBIT_PAT (+5 more)
 
 ### Community 20 - "dropdown-menu.tsx"
-Cohesion: 0.05
-Nodes (34): AdminRoute(), AppShell(), LanguageSelector(), bottomItems, MobileBottomNav(), MobileTopBar(), ProfileAvatar(), ProfileSwitcher() (+26 more)
+Cohesion: 0.09
+Nodes (22): App(), queryClient, AppShell(), ProfileAvatar(), ProfileSwitcher(), KEY, useCategoryTranslations(), useMergeCategoryTranslations() (+14 more)
 
 ### Community 21 - "FinTrack"
 Cohesion: 0.25
@@ -208,8 +209,8 @@ Cohesion: 0.43
 Nodes (6): dispatch(), listeners, memToasts, toast(), ToastMessage, useToast()
 
 ### Community 27 - "Auth.tsx"
-Cohesion: 0.39
-Nodes (7): applyKeywordRules(), matches(), ClassificationSource, ClassifyContext, ClassifyResult, Category, KeywordRule
+Cohesion: 0.14
+Nodes (21): deleteCommunityVote(), ruleCommunityKey(), RuleLike, syncCommunityVoteOnEdit(), upsertCommunityVote(), useCommunityRuleMap(), applyKeywordRules(), matches() (+13 more)
 
 ### Community 28 - "settings.json"
 Cohesion: 0.50
@@ -240,16 +241,16 @@ Cohesion: 0.15
 Nodes (12): ComboSelect(), emptyPersonalForm, PersonalDataFields(), PersonalFormValue, Props, CountryOption, CountryTuple, getCountries() (+4 more)
 
 ### Community 63 - "toast.tsx"
-Cohesion: 0.33
-Nodes (8): ALWAYS_RULES, BUILTIN_RULES, BuiltinRule, matchBuiltinCategory(), merchantKey(), normalize(), tokenString(), classifyConcept()
+Cohesion: 0.24
+Nodes (6): AdminRoute(), itemClass(), navItems, Sidebar(), UserPlanNavItem(), useIsAdmin()
 
 ### Community 64 - "plan.ts"
-Cohesion: 0.13
-Nodes (13): LimitReachedDialog(), LimitReachedDialogProps, PlanLimits, PlanType, PlanUsage, daysUntilReset(), DIMENSION_KEYS, FeatureFlag (+5 more)
+Cohesion: 0.18
+Nodes (9): PlanLimits, PlanType, PlanUsage, DIMENSION_KEYS, FeatureFlag, LimitCheck, LimitDimension, PLAN_COLORS (+1 more)
 
 ### Community 65 - "package.json"
 Cohesion: 0.43
-Nodes (6): deleteCommunityVote(), ruleCommunityKey(), RuleLike, syncCommunityVoteOnEdit(), upsertCommunityVote(), useCommunityRuleMap()
+Nodes (4): LanguageSelector(), bottomItems, MobileBottomNav(), MobileTopBar()
 
 ### Community 68 - "toast.tsx"
 Cohesion: 0.26
@@ -276,8 +277,16 @@ Cohesion: 0.67
 Nodes (3): Badge(), BadgeProps, badgeVariants
 
 ### Community 74 - "tabs.tsx"
-Cohesion: 0.50
-Nodes (3): TabsContent(), TabsList(), TabsTrigger()
+Cohesion: 0.29
+Nodes (3): useUpdateLanguage(), DeleteAccountRow(), LanguageRow()
+
+### Community 78 - "Skeleton"
+Cohesion: 0.40
+Nodes (4): LimitReachedDialog(), LimitReachedDialogProps, daysUntilReset(), MONTHLY_DIMENSIONS
+
+### Community 81 - "useUnreviewedBankCount"
+Cohesion: 0.40
+Nodes (3): useUnreviewedBankCount(), useUnreadFeedbackCount(), Admin()
 
 ### Community 154 - "Product"
 Cohesion: 0.18
@@ -286,14 +295,14 @@ Nodes (10): Accessibility & Inclusion, Anti-references, Brand Personality, Desig
 ## Knowledge Gaps
 - **334 isolated node(s):** `root`, `$schema`, `UserPromptSubmit`, `name`, `private` (+329 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **18 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **17 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `cn()` connect `cn` to `toast.tsx`, `dropdown-menu.tsx`, `badge.tsx`, `tabs.tsx`, `date-picker-field.tsx`, `PopoverContent`, `Separator`, `Skeleton`, `automap.ts`, `TooltipContent`, `History`, `AccountForm.tsx`, `transferMatch.ts`, `dropdown-menu.tsx`, `PasswordStrengthBar`, `Landing.tsx`?**
+- **Why does `cn()` connect `cn` to `package.json`, `toast.tsx`, `dropdown-menu.tsx`, `badge.tsx`, `AccountForm.tsx`, `date-picker-field.tsx`, `PopoverContent`, `Separator`, `History`, `automap.ts`, `TooltipContent`, `tabs.tsx`, `transferMatch.ts`, `dropdown-menu.tsx`, `PasswordStrengthBar`, `Landing.tsx`, `toast.tsx`?**
   _High betweenness centrality (0.144) - this node is a cross-community bridge._
-- **Why does `ImportInner()` connect `useImport.ts` to `package.json`, `Dashboard`, `AccountForm.tsx`, `History`, `automap.ts`?**
+- **Why does `ImportInner()` connect `useImport.ts` to `Dashboard`, `AccountForm.tsx`, `History`, `automap.ts`, `Auth.tsx`?**
   _High betweenness centrality (0.065) - this node is a cross-community bridge._
 - **Why does `useProfile()` connect `Dashboard` to `Home.tsx`, `useImport.ts`, `useTransactions.ts`, `AccountForm.tsx`, `automap.ts`, `dropdown-menu.tsx`?**
   _High betweenness centrality (0.065) - this node is a cross-community bridge._

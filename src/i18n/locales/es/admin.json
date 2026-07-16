@@ -81,7 +81,6 @@
     "icon_results": "{{shown}} de {{total}}",
     "type": "Tipo",
     "color": "Color",
-    "order": "Orden",
     "group": "Grupo",
     "pick_group": "Selecciona un grupo",
     "delete_title": "¿Eliminar?",

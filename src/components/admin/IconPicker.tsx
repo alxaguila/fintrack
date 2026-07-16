@@ -1,7 +1,6 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Search, X } from 'lucide-react'
-import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover'
+import { Search } from 'lucide-react'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { categoryIcon } from '@/lib/categoryIcons'
@@ -11,44 +10,54 @@ const MAX_RESULTS = 120
 
 /**
  * Selector visual de icono lucide: botón con preview del icono actual que abre
- * un popover con buscador + cuadrícula. Guarda el mismo nombre kebab-case que
- * ya usa categoryIcon() (categories.icon / category_groups.icon), así que no
- * cambia el formato de dato, solo la forma de elegirlo.
+ * un desplegable con buscador + cuadrícula. Guarda el mismo nombre kebab-case
+ * que ya usa categoryIcon() (categories.icon / category_groups.icon), así que
+ * no cambia el formato de dato, solo la forma de elegirlo.
+ *
+ * El desplegable se renderiza EN FLUJO (no vía Popover/portal de Radix): este
+ * componente vive siempre dentro de un Dialog modal, y un portal escaparía al
+ * <body> fuera del FocusScope del diálogo — Radix le roba el foco de vuelta al
+ * diálogo en cada render (el buscador no admite tecleo) y su scroll-lock deja
+ * el grid sin scroll. Mismo problema ya resuelto así en CategoryCombobox.
  */
 export function IconPicker({ value, onChange }: { value: string; onChange: (v: string) => void }) {
   const { t } = useTranslation('admin')
   const [open, setOpen] = useState(false)
   const [query, setQuery] = useState('')
+  const wrapperRef = useRef<HTMLDivElement>(null)
 
-  const results = useMemo(() => {
-    const q = query.trim().toLowerCase()
-    const all = q ? LUCIDE_ICON_NAMES.filter((n) => n.includes(q)) : LUCIDE_ICON_NAMES
-    return all.slice(0, MAX_RESULTS)
-  }, [query])
+  useEffect(() => {
+    if (!open) return
+    function onDocMouseDown(e: MouseEvent) {
+      if (wrapperRef.current && !wrapperRef.current.contains(e.target as Node)) setOpen(false)
+    }
+    document.addEventListener('mousedown', onDocMouseDown)
+    return () => document.removeEventListener('mousedown', onDocMouseDown)
+  }, [open])
 
-  const totalMatches = useMemo(() => {
+  const allMatches = useMemo(() => {
     const q = query.trim().toLowerCase()
-    return q ? LUCIDE_ICON_NAMES.filter((n) => n.includes(q)).length : LUCIDE_ICON_NAMES.length
+    return q ? LUCIDE_ICON_NAMES.filter((n) => n.includes(q)) : LUCIDE_ICON_NAMES
   }, [query])
+  const results = allMatches.slice(0, MAX_RESULTS)
 
   const Preview = categoryIcon(value)
 
   return (
-    <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>
-        <button
-          type="button"
-          className="flex items-center gap-3 rounded-lg border border-input bg-white px-3 py-2 text-sm shadow-sm transition-colors hover:bg-slate-50"
-        >
-          <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-slate-100 text-slate-600">
-            <Preview className="h-4 w-4" />
-          </span>
-          <span className="truncate text-slate-700">{value || t('categories.icon_none')}</span>
-        </button>
-      </PopoverTrigger>
+    <div ref={wrapperRef} className="relative">
+      <button
+        type="button"
+        onClick={() => setOpen((o) => !o)}
+        className="flex w-full items-center gap-3 rounded-lg border border-input bg-white px-3 py-2 text-sm shadow-sm transition-colors hover:bg-slate-50"
+      >
+        <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-slate-100 text-slate-600">
+          <Preview className="h-4 w-4" />
+        </span>
+        <span className="truncate text-slate-700">{value || t('categories.icon_none')}</span>
+      </button>
 
-      <PopoverContent className="w-80 max-w-[90vw] p-0" align="start">
-        <div className="space-y-3 p-3">
+      {open && (
+        <div className="absolute left-0 right-0 z-50 mt-1 space-y-3 rounded-2xl border border-slate-200 bg-white p-3 shadow-lg">
           <div className="flex items-center gap-2">
             <div className="relative flex-1">
               <Search className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-slate-400" />
@@ -77,7 +86,7 @@ export function IconPicker({ value, onChange }: { value: string; onChange: (v: s
             <p className="py-6 text-center text-sm text-slate-400">{t('categories.icon_no_results')}</p>
           ) : (
             <>
-              <div className="grid max-h-64 grid-cols-6 gap-1 overflow-y-auto">
+              <div className="grid max-h-64 grid-cols-6 gap-1 overflow-y-auto overscroll-contain">
                 {results.map((name) => {
                   const Ico = categoryIcon(name)
                   const isSelected = name === value
@@ -97,12 +106,12 @@ export function IconPicker({ value, onChange }: { value: string; onChange: (v: s
                 })}
               </div>
               <p className="text-center text-xs text-slate-400">
-                {t('categories.icon_results', { shown: results.length, total: totalMatches })}
+                {t('categories.icon_results', { shown: results.length, total: allMatches.length })}
               </p>
             </>
           )}
         </div>
-      </PopoverContent>
-    </Popover>
+      )}
+    </div>
   )
 }

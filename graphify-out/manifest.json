@@ -525,8 +525,8 @@
     "semantic_hash": ""
   },
   "src/lib/version.ts": {
-    "mtime": 1784232530.193511,
-    "ast_hash": "792c168349b3029791b340ab5f8dec01",
+    "mtime": 1784233388.0664356,
+    "ast_hash": "6859365fc3e0a9b2cb6231230e401f7b",
     "semantic_hash": ""
   },
   "src/main.tsx": {
@@ -760,13 +760,13 @@
     "semantic_hash": ""
   },
   "src/i18n/locales/en/admin.json": {
-    "mtime": 1784232517.5943017,
-    "ast_hash": "82d93022fc5fa2fc57a892d22c7eeac3",
+    "mtime": 1784233222.6011052,
+    "ast_hash": "a60c98c08b36543a4fcfae550448a50a",
     "semantic_hash": ""
   },
   "src/i18n/locales/es/admin.json": {
-    "mtime": 1784232500.578151,
-    "ast_hash": "42f81f527675f8a5f188276ff545fc54",
+    "mtime": 1784233213.6334589,
+    "ast_hash": "710c0f765380328cbcf750042368f2cb",
     "semantic_hash": ""
   },
   "src/pages/Admin.tsx": {
@@ -805,8 +805,8 @@
     "semantic_hash": ""
   },
   "src/pages/admin/Categorias.tsx": {
-    "mtime": 1784232476.0602217,
-    "ast_hash": "9c10ac02e9b34a4ce3ca06623ed0d739",
+    "mtime": 1784233183.1586704,
+    "ast_hash": "ffe114306053cd014fbeb61a7350335d",
     "semantic_hash": ""
   },
   "supabase/migrations/015_admin_role.sql": {
@@ -1590,8 +1590,8 @@
     "semantic_hash": ""
   },
   "src/components/admin/IconPicker.tsx": {
-    "mtime": 1784223358.568395,
-    "ast_hash": "608834dc8ef92b1426d11455c206e797",
+    "mtime": 1784233049.4539144,
+    "ast_hash": "e5cd64070847106e3bf52676578e2118",
     "semantic_hash": ""
   },
   "src/lib/lucideCatalog.ts": {
