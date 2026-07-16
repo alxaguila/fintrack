@@ -11,7 +11,7 @@
     "line1": "All your accounts,",
     "line2": "without sharing your",
     "emph": "bank logins.",
-    "sub": "No bank connection, no access handed to anyone. Upload the statement your online bank already gives you and get all your accounts in order in seconds — the control your spreadsheet never delivered.",
+    "sub": "Import the CSV or Excel statement your online bank already gives you, and fintrack instantly organizes all your transactions, categories, net worth and budgets — no bank connection, no access handed to anyone.",
     "cta": "Get started free",
     "note": "Free forever on the Free plan · no card",
     "trust1": "No bank credentials",
@@ -19,7 +19,7 @@
     "trust3": "Wipe it all in one click"
   },
   "marquee": {
-    "label": "Works with your bank’s CSV — with every bank"
+    "label": "Import statements from any bank"
   },
   "excel": {
     "eyebrow": "The same old problem",
@@ -40,7 +40,7 @@
     "uploadCta": "Sign up free to upload your statement",
     "uploadFormats": "CSV · XLSX · OFX — from any bank",
     "f2title": "We never ask for your credentials",
-    "f2body": "No connection to your bank or third parties. No credentials to hand over, no doubts about what happens to them.",
+    "f2body": "If an app asks for your bank password, it already asked for too much. We don't connect to your bank or third parties: no credentials to hand over, no doubts about what happens to them.",
     "f3title": "Automatic classification",
     "f3body": "A dictionary, your own rules and the Haiku engine label every transaction for you. You just review."
   },
@@ -57,7 +57,7 @@
   "security": {
     "eyebrow": "Privacy by design",
     "title": "Your data never leaves your control.",
-    "sub": "Most apps ask for your bank credentials and nobody tells you what they do with them. fintrack doesn’t. You decide what you upload and when — and you can wipe it all in one click.",
+    "sub": "Most finance apps ask for permanent access to your bank. We don't. Ever. You decide what you upload and when — and you can wipe it all in one click.",
     "s1t": "Zero bank credentials",
     "s1d": "No connection to your bank. We never ask for a username or password.",
     "s2t": "End-to-end encryption",
@@ -126,7 +126,7 @@
     }
   },
   "cta": {
-    "title": "Your finances, without giving up your data.",
+    "title": "If an app asks for your bank password, it already asked for too much.",
     "sub": "Upload your first statement today. Free, no card and no credentials for anyone.",
     "btn": "Get started free",
     "note": "Set up in under a minute"

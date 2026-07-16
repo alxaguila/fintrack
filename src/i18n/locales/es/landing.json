@@ -11,7 +11,7 @@
     "line1": "Todas tus cuentas,",
     "line2": "sin dar las claves",
     "emph": "de tu banco.",
-    "sub": "Sin conectar tu banco ni ceder acceso a nadie. Subes el extracto que ya te da tu banca online y en segundos tienes todas tus cuentas ordenadas — el control que tu Excel nunca te dio.",
+    "sub": "Importa el extracto CSV o Excel que ya te da tu banca online y fintrack organiza al instante todos tus movimientos, categorías, patrimonio y presupuestos — sin conectar tu banco ni ceder acceso a nadie.",
     "cta": "Empieza gratis",
     "note": "Gratis para siempre en el plan Free · sin tarjeta",
     "trust1": "Sin claves bancarias",
@@ -19,7 +19,7 @@
     "trust3": "Bórralo todo en 1 clic"
   },
   "marquee": {
-    "label": "Compatible con el CSV de tu banco — funciona con todos"
+    "label": "Importa extractos de cualquier banco"
   },
   "excel": {
     "eyebrow": "El problema de siempre",
@@ -40,7 +40,7 @@
     "uploadCta": "Empieza gratis para subir tu extracto",
     "uploadFormats": "CSV · XLSX · OFX — de cualquier banco",
     "f2title": "Nunca pedimos tus claves",
-    "f2body": "No conectamos con tu banco ni con terceros. Sin credenciales que ceder, sin dudas de qué hacen con ellas.",
+    "f2body": "Si una app pide la contraseña de tu banco, ya ha pedido demasiado. Nosotros no conectamos con tu banco ni con terceros: sin credenciales que ceder, sin dudas de qué hacen con ellas.",
     "f3title": "Clasificación automática",
     "f3body": "Diccionario, reglas propias y el motor Haiku etiquetan cada movimiento por ti. Tú solo revisas."
   },
@@ -57,7 +57,7 @@
   "security": {
     "eyebrow": "Privacidad por diseño",
     "title": "Tus datos no salen de tu control.",
-    "sub": "La mayoría de apps te piden las claves de tu banco y nadie te dice qué hacen con ellas. fintrack no. Tú decides qué subes y cuándo — y puedes borrarlo todo en un clic.",
+    "sub": "La mayoría de apps financieras te piden acceso permanente a tu banco. Nosotros no. Nunca. Tú decides qué subes y cuándo — y puedes borrarlo todo en un clic.",
     "s1t": "Cero claves bancarias",
     "s1d": "No hay conexión con tu banco. No pedimos usuario ni contraseña, nunca.",
     "s2t": "Cifrado de extremo a extremo",
@@ -126,7 +126,7 @@
     }
   },
   "cta": {
-    "title": "Tus finanzas, sin ceder tus datos.",
+    "title": "Si una app pide la contraseña de tu banco, ya ha pedido demasiado.",
     "sub": "Sube tu primer extracto hoy. Gratis, sin tarjeta y sin dar tus claves a nadie.",
     "btn": "Empieza gratis",
     "note": "Se configura en menos de un minuto"

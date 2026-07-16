@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Plus, Pencil, Trash2 } from 'lucide-react'
+import { Plus, Pencil, Trash2, Search } from 'lucide-react'
 import i18n from '@/i18n'
 import { useCategoryGroups, useCategories } from '@/hooks/useCategories'
 import {
@@ -8,6 +8,7 @@ import {
 } from '@/hooks/useAdminCategories'
 import { categoryGroupFormSchema, categoryFormSchema, fieldErrors } from '@/lib/validation'
 import { categoryIcon } from '@/lib/categoryIcons'
+import { IconPicker } from '@/components/admin/IconPicker'
 import type { Category, CategoryGroup, CategoryType } from '@/lib/database.types'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -37,27 +38,56 @@ function typeBadgeColor(type: CategoryType): string {
   return '#64748b'
 }
 
+function normalize(s: string): string {
+  return s.toLowerCase().normalize('NFD').replace(/\p{Diacritic}/gu, '')
+}
+
 export default function Categorias() {
   const { t } = useTranslation('admin')
   const { data: groups = [] } = useCategoryGroups()
   const { data: categories = [] } = useCategories()
+  const [query, setQuery] = useState('')
+  const lang = i18n.language?.slice(0, 2) || 'es'
+
+  const q = normalize(query.trim())
+  const matchesGroup = (g: CategoryGroup) =>
+    !q || normalize(g.slug).includes(q) || normalize(currentLabel('group', g.slug, lang)).includes(q)
+  const matchesCategory = (c: Category) =>
+    !q || normalize(c.slug).includes(q) || normalize(currentLabel('category', c.slug, lang)).includes(q)
+
+  const groupMatchCount = q ? groups.filter(matchesGroup).length : null
+  const categoryMatchCount = q ? categories.filter(matchesCategory).length : null
 
   return (
     <div className="mx-auto max-w-3xl p-6 space-y-6">
       <AdminHeader title={t('categories.title')} />
 
+      <div className="relative">
+        <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+        <Input
+          className="pl-9"
+          placeholder={t('categories.search')}
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+        />
+      </div>
+
       <Tabs defaultValue="groups">
         <TabsList className="w-full">
-          <TabsTrigger value="groups" className="flex-1">{t('categories.tab_groups')}</TabsTrigger>
-          <TabsTrigger value="cats" className="flex-1">{t('categories.tab_categories')}</TabsTrigger>
+          <TabsTrigger value="groups" className="flex-1">
+            {t('categories.tab_groups')}{groupMatchCount !== null && ` (${groupMatchCount})`}
+          </TabsTrigger>
+          <TabsTrigger value="cats" className="flex-1">
+            {t('categories.tab_categories')}{categoryMatchCount !== null && ` (${categoryMatchCount})`}
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="groups">
-          <GroupsPanel groups={groups} />
+          <GroupsPanel groups={groups.filter(matchesGroup)} searching={!!q} />
         </TabsContent>
 
         <TabsContent value="cats">
-          <CategoriesPanel groups={groups} categories={categories} />
+          <CategoriesPanel groups={groups} categories={categories.filter(matchesCategory)} searching={!!q} />
         </TabsContent>
       </Tabs>
     </div>
@@ -67,7 +97,7 @@ export default function Categorias() {
 // ============================================================
 // GRUPOS
 // ============================================================
-function GroupsPanel({ groups }: { groups: CategoryGroup[] }) {
+function GroupsPanel({ groups, searching }: { groups: CategoryGroup[]; searching: boolean }) {
   const { t } = useTranslation('admin')
   const { t: tc } = useTranslation('common')
   const lang = i18n.language?.slice(0, 2) || 'es'
@@ -82,6 +112,9 @@ function GroupsPanel({ groups }: { groups: CategoryGroup[] }) {
         <Button onClick={() => setEditing(null)}><Plus className="h-4 w-4" /> {t('categories.add_group')}</Button>
       </div>
 
+      {groups.length === 0 ? (
+        <p className="text-sm text-slate-500">{searching ? t('categories.no_search_results') : t('categories.empty')}</p>
+      ) : (
       <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white">
         {groups.map((g) => {
           const Icon = categoryIcon(g.icon)
@@ -113,6 +146,7 @@ function GroupsPanel({ groups }: { groups: CategoryGroup[] }) {
           )
         })}
       </div>
+      )}
 
       {editing !== undefined && (
         <GroupDialog
@@ -157,7 +191,7 @@ function GroupsPanel({ groups }: { groups: CategoryGroup[] }) {
 // ============================================================
 // SUBCATEGORÍAS
 // ============================================================
-function CategoriesPanel({ groups, categories }: { groups: CategoryGroup[]; categories: Category[] }) {
+function CategoriesPanel({ groups, categories, searching }: { groups: CategoryGroup[]; categories: Category[]; searching: boolean }) {
   const { t } = useTranslation('admin')
   const { t: tc } = useTranslation('common')
   const lang = i18n.language?.slice(0, 2) || 'es'
@@ -187,6 +221,9 @@ function CategoriesPanel({ groups, categories }: { groups: CategoryGroup[]; cate
         <Button onClick={() => setEditing(null)}><Plus className="h-4 w-4" /> {t('categories.add_category')}</Button>
       </div>
 
+      {filtered.length === 0 ? (
+        <p className="text-sm text-slate-500">{searching ? t('categories.no_search_results') : t('categories.empty')}</p>
+      ) : (
       <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white">
         {filtered.map((c) => {
           const Icon = categoryIcon(c.icon)
@@ -218,6 +255,7 @@ function CategoriesPanel({ groups, categories }: { groups: CategoryGroup[]; cate
           )
         })}
       </div>
+      )}
 
       {editing !== undefined && (
         <CategoryDialog
@@ -292,16 +330,10 @@ function LabelFields({
 function IconField({ icon, setIcon, error }: { icon: string; setIcon: (v: string) => void; error?: string }) {
   const { t } = useTranslation('admin')
   const { t: tc } = useTranslation('common')
-  const Preview = categoryIcon(icon)
   return (
     <div className="space-y-1.5">
       <Label>{t('categories.icon')}</Label>
-      <div className="flex items-center gap-3">
-        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-slate-100 text-slate-600">
-          <Preview className="h-4 w-4" />
-        </span>
-        <Input placeholder="shopping-cart" value={icon} onChange={(e) => setIcon(e.target.value)} />
-      </div>
+      <IconPicker value={icon} onChange={setIcon} />
       <p className="text-xs text-slate-400">{t('categories.icon_hint')}</p>
       {error && <p className="text-xs text-[#CB6391]">{tc(`errors.${error}`)}</p>}
     </div>
