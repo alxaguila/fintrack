@@ -10,7 +10,23 @@
     "users_desc": "User list and activity",
     "stats": "Statistics",
     "stats_desc": "Global usage KPIs",
+    "feedback": "Feedback",
+    "feedback_desc": "User suggestions, complaints and bugs",
     "soon": "Coming soon"
+  },
+  "feedback": {
+    "title": "Feedback",
+    "empty": "No feedback yet.",
+    "unread_count": "{{count}} unread",
+    "no_email": "No email",
+    "from": "From",
+    "mark_unread": "Mark as unread",
+    "types": {
+      "suggestion": "Suggestion",
+      "complaint": "Complaint",
+      "bug": "Bug",
+      "other": "Other"
+    }
   },
   "banks": {
     "title": "Bank entities",

@@ -9,7 +9,6 @@ import { supabase } from '@/lib/supabase'
 import { passwordSchema } from '@/lib/validation'
 import { PasswordStrengthBar } from '@/components/PasswordStrengthBar'
 import { PasswordInput } from '@/components/auth/PasswordInput'
-import { GoogleButton, OrDivider } from '@/components/auth/GoogleButton'
 import { toast } from '@/hooks/useToast'
 import { BRAND, BrandMark } from '@/components/landing/brand'
 
@@ -17,28 +16,37 @@ const RESEND_COOLDOWN = 60
 const OTP_MIN = 6
 const OTP_MAX = 8
 
-const signupSchema = z
-  .object({ email: z.string().email(), password: passwordSchema, confirmPassword: z.string() })
+const requestSchema = z.object({ email: z.string().email() })
+type RequestData = z.infer<typeof requestSchema>
+
+const resetSchema = z
+  .object({ password: passwordSchema, confirmPassword: z.string() })
   .refine((d) => d.password === d.confirmPassword, { path: ['confirmPassword'], message: 'mismatch' })
-type SignupData = z.infer<typeof signupSchema>
+type ResetData = z.infer<typeof resetSchema>
 
 /**
- * Página de registro con la estética de la landing (fondo navy + tarjeta). Reutiliza
- * el flujo signup → verificación por código OTP de Supabase (idéntico a Auth). Al
- * verificar, `onAuthStateChange` crea la sesión y redirige a /app.
+ * Restablecer contraseña olvidada, con la estética de la landing.
+ *
+ * Flujo (consistente con el registro, por código en vez de enlace mágico):
+ *   1. `request` → resetPasswordForEmail envía un código al correo.
+ *   2. `reset`   → verifyOtp({type:'recovery'}) crea sesión y updateUser fija la nueva contraseña.
+ *
+ * OJO: no se redirige al detectar sesión, porque verifyOtp ya crea una ANTES de
+ * haber cambiado la contraseña; la navegación a /app ocurre solo tras updateUser.
  */
-export default function Register() {
+export default function ResetPassword() {
   const { t, i18n } = useTranslation('auth')
   const navigate = useNavigate()
-  const [mode, setMode] = useState<'signup' | 'verify'>('signup')
+  const [mode, setMode] = useState<'request' | 'reset'>('request')
   const [serverError, setServerError] = useState('')
   const [pendingEmail, setPendingEmail] = useState('')
   const [code, setCode] = useState('')
-  const [verifying, setVerifying] = useState(false)
+  const [saving, setSaving] = useState(false)
   const [cooldown, setCooldown] = useState(0)
 
-  const form = useForm<SignupData>({ resolver: zodResolver(signupSchema) })
-  const pwd = form.watch('password') || ''
+  const requestForm = useForm<RequestData>({ resolver: zodResolver(requestSchema) })
+  const resetForm = useForm<ResetData>({ resolver: zodResolver(resetSchema) })
+  const pwd = resetForm.watch('password') || ''
 
   const lang: 'es' | 'en' = i18n.language.startsWith('en') ? 'en' : 'es'
   const setLang = (next: 'es' | 'en') => {
@@ -48,76 +56,69 @@ export default function Register() {
   }
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session) navigate('/app', { replace: true })
-    })
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_e, session) => {
-      if (session) navigate('/app', { replace: true })
-    })
-    return () => subscription.unsubscribe()
-  }, [navigate])
-
-  useEffect(() => {
     if (cooldown <= 0) return
     const id = setInterval(() => setCooldown((c) => (c <= 1 ? 0 : c - 1)), 1000)
     return () => clearInterval(id)
   }, [cooldown])
 
-  async function onSignup(data: SignupData) {
+  async function onRequest(data: RequestData) {
     setServerError('')
-    const { data: res, error } = await supabase.auth.signUp({
-      email: data.email,
-      password: data.password,
-      options: { data: { lang } },
-    })
+    // Supabase no revela si el correo existe: la respuesta es la misma en ambos
+    // casos, y el mensaje que mostramos es neutro (anti user-enumeration).
+    const { error } = await supabase.auth.resetPasswordForEmail(data.email)
     if (error) {
-      if (error.message.includes('already registered')) setServerError(t('errors.email_taken'))
-      else setServerError(error.message)
+      setServerError(error.message)
       return
     }
-    if (res.session) return
     setPendingEmail(data.email)
     setCode('')
     setCooldown(RESEND_COOLDOWN)
-    setServerError('')
-    setMode('verify')
+    setMode('reset')
   }
 
-  async function onVerify(e: React.FormEvent) {
-    e.preventDefault()
+  async function onReset(data: ResetData) {
     if (code.length < OTP_MIN) return
     setServerError('')
-    setVerifying(true)
-    const { data, error } = await supabase.auth.verifyOtp({ email: pendingEmail, token: code, type: 'signup' })
-    if (error) {
-      setVerifying(false)
+    setSaving(true)
+    const { error: otpError } = await supabase.auth.verifyOtp({
+      email: pendingEmail,
+      token: code,
+      type: 'recovery',
+    })
+    if (otpError) {
+      setSaving(false)
       setServerError(t('errors.invalid_code'))
       return
     }
-    if (data.user) {
-      await supabase
-        .from('user_settings')
-        .upsert({ user_id: data.user.id, preferred_language: lang, updated_at: new Date().toISOString() })
+    // El código es válido y ya hay sesión: ahora sí fijamos la nueva contraseña.
+    const { error: updateError } = await supabase.auth.updateUser({ password: data.password })
+    if (updateError) {
+      setSaving(false)
+      setServerError(updateError.message)
+      return
     }
+    toast({ title: 'FinTrack', description: t('reset.success'), variant: 'success' })
+    navigate('/app', { replace: true })
   }
 
   async function onResend() {
     if (cooldown > 0) return
     setServerError('')
-    const { error } = await supabase.auth.resend({ type: 'signup', email: pendingEmail })
+    // Para recovery no existe auth.resend(): se vuelve a pedir el correo.
+    const { error } = await supabase.auth.resetPasswordForEmail(pendingEmail)
     if (error) {
       setServerError(error.message)
       return
     }
     setCooldown(RESEND_COOLDOWN)
-    toast({ title: 'FinTrack', description: t('verify.resent'), variant: 'success' })
+    toast({ title: 'FinTrack', description: t('reset.resent'), variant: 'success' })
   }
 
-  function backToSignup() {
-    form.setValue('email', pendingEmail)
+  function backToRequest() {
+    requestForm.setValue('email', pendingEmail)
     setCode('')
     setServerError('')
-    setMode('signup')
+    setMode('request')
   }
 
   const inputStyle: React.CSSProperties = {
@@ -126,6 +127,12 @@ export default function Register() {
   }
   const labelStyle: React.CSSProperties = { display: 'block', font: `600 13px ${BRAND.sans}`, color: '#46586B', marginBottom: 6 }
   const seg: React.CSSProperties = { font: `600 12px ${BRAND.sans}`, padding: '6px 13px', borderRadius: 8, cursor: 'pointer', border: 'none' }
+  const errorStyle: React.CSSProperties = { margin: '6px 0 0', font: `400 12px ${BRAND.sans}`, color: '#DC2626' }
+  const primaryBtn = (disabled: boolean): React.CSSProperties => ({
+    marginTop: 4, background: BRAND.accent, color: '#fff', font: `600 15px ${BRAND.sans}`,
+    padding: '13px 0', borderRadius: 11, border: 'none',
+    cursor: disabled ? 'not-allowed' : 'pointer', opacity: disabled ? 0.6 : 1,
+  })
 
   return (
     <div style={{ minHeight: '100dvh', background: BRAND.ink, color: BRAND.ink, position: 'relative', overflow: 'hidden', fontFamily: BRAND.sans, display: 'flex', flexDirection: 'column' }}>
@@ -149,69 +156,79 @@ export default function Register() {
         <div style={{ width: '100%', maxWidth: 440, background: '#fff', borderRadius: 22, boxShadow: '0 30px 70px rgba(0,0,0,.4)', overflow: 'hidden' }}>
           <div style={{ padding: '30px 32px 34px' }}>
             <h1 style={{ margin: 0, font: `500 28px ${BRAND.display}`, letterSpacing: '-.02em', color: BRAND.ink }}>
-              {mode === 'verify' ? t('verify.title') : t('signup.title')}
+              {mode === 'reset' ? t('reset.title') : t('forgot.title')}
             </h1>
             <p style={{ margin: '8px 0 0', font: `400 15px/1.5 ${BRAND.sans}`, color: '#66757F' }}>
-              {mode === 'verify' ? t('verify.subtitle', { email: pendingEmail }) : t('signup.subtitle')}
+              {mode === 'reset' ? t('reset.subtitle', { email: pendingEmail }) : t('forgot.subtitle')}
             </p>
 
-            {mode === 'signup' && (
-              <form onSubmit={form.handleSubmit(onSignup)} style={{ marginTop: 24, display: 'flex', flexDirection: 'column', gap: 15 }}>
+            {mode === 'request' && (
+              <form onSubmit={requestForm.handleSubmit(onRequest)} style={{ marginTop: 24, display: 'flex', flexDirection: 'column', gap: 15 }}>
                 <div>
-                  <label htmlFor="r-email" style={labelStyle}>{t('signup.email')}</label>
-                  <input id="r-email" type="email" placeholder={t('signup.email_placeholder')} style={inputStyle} {...form.register('email')} />
-                </div>
-                <div>
-                  <label htmlFor="r-password" style={labelStyle}>{t('signup.password')}</label>
-                  <PasswordInput id="r-password" autoComplete="new-password" placeholder={t('signup.password_placeholder')} style={inputStyle} {...form.register('password')} />
-                  {form.formState.errors.password && <p style={{ margin: '6px 0 0', font: `400 12px ${BRAND.sans}`, color: '#DC2626' }}>{t('errors.weak_password')}</p>}
-                  <div style={{ marginTop: 8 }}><PasswordStrengthBar password={pwd} /></div>
-                </div>
-                <div>
-                  <label htmlFor="r-confirm" style={labelStyle}>{t('signup.confirm_password')}</label>
-                  <PasswordInput id="r-confirm" autoComplete="new-password" placeholder={t('signup.confirm_placeholder')} style={inputStyle} {...form.register('confirmPassword')} />
-                  {form.formState.errors.confirmPassword && <p style={{ margin: '6px 0 0', font: `400 12px ${BRAND.sans}`, color: '#DC2626' }}>{t('errors.passwords_mismatch')}</p>}
+                  <label htmlFor="rp-email" style={labelStyle}>{t('forgot.email')}</label>
+                  <input id="rp-email" type="email" autoComplete="email" placeholder={t('forgot.email_placeholder')} style={inputStyle} {...requestForm.register('email')} />
+                  {requestForm.formState.errors.email && <p style={errorStyle}>{t('errors.invalid_email')}</p>}
                 </div>
                 {serverError && <p style={{ margin: 0, font: `400 13px ${BRAND.sans}`, color: '#DC2626' }}>{serverError}</p>}
-                <button type="submit" disabled={form.formState.isSubmitting} style={{ marginTop: 4, background: BRAND.accent, color: '#fff', font: `600 15px ${BRAND.sans}`, padding: '13px 0', borderRadius: 11, border: 'none', cursor: 'pointer', opacity: form.formState.isSubmitting ? 0.7 : 1 }}>
-                  {form.formState.isSubmitting ? t('signup.loading') : t('signup.submit')}
+                <button type="submit" disabled={requestForm.formState.isSubmitting} style={primaryBtn(requestForm.formState.isSubmitting)}>
+                  {requestForm.formState.isSubmitting ? t('forgot.loading') : t('forgot.submit')}
                 </button>
-                <OrDivider />
-                <GoogleButton onError={setServerError} />
                 <p style={{ margin: 0, textAlign: 'center', font: `400 14px ${BRAND.sans}`, color: '#66757F' }}>
-                  {t('signup.has_account')}{' '}
                   <button type="button" onClick={() => navigate('/?login=1')} style={{ font: `600 14px ${BRAND.sans}`, color: BRAND.blue, background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>
-                    {t('signup.login_link')}
+                    {t('forgot.back_to_login')}
                   </button>
                 </p>
               </form>
             )}
 
-            {mode === 'verify' && (
-              <form onSubmit={onVerify} style={{ marginTop: 24, display: 'flex', flexDirection: 'column', gap: 15 }}>
+            {mode === 'reset' && (
+              <form onSubmit={resetForm.handleSubmit(onReset)} style={{ marginTop: 24, display: 'flex', flexDirection: 'column', gap: 15 }}>
                 <div>
-                  <label htmlFor="r-otp" style={labelStyle}>{t('verify.code')}</label>
+                  <label htmlFor="rp-otp" style={labelStyle}>{t('reset.code')}</label>
                   <input
-                    id="r-otp"
+                    id="rp-otp"
                     inputMode="numeric"
                     autoComplete="one-time-code"
                     maxLength={OTP_MAX}
-                    placeholder={t('verify.code_placeholder')}
+                    placeholder={t('reset.code_placeholder')}
                     value={code}
                     onChange={(e) => setCode(e.target.value.replace(/\D/g, '').slice(0, OTP_MAX))}
                     style={{ ...inputStyle, textAlign: 'center', font: `500 20px ${BRAND.mono}`, letterSpacing: '.3em' }}
                   />
                 </div>
+                <div>
+                  <label htmlFor="rp-password" style={labelStyle}>{t('reset.new_password')}</label>
+                  <PasswordInput
+                    id="rp-password"
+                    autoComplete="new-password"
+                    placeholder={t('reset.new_password_placeholder')}
+                    style={inputStyle}
+                    {...resetForm.register('password')}
+                  />
+                  {resetForm.formState.errors.password && <p style={errorStyle}>{t('errors.weak_password')}</p>}
+                  <div style={{ marginTop: 8 }}><PasswordStrengthBar password={pwd} /></div>
+                </div>
+                <div>
+                  <label htmlFor="rp-confirm" style={labelStyle}>{t('reset.confirm_password')}</label>
+                  <PasswordInput
+                    id="rp-confirm"
+                    autoComplete="new-password"
+                    placeholder={t('reset.confirm_placeholder')}
+                    style={inputStyle}
+                    {...resetForm.register('confirmPassword')}
+                  />
+                  {resetForm.formState.errors.confirmPassword && <p style={errorStyle}>{t('errors.passwords_mismatch')}</p>}
+                </div>
                 {serverError && <p style={{ margin: 0, font: `400 13px ${BRAND.sans}`, color: '#DC2626' }}>{serverError}</p>}
-                <button type="submit" disabled={verifying || code.length < OTP_MIN} style={{ marginTop: 4, background: BRAND.accent, color: '#fff', font: `600 15px ${BRAND.sans}`, padding: '13px 0', borderRadius: 11, border: 'none', cursor: (verifying || code.length < OTP_MIN) ? 'not-allowed' : 'pointer', opacity: (verifying || code.length < OTP_MIN) ? 0.6 : 1 }}>
-                  {verifying ? t('verify.loading') : t('verify.submit')}
+                <button type="submit" disabled={saving || code.length < OTP_MIN} style={primaryBtn(saving || code.length < OTP_MIN)}>
+                  {saving ? t('reset.loading') : t('reset.submit')}
                 </button>
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8, font: `400 14px ${BRAND.sans}` }}>
                   <button type="button" onClick={onResend} disabled={cooldown > 0} style={{ color: cooldown > 0 ? '#9AA6B0' : BRAND.blue, background: 'none', border: 'none', cursor: cooldown > 0 ? 'default' : 'pointer' }}>
-                    {cooldown > 0 ? t('verify.resend_in', { seconds: cooldown }) : t('verify.resend')}
+                    {cooldown > 0 ? t('reset.resend_in', { seconds: cooldown }) : t('reset.resend')}
                   </button>
-                  <button type="button" onClick={backToSignup} style={{ display: 'inline-flex', alignItems: 'center', gap: 4, color: '#66757F', background: 'none', border: 'none', cursor: 'pointer' }}>
-                    <ArrowLeft style={{ width: 14, height: 14 }} />{t('verify.change_email')}
+                  <button type="button" onClick={backToRequest} style={{ display: 'inline-flex', alignItems: 'center', gap: 4, color: '#66757F', background: 'none', border: 'none', cursor: 'pointer' }}>
+                    <ArrowLeft style={{ width: 14, height: 14 }} />{t('reset.change_email')}
                   </button>
                 </div>
               </form>

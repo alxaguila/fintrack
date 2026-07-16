@@ -249,7 +249,7 @@ export type CommunityRuleContribution = {
 }
 
 // Feedback / soporte enviado por el usuario (migración 014).
-// Solo-inserción desde el cliente; se lee por service role / backoffice.
+// Solo-inserción para el usuario; lo lee el admin desde /admin/feedback (migración 021).
 export type FeedbackType = 'suggestion' | 'complaint' | 'bug' | 'other'
 export type Feedback = {
   id: string
@@ -259,6 +259,8 @@ export type Feedback = {
   message: string
   app_version: string | null
   created_at: string
+  // NULL = no leído. Solo el admin lo escribe (GRANT a nivel de columna, migración 021).
+  read_at: string | null
 }
 
 // Tipo genérico para la DB (compatible con supabase-js)
@@ -278,7 +280,7 @@ export type Database = {
       keyword_rules: { Row: KeywordRule; Insert: Omit<KeywordRule, 'id' | 'created_at' | 'amount_min' | 'amount_max'> & { amount_min?: number | null; amount_max?: number | null }; Update: Partial<KeywordRule>; Relationships: [] }
       community_rules: { Row: CommunityRule; Insert: CommunityRule; Update: Partial<CommunityRule>; Relationships: [] }
       community_rule_contributions: { Row: CommunityRuleContribution; Insert: CommunityRuleContribution; Update: Partial<CommunityRuleContribution>; Relationships: [] }
-      feedback: { Row: Feedback; Insert: Omit<Feedback, 'id' | 'created_at'>; Update: Partial<Feedback>; Relationships: [] }
+      feedback: { Row: Feedback; Insert: Omit<Feedback, 'id' | 'created_at' | 'read_at'>; Update: Partial<Feedback>; Relationships: [] }
     }
     Views: Record<string, never>
     Functions: {

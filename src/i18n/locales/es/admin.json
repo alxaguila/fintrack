@@ -10,7 +10,23 @@
     "users_desc": "Listado y actividad de usuarios",
     "stats": "Estadísticas",
     "stats_desc": "KPIs globales de uso",
+    "feedback": "Feedback",
+    "feedback_desc": "Sugerencias, quejas y bugs de los usuarios",
     "soon": "Próximamente"
+  },
+  "feedback": {
+    "title": "Feedback",
+    "empty": "Todavía no hay feedback.",
+    "unread_count": "{{count}} sin leer",
+    "no_email": "Sin email",
+    "from": "De",
+    "mark_unread": "Marcar como no leído",
+    "types": {
+      "suggestion": "Sugerencia",
+      "complaint": "Queja",
+      "bug": "Error",
+      "other": "Otro"
+    }
   },
   "banks": {
     "title": "Entidades bancarias",

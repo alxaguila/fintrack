@@ -6,6 +6,8 @@ import { z } from 'zod'
 import { supabase } from '@/lib/supabase'
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from '@/components/ui/dialog'
 import { BRAND, BrandMark } from '@/components/landing/brand'
+import { PasswordInput } from '@/components/auth/PasswordInput'
+import { GoogleButton, OrDivider } from '@/components/auth/GoogleButton'
 
 const loginSchema = z.object({ email: z.string().email(), password: z.string().min(1) })
 type LoginData = z.infer<typeof loginSchema>
@@ -15,6 +17,8 @@ type Props = {
   onOpenChange: (open: boolean) => void
   /** Cambiar a la página de registro (cierra el popup y navega). */
   onGoRegister: () => void
+  /** Ir a restablecer contraseña (cierra el popup y navega). */
+  onGoForgot: () => void
 }
 
 /**
@@ -22,7 +26,7 @@ type Props = {
  * marketing (navy + azul). El éxito lo capta `onAuthStateChange` en Landing, que
  * redirige a /app; aquí solo cerramos el diálogo.
  */
-export function LoginDialog({ open, onOpenChange, onGoRegister }: Props) {
+export function LoginDialog({ open, onOpenChange, onGoRegister, onGoForgot }: Props) {
   const { t } = useTranslation('auth')
   const [serverError, setServerError] = useState('')
   const form = useForm<LoginData>({ resolver: zodResolver(loginSchema) })
@@ -72,7 +76,16 @@ export function LoginDialog({ open, onOpenChange, onGoRegister }: Props) {
           </div>
           <div>
             <label htmlFor="ld-password" style={labelStyle}>{t('login.password')}</label>
-            <input id="ld-password" type="password" placeholder={t('login.password_placeholder')} style={inputStyle} {...form.register('password')} />
+            <PasswordInput id="ld-password" autoComplete="current-password" placeholder={t('login.password_placeholder')} style={inputStyle} {...form.register('password')} />
+            <div style={{ marginTop: 7, textAlign: 'right' }}>
+              <button
+                type="button"
+                onClick={onGoForgot}
+                style={{ font: `500 13px ${BRAND.sans}`, color: BRAND.blue, background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
+              >
+                {t('forgot.link')}
+              </button>
+            </div>
           </div>
           {serverError && <p style={{ margin: 0, font: `400 13px ${BRAND.sans}`, color: '#DC2626' }}>{serverError}</p>}
           <button
@@ -83,6 +96,8 @@ export function LoginDialog({ open, onOpenChange, onGoRegister }: Props) {
           >
             {form.formState.isSubmitting ? t('login.loading') : t('login.submit')}
           </button>
+          <OrDivider />
+          <GoogleButton onError={setServerError} />
           <p style={{ margin: 0, textAlign: 'center', font: `400 14px ${BRAND.sans}`, color: '#66757F' }}>
             {t('login.no_account')}{' '}
             <button type="button" onClick={onGoRegister} style={{ font: `600 14px ${BRAND.sans}`, color: BRAND.blue, background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>

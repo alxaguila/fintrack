@@ -4,6 +4,7 @@ import { AppShell } from '@/components/layout/AppShell'
 import { Toaster } from '@/components/ui/toaster'
 import Landing from '@/pages/Landing'
 import Register from '@/pages/Register'
+import ResetPassword from '@/pages/ResetPassword'
 import Home from '@/pages/Home'
 import Dashboard from '@/pages/Dashboard'
 import Transactions from '@/pages/Transactions'
@@ -20,6 +21,7 @@ import AdminBancos from '@/pages/admin/Bancos'
 import AdminCategorias from '@/pages/admin/Categorias'
 import AdminUsuarios from '@/pages/admin/Usuarios'
 import AdminEstadisticas from '@/pages/admin/Estadisticas'
+import AdminFeedback from '@/pages/admin/Feedback'
 import { AdminRoute } from '@/components/auth/AdminRoute'
 
 const queryClient = new QueryClient({
@@ -36,6 +38,7 @@ export default function App() {
           {/* Puerta pública */}
           <Route path="/" element={<Landing />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
           {/* Compatibilidad con enlaces antiguos a /auth */}
           <Route path="/auth" element={<Navigate to="/" replace />} />
 
@@ -57,6 +60,7 @@ export default function App() {
             <Route path="admin/categorias" element={<AdminRoute><AdminCategorias /></AdminRoute>} />
             <Route path="admin/usuarios" element={<AdminRoute><AdminUsuarios /></AdminRoute>} />
             <Route path="admin/estadisticas" element={<AdminRoute><AdminEstadisticas /></AdminRoute>} />
+            <Route path="admin/feedback" element={<AdminRoute><AdminFeedback /></AdminRoute>} />
           </Route>
 
           <Route path="*" element={<Navigate to="/" replace />} />

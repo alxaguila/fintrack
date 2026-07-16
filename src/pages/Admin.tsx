@@ -1,8 +1,9 @@
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { Landmark, Tags, Users, BarChart3, ChevronRight } from 'lucide-react'
+import { Landmark, Tags, Users, BarChart3, MessageSquare, ChevronRight } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 import { useUnreviewedBankCount } from '@/hooks/useAdminBankEntities'
+import { useUnreadFeedbackCount } from '@/hooks/useAdminFeedback'
 
 /**
  * Hub de administración. Solo accesible para admins vía <AdminRoute>. Enlaza a
@@ -11,6 +12,7 @@ import { useUnreviewedBankCount } from '@/hooks/useAdminBankEntities'
 export default function Admin() {
   const { t } = useTranslation('admin')
   const { data: pendingEntities = 0 } = useUnreviewedBankCount(true)
+  const { data: unreadFeedback = 0 } = useUnreadFeedbackCount(true)
 
   return (
     <div className="mx-auto max-w-2xl p-6 space-y-6">
@@ -21,6 +23,7 @@ export default function Admin() {
         <MenuLink to="/app/admin/categorias" icon={Tags} label={t('hub.categories')} desc={t('hub.categories_desc')} />
         <MenuLink to="/app/admin/usuarios" icon={Users} label={t('hub.users')} desc={t('hub.users_desc')} />
         <MenuLink to="/app/admin/estadisticas" icon={BarChart3} label={t('hub.stats')} desc={t('hub.stats_desc')} />
+        <MenuLink to="/app/admin/feedback" icon={MessageSquare} label={t('hub.feedback')} desc={t('hub.feedback_desc')} dot={unreadFeedback > 0} />
       </nav>
     </div>
   )
