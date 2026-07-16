@@ -4,6 +4,7 @@ export type CategoryType = 'gasto' | 'ingreso' | 'no_computable'
 export type KeywordMatchType = 'contains' | 'starts_with' | 'ends_with' | 'exact' | 'regex'
 export type FileFormatType = 'csv' | 'xlsx' | 'xls'
 export type SignConventionType = 'signed' | 'unsigned_type' | 'split_columns'
+export type PlanType = 'free' | 'pro' | 'premium'
 
 export type UserSettings = {
   user_id: string
@@ -23,8 +24,49 @@ export type UserSettings = {
   // Rol de administrador (migración 015). Gobierna la escritura de catálogos
   // globales vía RLS + el acceso a /admin en el frontend.
   is_admin: boolean
+  // Plan de suscripción (migración 022). No auto-asignable: solo is_admin()
+  // puede cambiarlo (trigger `prevent_plan_self_change`).
+  plan: PlanType
   created_at: string
   updated_at: string
+}
+
+// Topes por plan (migración 022). NULL en cualquier campo numérico = ilimitado.
+export type PlanLimits = {
+  plan: PlanType
+  max_profiles: number | null
+  max_accounts: number | null
+  max_imports_per_month: number | null
+  max_movements_per_month: number | null
+  max_rules: number | null
+  has_ai_classification: boolean
+  has_budget: boolean
+  has_export: boolean
+  has_scheduled_export: boolean
+  dashboard_history_months: number | null
+  has_investments: boolean
+  has_networth: boolean
+  updated_at: string
+}
+
+// Registro de cada cambio de plan (migración 022), alimentado por un trigger.
+// Solo lectura para admin; base de la futura gráfica de evolución.
+export type PlanHistory = {
+  id: string
+  user_id: string
+  old_plan: PlanType
+  new_plan: PlanType
+  changed_by: string | null
+  changed_at: string
+}
+
+// Consumo del mes en curso del usuario autenticado (RPC get_plan_usage).
+export type PlanUsage = {
+  movements_this_month: number
+  imports_this_month: number
+  profiles_count: number
+  accounts_count: number
+  rules_count: number
 }
 
 export type FinancialProfile = {
@@ -115,6 +157,8 @@ export type AdminUserRow = {
   employment_status: string | null
   financial_goal: string | null
   onboarding_completed: boolean
+  // Plan de suscripción (migración 024, extiende admin_list_users de la 017).
+  plan: PlanType
   is_admin: boolean
   profiles_count: number
   accounts_count: number
@@ -153,6 +197,8 @@ export type AdminStatsOverview = {
 
 export type AdminSignupRow = { month: string; cnt: number }
 export type AdminDemographicRow = { dimension: string; bucket: string; cnt: number }
+// Evolución de usuarios por plan a lo largo del tiempo (migración 024, RPC admin_plan_evolution).
+export type AdminPlanEvolutionRow = { bucket: string; plan: PlanType; cnt: number }
 
 export type BankFormat = {
   id: string
@@ -281,6 +327,8 @@ export type Database = {
       community_rules: { Row: CommunityRule; Insert: CommunityRule; Update: Partial<CommunityRule>; Relationships: [] }
       community_rule_contributions: { Row: CommunityRuleContribution; Insert: CommunityRuleContribution; Update: Partial<CommunityRuleContribution>; Relationships: [] }
       feedback: { Row: Feedback; Insert: Omit<Feedback, 'id' | 'created_at' | 'read_at'>; Update: Partial<Feedback>; Relationships: [] }
+      plan_limits: { Row: PlanLimits; Insert: PlanLimits; Update: Partial<PlanLimits>; Relationships: [] }
+      plan_history: { Row: PlanHistory; Insert: Omit<PlanHistory, 'id' | 'changed_at'>; Update: never; Relationships: [] }
     }
     Views: Record<string, never>
     Functions: {
@@ -293,6 +341,8 @@ export type Database = {
       admin_stats_overview: { Args: Record<string, never>; Returns: AdminStatsOverview[] }
       admin_signups_by_month: { Args: Record<string, never>; Returns: AdminSignupRow[] }
       admin_demographics: { Args: Record<string, never>; Returns: AdminDemographicRow[] }
+      admin_plan_evolution: { Args: { p_granularity: string }; Returns: AdminPlanEvolutionRow[] }
+      get_plan_usage: { Args: Record<string, never>; Returns: PlanUsage[] }
     }
     Enums: Record<string, never>
   }

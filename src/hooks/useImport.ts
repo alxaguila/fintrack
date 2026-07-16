@@ -10,7 +10,8 @@ import { findTransferPairs } from '@/lib/transferMatch'
 import { isCardSettlementConcept } from '@/lib/cardSettlement'
 import { propagateBalances } from '@/lib/computeBalances'
 import { reanchorOpeningBalance } from '@/lib/openingBalance'
-import type { AccountType, BankFormat, Category, CategoryGroup, KeywordRule, Transaction, TransactionType } from '@/lib/database.types'
+import type { AccountType, BankFormat, Category, CategoryGroup, KeywordRule, PlanLimits, PlanType, PlanUsage, Transaction, TransactionType } from '@/lib/database.types'
+import { PlanLimitError } from '@/lib/plan'
 import { parse, isValid, format } from 'date-fns'
 
 export interface ParsedRow {
@@ -471,8 +472,52 @@ export function useConfirmImport() {
       /** Saldo de referencia para cuentas bancarias sin columna de saldo (1er import). */
       manualBalance?: ManualBalance | null
     }) => {
-      const newRows = rows.filter(r => !r.isDuplicate)
-      if (newRows.length === 0) return { imported: 0, skipped: rows.length }
+      let newRows = rows.filter(r => !r.isDuplicate)
+      if (newRows.length === 0) return { imported: 0, skipped: rows.length, trimmedByPlan: 0 }
+
+      // ── Gate de plan (Fase 1): importaciones/mes + movimientos/mes ──────────
+      const { data: { user } } = await supabase.auth.getUser()
+      if (!user) throw new Error('Not authenticated')
+
+      const [{ data: settingsRow }, { data: usageRows }] = await Promise.all([
+        supabase.from('user_settings').select('plan').eq('user_id', user.id).maybeSingle(),
+        supabase.rpc('get_plan_usage'),
+      ])
+      const plan = (settingsRow?.plan ?? 'free') as PlanType
+      const { data: limits } = await supabase.from('plan_limits').select('*').eq('plan', plan).maybeSingle<PlanLimits>()
+      const usage = (usageRows?.[0] ?? null) as PlanUsage | null
+
+      if (limits?.max_imports_per_month != null && (usage?.imports_this_month ?? 0) >= limits.max_imports_per_month) {
+        throw new PlanLimitError('imports', limits.max_imports_per_month, plan)
+      }
+
+      // Gracia: la 1ª importación de una cuenta VACÍA nunca aplica el límite de
+      // movimientos, en cualquier plan (fomenta subir histórico completo).
+      const { count: existingAccountCount } = await supabase
+        .from('transactions')
+        .select('*', { count: 'exact', head: true })
+        .eq('account_id', accountId)
+      const isEmptyAccount = (existingAccountCount ?? 0) === 0
+
+      // Cuenta ya poblada: el histórico (meses pasados) entra siempre; solo se
+      // recorta el excedente de movimientos del MES EN CURSO sobre el cupo
+      // restante del plan (opción B, acordada).
+      let trimmedByPlan = 0
+      if (!isEmptyAccount && limits?.max_movements_per_month != null) {
+        const now = new Date()
+        const currentMonthPrefix = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`
+        const remaining = Math.max(0, limits.max_movements_per_month - (usage?.movements_this_month ?? 0))
+        const pastRows = newRows.filter(r => !r.date.startsWith(currentMonthPrefix))
+        const thisMonthRows = newRows.filter(r => r.date.startsWith(currentMonthPrefix))
+        if (thisMonthRows.length > remaining) {
+          trimmedByPlan = thisMonthRows.length - remaining
+          newRows = [...pastRows, ...thisMonthRows.slice(0, remaining)]
+        }
+      }
+
+      if (newRows.length === 0) {
+        return { imported: 0, skipped: rows.length, trimmedByPlan, planMovementsLimit: limits?.max_movements_per_month ?? undefined }
+      }
 
       // Cuentas bancarias sin columna de saldo: reconstruimos el saldo corrido a
       // partir del ancla (saldo introducido en el 1er import o saldo ya guardado).
@@ -549,7 +594,12 @@ export function useConfirmImport() {
         }
       }
 
-      return { imported: newRows.length, skipped: rows.length - newRows.length }
+      return {
+        imported: newRows.length,
+        skipped: rows.length - newRows.length,
+        trimmedByPlan,
+        planMovementsLimit: limits?.max_movements_per_month ?? undefined,
+      }
     },
     onSuccess: () => {
       invalidateTransactionData(qc)
@@ -561,6 +611,8 @@ export function useConfirmImport() {
       qc.invalidateQueries({ queryKey: ['card_spending_history'] })
       // Historial de extractos + onboarding "sube tu primer extracto".
       qc.invalidateQueries({ queryKey: ['import_batches'] })
+      // Consumo del plan (movimientos/importaciones de este mes).
+      qc.invalidateQueries({ queryKey: ['plan_usage'] })
     },
   })
 }

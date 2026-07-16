@@ -1,17 +1,33 @@
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Shield, Search, Users as UsersIcon } from 'lucide-react'
-import { useAdminUsers, useAdminUserActivity } from '@/hooks/useAdminAnalytics'
-import type { AdminUserRow } from '@/lib/database.types'
+import { useAdminUsers, useAdminUserActivity, useAdminSetPlan } from '@/hooks/useAdminAnalytics'
+import type { AdminUserRow, PlanType } from '@/lib/database.types'
+import { PLAN_COLORS } from '@/lib/plan'
 import { categoryLabel } from '@/lib/categoryIcons'
 import { formatCurrency, formatDate } from '@/lib/utils'
+import { cn } from '@/lib/utils'
 import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select'
 import {
-  Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription,
+  Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter,
 } from '@/components/ui/dialog'
+import { toast } from '@/hooks/useToast'
 import { AdminHeader } from './AdminHeader'
 
 const typeColor = (t: string | null) => (t === 'ingreso' ? '#14B8A6' : t === 'gasto' ? '#CB6391' : '#64748b')
+const PLAN_ORDER: PlanType[] = ['free', 'pro', 'premium']
+
+function PlanBadge({ plan }: { plan: PlanType }) {
+  const { t } = useTranslation('common')
+  const c = PLAN_COLORS[plan]
+  return (
+    <span className={cn('shrink-0 rounded-full px-2 py-0.5 text-xs font-semibold', c.bgClass, c.textClass)}>
+      {t(`plan.name.${plan}`)}
+    </span>
+  )
+}
 
 export default function Usuarios() {
   const { t } = useTranslation('admin')
@@ -58,6 +74,7 @@ export default function Usuarios() {
                 </p>
                 <p className="truncate text-xs text-slate-500">{u.email}</p>
               </div>
+              <PlanBadge plan={u.plan} />
               <div className="hidden shrink-0 text-right sm:block">
                 <p className="text-xs text-slate-500">{t('users.joined', { date: formatDate(u.created_at.slice(0, 10)) })}</p>
                 <p className="text-xs text-slate-400">{t('users.tx_count', { count: u.transactions_count })}</p>
@@ -81,10 +98,24 @@ function UserDetailDialog({ user, onClose }: { user: AdminUserRow | null; onClos
   const { t } = useTranslation('admin')
   const { t: tc } = useTranslation('common')
   const { data, isLoading } = useAdminUserActivity(user?.user_id ?? null)
+  const setPlan = useAdminSetPlan()
+  const [pendingPlan, setPendingPlan] = useState<PlanType | null>(null)
 
   const monthMax = useMemo(() => Math.max(1, ...(data?.byMonth ?? []).map((m) => Number(m.total_abs))), [data])
 
+  async function confirmPlanChange() {
+    if (!user || !pendingPlan) return
+    try {
+      await setPlan.mutateAsync({ userId: user.user_id, plan: pendingPlan })
+      toast({ variant: 'success', title: t('users.plan_changed', { plan: tc(`plan.name.${pendingPlan}`) }) })
+    } catch (err: any) {
+      toast({ variant: 'destructive', title: tc('errors.save_failed'), description: err?.message })
+    }
+    setPendingPlan(null)
+  }
+
   return (
+    <>
     <Dialog open={!!user} onOpenChange={(o) => !o && onClose()}>
       <DialogContent className="max-h-[90dvh] overflow-y-auto sm:rounded-2xl">
         <DialogHeader>
@@ -102,6 +133,19 @@ function UserDetailDialog({ user, onClose }: { user: AdminUserRow | null; onClos
               <Fact label={t('users.profiles')} value={String(user.profiles_count)} />
               <Fact label={t('users.accounts')} value={String(user.accounts_count)} />
               <Fact label={t('users.movements')} value={String(user.transactions_count)} />
+            </div>
+
+            {/* Plan de suscripción */}
+            <div className="flex items-center justify-between gap-3 rounded-xl bg-slate-50 px-3 py-2.5">
+              <span className="text-xs font-medium text-slate-500">{t('users.plan')}</span>
+              <Select value={user.plan} onValueChange={(v) => v !== user.plan && setPendingPlan(v as PlanType)}>
+                <SelectTrigger className="h-8 w-32 text-sm"><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  {PLAN_ORDER.map((p) => (
+                    <SelectItem key={p} value={p}>{tc(`plan.name.${p}`)}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
 
             <p className="rounded-xl bg-slate-50 px-3 py-2 text-xs text-slate-500">{t('users.masked_note')}</p>
@@ -154,6 +198,25 @@ function UserDetailDialog({ user, onClose }: { user: AdminUserRow | null; onClos
         )}
       </DialogContent>
     </Dialog>
+
+    {/* Confirmación del cambio de plan (diálogo hermano, no anidado) */}
+    <Dialog open={!!pendingPlan} onOpenChange={(o) => !o && setPendingPlan(null)}>
+      <DialogContent className="sm:rounded-2xl">
+        <DialogHeader>
+          <DialogTitle>{t('users.plan_confirm_title')}</DialogTitle>
+          <DialogDescription>
+            {t('users.plan_confirm_body', { name: user?.full_name || user?.email, plan: pendingPlan ? tc(`plan.name.${pendingPlan}`) : '' })}
+          </DialogDescription>
+        </DialogHeader>
+        <DialogFooter>
+          <Button variant="outline" onClick={() => setPendingPlan(null)} disabled={setPlan.isPending}>{tc('actions.cancel')}</Button>
+          <Button onClick={confirmPlanChange} disabled={setPlan.isPending}>
+            {setPlan.isPending ? tc('actions.loading') : tc('actions.confirm')}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+    </>
   )
 }
 

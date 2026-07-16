@@ -1,3 +1,5 @@
+import { useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { AppShell } from '@/components/layout/AppShell'
@@ -15,6 +17,7 @@ import History from '@/pages/History'
 import Settings from '@/pages/Settings'
 import SettingsProfile from '@/pages/settings/Profile'
 import SettingsSecurity from '@/pages/settings/Security'
+import SettingsPlan from '@/pages/settings/Plan'
 import SettingsFeedback from '@/pages/settings/Feedback'
 import Admin from '@/pages/Admin'
 import AdminBancos from '@/pages/admin/Bancos'
@@ -31,6 +34,14 @@ const queryClient = new QueryClient({
 })
 
 export default function App() {
+  const { t } = useTranslation()
+
+  // El <title> de index.html es estático (fallback para crawlers); aquí lo
+  // reescribimos con el idioma activo. `t` cambia de identidad al cambiar idioma.
+  useEffect(() => {
+    document.title = t('app_title')
+  }, [t])
+
   return (
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
@@ -54,6 +65,7 @@ export default function App() {
             <Route path="settings" element={<Settings />} />
             <Route path="settings/profile" element={<SettingsProfile />} />
             <Route path="settings/security" element={<SettingsSecurity />} />
+            <Route path="settings/plan" element={<SettingsPlan />} />
             <Route path="settings/feedback" element={<SettingsFeedback />} />
             <Route path="admin" element={<AdminRoute><Admin /></AdminRoute>} />
             <Route path="admin/bancos" element={<AdminRoute><AdminBancos /></AdminRoute>} />

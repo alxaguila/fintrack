@@ -1,10 +1,11 @@
 import { NavLink, useLocation } from 'react-router-dom'
-import { Home, BarChart3, ArrowLeftRight, Upload, Wallet, Settings, Tags, FileClock, Shield, ShieldCheck } from 'lucide-react'
+import { Home, BarChart3, ArrowLeftRight, Upload, Wallet, Tags, FileClock, Shield, ShieldCheck } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { cn } from '@/lib/utils'
 import { APP_VERSION } from '@/lib/version'
 import { useIsAdmin } from '@/hooks/useIsAdmin'
 import { useUnreviewedBankCount } from '@/hooks/useAdminBankEntities'
+import { useUserSettings } from '@/hooks/useUserSettings'
 import { Logo } from '@/components/Logo'
 
 const navItems = [
@@ -14,8 +15,6 @@ const navItems = [
   { to: '/app/accounts',     icon: Wallet,         label: 'nav.accounts' },
   { to: '/app/history',      icon: FileClock,      label: 'nav.history' },
 ]
-
-const settingsItem = { to: '/app/settings', icon: Settings, label: 'nav.settings' }
 
 // Estilo compartido de item de nav (dolfin): activo = navy elevado + barra coral.
 const itemClass = (isActive: boolean) =>
@@ -29,6 +28,35 @@ const itemClass = (isActive: boolean) =>
 // Barra coral del item activo (indicador a la izquierda).
 function ActiveBar() {
   return <span className="absolute bottom-[9px] left-0 top-[9px] w-[3px] rounded-[3px] bg-[var(--brand-accent)]" />
+}
+
+// Bloque de usuario (sustituye al botón "Ajustes"): avatar con inicial, nombre
+// y plan de suscripción. Mismo destino y comportamiento que Ajustes tenía.
+function UserPlanNavItem() {
+  const { t } = useTranslation('common')
+  const { data: settings } = useUserSettings()
+  const name = settings?.first_name?.trim() || ''
+  const initial = (name.charAt(0) || 'U').toUpperCase()
+  const planKey = settings?.plan ?? 'free'
+
+  return (
+    <NavLink to="/app/settings" className="block">
+      {({ isActive }) => (
+        <span className={itemClass(isActive)}>
+          {isActive && <ActiveBar />}
+          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[var(--brand-primary-3)]/15 text-[13px] font-semibold text-[var(--brand-primary-3)]">
+            {initial}
+          </span>
+          <span className="min-w-0 flex-1">
+            <span className="block truncate leading-tight text-[#E7F0F5]">{name || t('sidebar.user_fallback')}</span>
+            <span className="block truncate text-[11px] leading-tight text-[var(--side-text-muted)]">
+              {t('sidebar.plan_label', { plan: t(`plan.name.${planKey}`) })}
+            </span>
+          </span>
+        </span>
+      )}
+    </NavLink>
+  )
 }
 
 export function Sidebar() {
@@ -109,15 +137,7 @@ export function Sidebar() {
             {t('nav.import')}
           </NavLink>
 
-          <NavLink to={settingsItem.to} className="block">
-            {({ isActive }) => (
-              <span className={itemClass(isActive)}>
-                {isActive && <ActiveBar />}
-                <settingsItem.icon className="h-[18px] w-[18px] shrink-0" strokeWidth={1.7} />
-                {t(settingsItem.label)}
-              </span>
-            )}
-          </NavLink>
+          <UserPlanNavItem />
 
           {/* Panel de administración — solo visible para admins. */}
           {isAdmin && (

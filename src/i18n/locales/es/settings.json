@@ -4,6 +4,7 @@
     "back": "Volver a Ajustes",
     "profile": "Perfil",
     "security": "Login y contraseña",
+    "plan": "Mi plan",
     "feedback": "Feedback y soporte",
     "logout": "Cerrar sesión"
   },
@@ -120,6 +121,41 @@
   "language": {
     "title": "Idioma de la aplicación",
     "saved": "Idioma guardado"
+  },
+  "plan": {
+    "title": "Mi plan",
+    "current_badge": "Tu plan",
+    "usage_title": "Consumo de este mes",
+    "unlimited": "Ilimitado",
+    "usage": {
+      "profiles": "Perfiles financieros",
+      "accounts": "Cuentas conectadas",
+      "imports": "Importaciones este mes",
+      "movements": "Movimientos este mes",
+      "rules": "Reglas de clasificación"
+    },
+    "compare_title": "Compara los planes",
+    "rows": {
+      "profiles": "Perfiles financieros",
+      "accounts": "Cuentas conectadas",
+      "imports": "Importaciones/mes",
+      "movements": "Movimientos/mes",
+      "classification": "Motor de clasificación",
+      "rules": "Reglas",
+      "budget": "Presupuestos",
+      "dashboard_history": "Dashboard histórico",
+      "export": "Exportación",
+      "transfers": "Detección de transferencias",
+      "investments": "Cartera de valores",
+      "networth": "Mi patrimonio"
+    },
+    "classification_base": "Diccionario + comunidad",
+    "classification_ai": "+ IA",
+    "export_none": "—",
+    "export_basic": "Excel/CSV",
+    "export_scheduled": "+ programada",
+    "months": "{{count}} meses",
+    "payment_note": "El pago online estará disponible próximamente. Para cambiar de plan, contacta con soporte."
   },
   "onboarding": {
     "title": "Completar registro",

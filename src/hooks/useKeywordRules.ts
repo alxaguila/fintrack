@@ -30,7 +30,10 @@ export function useCreateKeywordRule() {
       if (error) throw error
       return data
     },
-    onSuccess: () => qc.invalidateQueries({ queryKey: ['keyword_rules'] }),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['keyword_rules'] })
+      qc.invalidateQueries({ queryKey: ['plan_usage'] })
+    },
   })
 }
 

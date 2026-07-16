@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { User, Lock, MessageSquare, LogOut, Trash2, ChevronRight, AlertTriangle, Languages } from 'lucide-react'
+import { User, Lock, MessageSquare, LogOut, Trash2, ChevronRight, AlertTriangle, Languages, CreditCard } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 import { useUpdateLanguage } from '@/hooks/useUserSettings'
 import { cn } from '@/lib/utils'
@@ -26,6 +26,7 @@ export default function Settings() {
       <nav className="overflow-hidden rounded-2xl border border-slate-200 bg-white">
         <MenuLink to="/app/settings/profile" icon={User} label={t('menu.profile')} />
         <MenuLink to="/app/settings/security" icon={Lock} label={t('menu.security')} />
+        <MenuLink to="/app/settings/plan" icon={CreditCard} label={t('menu.plan')} />
         <MenuLink to="/app/settings/feedback" icon={MessageSquare} label={t('menu.feedback')} />
         <LanguageRow />
       </nav>

@@ -13,11 +13,13 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { useKeywordRules, useUpdateKeywordRule, useDeleteKeywordRule, useCreateKeywordRule } from '@/hooks/useKeywordRules'
 import { invalidateTransactionData } from '@/hooks/useTransactions'
 import { useCategories, useCategoryGroups } from '@/hooks/useCategories'
+import { useLimitGate } from '@/hooks/usePlan'
 import { ruleCommunityKey, syncCommunityVoteOnEdit, deleteCommunityVote, upsertCommunityVote } from '@/hooks/useCommunityRules'
 import { categoryIcon, categoryLabel } from '@/lib/categoryIcons'
 import { formatCurrency } from '@/lib/utils'
 import { toast } from '@/hooks/useToast'
 import { ruleFormSchema, firstError, LIMITS } from '@/lib/validation'
+import { LimitReachedDialog } from '@/components/plan/LimitReachedDialog'
 import type { KeywordRule, TransactionType } from '@/lib/database.types'
 
 type RuleType = '' | 'gasto' | 'ingreso'
@@ -50,9 +52,11 @@ export default function ClassificationRules() {
   const updateRule = useUpdateKeywordRule()
   const deleteRule = useDeleteKeywordRule()
   const createRule = useCreateKeywordRule()
+  const rulesLimit = useLimitGate('rules')
 
   const [search, setSearch] = useState('')
   const [deleteId, setDeleteId] = useState<string | null>(null)
+  const [showLimitDialog, setShowLimitDialog] = useState(false)
 
   // Diálogo único para crear/editar
   const [dialogOpen, setDialogOpen] = useState(false)
@@ -75,6 +79,10 @@ export default function ClassificationRules() {
   const dialogCats = categories.filter(c => c.group_id === form.group_id)
 
   function openCreate() {
+    if (rulesLimit.limited) {
+      setShowLimitDialog(true)
+      return
+    }
     setEditingRule(null)
     setForm(EMPTY_FORM)
     setDialogOpen(true)
@@ -379,6 +387,16 @@ export default function ClassificationRules() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {rulesLimit.limit != null && (
+        <LimitReachedDialog
+          open={showLimitDialog}
+          onOpenChange={setShowLimitDialog}
+          dimension="rules"
+          plan={rulesLimit.plan!}
+          limit={rulesLimit.limit}
+        />
+      )}
     </div>
   )
 }

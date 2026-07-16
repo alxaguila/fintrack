@@ -2,10 +2,12 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { ComposedChart, Bar, XAxis, YAxis, Tooltip, PieChart, Pie, Cell, Sector } from 'recharts'
-import { ArrowUp, ArrowDown, Minus, Eye, Check, Info, TriangleAlert } from 'lucide-react'
+import { ArrowUp, ArrowDown, Minus, Eye, Check, Info, TriangleAlert, ChevronLeft } from 'lucide-react'
 import { useProfile } from '@/contexts/ProfileContext'
 import { useDashboardTotals, useDashboardBreakdown, useDashboardCategorySeries, useTransactionCounts } from '@/hooks/useTransactions'
 import { useCategories } from '@/hooks/useCategories'
+import { usePlan } from '@/hooks/usePlan'
+import { UpgradeHintDialog } from '@/components/plan/UpgradeHintDialog'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -16,7 +18,7 @@ import type { TransactionType } from '@/lib/database.types'
 
 const BAR_PX = 76 // ancho por periodo (para el scroll horizontal)
 const CHART_H = 232 // alto del cash flow
-const CHART_MAX_PERIODS = 24 // máx. periodos (2 años en mensual)
+const VISIBLE_BARS = 12 // ventana visible por defecto (grupos de columnas)
 
 // Geometría del donut (px).
 const DONUT = 224, DCX = 112, DCY = 112, D_INNER = 62, D_OUTER = 90, D_ICON_R = 102
@@ -160,12 +162,31 @@ export default function Dashboard() {
   const { data: totals = [], isLoading } = useDashboardTotals(activeProfile?.id)
   const { data: counts } = useTransactionCounts(activeProfile?.id)
   const { data: categories = [] } = useCategories()
+  const { plan, limits: planLimits } = usePlan()
   const monthNames = t('charts.months', { returnObjects: true }) as string[]
   const scrollRef = useRef<HTMLDivElement>(null)
+  // Ventana de histórico del cash flow: por defecto VISIBLE_BARS; "<" carga
+  // todo de golpe (bloqueado en FREE). Se reinicia al cambiar de perfil.
+  const [showAllHistory, setShowAllHistory] = useState(false)
+  const [showUpgradeHint, setShowUpgradeHint] = useState(false)
+  useEffect(() => { setShowAllHistory(false) }, [activeProfile?.id])
+
+  // Tope de histórico del Dashboard según el plan (NULL = ilimitado). Se recorta
+  // aquí, antes de agrupar en periodos, para que ningún bloque posterior (KPIs,
+  // sparkline, desglose) llegue a ver meses fuera del rango permitido.
+  const historyMonths = planLimits?.dashboard_history_months ?? null
+  const visibleTotals = useMemo(() => {
+    if (historyMonths == null) return totals
+    const cutoff = new Date()
+    cutoff.setDate(1)
+    cutoff.setMonth(cutoff.getMonth() - (historyMonths - 1))
+    const cutoffKey = `${cutoff.getFullYear()}-${String(cutoff.getMonth() + 1).padStart(2, '0')}-01`
+    return totals.filter(r => r.month >= cutoffKey)
+  }, [totals, historyMonths])
 
   const periods = useMemo(() => {
     const map = new Map<string, { key: string; ingreso: number; gasto: number }>()
-    for (const row of totals) {
+    for (const row of visibleTotals) {
       const key = bucketKey(row.month, granularity)
       const b = map.get(key) ?? { key, ingreso: 0, gasto: 0 }
       if (row.transaction_type === 'ingreso') b.ingreso += row.total_abs
@@ -173,7 +194,7 @@ export default function Dashboard() {
       map.set(key, b)
     }
     return [...map.values()].sort((a, b) => (a.key < b.key ? -1 : 1))
-  }, [totals, granularity])
+  }, [visibleTotals, granularity])
 
   const activeKey = useMemo(() => {
     if (selectedPeriod && periods.some(p => p.key === selectedPeriod)) return selectedPeriod
@@ -313,10 +334,21 @@ export default function Dashboard() {
   const isFiltered = !!selectedCat
   const filterColor = breakdownType === 'ingreso' ? C_INCOME : breakdownType === 'gasto' ? C_EXPENSE : C_NEUTRAL
 
-  const chartData = periods.slice(-CHART_MAX_PERIODS).map(p => ({
+  const visiblePeriods = showAllHistory ? periods : periods.slice(-VISIBLE_BARS)
+  const chartData = visiblePeriods.map(p => ({
     key: p.key, ingreso: p.ingreso, gasto: p.gasto, value: catByPeriod.get(p.key) ?? 0,
   }))
   const chartWidth = Math.max(chartData.length * BAR_PX, 320)
+  // Botón "<": carga todo el histórico de golpe. Siempre es clicable — en FREE
+  // muestra un aviso de mejora de plan en vez de quedar inerte; solo se
+  // deshabilita quitando el brillo cuando de verdad no hay nada más que
+  // revelar (plan de pago que ya no tiene más historial, o ya está todo cargado).
+  const historyLockedByPlan = plan === 'free'
+  const hasMoreHistory = !showAllHistory && periods.length > VISIBLE_BARS
+  function handleHistoryClick() {
+    if (historyLockedByPlan) { setShowUpgradeHint(true); return }
+    if (hasMoreHistory) setShowAllHistory(true)
+  }
 
   // Techo de escala: si un periodo es un outlier (>1.7× del 2º), lo capamos para
   // que el resto de columnas sean altas; el outlier se dibuja con el borde roto.
@@ -445,7 +477,18 @@ export default function Dashboard() {
                 </CardHeader>
                 <CardContent className="p-4 pt-0">
                   {isLoading ? <Skeleton style={{ height: CHART_H }} /> : (
-                    <div ref={scrollRef} className="no-scrollbar cursor-pointer overflow-x-auto">
+                    <div className="flex items-center gap-2">
+                      <button
+                        type="button"
+                        onClick={handleHistoryClick}
+                        disabled={!historyLockedByPlan && !hasMoreHistory}
+                        title={historyLockedByPlan ? t('history_expand.locked_hint') : t('history_expand.hint')}
+                        aria-label={historyLockedByPlan ? t('history_expand.locked_hint') : t('history_expand.hint')}
+                        className="flex h-8 w-8 shrink-0 items-center justify-center self-center rounded-full border border-slate-300 bg-white text-slate-600 shadow-sm transition-colors hover:border-slate-400 hover:bg-slate-50 hover:text-slate-900 disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:border-slate-300 disabled:hover:bg-white"
+                      >
+                        <ChevronLeft className="h-4 w-4" />
+                      </button>
+                      <div ref={scrollRef} className="no-scrollbar min-w-0 cursor-pointer overflow-x-auto" style={{ maxWidth: VISIBLE_BARS * BAR_PX }}>
                       <ComposedChart width={chartWidth} height={CHART_H} data={chartData} barCategoryGap="26%" barGap={2}
                         onClick={(e: any) => { if (e?.activeLabel) { const k = String(e.activeLabel); setSelectedPeriod(prev => prev === k ? null : k) } }}
                         margin={{ top: 0, right: 6, bottom: 0, left: 6 }}>
@@ -461,6 +504,7 @@ export default function Dashboard() {
                           </>
                         )}
                       </ComposedChart>
+                      </div>
                     </div>
                   )}
                 </CardContent>
@@ -610,6 +654,13 @@ export default function Dashboard() {
           </div>
         </>
       )}
+
+      <UpgradeHintDialog
+        open={showUpgradeHint}
+        onOpenChange={setShowUpgradeHint}
+        title={t('history_expand.upgrade_title')}
+        description={t('history_expand.upgrade_body')}
+      />
     </div>
   )
 }

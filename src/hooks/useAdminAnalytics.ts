@@ -1,9 +1,13 @@
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { supabase } from '@/lib/supabase'
 import type {
   AdminUserRow, AdminCategoryBreakdownRow, AdminMonthlyRow,
-  AdminStatsOverview, AdminSignupRow, AdminDemographicRow,
+  AdminStatsOverview, AdminSignupRow, AdminDemographicRow, AdminPlanEvolutionRow,
+  PlanType,
 } from '@/lib/database.types'
+
+/** Granularidad de la gráfica de evolución de usuarios por plan (RPC admin_plan_evolution). */
+export type PlanEvolutionGranularity = 'day' | 'week' | 'month'
 
 /** Listado de usuarios (RPC admin-only). */
 export function useAdminUsers() {
@@ -58,6 +62,37 @@ export function useAdminStats() {
         signups: (signups.data ?? []) as AdminSignupRow[],
         demographics: (demo.data ?? []) as AdminDemographicRow[],
       }
+    },
+  })
+}
+
+/** Evolución de usuarios por plan (RPC admin-only), con granularidad día/semana/mes. */
+export function useAdminPlanEvolution(granularity: PlanEvolutionGranularity) {
+  return useQuery({
+    queryKey: ['admin', 'plan_evolution', granularity],
+    staleTime: 1000 * 60,
+    queryFn: async () => {
+      const { data, error } = await supabase.rpc('admin_plan_evolution', { p_granularity: granularity })
+      if (error) throw error
+      return (data ?? []) as AdminPlanEvolutionRow[]
+    },
+  })
+}
+
+/** Forzar el plan de un usuario (admin-only; RLS + trigger acotan la escritura solo a `plan`). */
+export function useAdminSetPlan() {
+  const qc = useQueryClient()
+  return useMutation({
+    mutationFn: async ({ userId, plan }: { userId: string; plan: PlanType }) => {
+      const { error } = await supabase
+        .from('user_settings')
+        .update({ plan, updated_at: new Date().toISOString() })
+        .eq('user_id', userId)
+      if (error) throw error
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['admin', 'users'] })
+      qc.invalidateQueries({ queryKey: ['admin', 'plan_evolution'] })
     },
   })
 }

@@ -10,6 +10,7 @@ import { useAccounts } from '@/hooks/useAccounts'
 import { useCategories, useCategoryGroups } from '@/hooks/useCategories'
 import { useUpdateTransaction, invalidateTransactionData } from '@/hooks/useTransactions'
 import { useCreateKeywordRule } from '@/hooks/useKeywordRules'
+import { useLimitGate } from '@/hooks/usePlan'
 import { upsertCommunityVote, ruleCommunityKey } from '@/hooks/useCommunityRules'
 import { merchantKey } from '@/lib/categoryRules'
 import { categoryIcon, categoryLabel } from '@/lib/categoryIcons'
@@ -22,6 +23,7 @@ import { Separator } from '@/components/ui/separator'
 import { DatePickerField } from '@/components/ui/date-picker-field'
 import { CategoryCombobox } from '@/components/ui/category-combobox'
 import { Skeleton } from '@/components/ui/skeleton'
+import { LimitReachedDialog } from '@/components/plan/LimitReachedDialog'
 import { formatCurrency, formatDate } from '@/lib/utils'
 import { toast } from '@/hooks/useToast'
 import { keywordSchema, firstError, LIMITS } from '@/lib/validation'
@@ -104,6 +106,8 @@ export default function Transactions() {
   const [ruleAmountMax, setRuleAmountMax] = useState('')
   const [ruleMatchCount, setRuleMatchCount] = useState<number | null>(null)
   const createRule = useCreateKeywordRule()
+  const rulesLimit = useLimitGate('rules')
+  const [showRuleLimitDialog, setShowRuleLimitDialog] = useState(false)
 
   const NOTE_MAX = 50
 
@@ -261,10 +265,14 @@ export default function Transactions() {
 
         // Aprender: crear regla para futuras importaciones + votar en la comunidad
         if (createRuleFlag && ruleKey && catId) {
-          try {
-            await createRule.mutateAsync({ keyword: ruleKey, match_type: 'contains', category_id: catId, priority: 50, is_active: true, user_id: '', profile_id: null } as any)
-            await upsertCommunityVote(ruleKey, catId)
-          } catch (e) { console.warn('[Transactions] create rule failed:', e) }
+          if (rulesLimit.limited) {
+            toast({ title: tc('plan.limit_reached.rules', { plan: tc(`plan.name.${rulesLimit.plan}`), limit: rulesLimit.limit }) })
+          } else {
+            try {
+              await createRule.mutateAsync({ keyword: ruleKey, match_type: 'contains', category_id: catId, priority: 50, is_active: true, user_id: '', profile_id: null } as any)
+              await upsertCommunityVote(ruleKey, catId)
+            } catch (e) { console.warn('[Transactions] create rule failed:', e) }
+          }
         }
       }
 
@@ -314,6 +322,10 @@ export default function Transactions() {
   // los movimientos del perfil para poder contar/aplicar los que casen.
   function goToRulePreview() {
     if (!categoryTx) return
+    if (rulesLimit.limited) {
+      setShowRuleLimitDialog(true)
+      return
+    }
     // Palabras clave e importe arrancan vacíos (no existen en el paso 1); en cambio
     // Tipo/Categoría/Subcategoría se conservan tal cual los dejaste en el paso 1.
     // El recuento de coincidencias lo calcula el efecto (en servidor).
@@ -755,6 +767,16 @@ export default function Transactions() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {rulesLimit.limit != null && (
+        <LimitReachedDialog
+          open={showRuleLimitDialog}
+          onOpenChange={setShowRuleLimitDialog}
+          dimension="rules"
+          plan={rulesLimit.plan!}
+          limit={rulesLimit.limit}
+        />
+      )}
     </div>
   )
 }

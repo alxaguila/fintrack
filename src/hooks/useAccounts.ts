@@ -44,6 +44,7 @@ export function useCreateAccount() {
       // El saldo inicial afecta al saldo calculado y su gráfica.
       qc.invalidateQueries({ queryKey: ['account_balances'] })
       qc.invalidateQueries({ queryKey: ['account_balance_history'] })
+      qc.invalidateQueries({ queryKey: ['plan_usage'] })
     },
   })
 }

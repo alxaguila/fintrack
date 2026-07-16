@@ -17,6 +17,13 @@ export interface ClassifyContext {
   profileId: string
   /** Importe del movimiento (para reglas con condición de importe). */
   amount: number
+  /**
+   * Plan del usuario con acceso al paso 3.5 (fallback de IA, Haiku). Cableado
+   * desde ya para el gating; sin efecto todavía porque ese paso no existe aún
+   * (ver memoria `project_ai_classification_fallback`). Cuando se implemente,
+   * irá entre el diccionario integrado (3) y "sin categoría" (4).
+   */
+  hasAiClassification?: boolean
 }
 
 export interface ClassifyResult {

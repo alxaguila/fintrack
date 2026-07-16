@@ -4,8 +4,10 @@ import { Plus, Archive, Trash2, AlertTriangle } from 'lucide-react'
 import { useProfile } from '@/contexts/ProfileContext'
 import { useAccounts, useDeleteAccount, useUpdateAccount } from '@/hooks/useAccounts'
 import { useBankEntities } from '@/hooks/useBankEntities'
+import { useLimitGate } from '@/hooks/usePlan'
 import { AccountFormDialog } from '@/components/accounts/AccountForm'
 import { AccountCard } from '@/components/accounts/AccountCard'
+import { LimitReachedDialog } from '@/components/plan/LimitReachedDialog'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog'
 import { toast } from '@/hooks/useToast'
@@ -23,6 +25,8 @@ export default function Accounts() {
   const { data: entities = [] } = useBankEntities()
   const deleteAccount = useDeleteAccount()
   const updateAccount = useUpdateAccount()
+  const accountsLimit = useLimitGate('accounts')
+  const [showLimitDialog, setShowLimitDialog] = useState(false)
 
   // Mapa entidad (minúsculas) → logo, para que la tarjeta herede el logo del catálogo.
   const entityLogoByName = useMemo(() => {
@@ -55,6 +59,10 @@ export default function Accounts() {
   const busy = deleteAccount.isPending || updateAccount.isPending
 
   function openCreate(defaultType?: AccountType) {
+    if (accountsLimit.limited) {
+      setShowLimitDialog(true)
+      return
+    }
     setEditing(null)
     setCreateType(defaultType)
     setDialogOpen(true)
@@ -247,6 +255,16 @@ export default function Accounts() {
           )}
         </DialogContent>
       </Dialog>
+
+      {accountsLimit.limit != null && (
+        <LimitReachedDialog
+          open={showLimitDialog}
+          onOpenChange={setShowLimitDialog}
+          dimension="accounts"
+          plan={accountsLimit.plan!}
+          limit={accountsLimit.limit}
+        />
+      )}
     </div>
   )
 }

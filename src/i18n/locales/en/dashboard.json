@@ -76,5 +76,11 @@
     "title": "Create your first profile",
     "description": "Profiles let you manage finances for different people independently.",
     "action": "Create profile"
+  },
+  "history_expand": {
+    "hint": "Load all available history",
+    "locked_hint": "Upgrade your plan to see more history",
+    "upgrade_title": "Seeing more history is a PRO/PREMIUM thing",
+    "upgrade_body": "Your FREE plan shows the last 12 months. Upgrade your subscription to see your full history with no limit."
   }
 }

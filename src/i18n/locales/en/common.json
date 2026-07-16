@@ -1,5 +1,6 @@
 {
   "app_name": "FinTrack",
+  "app_title": "fintrack — personal finances",
   "nav": {
     "home": "Global Position",
     "analysis": "Analysis",
@@ -92,9 +93,25 @@
     "new": "New profile",
     "select": "Select a profile"
   },
+  "plan": {
+    "name": { "free": "FREE", "pro": "PRO", "premium": "PREMIUM" },
+    "limit_reached": {
+      "title": "You've reached your plan's limit",
+      "profiles": "Your {{plan}} plan allows up to {{limit}} financial profiles.",
+      "accounts": "Your {{plan}} plan allows up to {{limit}} connected accounts.",
+      "imports": "Your {{plan}} plan allows up to {{limit}} imports per month.",
+      "movements": "Your {{plan}} plan allows up to {{limit}} transactions per month.",
+      "rules": "Your {{plan}} plan allows up to {{limit}} classification rules.",
+      "reset_hint": "Upgrade your subscription or wait {{days}} days for the counter to reset.",
+      "reset_hint_one": "Upgrade your subscription or wait 1 day for the counter to reset.",
+      "cta_upgrade": "Upgrade my plan"
+    }
+  },
   "sidebar": {
     "section_main": "Main",
-    "trust_title": "Your data, encrypted",
-    "trust_body": "No bank connection. Only you see your statements."
+    "trust_title": "You're in control",
+    "trust_body": "No bank connection, no more spreadsheets to update by hand: fintrack keeps your finances organized for you.",
+    "user_fallback": "User",
+    "plan_label": "Plan: {{plan}}"
   }
 }

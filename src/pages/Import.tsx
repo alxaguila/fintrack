@@ -19,7 +19,9 @@ import { Badge } from '@/components/ui/badge'
 import { toast } from '@/hooks/useToast'
 import { formatCurrency, formatDate } from '@/lib/utils'
 import { autoDetectColumns } from '@/lib/automap'
-import type { BankFormat, SignConventionType } from '@/lib/database.types'
+import type { BankFormat, PlanType, SignConventionType } from '@/lib/database.types'
+import { PlanLimitError, type LimitDimension } from '@/lib/plan'
+import { LimitReachedDialog } from '@/components/plan/LimitReachedDialog'
 import { useNavigate } from 'react-router-dom'
 import { parse, isValid } from 'date-fns'
 
@@ -112,6 +114,8 @@ function ImportInner() {
   const [existingTxCount, setExistingTxCount] = useState<number | null>(null)
   const [manualBalanceInput, setManualBalanceInput] = useState('')
   const [manualBalanceDate, setManualBalanceDate] = useState(todayISO())
+  // Bloqueo duro de plan (p. ej. tope de importaciones/mes alcanzado)
+  const [limitDialog, setLimitDialog] = useState<{ dimension: LimitDimension; limit: number; plan: PlanType } | null>(null)
 
   const selectedAccount = accounts.find(a => a.id === accountId)
   const entity = selectedAccount?.entity ?? ''
@@ -307,8 +311,21 @@ function ImportInner() {
           : null,
       })
       toast({ title: t('step3.success', { count: result.imported }), variant: 'success' })
+      if (result.trimmedByPlan > 0) {
+        toast({
+          title: t('step3.trimmed_by_plan', {
+            imported: result.imported,
+            trimmed: result.trimmedByPlan,
+            limit: result.planMovementsLimit,
+          }),
+        })
+      }
       navigate('/app/transactions')
     } catch (err: any) {
+      if (err instanceof PlanLimitError) {
+        setLimitDialog({ dimension: err.dimension, limit: err.limit, plan: err.plan })
+        return
+      }
       console.error('[Import] confirm failed:', err)
       const detail = err?.message || err?.error_description || err?.hint || JSON.stringify(err)
       toast({ title: tc('errors.save_failed'), description: detail, variant: 'destructive' })
@@ -802,6 +819,16 @@ function ImportInner() {
           profileId={activeProfile.id}
           sortOrder={accounts.length}
           onSaved={acc => setAccountId(acc.id)}
+        />
+      )}
+
+      {limitDialog && (
+        <LimitReachedDialog
+          open={!!limitDialog}
+          onOpenChange={(o) => !o && setLimitDialog(null)}
+          dimension={limitDialog.dimension}
+          plan={limitDialog.plan}
+          limit={limitDialog.limit}
         />
       )}
     </div>

@@ -3,6 +3,8 @@ import { Check, ChevronDown, Plus, User } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useProfile } from '@/contexts/ProfileContext'
 import { useProfiles, useCreateProfile } from '@/hooks/useProfiles'
+import { useLimitGate } from '@/hooks/usePlan'
+import { LimitReachedDialog } from '@/components/plan/LimitReachedDialog'
 import { cn } from '@/lib/utils'
 import { profileNameSchema, firstError, LIMITS } from '@/lib/validation'
 import { toast } from '@/hooks/useToast'
@@ -25,13 +27,20 @@ export function ProfileSwitcher() {
   const { activeProfile, setActiveProfile } = useProfile()
   const { data: profiles = [] } = useProfiles()
   const createProfile = useCreateProfile()
+  const profilesLimit = useLimitGate('profiles')
   const [open, setOpen] = useState(false)
   const [creating, setCreating] = useState(false)
   const [newName, setNewName] = useState('')
+  const [showLimitDialog, setShowLimitDialog] = useState(false)
 
   async function handleCreate() {
     const name = newName.trim()
     if (!name) return
+    if (profilesLimit.limited) {
+      setOpen(false)
+      setShowLimitDialog(true)
+      return
+    }
     // Validación (defensa en profundidad): longitud del nombre de perfil.
     if (firstError(profileNameSchema.safeParse(name))) {
       toast({ variant: 'destructive', title: t('errors.invalid_input') })
@@ -103,6 +112,16 @@ export function ProfileSwitcher() {
             </button>
           )}
         </div>
+      )}
+
+      {profilesLimit.limit != null && (
+        <LimitReachedDialog
+          open={showLimitDialog}
+          onOpenChange={setShowLimitDialog}
+          dimension="profiles"
+          plan={profilesLimit.plan!}
+          limit={profilesLimit.limit}
+        />
       )}
     </div>
   )

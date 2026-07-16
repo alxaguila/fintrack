@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react'
 import { NavLink, useLocation } from 'react-router-dom'
-import { Home, BarChart3, ArrowLeftRight, Wallet, FileClock, Upload, Settings, Shield, Menu, X } from 'lucide-react'
+import { Home, BarChart3, ArrowLeftRight, Wallet, FileClock, Upload, Shield, Menu, X } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { cn } from '@/lib/utils'
 import { APP_VERSION } from '@/lib/version'
 import { useIsAdmin } from '@/hooks/useIsAdmin'
 import { useUnreviewedBankCount } from '@/hooks/useAdminBankEntities'
+import { useUserSettings } from '@/hooks/useUserSettings'
 import { Logo } from '@/components/Logo'
 import { LanguageSelector } from './LanguageSelector'
 
@@ -60,6 +61,10 @@ export function MobileTopBar() {
   const location = useLocation()
   const { isAdmin } = useIsAdmin()
   const { data: pendingEntities = 0 } = useUnreviewedBankCount(isAdmin)
+  const { data: settings } = useUserSettings()
+  const userName = settings?.first_name?.trim() || ''
+  const userInitial = (userName.charAt(0) || 'U').toUpperCase()
+  const planKey = settings?.plan ?? 'free'
 
   // Cerrar el drawer al navegar.
   useEffect(() => { setOpen(false) }, [location.pathname])
@@ -130,8 +135,15 @@ export function MobileTopBar() {
                   )
                 }
               >
-                <Settings className="h-[18px] w-[18px] shrink-0" strokeWidth={1.7} />
-                {t('nav.settings')}
+                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[var(--brand-primary-3)]/15 text-[13px] font-semibold text-[var(--brand-primary-3)]">
+                  {userInitial}
+                </span>
+                <span className="min-w-0 flex-1">
+                  <span className="block truncate leading-tight text-[#E7F0F5]">{userName || t('sidebar.user_fallback')}</span>
+                  <span className="block truncate text-[11px] leading-tight text-[var(--side-text-muted)]">
+                    {t('sidebar.plan_label', { plan: t(`plan.name.${planKey}`) })}
+                  </span>
+                </span>
               </NavLink>
 
               {isAdmin && (

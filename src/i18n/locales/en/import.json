@@ -78,6 +78,7 @@
     "next_balance": "Continue",
     "importing": "Importing...",
     "success": "Import complete. {{count}} transactions added.",
+    "trimmed_by_plan": "{{imported}} transactions were imported. {{trimmed}} from this month were not imported due to your plan's limit ({{limit}}/month).",
     "back": "Back to mapping"
   },
   "step4": {

@@ -76,5 +76,11 @@
     "title": "Crea tu primer perfil",
     "description": "Los perfiles te permiten gestionar las finanzas de distintas personas de forma independiente.",
     "action": "Crear perfil"
+  },
+  "history_expand": {
+    "hint": "Cargar todo el histórico disponible",
+    "locked_hint": "Mejora tu plan para ver más histórico",
+    "upgrade_title": "Ver más histórico es cosa de PRO/PREMIUM",
+    "upgrade_body": "Tu plan FREE muestra los últimos 12 meses. Mejora tu suscripción para ver todo tu histórico sin límite."
   }
 }

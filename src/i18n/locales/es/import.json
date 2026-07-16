@@ -78,6 +78,7 @@
     "next_balance": "Continuar",
     "importing": "Importando...",
     "success": "Importación completada. {{count}} movimientos añadidos.",
+    "trimmed_by_plan": "Se importaron {{imported}} movimientos. {{trimmed}} de este mes no se importaron por el límite de tu plan ({{limit}}/mes).",
     "back": "Volver a mapear"
   },
   "step4": {
