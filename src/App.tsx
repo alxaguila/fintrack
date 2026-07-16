@@ -9,6 +9,7 @@ import Register from '@/pages/Register'
 import ResetPassword from '@/pages/ResetPassword'
 import Home from '@/pages/Home'
 import Dashboard from '@/pages/Dashboard'
+import Budgets from '@/pages/Budgets'
 import Transactions from '@/pages/Transactions'
 import ClassificationRules from '@/pages/ClassificationRules'
 import Import from '@/pages/Import'
@@ -57,6 +58,7 @@ export default function App() {
           <Route path="/app" element={<AppShell />}>
             <Route index element={<Home />} />
             <Route path="analysis" element={<Dashboard />} />
+            <Route path="budgets" element={<Budgets />} />
             <Route path="transactions" element={<Transactions />} />
             <Route path="transactions/rules" element={<ClassificationRules />} />
             <Route path="import" element={<Import />} />

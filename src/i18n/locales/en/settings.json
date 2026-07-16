@@ -135,26 +135,6 @@
       "rules": "Classification rules"
     },
     "compare_title": "Compare plans",
-    "rows": {
-      "profiles": "Financial profiles",
-      "accounts": "Connected accounts",
-      "imports": "Imports/month",
-      "movements": "Transactions/month",
-      "classification": "Classification engine",
-      "rules": "Rules",
-      "budget": "Budgets",
-      "dashboard_history": "Dashboard history",
-      "export": "Export",
-      "transfers": "Transfer detection",
-      "investments": "Investment portfolio",
-      "networth": "My net worth"
-    },
-    "classification_base": "Dictionary + community",
-    "classification_ai": "+ AI",
-    "export_none": "—",
-    "export_basic": "Excel/CSV",
-    "export_scheduled": "+ scheduled",
-    "months": "{{count}} months",
     "payment_note": "Online payment will be available soon. To change your plan, contact support."
   },
   "onboarding": {

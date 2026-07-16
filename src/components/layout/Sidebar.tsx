@@ -1,16 +1,22 @@
+import { useState } from 'react'
 import { NavLink, useLocation } from 'react-router-dom'
-import { Home, BarChart3, ArrowLeftRight, Upload, Wallet, Tags, FileClock, Shield, ShieldCheck } from 'lucide-react'
+import { Home, BarChart3, ArrowLeftRight, Upload, Wallet, Tags, FileClock, Shield, ShieldCheck, Sparkles, PiggyBank } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { cn } from '@/lib/utils'
 import { APP_VERSION } from '@/lib/version'
 import { useIsAdmin } from '@/hooks/useIsAdmin'
 import { useUnreviewedBankCount } from '@/hooks/useAdminBankEntities'
 import { useUserSettings } from '@/hooks/useUserSettings'
+import { useBudgetsGate } from '@/hooks/useBudgetsGate'
 import { Logo } from '@/components/Logo'
+import { UpgradePlanDialog } from '@/components/plan/UpgradePlanDialog'
+import { UpgradeHintDialog } from '@/components/plan/UpgradeHintDialog'
 
-const navItems = [
+const navItemsTop = [
   { to: '/app',              icon: Home,           label: 'nav.home' },
   { to: '/app/analysis',     icon: BarChart3,      label: 'nav.analysis' },
+]
+const navItemsBottom = [
   { to: '/app/transactions', icon: ArrowLeftRight, label: 'nav.transactions' },
   { to: '/app/accounts',     icon: Wallet,         label: 'nav.accounts' },
   { to: '/app/history',      icon: FileClock,      label: 'nav.history' },
@@ -59,6 +65,72 @@ function UserPlanNavItem() {
   )
 }
 
+// Ítem "Presupuestos": la función todavía no existe para nadie, pero PRO/PREMIUM
+// ya navegan a la página "muy pronto"; FREE ve el aviso de mejora de plan.
+function BudgetsNavItem() {
+  const { t } = useTranslation('common')
+  const location = useLocation()
+  const hasBudget = useBudgetsGate()
+  const [hintOpen, setHintOpen] = useState(false)
+  const isActive = location.pathname.startsWith('/app/budgets')
+
+  if (hasBudget) {
+    return (
+      <NavLink to="/app/budgets" className="block">
+        {({ isActive }) => (
+          <span className={itemClass(isActive)}>
+            {isActive && <ActiveBar />}
+            <PiggyBank className="h-[18px] w-[18px] shrink-0" strokeWidth={1.7} />
+            {t('nav.budgets')}
+          </span>
+        )}
+      </NavLink>
+    )
+  }
+
+  return (
+    <>
+      <button type="button" onClick={() => setHintOpen(true)} className="block w-full text-left">
+        <span className={itemClass(isActive)}>
+          {isActive && <ActiveBar />}
+          <PiggyBank className="h-[18px] w-[18px] shrink-0" strokeWidth={1.7} />
+          {t('nav.budgets')}
+        </span>
+      </button>
+      <UpgradeHintDialog
+        open={hintOpen}
+        onOpenChange={setHintOpen}
+        title={t('budgets.hint_title')}
+        description={t('budgets.hint_body')}
+      />
+    </>
+  )
+}
+
+// Botón "Mejorar plan": solo visible para FREE (PRO/PREMIUM ya tienen lo mejor
+// disponible o aún no hay pasarela de pago para ir más allá). Abre el popup con
+// las mismas tarjetas de la landing.
+function UpgradePlanNavItem() {
+  const { t } = useTranslation('common')
+  const { data: settings } = useUserSettings()
+  const [open, setOpen] = useState(false)
+  const isFree = (settings?.plan ?? 'free') === 'free'
+
+  if (!isFree) return null
+
+  return (
+    <>
+      <button type="button" onClick={() => setOpen(true)} className="block w-full text-left">
+        <span className={cn(itemClass(false), 'text-[var(--brand-accent)] hover:text-[#FF9784]')}>
+          <Sparkles className="h-[18px] w-[18px] shrink-0" strokeWidth={1.7} />
+          {t('sidebar.upgrade_plan')}
+        </span>
+      </button>
+      <UpgradePlanDialog open={open} onOpenChange={setOpen} />
+    </>
+  )
+}
+
 export function Sidebar() {
   const { t } = useTranslation('common')
   const location = useLocation()
@@ -67,18 +139,36 @@ export function Sidebar() {
   const { data: pendingEntities = 0 } = useUnreviewedBankCount(isAdmin)
 
   return (
-    <aside className="hidden h-screen w-[242px] flex-col bg-[var(--brand-ink)] px-[18px] pb-[22px] pt-[26px] text-[var(--side-text)] md:flex">
+    <aside className="relative hidden h-screen w-[242px] flex-col overflow-hidden bg-[var(--brand-ink)] px-[18px] pb-[22px] pt-[26px] text-[var(--side-text)] md:flex">
+      {/* Foco de luz decorativo — mismo efecto que la cabecera del popup de planes */}
+      <div
+        className="pointer-events-none absolute -right-14 -top-14 h-[220px] w-[220px] rounded-full"
+        style={{ background: 'radial-gradient(circle,rgba(56,176,214,.3),transparent 70%)' }}
+      />
+
+      <div className="relative flex flex-1 flex-col">
       {/* Logo — la versión va en la baseline del wordmark */}
       <div className="flex items-center px-2 pb-1 text-white">
         <Logo size={30} version={APP_VERSION} />
       </div>
 
       {/* Navegación principal */}
-      <div className="mt-[30px] px-2 text-[10px] font-semibold uppercase tracking-[0.14em] text-[var(--side-heading)]" style={{ fontFamily: '"Space Grotesk", sans-serif' }}>
-        {t('sidebar.section_main')}
-      </div>
-      <nav className="mt-3 flex flex-col gap-[3px]">
-        {navItems.map(({ to, icon: Icon, label }) => (
+      <nav className="mt-7 flex flex-col gap-[3px]">
+        {navItemsTop.map(({ to, icon: Icon, label }) => (
+          <NavLink key={to} to={to} end={to === '/app'} className="block">
+            {({ isActive }) => (
+              <span className={itemClass(isActive)}>
+                {isActive && <ActiveBar />}
+                <Icon className="h-[18px] w-[18px] shrink-0" strokeWidth={1.7} />
+                {t(label)}
+              </span>
+            )}
+          </NavLink>
+        ))}
+
+        <BudgetsNavItem />
+
+        {navItemsBottom.map(({ to, icon: Icon, label }) => (
           <div key={to}>
             <NavLink to={to} end={to === '/app'} className="block">
               {({ isActive }) => (
@@ -138,6 +228,7 @@ export function Sidebar() {
           </NavLink>
 
           <UserPlanNavItem />
+          <UpgradePlanNavItem />
 
           {/* Panel de administración — solo visible para admins. */}
           {isAdmin && (
@@ -155,6 +246,7 @@ export function Sidebar() {
             </NavLink>
           )}
         </div>
+      </div>
       </div>
     </aside>
   )

@@ -1,54 +1,93 @@
 import { useEffect, useState } from 'react'
 import { NavLink, useLocation } from 'react-router-dom'
-import { Home, BarChart3, ArrowLeftRight, Wallet, FileClock, Upload, Shield, Menu, X } from 'lucide-react'
+import { Home, BarChart3, ArrowLeftRight, Wallet, FileClock, Upload, Shield, Menu, X, PiggyBank } from 'lucide-react'
+import type { LucideIcon } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { cn } from '@/lib/utils'
 import { APP_VERSION } from '@/lib/version'
 import { useIsAdmin } from '@/hooks/useIsAdmin'
 import { useUnreviewedBankCount } from '@/hooks/useAdminBankEntities'
 import { useUserSettings } from '@/hooks/useUserSettings'
+import { useBudgetsGate } from '@/hooks/useBudgetsGate'
 import { Logo } from '@/components/Logo'
+import { UpgradeHintDialog } from '@/components/plan/UpgradeHintDialog'
 import { LanguageSelector } from './LanguageSelector'
 
 // Destinos principales: van en la barra inferior con scroll horizontal.
+// "Presupuestos" se intercala aparte (BudgetsBottomNavItem) por su gate de plan.
 const bottomItems = [
   { to: '/app',              icon: Home,           label: 'nav.short.home' },
   { to: '/app/analysis',     icon: BarChart3,      label: 'nav.short.analysis' },
   { to: '/app/transactions', icon: ArrowLeftRight, label: 'nav.short.transactions' },
-  { to: '/app/accounts',     icon: Wallet,         label: 'nav.short.accounts' },
-  { to: '/app/history',      icon: FileClock,      label: 'nav.short.history' },
 ]
+
+const bottomItemClass = (isActive: boolean) =>
+  cn(
+    'relative flex min-w-[76px] shrink-0 flex-col items-center justify-center gap-1 rounded-xl px-2 py-1.5 text-[11px] font-medium transition-colors',
+    isActive
+      ? 'bg-[var(--brand-ink-2)] text-white'
+      : 'text-[var(--side-text-muted)] hover:bg-[var(--side-hover-bg)] hover:text-[#E7F0F5]',
+  )
+
+function BottomNavLink({ to, icon: Icon, label }: { to: string; icon: LucideIcon; label: string }) {
+  const { t } = useTranslation('common')
+  return (
+    <NavLink to={to} end={to === '/app'} className={({ isActive }) => bottomItemClass(isActive)}>
+      {({ isActive }) => (
+        <>
+          {isActive && <span className="absolute left-3 right-3 top-0 h-[3px] rounded-b-[3px] bg-[var(--brand-accent)]" />}
+          <Icon className="h-5 w-5 shrink-0" strokeWidth={1.7} />
+          <span className="max-w-full truncate">{t(label)}</span>
+        </>
+      )}
+    </NavLink>
+  )
+}
+
+// "Presupuestos" en la barra inferior: PRO/PREMIUM navegan a la página "muy
+// pronto"; FREE ve el aviso de mejora de plan (mismo gate que en el sidebar).
+function BudgetsBottomNavItem() {
+  const { t } = useTranslation('common')
+  const location = useLocation()
+  const hasBudget = useBudgetsGate()
+  const [hintOpen, setHintOpen] = useState(false)
+  const isActive = location.pathname.startsWith('/app/budgets')
+
+  const content = (
+    <>
+      {isActive && <span className="absolute left-3 right-3 top-0 h-[3px] rounded-b-[3px] bg-[var(--brand-accent)]" />}
+      <PiggyBank className="h-5 w-5 shrink-0" strokeWidth={1.7} />
+      <span className="max-w-full truncate">{t('nav.short.budgets')}</span>
+    </>
+  )
+
+  if (hasBudget) {
+    return <NavLink to="/app/budgets" className={bottomItemClass(isActive)}>{content}</NavLink>
+  }
+
+  return (
+    <>
+      <button type="button" onClick={() => setHintOpen(true)} className={bottomItemClass(isActive)}>
+        {content}
+      </button>
+      <UpgradeHintDialog
+        open={hintOpen}
+        onOpenChange={setHintOpen}
+        title={t('budgets.hint_title')}
+        description={t('budgets.hint_body')}
+      />
+    </>
+  )
+}
 
 /** Barra inferior de navegación (solo móvil). Mismo lenguaje que el sidebar de
  *  escritorio: fondo navy, activo elevado con indicador coral. */
 export function MobileBottomNav() {
-  const { t } = useTranslation('common')
-
   return (
     <nav className="flex shrink-0 items-stretch gap-1 overflow-x-auto bg-[var(--brand-ink)] px-2 py-1.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:hidden">
-      {bottomItems.map(({ to, icon: Icon, label }) => (
-        <NavLink
-          key={to}
-          to={to}
-          end={to === '/app'}
-          className={({ isActive }) =>
-            cn(
-              'relative flex min-w-[76px] shrink-0 flex-col items-center justify-center gap-1 rounded-xl px-2 py-1.5 text-[11px] font-medium transition-colors',
-              isActive
-                ? 'bg-[var(--brand-ink-2)] text-white'
-                : 'text-[var(--side-text-muted)] hover:bg-[var(--side-hover-bg)] hover:text-[#E7F0F5]',
-            )
-          }
-        >
-          {({ isActive }) => (
-            <>
-              {isActive && <span className="absolute left-3 right-3 top-0 h-[3px] rounded-b-[3px] bg-[var(--brand-accent)]" />}
-              <Icon className="h-5 w-5 shrink-0" strokeWidth={1.7} />
-              <span className="max-w-full truncate">{t(label)}</span>
-            </>
-          )}
-        </NavLink>
-      ))}
+      {bottomItems.slice(0, 2).map(({ to, icon, label }) => <BottomNavLink key={to} to={to} icon={icon} label={label} />)}
+      <BudgetsBottomNavItem />
+      {bottomItems.slice(2).map(({ to, icon, label }) => <BottomNavLink key={to} to={to} icon={icon} label={label} />)}
     </nav>
   )
 }
@@ -122,6 +161,36 @@ export function MobileTopBar() {
               >
                 <Upload className="h-5 w-5 shrink-0" strokeWidth={1.8} />
                 {t('nav.import')}
+              </NavLink>
+
+              <NavLink
+                to="/app/accounts"
+                className={({ isActive }) =>
+                  cn(
+                    'flex items-center gap-3 rounded-[11px] px-3 py-2 text-sm transition-colors',
+                    isActive
+                      ? 'bg-[var(--brand-ink-2)] font-medium text-white'
+                      : 'text-[var(--side-text-muted)] hover:bg-[var(--side-hover-bg)] hover:text-white',
+                  )
+                }
+              >
+                <Wallet className="h-[18px] w-[18px] shrink-0" strokeWidth={1.7} />
+                {t('nav.accounts')}
+              </NavLink>
+
+              <NavLink
+                to="/app/history"
+                className={({ isActive }) =>
+                  cn(
+                    'flex items-center gap-3 rounded-[11px] px-3 py-2 text-sm transition-colors',
+                    isActive
+                      ? 'bg-[var(--brand-ink-2)] font-medium text-white'
+                      : 'text-[var(--side-text-muted)] hover:bg-[var(--side-hover-bg)] hover:text-white',
+                  )
+                }
+              >
+                <FileClock className="h-[18px] w-[18px] shrink-0" strokeWidth={1.7} />
+                {t('nav.history')}
               </NavLink>
 
               <NavLink

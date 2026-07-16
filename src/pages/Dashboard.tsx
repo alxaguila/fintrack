@@ -445,9 +445,14 @@ export default function Dashboard() {
                 <BarSpark data={spark.map(p => ({ label: p.label, value: p.balance }))} color={C_NEUTRAL} inactiveOp={0.4} activeIndex={sparkActiveIdx} />
               </CardContent>
             </Card>
-            <Card className="rounded-2xl border-0 text-white shadow-sm" style={{ backgroundColor: C_TASA }}>
-              <CardHeader className="p-4 pb-1"><CardTitle className="text-[15px] font-bold text-white/80">{t('kpis.savings_rate')}</CardTitle></CardHeader>
-              <CardContent className="space-y-1 p-4 pt-0">
+            <Card className="relative overflow-hidden rounded-2xl border-0 text-white shadow-sm" style={{ backgroundColor: C_TASA }}>
+              {/* Foco de luz decorativo — mismo efecto que el sidebar y el popup de planes */}
+              <div
+                className="pointer-events-none absolute -right-10 -top-12 h-[150px] w-[150px] rounded-full"
+                style={{ background: 'radial-gradient(circle,rgba(56,176,214,.3),transparent 70%)' }}
+              />
+              <CardHeader className="relative p-4 pb-1"><CardTitle className="text-[15px] font-bold text-white/80">{t('kpis.savings_rate')}</CardTitle></CardHeader>
+              <CardContent className="relative space-y-1 p-4 pt-0">
                 <p className="text-4xl font-extrabold tracking-tight" style={{ color: savingsRate >= 0 ? '#5EEAD4' : '#F0A6C4' }}>{savingsRate.toFixed(0)}<span className="text-2xl font-bold text-white/70">%</span></p>
                 <p className="text-[13px] text-white/70">{t('kpis.saved_amount', { amount: fmtAmount(Math.max(0, balance)) })}</p>
               </CardContent>

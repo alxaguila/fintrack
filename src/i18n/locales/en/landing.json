@@ -42,7 +42,7 @@
     "f2title": "We never ask for your credentials",
     "f2body": "If an app asks for your bank password, it already asked for too much. We don't connect to your bank or third parties: no credentials to hand over, no doubts about what happens to them.",
     "f3title": "Automatic classification",
-    "f3body": "A dictionary, your own rules and the Haiku engine label every transaction for you. You just review."
+    "f3body": "A dictionary and your own rules label every transaction for you. You just review."
   },
   "steps": {
     "eyebrow": "Three steps",
@@ -71,13 +71,14 @@
     "sub": "Three tiers. The Free plan is free forever and asks for no card.",
     "monthly": "Monthly",
     "annual": "Annual",
-    "save": "-20%",
+    "save": "-25%",
     "swipeHint": "Swipe to compare plans →",
     "unit": "/mo",
     "forever": "forever",
     "billNote": "Billed annually",
     "recommended": "Recommended",
     "comingSoon": "Coming soon",
+    "currentPlanCta": "Your current plan",
     "free": {
       "name": "FREE",
       "desc": "To start tidying up your money",
@@ -85,12 +86,11 @@
       "inherits": "Includes:",
       "features": [
         "1 financial profile",
-        "3 accounts",
+        "3 bank accounts / cards",
         "5 imports per month",
         "200 transactions per month",
-        "Engine: dictionary + community",
         "50 classification rules",
-        "Dashboard with 6-month history"
+        "Dashboard with 12-month history"
       ]
     },
     "pro": {
@@ -100,10 +100,9 @@
       "inherits": "Everything in Free, plus:",
       "features": [
         "3 financial profiles",
-        "10 accounts",
+        "10 bank accounts / cards",
         "Unlimited imports",
         "3,000 transactions per month",
-        "Engine + Haiku AI",
         "100 rules",
         "Budgets",
         "Unlimited dashboard history",
@@ -115,12 +114,13 @@
       "desc": "Full net worth and investments",
       "inherits": "Everything in Pro, plus:",
       "features": [
-        "Unlimited profiles & accounts",
+        "Unlimited profiles",
+        "Unlimited bank accounts / cards",
+        "Improved classification with AI Haiku",
         "Unlimited transactions & rules",
-        "Advanced budgets",
-        "Unlimited dashboard + forecasts",
         "Scheduled exports",
         "Investment portfolio",
+        "Funds & ETFs",
         "Net worth"
       ]
     }

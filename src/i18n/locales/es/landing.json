@@ -42,7 +42,7 @@
     "f2title": "Nunca pedimos tus claves",
     "f2body": "Si una app pide la contraseña de tu banco, ya ha pedido demasiado. Nosotros no conectamos con tu banco ni con terceros: sin credenciales que ceder, sin dudas de qué hacen con ellas.",
     "f3title": "Clasificación automática",
-    "f3body": "Diccionario, reglas propias y el motor Haiku etiquetan cada movimiento por ti. Tú solo revisas."
+    "f3body": "Diccionario y reglas propias etiquetan cada movimiento por ti. Tú solo revisas."
   },
   "steps": {
     "eyebrow": "Tres pasos",
@@ -71,13 +71,14 @@
     "sub": "Tres modalidades. El plan Free es gratis para siempre y no pide tarjeta.",
     "monthly": "Mensual",
     "annual": "Anual",
-    "save": "-20%",
+    "save": "-25%",
     "swipeHint": "Desliza para comparar los planes →",
     "unit": "/mes",
     "forever": "para siempre",
     "billNote": "Facturado anualmente",
     "recommended": "Recomendado",
     "comingSoon": "Próximamente",
+    "currentPlanCta": "Tu plan actual",
     "free": {
       "name": "FREE",
       "desc": "Para empezar a ordenar tu dinero",
@@ -85,12 +86,11 @@
       "inherits": "Incluye:",
       "features": [
         "1 perfil financiero",
-        "3 cuentas",
+        "3 cuentas bancarias / tarjetas",
         "5 importaciones al mes",
         "200 movimientos al mes",
-        "Motor: diccionario + comunidad",
         "50 reglas de clasificación",
-        "Dashboard con histórico de 6 meses"
+        "Dashboard con histórico de 12 meses"
       ]
     },
     "pro": {
@@ -100,10 +100,9 @@
       "inherits": "Todo lo de Free, y además:",
       "features": [
         "3 perfiles financieros",
-        "10 cuentas",
+        "10 cuentas bancarias / tarjetas",
         "Importaciones ilimitadas",
         "3.000 movimientos al mes",
-        "Motor + IA Haiku",
         "100 reglas",
         "Presupuestos",
         "Dashboard histórico ilimitado",
@@ -115,12 +114,13 @@
       "desc": "Patrimonio completo e inversiones",
       "inherits": "Todo lo de Pro, y además:",
       "features": [
-        "Perfiles y cuentas ilimitados",
+        "Perfiles ilimitados",
+        "Cuentas bancarias / tarjetas ilimitadas",
+        "Clasificación mejorada con AI Haiku",
         "Movimientos y reglas ilimitados",
-        "Presupuestos avanzados",
-        "Dashboard ilimitado + previsiones",
         "Exportación programada",
         "Cartera de valores",
+        "Fondos y ETFs",
         "Mi patrimonio"
       ]
     }

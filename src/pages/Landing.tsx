@@ -6,6 +6,7 @@ import { BRAND, BrandMark } from '@/components/landing/brand'
 import { HeroDashboardMock } from '@/components/landing/HeroDashboardMock'
 import { CsvFlowArt, VaultArt, BrainArt } from '@/components/landing/FeatureArt'
 import { LoginDialog } from '@/components/auth/LoginDialog'
+import { PricingCards } from '@/components/landing/PricingCards'
 
 // Copia local de estilos de la landing (keyframes, hover y responsive). Se inyecta
 // una sola vez; el diseño va con estilos inline para ser fiel al mockup aprobado.
@@ -49,8 +50,6 @@ const CSS = `
 .ftl-float{animation:ftFloat 5.5s ease-in-out infinite}
 .ftl-ctacard{transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease}
 .ftl-ctacard:hover{transform:translateY(-2px);box-shadow:0 12px 28px rgba(10,37,64,.12);border-color:#CBD9E4}
-.ftl-price-hint{display:none}
-.ftl-price-grid::-webkit-scrollbar{display:none}
 @media (max-width:1024px){
   .ftl-hero-card{min-height:auto!important}
   .ftl-hero-body{flex-direction:column!important;gap:36px!important;padding:32px 24px 40px!important}
@@ -62,12 +61,6 @@ const CSS = `
   .ftl-grid-2>*{min-width:0}
   .ftl-steps{flex-direction:column!important;align-items:center!important}
   .ftl-chev{transform:rotate(90deg)!important;padding-top:0!important}
-  .ftl-price-hint{display:block!important}
-  /* Carrusel de planes: un swipe = un plan. Márgenes negativos para que el scroller
-     llegue al filo de la pantalla y los planes vecinos asomen. */
-  .ftl-price-grid{display:flex!important;max-width:none!important;margin:0 -34px!important;padding:10px 34px 26px!important;gap:14px!important;align-items:stretch!important;overflow-x:auto!important;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none}
-  .ftl-price-grid>*{flex:0 0 86%;scroll-snap-align:center;scroll-snap-stop:always;opacity:.7;transform:scale(.95)!important;transition:transform .35s cubic-bezier(.2,.7,.2,1),opacity .35s ease}
-  .ftl-price-grid>.ftl-p-on{opacity:1;transform:scale(1)!important}
 }
 @media (max-width:768px){
   .ftl-navcenter{display:none!important}
@@ -97,7 +90,6 @@ const CSS = `
 @media (max-width:520px){
   .ftl-h1{font-size:34px!important}
   .ftl-navcta{display:none!important}
-  .ftl-price-grid>*{flex-basis:88%}
   .ftl-mock-side{display:none!important}
 }
 @media (prefers-reduced-motion: reduce){
@@ -115,7 +107,6 @@ export default function Landing() {
   const [annual, setAnnual] = useState(true)
   const [loginOpen, setLoginOpen] = useState(false)
   const rootRef = useRef<HTMLDivElement>(null)
-  const priceRef = useRef<HTMLDivElement>(null)
 
   // Reveal al hacer scroll. Se gatea con la clase `ftl-anim` puesta ANTES del primer
   // paint (useLayoutEffect) para que sin JS o con reduced-motion el contenido quede
@@ -145,57 +136,6 @@ export default function Landing() {
     return () => io.disconnect()
   }, [])
 
-  // Carrusel de planes en móvil. El swipe y el frenado los pone scroll-snap; aquí solo
-  // arrancamos centrados en PRO y marcamos la tarjeta activa (clase por DOM en vez de
-  // estado: el scroll dispara demasiado como para re-renderizar). En layout effect para
-  // que la posición y el destacado estén puestos antes del primer paint.
-  useLayoutEffect(() => {
-    const el = priceRef.current
-    if (!el) return
-    const cards = () => Array.from(el.children) as HTMLElement[]
-    const scrolls = () => el.scrollWidth > el.clientWidth + 1
-
-    const sync = () => {
-      // En escritorio es un grid sin scroll: todas las tarjetas van a plena presencia.
-      if (!scrolls()) return cards().forEach((c) => c.classList.add('ftl-p-on'))
-      const mid = el.scrollLeft + el.clientWidth / 2
-      let best = 0
-      let bestDist = Infinity
-      cards().forEach((c, i) => {
-        const dist = Math.abs(c.offsetLeft + c.offsetWidth / 2 - mid)
-        if (dist < bestDist) { bestDist = dist; best = i }
-      })
-      cards().forEach((c, i) => c.classList.toggle('ftl-p-on', i === best))
-    }
-
-    const centerPro = () => {
-      if (!scrolls()) return
-      const pro = el.children[1] as HTMLElement | undefined
-      if (!pro) return
-      el.scrollLeft = pro.offsetLeft + pro.offsetWidth / 2 - el.clientWidth / 2
-    }
-
-    let raf = 0
-    const onScroll = () => {
-      if (raf) return
-      raf = requestAnimationFrame(() => { raf = 0; sync() })
-    }
-    // Solo re-centramos al cruzar el breakpoint, nunca en `resize`: en móvil la barra de
-    // URL lo dispara al hacer scroll y devolvería al usuario a PRO a la fuerza.
-    const mq = window.matchMedia('(max-width:1024px)')
-    const onBreakpoint = () => { centerPro(); sync() }
-
-    centerPro()
-    sync()
-    el.addEventListener('scroll', onScroll, { passive: true })
-    mq.addEventListener('change', onBreakpoint)
-    return () => {
-      if (raf) cancelAnimationFrame(raf)
-      el.removeEventListener('scroll', onScroll)
-      mq.removeEventListener('change', onBreakpoint)
-    }
-  }, [])
-
   // Enlace "Inicia sesión" del registro (/?login=1) → abre el popup y limpia la URL.
   useEffect(() => {
     if (searchParams.get('login') === '1') {
@@ -223,28 +163,14 @@ export default function Landing() {
     return () => subscription.unsubscribe()
   }, [navigate])
 
-  const money = (v: number) => (lang === 'en' ? v.toFixed(2) : v.toFixed(2).replace('.', ','))
-  const proPrice = money(annual ? 5.99 : 7.99)
-  const premPrice = money(annual ? 15.99 : 19.99)
-
   const goRegister = () => navigate('/register')
   const openLogin = () => setLoginOpen(true)
-
-  const freeFeatures = t('pricing.free.features', { returnObjects: true }) as string[]
-  const proFeatures = t('pricing.pro.features', { returnObjects: true }) as string[]
-  const premFeatures = t('pricing.premium.features', { returnObjects: true }) as string[]
 
   const segBase: React.CSSProperties = {
     font: `600 12px ${BRAND.sans}`, padding: '6px 13px', borderRadius: 8, cursor: 'pointer', border: 'none',
   }
   const langOn = { background: '#fff', color: BRAND.ink }
   const langOff = { background: 'transparent', color: '#8FA9B8' }
-  const billBase: React.CSSProperties = {
-    font: `600 14px ${BRAND.sans}`, padding: '9px 20px', borderRadius: 9, cursor: 'pointer', border: 'none',
-    display: 'inline-flex', alignItems: 'center',
-  }
-  const billOn = { background: '#fff', color: BRAND.ink, boxShadow: '0 2px 8px rgba(10,37,64,.1)' }
-  const billOff = { background: 'transparent', color: '#7B857E' }
 
   const check = (stroke: string) => (
     <svg width="16" height="16" viewBox="0 0 18 18" style={{ flex: 'none', marginTop: 2 }}>
@@ -511,77 +437,7 @@ export default function Landing() {
           <h2 className="ftl-h2" style={{ margin: 0, font: `500 46px/1.06 ${BRAND.display}`, letterSpacing: '-.035em', color: BRAND.ink }}>{t('pricing.title')}</h2>
           <p style={{ margin: '16px 0 0', font: `400 17px/1.55 ${BRAND.sans}`, color: '#586470' }}>{t('pricing.sub')}</p>
         </div>
-        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 42 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 4, background: '#EAE5DA', borderRadius: 12, padding: 4 }}>
-            <button className="ftl-seg" onClick={() => setAnnual(false)} style={{ ...billBase, ...(annual ? billOff : billOn) }}>{t('pricing.monthly')}</button>
-            <button className="ftl-seg" onClick={() => setAnnual(true)} style={{ ...billBase, ...(annual ? billOn : billOff) }}>
-              {t('pricing.annual')}<span style={{ marginLeft: 7, font: `600 10px ${BRAND.sans}`, color: '#fff', background: accent, padding: '2px 7px', borderRadius: 20 }}>{t('pricing.save')}</span>
-            </button>
-          </div>
-        </div>
-
-        <div className="ftl-price-hint" style={{ textAlign: 'center', margin: '-16px 0 20px', font: `500 13px ${BRAND.sans}`, color: '#8B98A2' }}>{t('pricing.swipeHint')}</div>
-
-        <div ref={priceRef} className="ftl-price-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 20, maxWidth: 1080, margin: '0 auto', alignItems: 'start' }}>
-          {/* FREE */}
-          <div style={{ background: '#fff', border: `2px solid ${BRAND.ink}`, borderRadius: 22, padding: '32px 30px', boxShadow: '0 8px 30px rgba(10,37,64,.05)' }}>
-            <div style={{ font: `600 15px ${BRAND.display}`, letterSpacing: '.02em', color: BRAND.ink }}>{t('pricing.free.name')}</div>
-            <div style={{ marginTop: 6, font: `400 14px ${BRAND.sans}`, color: '#8B98A2' }}>{t('pricing.free.desc')}</div>
-            <div style={{ marginTop: 22, display: 'flex', alignItems: 'flex-end', gap: 6 }}>
-              <span style={{ font: `600 46px/1 ${BRAND.mono}`, color: BRAND.ink }}>€0</span>
-              <span style={{ font: `400 14px ${BRAND.sans}`, color: '#94A3B8', paddingBottom: 8 }}>{t('pricing.forever')}</span>
-            </div>
-            <button onClick={goRegister} className="ftl-ghost" style={{ display: 'block', width: '100%', textAlign: 'center', marginTop: 24, background: '#EDE9E1', color: BRAND.ink, font: `600 14.5px ${BRAND.sans}`, padding: '13px 0', borderRadius: 12, border: 'none', cursor: 'pointer' }}>{t('pricing.free.cta')}</button>
-            <div style={{ marginTop: 24, font: `500 13px ${BRAND.sans}`, color: BRAND.ink }}>{t('pricing.free.inherits')}</div>
-            <div style={{ marginTop: 14, display: 'flex', flexDirection: 'column', gap: 11 }}>
-              {freeFeatures.map((f, i) => (
-                <div key={i} style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>{check(BRAND.blue)}<span style={{ font: `400 14px/1.4 ${BRAND.sans}`, color: '#55636F' }}>{f}</span></div>
-              ))}
-            </div>
-          </div>
-
-          {/* PRO */}
-          <div className="ftl-price-pro" style={{ background: BRAND.ink, border: `2px solid ${BRAND.ink}`, borderRadius: 22, padding: '32px 30px', boxShadow: '0 26px 60px rgba(10,37,64,.28)', position: 'relative', transform: 'scale(1.04)' }}>
-            <div style={{ position: 'absolute', top: 18, right: 20, font: `600 10px ${BRAND.sans}`, letterSpacing: '.08em', textTransform: 'uppercase', color: '#fff', background: accent, padding: '4px 11px', borderRadius: 20 }}>{t('pricing.recommended')}</div>
-            <div style={{ font: `600 15px ${BRAND.display}`, letterSpacing: '.02em', color: '#7ED6E7' }}>{t('pricing.pro.name')}</div>
-            <div style={{ marginTop: 6, font: `400 14px ${BRAND.sans}`, color: '#8FA9B8' }}>{t('pricing.pro.desc')}</div>
-            <div style={{ marginTop: 22, display: 'flex', alignItems: 'flex-end', gap: 8 }}>
-              <span style={{ font: `600 46px/1 ${BRAND.mono}`, color: '#fff' }}>€{proPrice}</span>
-              <span style={{ font: `400 14px ${BRAND.sans}`, color: '#8FA9B8', paddingBottom: 8 }}>{t('pricing.unit')}</span>
-              {annual && <span style={{ font: `400 15px ${BRAND.mono}`, color: '#5F7E92', textDecoration: 'line-through', paddingBottom: 9 }}>€{money(7.99)}</span>}
-            </div>
-            <div style={{ marginTop: 6, font: `400 12px ${BRAND.sans}`, color: '#6E8FA2', minHeight: 16 }}>{annual ? t('pricing.billNote') : ''}</div>
-            <button onClick={goRegister} className="ftl-primary" style={{ display: 'block', width: '100%', textAlign: 'center', marginTop: 20, background: accent, color: '#fff', font: `600 14.5px ${BRAND.sans}`, padding: '13px 0', borderRadius: 12, border: 'none', cursor: 'pointer' }}>{t('pricing.pro.cta')}</button>
-            <div style={{ marginTop: 24, font: `500 13px ${BRAND.sans}`, color: '#B7CDDA' }}>{t('pricing.pro.inherits')}</div>
-            <div style={{ marginTop: 14, display: 'flex', flexDirection: 'column', gap: 11 }}>
-              {proFeatures.map((f, i) => (
-                <div key={i} style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>{check('#7ED6E7')}<span style={{ font: `400 14px/1.4 ${BRAND.sans}`, color: '#C7D6E0' }}>{f}</span></div>
-              ))}
-            </div>
-          </div>
-
-          {/* PREMIUM */}
-          <div style={{ background: '#fff', border: `2px solid ${BRAND.ink}`, borderRadius: 22, padding: '32px 30px', boxShadow: '0 8px 30px rgba(10,37,64,.05)' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 9 }}>
-              <span style={{ font: `600 15px ${BRAND.display}`, letterSpacing: '.02em', color: BRAND.ink }}>{t('pricing.premium.name')}</span>
-              <span style={{ font: `600 9.5px ${BRAND.sans}`, letterSpacing: '.06em', textTransform: 'uppercase', color: '#8B6B2E', background: '#F6ECD6', padding: '3px 9px', borderRadius: 20 }}>{t('pricing.comingSoon')}</span>
-            </div>
-            <div style={{ marginTop: 6, font: `400 14px ${BRAND.sans}`, color: '#8B98A2' }}>{t('pricing.premium.desc')}</div>
-            <div style={{ marginTop: 22, display: 'flex', alignItems: 'flex-end', gap: 8 }}>
-              <span style={{ font: `600 46px/1 ${BRAND.mono}`, color: BRAND.ink }}>€{premPrice}</span>
-              <span style={{ font: `400 14px ${BRAND.sans}`, color: '#94A3B8', paddingBottom: 8 }}>{t('pricing.unit')}</span>
-              {annual && <span style={{ font: `400 15px ${BRAND.mono}`, color: '#B4BEC9', textDecoration: 'line-through', paddingBottom: 9 }}>€{money(19.99)}</span>}
-            </div>
-            <div style={{ marginTop: 6, font: `400 12px ${BRAND.sans}`, color: '#94A3B8', minHeight: 16 }}>{annual ? t('pricing.billNote') : ''}</div>
-            <div style={{ textAlign: 'center', marginTop: 20, background: '#EDE9E1', color: '#98A2AC', font: `600 14.5px ${BRAND.sans}`, padding: '13px 0', borderRadius: 12, cursor: 'not-allowed' }}>{t('pricing.comingSoon')}</div>
-            <div style={{ marginTop: 24, font: `500 13px ${BRAND.sans}`, color: BRAND.ink }}>{t('pricing.premium.inherits')}</div>
-            <div style={{ marginTop: 14, display: 'flex', flexDirection: 'column', gap: 11 }}>
-              {premFeatures.map((f, i) => (
-                <div key={i} style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>{check(BRAND.blue)}<span style={{ font: `400 14px/1.4 ${BRAND.sans}`, color: '#55636F' }}>{f}</span></div>
-              ))}
-            </div>
-          </div>
-        </div>
+        <PricingCards annual={annual} onAnnualChange={setAnnual} variant="marketing" onFreeCta={goRegister} onProCta={goRegister} />
       </section>
 
       {/* ==================== CTA FINAL ==================== */}

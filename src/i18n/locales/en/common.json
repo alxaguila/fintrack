@@ -4,6 +4,7 @@
   "nav": {
     "home": "Global Position",
     "analysis": "Analysis",
+    "budgets": "Budgets",
     "transactions": "Transactions",
     "rules": "Classification rules",
     "import": "Import statements",
@@ -16,6 +17,7 @@
     "short": {
       "home": "Home",
       "analysis": "Analysis",
+      "budgets": "Budgets",
       "transactions": "Transactions",
       "accounts": "Accounts",
       "history": "History"
@@ -93,12 +95,20 @@
     "new": "New profile",
     "select": "Select a profile"
   },
+  "budgets": {
+    "hint_title": "Keep your spending under control with budgets",
+    "hint_body": "Set a monthly limit for your categories and avoid surprises at the end of the month. This feature is available on the PRO and PREMIUM plans.",
+    "coming_soon_title": "Budgets",
+    "coming_soon_body": "We're building category budgets. You'll soon be able to set your spending limits right here."
+  },
   "plan": {
     "name": { "free": "FREE", "pro": "PRO", "premium": "PREMIUM" },
+    "compare_plans_cta": "Compare plans",
     "limit_reached": {
       "title": "You've reached your plan's limit",
+      "title_accounts": "Account limit reached",
       "profiles": "Your {{plan}} plan allows up to {{limit}} financial profiles.",
-      "accounts": "Your {{plan}} plan allows up to {{limit}} connected accounts.",
+      "accounts": "Your {{plan}} plan allows up to {{limit}} connected accounts. Upgrade your plan to keep adding your banks and cards.",
       "imports": "Your {{plan}} plan allows up to {{limit}} imports per month.",
       "movements": "Your {{plan}} plan allows up to {{limit}} transactions per month.",
       "rules": "Your {{plan}} plan allows up to {{limit}} classification rules.",
@@ -108,10 +118,14 @@
     }
   },
   "sidebar": {
-    "section_main": "Main",
     "trust_title": "You're in control",
     "trust_body": "No bank connection, no more spreadsheets to update by hand: fintrack keeps your finances organized for you.",
     "user_fallback": "User",
-    "plan_label": "Plan: {{plan}}"
+    "plan_label": "Plan: {{plan}}",
+    "upgrade_plan": "Upgrade plan"
+  },
+  "upgrade_dialog": {
+    "title": "Upgrade your plan",
+    "subtitle": "More accounts, imports and AI-powered classification whenever you need them."
   }
 }

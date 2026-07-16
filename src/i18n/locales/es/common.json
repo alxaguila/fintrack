@@ -4,6 +4,7 @@
   "nav": {
     "home": "Posición Global",
     "analysis": "Análisis",
+    "budgets": "Presupuestos",
     "transactions": "Movimientos",
     "rules": "Reglas de clasificación",
     "import": "Importar extractos",
@@ -16,6 +17,7 @@
     "short": {
       "home": "Inicio",
       "analysis": "Análisis",
+      "budgets": "Presupuestos",
       "transactions": "Movimientos",
       "accounts": "Cuentas",
       "history": "Historial"
@@ -93,12 +95,20 @@
     "new": "Nuevo perfil",
     "select": "Selecciona un perfil"
   },
+  "budgets": {
+    "hint_title": "Mantén tus gastos bajo control con presupuestos",
+    "hint_body": "Pon un límite mensual a tus categorías y evita sorpresas a fin de mes. Esta función está disponible en los planes PRO y PREMIUM.",
+    "coming_soon_title": "Presupuestos",
+    "coming_soon_body": "Estamos construyendo los presupuestos por categoría. Muy pronto podrás definir aquí tus límites de gasto."
+  },
   "plan": {
     "name": { "free": "FREE", "pro": "PRO", "premium": "PREMIUM" },
+    "compare_plans_cta": "Comparar planes",
     "limit_reached": {
       "title": "Has alcanzado el límite de tu plan",
+      "title_accounts": "Límite de cuentas alcanzado",
       "profiles": "Tu plan {{plan}} permite hasta {{limit}} perfiles financieros.",
-      "accounts": "Tu plan {{plan}} permite hasta {{limit}} cuentas conectadas.",
+      "accounts": "Tu plan {{plan}} permite hasta {{limit}} cuentas conectadas. Actualiza tu plan para seguir añadiendo tus bancos y tarjetas.",
       "imports": "Tu plan {{plan}} permite hasta {{limit}} importaciones al mes.",
       "movements": "Tu plan {{plan}} permite hasta {{limit}} movimientos al mes.",
       "rules": "Tu plan {{plan}} permite hasta {{limit}} reglas de clasificación.",
@@ -108,10 +118,14 @@
     }
   },
   "sidebar": {
-    "section_main": "Principal",
     "trust_title": "Tú tienes el control",
     "trust_body": "Sin conexión a tu banco ni Excel que actualizar a mano: fintrack organiza tus finanzas por ti.",
     "user_fallback": "Usuario",
-    "plan_label": "Plan: {{plan}}"
+    "plan_label": "Plan: {{plan}}",
+    "upgrade_plan": "Mejorar plan"
+  },
+  "upgrade_dialog": {
+    "title": "Mejora tu plan",
+    "subtitle": "Más cuentas, importaciones y clasificación con IA cuando lo necesites."
   }
 }

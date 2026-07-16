@@ -70,13 +70,21 @@ export function useParseFile() {
 }
 
 // Formatos candidatos (orden europeo primero). Cubren barras, guiones y puntos.
+// Incluye variantes con año a 2 dígitos: Excel autoformatea fechas tecleadas a
+// mano (p.ej. cuando el usuario arma el extracto manualmente porque el CSV del
+// banco falló) usando el formato corto de fecha del sistema, que en muchos
+// Windows es "dd/mm/aa".
 const DATE_PARSE_FORMATS = [
   'dd/MM/yyyy', 'd/M/yyyy',
   'dd-MM-yyyy', 'd-M-yyyy',
   'dd.MM.yyyy', 'd.M.yyyy',
   'yyyy-MM-dd', 'yyyy/MM/dd',
   'yyyyMMdd',
+  'dd/MM/yy', 'd/M/yy',
+  'dd-MM-yy', 'd-M-yy',
+  'dd.MM.yy', 'd.M.yy',
   'MM/dd/yyyy',
+  'MM/dd/yy',
 ]
 
 function parseDate(raw: string, dateFormat: string): string | null {
@@ -90,11 +98,17 @@ function parseDate(raw: string, dateFormat: string): string | null {
   const formats = [dateFormat, ...DATE_PARSE_FORMATS]
   for (const fmt of formats) {
     const parsed = parse(dateOnly, fmt, new Date())
-    if (isValid(parsed)) {
-      // Formatear en hora LOCAL (no toISOString, que pasa a UTC y resta un día
-      // en zonas con offset positivo como España).
-      return format(parsed, 'yyyy-MM-dd')
-    }
+    if (!isValid(parsed)) continue
+    // date-fns es permisivo: p.ej. "26" contra el token "yyyy" no falla, lo
+    // interpreta como año literal 26 (año 0026) en vez de rechazarlo, y un
+    // "05/07/26" puede colar como día/mes intercambiado contra un formato que
+    // no le corresponde. Para descartar estos falsos positivos, solo aceptamos
+    // el formato si al reformatear el resultado se reconstruye el texto
+    // original exacto (round-trip).
+    if (format(parsed, fmt) !== dateOnly) continue
+    // Formatear en hora LOCAL (no toISOString, que pasa a UTC y resta un día
+    // en zonas con offset positivo como España).
+    return format(parsed, 'yyyy-MM-dd')
   }
   return null
 }
