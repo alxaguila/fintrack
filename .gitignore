@@ -10,3 +10,11 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Tooling local (no forma parte de la app / no desplegar)
+.impeccable/
+.claude/skills/
+
+# graphify: churn de caché y backups diarios (se conserva el grafo curado)
+graphify-out/cache/
+graphify-out/20*/
