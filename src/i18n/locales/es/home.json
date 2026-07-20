@@ -21,6 +21,8 @@
   },
   "accounts": {
     "section": "Cuentas",
+    "show": "Ver cuentas",
+    "hide": "Ocultar cuentas",
     "count_one": "{{count}} cuenta",
     "count_other": "{{count}} cuentas",
     "no_balance": "Sin datos de saldo",

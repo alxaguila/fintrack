@@ -18,7 +18,8 @@
     "create_account": "Crear cuenta",
     "entity_label": "Entidad bancaria",
     "entity_placeholder": "Ej: Santander, BBVA...",
-    "saved_format": "Formato guardado encontrado para {{entity}}. ¿Usar configuración anterior?"
+    "saved_format": "Formato guardado encontrado para {{entity}}. ¿Usar configuración anterior?",
+    "currency_mismatch_warning": "Este extracto mezcla varias monedas en la misma columna de importe; los valores se sumarán tal cual, sin conversión. Revísalo antes de confirmar."
   },
   "step2": {
     "title": "Mapea las columnas del fichero",
@@ -38,6 +39,8 @@
     "debit_column": "Columna débito",
     "credit_column": "Columna crédito",
     "balance_column": "Columna de saldo (opcional)",
+    "state_column": "Columna de estado (opcional)",
+    "state_column_help": "Si el extracto marca cada movimiento como completado/pendiente/revertido (p.ej. Revolut), indica aquí esa columna: los movimientos no finales (pendiente, revertido, declinado...) se descartarán al importar.",
     "select_column": "Selecciona columna",
     "no_column": "No disponible",
     "detected_title": "Mapeo detectado automáticamente",

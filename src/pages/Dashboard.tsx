@@ -251,6 +251,10 @@ export default function Dashboard() {
     return { rows: [...map.values()].sort((a, b) => b.total - a.total), total }
   }, [breakdownRows, breakdownType, categoryById])
 
+  // Importe de la subcategoría mayor: referencia para el ancho de las barras
+  // (la mayor llena su carril y el resto va a proporción de ella).
+  const maxRowTotal = breakdown.rows[0]?.total ?? 0
+
   const prevByCat = useMemo(() => {
     const m = new Map<string, number>()
     for (const row of prevBreakdownRows) {
@@ -538,6 +542,9 @@ export default function Dashboard() {
                       ) : breakdown.rows.map(r => {
                         const Icon = categoryIcon(r.icon)
                         const pct = breakdown.total > 0 ? (r.total / breakdown.total) * 100 : 0
+                        // La barra es proporcional a la subcategoría MAYOR (que llena su
+                        // carril), no al total del periodo; el % de la derecha sí es sobre el total.
+                        const barPct = maxRowTotal > 0 ? (r.total / maxRowTotal) * 100 : 0
                         const key = r.categoryId ?? '__uncat__'
                         const soft = pastel(r.color)
                         const name = r.slug ? categoryLabel(r.slug) : t('no_category')
@@ -554,7 +561,7 @@ export default function Dashboard() {
                                 <span className="shrink-0 text-xs text-muted-foreground">{pct.toFixed(0)}%</span>
                               </div>
                               <div className="mt-1 flex items-center gap-3">
-                                <div className="h-1.5 min-w-0 flex-1 overflow-hidden rounded-full bg-muted"><div className="h-full rounded-full" style={{ width: `${pct}%`, backgroundColor: soft }} /></div>
+                                <div className="h-1.5 min-w-0 flex-1 overflow-hidden rounded-full bg-muted"><div className="h-full rounded-full" style={{ width: `${barPct}%`, backgroundColor: soft }} /></div>
                                 <span className="shrink-0 whitespace-nowrap text-sm font-semibold">{fmtAmount(r.total)}</span>
                               </div>
                             </div>

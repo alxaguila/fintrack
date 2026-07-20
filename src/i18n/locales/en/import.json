@@ -18,7 +18,8 @@
     "create_account": "Create account",
     "entity_label": "Bank",
     "entity_placeholder": "e.g. Santander, BBVA...",
-    "saved_format": "Saved format found for {{entity}}. Use previous configuration?"
+    "saved_format": "Saved format found for {{entity}}. Use previous configuration?",
+    "currency_mismatch_warning": "This statement mixes several currencies in the same amount column; values will be summed as-is, with no conversion. Please review before confirming."
   },
   "step2": {
     "title": "Map file columns",
@@ -38,6 +39,8 @@
     "debit_column": "Debit column",
     "credit_column": "Credit column",
     "balance_column": "Balance column (optional)",
+    "state_column": "Status column (optional)",
+    "state_column_help": "If the statement marks each transaction as completed/pending/reverted (e.g. Revolut), select that column here: non-final transactions (pending, reverted, declined...) will be skipped on import.",
     "select_column": "Select column",
     "no_column": "Not available",
     "detected_title": "Columns detected automatically",

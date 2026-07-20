@@ -1,0 +1,59 @@
+{
+  "title": "Presupuestos",
+  "subtitle": "Controla y proyecta tu gasto antes de que ocurra.",
+  "month_nav": {
+    "prev": "Periodo anterior",
+    "next": "Periodo siguiente"
+  },
+  "granularity": {
+    "month": "Mes",
+    "quarter": "Trimestre",
+    "year": "Año"
+  },
+  "summary": {
+    "total_label": "Presupuesto total",
+    "spent_label": "Gastado",
+    "available_label": "Disponible",
+    "of_budget": "{{pct}}% del presupuesto",
+    "days_remaining": "Quedan {{count}} días",
+    "days_remaining_one": "Queda 1 día",
+    "period_end": "Fin del periodo: {{date}}",
+    "period_closed": "Periodo cerrado"
+  },
+  "projection": {
+    "title": "Proyección de cierre",
+    "estimate_label": "Estimación fin de periodo",
+    "vs_budget_label": "vs presupuesto",
+    "on_track": "Dentro del objetivo",
+    "over_pace": "Por encima del ritmo"
+  },
+  "envelopes": {
+    "title": "Categorías",
+    "spent_of": "{{spent}} gastado de {{budgeted}}",
+    "no_budget": "Sin presupuestar",
+    "vs_avg": "vs media 6 meses",
+    "projection_label": "Proyección",
+    "over_budget": "{{amount}} sobre presupuesto",
+    "under_budget": "{{amount}} por debajo",
+    "empty": "Aún no tienes categorías presupuestadas."
+  },
+  "add_envelope": {
+    "button": "Añadir categoría",
+    "title": "Elegir categoría a presupuestar",
+    "empty": "Ya tienes todas las categorías de gasto activas."
+  },
+  "detail": {
+    "subtitle_spent": "{{spent}} gastado de {{budgeted}}",
+    "subtitle_no_budget": "Sin presupuesto asignado todavía",
+    "amount_label": "Importe mensual",
+    "unbudgeted": "Sin presupuestar",
+    "proposed_badge": "Sugerido",
+    "editing_month": "Editando {{month}}",
+    "history_toggle": "Últimos 12 meses",
+    "history_avg": "Media: {{amount}}",
+    "override_toggle": "Solo este mes",
+    "override_hint": "Este importe aplica solo a este mes. El resto de meses sigue usando el importe recurrente.",
+    "reset_override": "Volver al importe recurrente",
+    "close": "Cerrar"
+  }
+}

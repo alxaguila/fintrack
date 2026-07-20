@@ -24,7 +24,7 @@ const CSS = `
 .ftpc-price-grid::-webkit-scrollbar{display:none}
 @media (max-width:1024px){
   .ftpc-price-hint{display:block!important}
-  .ftpc-price-grid{display:flex!important;max-width:none!important;margin:0 -34px!important;padding:10px 34px 26px!important;gap:14px!important;align-items:stretch!important;overflow-x:auto!important;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+  .ftpc-price-grid{display:flex!important;max-width:none!important;margin:0 calc(var(--pc-bleed) * -1)!important;padding:10px var(--pc-bleed) 26px!important;gap:14px!important;align-items:stretch!important;overflow-x:auto!important;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none}
   .ftpc-price-grid>*{flex:0 0 86%;scroll-snap-align:center;scroll-snap-stop:always;opacity:.7;transform:scale(.95)!important;transition:transform .35s cubic-bezier(.2,.7,.2,1),opacity .35s ease}
   .ftpc-price-grid>.ftpc-p-on{opacity:1;transform:scale(1)!important}
 }
@@ -119,12 +119,16 @@ export function PricingCards({ annual, onAnnualChange, variant = 'marketing', cu
   )
 
   const isUpgrade = variant === 'upgrade'
+  // El carrusel móvil "sangra" hasta el borde del contenedor: el sangrado debe
+  // coincidir con el padding horizontal real de cada consumidor (34px en la
+  // landing, 24px en las pantallas in-app), o las tarjetas quedan cortadas.
+  const bleed = isUpgrade ? 24 : 34
   const currentBoxStyle: React.CSSProperties = {
     width: '100%', boxSizing: 'border-box', textAlign: 'center', borderRadius: 12, padding: '13px 0', font: `600 14.5px ${BRAND.sans}`,
   }
 
   return (
-    <div style={{ fontFamily: BRAND.sans }}>
+    <div style={{ fontFamily: BRAND.sans, ['--pc-bleed' as string]: `${bleed}px` }}>
       <style>{CSS}</style>
 
       <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 42 }}>

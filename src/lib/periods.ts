@@ -22,6 +22,27 @@ export function bucketLabel(key: string, g: Granularity, monthNames: string[]): 
   return `${monthNames[Number(m) - 1]} ${y.slice(2)}`
 }
 
+/** Clave del periodo anterior/siguiente dentro de la misma granularidad. */
+export function prevPeriodKey(key: string, g: Granularity): string {
+  if (g === 'year') return String(Number(key) - 1)
+  if (g === 'quarter') {
+    const [y, q] = key.split('-Q')
+    return Number(q) === 1 ? `${Number(y) - 1}-Q4` : `${y}-Q${Number(q) - 1}`
+  }
+  const [y, m] = key.split('-')
+  return Number(m) === 1 ? `${Number(y) - 1}-12` : `${y}-${String(Number(m) - 1).padStart(2, '0')}`
+}
+
+export function nextPeriodKey(key: string, g: Granularity): string {
+  if (g === 'year') return String(Number(key) + 1)
+  if (g === 'quarter') {
+    const [y, q] = key.split('-Q')
+    return Number(q) === 4 ? `${Number(y) + 1}-Q1` : `${y}-Q${Number(q) + 1}`
+  }
+  const [y, m] = key.split('-')
+  return Number(m) === 12 ? `${Number(y) + 1}-01` : `${y}-${String(Number(m) + 1).padStart(2, '0')}`
+}
+
 /** Rango de fechas [from, to] (YYYY-MM-DD) que cubre un periodo */
 export function bucketRange(key: string, g: Granularity): { from: string; to: string } {
   if (g === 'year') return { from: `${key}-01-01`, to: `${key}-12-31` }

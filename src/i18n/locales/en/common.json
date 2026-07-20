@@ -97,9 +97,7 @@
   },
   "budgets": {
     "hint_title": "Keep your spending under control with budgets",
-    "hint_body": "Set a monthly limit for your categories and avoid surprises at the end of the month. This feature is available on the PRO and PREMIUM plans.",
-    "coming_soon_title": "Budgets",
-    "coming_soon_body": "We're building category budgets. You'll soon be able to set your spending limits right here."
+    "hint_body": "Set a monthly limit for your categories and avoid surprises at the end of the month. This feature is available on the PRO and PREMIUM plans."
   },
   "plan": {
     "name": { "free": "FREE", "pro": "PRO", "premium": "PREMIUM" },

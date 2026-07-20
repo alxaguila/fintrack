@@ -18,6 +18,7 @@ import { AccountFormDialog } from '@/components/accounts/AccountForm'
 import { BankLogo } from '@/components/BankLogo'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Button } from '@/components/ui/button'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import type { Account } from '@/lib/database.types'
 
 // ── Tokens del diseño dolfin (específicos de Posición Global) ─────────────────
@@ -203,6 +204,7 @@ export default function Home() {
 
   const [chartRange, setChartRange] = useState<ChartRange>(loadRange)
   const [creditOpen, setCreditOpen] = useState(false)
+  const [accountsOpen, setAccountsOpen] = useState(false)
   const [editAccount, setEditAccount] = useState<Account | null>(null)
   const [editOpen, setEditOpen] = useState(false)
   // Series activas en la gráfica: por defecto solo el Total; las cuentas se añaden.
@@ -391,10 +393,17 @@ export default function Home() {
               {changeUp ? '+' : ''}{changePct.toFixed(1).replace('.', ',')}% {t('total.change_this_month')}
             </div>
           )}
+          <button
+            onClick={() => setAccountsOpen(o => !o)}
+            className="relative mt-[10px] flex items-center gap-1 text-[11px] font-medium text-[#9DC4D9] md:hidden"
+          >
+            {t(accountsOpen ? 'accounts.hide' : 'accounts.show')}
+            <ChevronDown className={`h-[13px] w-[13px] transition-transform ${accountsOpen ? 'rotate-180' : ''}`} />
+          </button>
         </div>
 
         {/* Tiles de cuenta (scroll horizontal si no caben) */}
-        <div className="flex gap-3 overflow-x-auto no-scrollbar md:flex-1">
+        <div className={`${accountsOpen ? 'flex' : 'hidden'} gap-3 overflow-x-auto no-scrollbar md:flex md:flex-1`}>
           {bankSorted.map(acc => (
             <AccountTile
               key={acc.id}
@@ -450,7 +459,7 @@ export default function Home() {
             <span className="text-[15px] font-semibold text-[#0A2540]" style={{ fontFamily: '"Space Grotesk", sans-serif' }}>{t('evolution.title')}</span>
             <span className="text-[12px] text-[#94A3B8]">{t('evolution.subtitle')}</span>
           </div>
-          <div className="flex gap-[2px] rounded-[9px] bg-[#F2EFE8] p-[3px]">
+          <div className="hidden gap-[2px] rounded-[9px] bg-[#F2EFE8] p-[3px] md:flex">
             {RANGES.map(r => (
               <button
                 key={r}
@@ -461,6 +470,16 @@ export default function Home() {
               </button>
             ))}
           </div>
+          <Select value={chartRange} onValueChange={(v) => setChartRange(v as ChartRange)}>
+            <SelectTrigger className="flex h-auto w-auto gap-1 rounded-full border-none bg-[#F2EFE8] px-3 py-1.5 text-[12px] font-semibold text-[#0A7BAE] shadow-none md:hidden">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent align="end">
+              {RANGES.map(r => (
+                <SelectItem key={r} value={r}>{t(`evolution.range_${r}`)}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
 
         {/* Chips de series */}

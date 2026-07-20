@@ -131,6 +131,31 @@ export type Category = {
   group?: CategoryGroup
 }
 
+// Importe recurrente mensual presupuestado para UNA subcategoría de un perfil
+// (migración 026). El total del "sobre" (category_groups) es la suma de las
+// budget_rules de sus subcategorías — no se guarda a nivel de grupo.
+export type BudgetRule = {
+  id: string
+  profile_id: string
+  category_id: string
+  amount: number
+  created_at: string
+  updated_at: string
+}
+
+// Excepción puntual de budget_rules para UN mes concreto (migración 026): el
+// importe efectivo de ese mes es este valor en vez del recurrente, sin alterar
+// la regla recurrente para los meses siguientes. `month` = día 1 del mes.
+export type BudgetOverride = {
+  id: string
+  profile_id: string
+  category_id: string
+  month: string
+  amount: number
+  created_at: string
+  updated_at: string
+}
+
 // Traducción (ES/EN) de un grupo o subcategoría, editable por admin en runtime
 // (migración 016). Se fusiona sobre el bundle categories.json en el cliente.
 export type CategoryTranslation = {
@@ -220,6 +245,8 @@ export type BankFormat = {
   debit_marker: string | null
   debit_column: string | null
   credit_column: string | null
+  /** Columna de estado de la transacción (p.ej. Revolut: COMPLETED/REVERTED/PENDING). Migración 025. */
+  state_column: string | null
   created_at: string
   updated_at: string
 }
@@ -329,6 +356,8 @@ export type Database = {
       feedback: { Row: Feedback; Insert: Omit<Feedback, 'id' | 'created_at' | 'read_at'>; Update: Partial<Feedback>; Relationships: [] }
       plan_limits: { Row: PlanLimits; Insert: PlanLimits; Update: Partial<PlanLimits>; Relationships: [] }
       plan_history: { Row: PlanHistory; Insert: Omit<PlanHistory, 'id' | 'changed_at'>; Update: never; Relationships: [] }
+      budget_rules: { Row: BudgetRule; Insert: Omit<BudgetRule, 'id' | 'created_at' | 'updated_at'>; Update: Partial<BudgetRule>; Relationships: [] }
+      budget_overrides: { Row: BudgetOverride; Insert: Omit<BudgetOverride, 'id' | 'created_at' | 'updated_at'>; Update: Partial<BudgetOverride>; Relationships: [] }
     }
     Views: Record<string, never>
     Functions: {

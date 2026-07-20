@@ -9,7 +9,8 @@
     "search_placeholder": "Search concepts and categories...",
     "amount_min": "Min amount",
     "amount_max": "Max amount",
-    "clear_filters": "Clear filters"
+    "clear_filters": "Clear filters",
+    "uncategorized": "Uncategorized"
   },
   "columns": {
     "date": "Date",
@@ -26,6 +27,22 @@
     "all": "All",
     "unreviewed": "Unreviewed",
     "reviewed": "Reviewed"
+  },
+  "mark_all_read": {
+    "button": "Mark all as read",
+    "done": "Transactions marked as read"
+  },
+  "groups": {
+    "today": "Today",
+    "yesterday": "Yesterday",
+    "this_week": "This week",
+    "last_week": "Last week",
+    "this_month": "This month",
+    "last_month": "Last month",
+    "this_year": "This year",
+    "last_year": "Last year",
+    "older": "Older",
+    "count": "{{count}} transaction(s)"
   },
   "auto_categorize": {
     "button": "Auto-categorize",
@@ -57,6 +74,11 @@
     "type": "Type",
     "save": "Save category",
     "saved": "{{count}} transaction(s) updated",
+    "add_note": "Add note",
+    "note_label": "Note",
+    "note_placeholder": "A brief note...",
+    "note_counter": "{{count}} left",
+    "note_saved": "Note saved",
     "apply_only_this": "Apply to this transaction only",
     "create_rule_button": "Create rule",
     "rule_hint": "A rule will be created and applied to future imports.",
@@ -120,6 +142,8 @@
   "summary": {
     "total_expenses": "Total expenses",
     "total_income": "Total income",
-    "count": "{{count}} transactions"
+    "count": "{{count}} transactions",
+    "movements_label": "transactions",
+    "unread_label": "unread"
   }
 }

@@ -9,7 +9,6 @@ import { useIsAdmin } from '@/hooks/useIsAdmin'
 import { useUnreviewedBankCount } from '@/hooks/useAdminBankEntities'
 import { useUserSettings } from '@/hooks/useUserSettings'
 import { useBudgetsGate } from '@/hooks/useBudgetsGate'
-import { Logo } from '@/components/Logo'
 import { UpgradeHintDialog } from '@/components/plan/UpgradeHintDialog'
 import { LanguageSelector } from './LanguageSelector'
 
@@ -118,16 +117,14 @@ export function MobileTopBar() {
 
   return (
     <>
-      <header className="flex h-14 shrink-0 items-center justify-between bg-[var(--brand-ink)] px-4 text-white md:hidden">
-        <Logo size={26} version={APP_VERSION} />
-        <button
-          onClick={() => setOpen(true)}
-          aria-label={t('nav.menu')}
-          className="flex h-9 w-9 items-center justify-center rounded-lg text-[var(--side-text)] transition-colors hover:bg-[var(--side-hover-bg)] hover:text-white"
-        >
-          <Menu className="h-5 w-5" />
-        </button>
-      </header>
+      <button
+        onClick={() => setOpen(true)}
+        aria-label={t('nav.menu')}
+        className="fixed right-4 z-40 flex h-10 w-10 items-center justify-center rounded-full bg-[var(--brand-ink)] text-white shadow-lg md:hidden"
+        style={{ top: 'calc(env(safe-area-inset-top, 0px) + 12px)' }}
+      >
+        <Menu className="h-5 w-5" />
+      </button>
 
       {/* Drawer */}
       {open && (
@@ -138,7 +135,10 @@ export function MobileTopBar() {
           />
           <div className="absolute right-0 top-0 flex h-full w-72 max-w-[85vw] flex-col rounded-l-2xl bg-[var(--brand-ink)] text-[var(--side-text)] shadow-xl">
             <div className="flex h-14 items-center justify-between px-4">
-              <span className="text-sm font-bold text-[var(--side-heading)]" style={{ fontFamily: '"Space Grotesk", sans-serif' }}>{t('nav.menu')}</span>
+              <span className="flex items-baseline gap-1.5">
+                <span className="text-sm font-bold text-[var(--side-heading)]" style={{ fontFamily: '"Space Grotesk", sans-serif' }}>{t('nav.menu')}</span>
+                <span className="text-[10px] font-normal text-[var(--side-text-muted)]">{APP_VERSION}</span>
+              </span>
               <button
                 onClick={() => setOpen(false)}
                 aria-label={t('actions.close')}

@@ -132,7 +132,13 @@
     "note": "Set up in under a minute"
   },
   "footer": {
+    "tagline": "Organize your accounts without handing your bank logins to anyone.",
+    "blog": "Blog",
+    "calculators": "Financial calculators",
+    "legalNotice": "Legal notice",
     "privacy": "Privacy",
+    "cookies": "Cookies",
+    "terms": "Terms and conditions",
     "help": "Help",
     "copy": "© 2026 fintrack · You upload, you’re in control."
   },

@@ -8,12 +8,13 @@ import { useProfile } from '@/contexts/ProfileContext'
 import { useTransactions, useTransactionCounts, useMarkFilteredAsRead, type TransactionFilters } from '@/hooks/useTransactions'
 import { useAccounts } from '@/hooks/useAccounts'
 import { useCategories, useCategoryGroups } from '@/hooks/useCategories'
+import { useBankEntities } from '@/hooks/useBankEntities'
 import { useUpdateTransaction, invalidateTransactionData } from '@/hooks/useTransactions'
 import { useCreateKeywordRule } from '@/hooks/useKeywordRules'
 import { useLimitGate } from '@/hooks/usePlan'
 import { upsertCommunityVote, ruleCommunityKey } from '@/hooks/useCommunityRules'
 import { merchantKey } from '@/lib/categoryRules'
-import { categoryIcon, categoryLabel } from '@/lib/categoryIcons'
+import { categoryLabel } from '@/lib/categoryIcons'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select'
@@ -22,25 +23,13 @@ import { Label } from '@/components/ui/label'
 import { Separator } from '@/components/ui/separator'
 import { DatePickerField } from '@/components/ui/date-picker-field'
 import { CategoryCombobox } from '@/components/ui/category-combobox'
-import { Skeleton } from '@/components/ui/skeleton'
+import { TransactionsList } from '@/components/transactions/TransactionsList'
 import { LimitReachedDialog } from '@/components/plan/LimitReachedDialog'
-import { formatCurrency, formatDate } from '@/lib/utils'
 import { toast } from '@/hooks/useToast'
 import { keywordSchema, firstError, LIMITS } from '@/lib/validation'
 import type { Transaction, TransactionType } from '@/lib/database.types'
 
 const PAGE_SIZE = 50
-
-// Paleta de marca (igual que el Dashboard): teal = ingreso, rosa palo = gasto.
-const C_INCOME = '#14B8A6'
-const C_EXPENSE = '#CB6391'
-
-// Estilo del badge de Tipo en la tabla, por tipo de movimiento.
-const TYPE_BADGE: Record<TransactionType, string> = {
-  ingreso: 'border-green-500 bg-green-500/10 text-green-600',
-  gasto: 'border-rose-500 bg-rose-500/10 text-rose-600',
-  no_computable: 'border-slate-400 bg-slate-400/10 text-slate-500',
-}
 
 // Convierte un texto de importe en número (o null si vacío/ inválido).
 function parseAmountInput(s: string): number | null {
@@ -117,8 +106,17 @@ export default function Transactions() {
   const { data: accounts = [] } = useAccounts(activeProfile?.id, { includeArchived: true })
   const { data: categories = [] } = useCategories()
   const { data: groups = [] } = useCategoryGroups()
+  const { data: bankEntities = [] } = useBankEntities()
   const updateTx = useUpdateTransaction()
   const markAllRead = useMarkFilteredAsRead()
+
+  // Mapa entity (nombre libre en cuentas) → logo del catálogo, para el avatar de
+  // entidad de cada fila. Mismo patrón que Accounts.tsx.
+  const entityLogoByName = useMemo(() => {
+    const m = new Map<string, string | null>()
+    for (const e of bankEntities) m.set(e.name.trim().toLowerCase(), e.logo_url)
+    return m
+  }, [bankEntities])
 
   // Ids de (sub)categorías cuyo nombre —o el de su grupo— casa con la búsqueda.
   // La resolución es en cliente (el nombre es i18n); luego la query casa concepto
@@ -408,14 +406,19 @@ export default function Transactions() {
 
   return (
     <div className="flex h-full flex-col gap-4 p-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-extrabold tracking-tight">{t('title')}</h1>
-        <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm" onClick={clearFilters} disabled={!hasActiveFilters}>
-            <FilterX className="h-4 w-4" />
-            {t('filters.clear_filters')}
-          </Button>
+      <div className="flex items-end justify-between gap-3">
+        <div>
+          <h1 className="font-serif text-[28px] leading-tight text-foreground">{t('title')}</h1>
+          <p className="mt-1 text-[13.5px] text-muted-foreground">
+            <span className="font-semibold text-foreground">{total}</span> {t('summary.movements_label')}
+            {' · '}
+            <span className="font-semibold text-[var(--brand-accent)]">{counts?.unread ?? 0}</span> {t('summary.unread_label')}
+          </p>
         </div>
+        <Button variant="ghost" size="sm" onClick={clearFilters} disabled={!hasActiveFilters}>
+          <FilterX className="h-4 w-4" />
+          {t('filters.clear_filters')}
+        </Button>
       </div>
 
       {/* Filas 1 y 2 juntas (buscador/selección arriba, rangos debajo) */}
@@ -425,7 +428,7 @@ export default function Transactions() {
           <div className="relative min-w-[200px] flex-1">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
-              className="bg-card pl-9"
+              className="bg-card pl-9 shadow-[var(--shadow-card)]"
               placeholder={t('filters.search_placeholder')}
               value={search}
               onChange={e => { setSearch(e.target.value); setPage(0) }}
@@ -435,7 +438,7 @@ export default function Transactions() {
             value={filters.accountId ?? '__all__'}
             onValueChange={v => { setFilters(f => ({...f, accountId: v === '__all__' ? undefined : v})); setPage(0) }}
           >
-            <SelectTrigger className="w-44 bg-card"><SelectValue placeholder={t('filters.all_accounts')} /></SelectTrigger>
+            <SelectTrigger className="w-44 bg-card shadow-[var(--shadow-card)]"><SelectValue placeholder={t('filters.all_accounts')} /></SelectTrigger>
             <SelectContent>
               <SelectItem value="__all__">{t('filters.all_accounts')}</SelectItem>
               {accounts.filter(a => a.is_active).map(a => <SelectItem key={a.id} value={a.id}>{a.name}</SelectItem>)}
@@ -445,7 +448,7 @@ export default function Transactions() {
             value={filters.transactionType ?? '__all__'}
             onValueChange={v => { setFilters(f => ({...f, transactionType: v === '__all__' ? undefined : v as TransactionType})); setPage(0) }}
           >
-            <SelectTrigger className="w-40 bg-card"><SelectValue placeholder={t('filters.all_types')} /></SelectTrigger>
+            <SelectTrigger className="w-40 bg-card shadow-[var(--shadow-card)]"><SelectValue placeholder={t('filters.all_types')} /></SelectTrigger>
             <SelectContent>
               <SelectItem value="__all__">{t('filters.all_types')}</SelectItem>
               <SelectItem value="gasto">{tc('transaction_type.gasto')}</SelectItem>
@@ -469,45 +472,47 @@ export default function Transactions() {
             onChange={v => { setFilters(f => ({...f, dateTo: v})); setPage(0) }}
           />
           <div className="relative">
-            <Input type="number" placeholder={t('filters.amount_min')} className="bg-card pr-9 [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none" value={filters.amountMin ?? ''} onChange={e => { setFilters(f => ({...f, amountMin: e.target.value ? Number(e.target.value) : undefined})); setPage(0) }} />
+            <Input type="number" placeholder={t('filters.amount_min')} className="bg-card pr-9 shadow-[var(--shadow-card)] [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none" value={filters.amountMin ?? ''} onChange={e => { setFilters(f => ({...f, amountMin: e.target.value ? Number(e.target.value) : undefined})); setPage(0) }} />
             <Euro className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           </div>
           <div className="relative">
-            <Input type="number" placeholder={t('filters.amount_max')} className="bg-card pr-9 [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none" value={filters.amountMax ?? ''} onChange={e => { setFilters(f => ({...f, amountMax: e.target.value ? Number(e.target.value) : undefined})); setPage(0) }} />
+            <Input type="number" placeholder={t('filters.amount_max')} className="bg-card pr-9 shadow-[var(--shadow-card)] [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none" value={filters.amountMax ?? ''} onChange={e => { setFilters(f => ({...f, amountMax: e.target.value ? Number(e.target.value) : undefined})); setPage(0) }} />
             <Euro className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           </div>
         </div>
       </div>
 
-      {/* Fila 3 (justo encima de la tabla): estado + sin categoría + marcar todo */}
+      {/* Fila 3 (justo encima de la lista): estado + sin categoría (mismo grupo
+          visual) + marcar todo. La lógica sigue siendo 2 filtros independientes
+          y combinables (isReviewed + uncategorized), solo se unifica el envoltorio. */}
       <div className="flex flex-wrap items-center gap-2">
-        <div className="inline-flex rounded-lg border bg-card p-0.5 text-sm">
+        <div className="inline-flex flex-wrap items-center gap-1 rounded-xl bg-[var(--bg-app-alt)] p-1 text-sm">
           {(['all', 'unreviewed', 'reviewed'] as const).map(mode => (
             <button
               key={mode}
               onClick={() => setReviewedMode(mode)}
-              className={`rounded-md px-2.5 py-0.5 transition-colors ${reviewedMode === mode ? 'bg-primary/10 font-medium text-primary' : 'text-muted-foreground hover:text-foreground'}`}
+              className={`rounded-lg px-2.5 py-1 transition-colors ${reviewedMode === mode ? 'bg-card font-medium text-foreground shadow-[var(--shadow-card)]' : 'text-muted-foreground hover:text-foreground'}`}
             >
               {t(`reviewed_filter.${mode}`)}
               {mode === 'unreviewed' && !!counts?.unread && (
-                <span className="ml-1 font-semibold text-[#CB6391]">({counts.unread})</span>
+                <span className="ml-1 font-semibold text-[var(--brand-accent)]">({counts.unread})</span>
               )}
             </button>
           ))}
+          <button
+            onClick={() => { setFilters(f => ({ ...f, uncategorized: f.uncategorized ? undefined : true })); setPage(0) }}
+            className={`rounded-lg px-2.5 py-1 transition-colors ${filters.uncategorized ? 'bg-card font-medium text-foreground shadow-[var(--shadow-card)]' : 'text-muted-foreground hover:text-foreground'}`}
+          >
+            {t('filters.uncategorized')}
+            {!!counts?.uncategorized && (
+              <span className="ml-1 font-semibold text-[var(--brand-accent)]">({counts.uncategorized})</span>
+            )}
+          </button>
         </div>
-        <button
-          onClick={() => { setFilters(f => ({ ...f, uncategorized: f.uncategorized ? undefined : true })); setPage(0) }}
-          className={`rounded-lg border px-2.5 py-1 text-sm transition-colors ${filters.uncategorized ? 'border-primary bg-primary/10 font-medium text-primary' : 'bg-card text-muted-foreground hover:text-foreground'}`}
-        >
-          {t('filters.uncategorized')}
-          {!!counts?.uncategorized && (
-            <span className="ml-1 font-semibold text-[#CB6391]">({counts.uncategorized})</span>
-          )}
-        </button>
         <Button
           variant="outline"
           size="sm"
-          className="ml-auto"
+          className="ml-auto hover:border-income/50 hover:text-income"
           onClick={handleMarkAllRead}
           disabled={!counts?.unread || markAllRead.isPending}
         >
@@ -516,102 +521,18 @@ export default function Transactions() {
         </Button>
       </div>
 
-      {/* Table */}
-      <div className="flex-1 min-h-0 overflow-auto rounded-2xl border bg-card">
-        <table className="w-full text-sm">
-          <thead className="sticky top-0 z-10 bg-muted">
-            <tr>
-              <th className="w-6 px-2 py-3" aria-hidden />
-              <th className="px-4 py-3 text-left font-medium">{t('columns.date')}</th>
-              <th className="px-4 py-3 text-left font-medium md:min-w-[360px] lg:min-w-[480px]">{t('columns.concept')}</th>
-              <th className="px-4 py-3 text-left font-medium hidden sm:table-cell">{t('columns.entity')}</th>
-              <th className="px-4 py-3 text-left font-medium hidden md:table-cell">{t('columns.category')}</th>
-              <th className="px-4 py-3 text-left font-medium hidden lg:table-cell">{t('columns.type')}</th>
-              <th className="px-4 py-3 text-right font-medium">{t('columns.amount')}</th>
-              <th className="px-4 py-3 text-center font-medium">{t('columns.reviewed')}</th>
-            </tr>
-          </thead>
-          <tbody>
-            {isLoading
-              ? Array.from({length: 8}).map((_, i) => (
-                  <tr key={i} className="border-t">
-                    <td className="px-2 py-3" />
-                    <td className="px-4 py-3"><Skeleton className="h-4 w-20" /></td>
-                    <td className="px-4 py-3 md:min-w-[360px] lg:min-w-[480px]"><Skeleton className="h-4 w-48" /></td>
-                    <td className="px-4 py-3 hidden sm:table-cell"><Skeleton className="h-4 w-24" /></td>
-                    <td className="px-4 py-3 hidden md:table-cell"><Skeleton className="h-4 w-28" /></td>
-                    <td className="px-4 py-3 hidden lg:table-cell"><Skeleton className="h-4 w-20" /></td>
-                    <td className="px-4 py-3"><Skeleton className="h-4 w-16 ml-auto" /></td>
-                    <td className="px-4 py-3"><Skeleton className="h-4 w-6 mx-auto" /></td>
-                  </tr>
-                ))
-              : transactions.map(tx => {
-                  const cat = categories.find(c => c.id === tx.category_id)
-                  const grp = groups.find(g => g.id === cat?.group_id)
-                  const account = accounts.find(a => a.id === tx.account_id)
-                  // Pastilla de categoría: icono + color del grupo (igual que el Dashboard).
-                  const CatIcon = categoryIcon(cat?.icon)
-                  const catColor = grp?.color ?? '#94a3b8'
-                  return (
-                    <tr key={tx.id} className={`border-t cursor-pointer transition-colors ${tx.is_reviewed ? 'bg-muted/40 text-muted-foreground hover:bg-muted/60' : 'hover:bg-muted/20'}`} onClick={() => openCategoryDialog(tx)}>
-                      <td className="px-2 py-3 text-center">
-                        {!tx.is_reviewed && (
-                          <span className="inline-block h-2 w-2 rounded-full bg-red-500" title={t('row.pending')} />
-                        )}
-                      </td>
-                      <td className="px-4 py-3 text-muted-foreground whitespace-nowrap">{formatDate(tx.date)}</td>
-                      <td className="px-4 py-3 max-w-[180px] sm:max-w-[240px] md:max-w-[360px] lg:max-w-[480px]">
-                        <div className="truncate font-mono uppercase">{tx.concept}</div>
-                        {tx.notes && (
-                          <div className="truncate text-xs font-normal normal-case text-muted-foreground">{tx.notes}</div>
-                        )}
-                      </td>
-                      <td className="px-4 py-3 hidden sm:table-cell text-muted-foreground">{account?.entity ?? '—'}</td>
-                      <td className="px-4 py-3 hidden md:table-cell">
-                        <span
-                          className="inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 text-xs font-medium"
-                          style={{ backgroundColor: `${catColor}1f`, color: catColor }}
-                        >
-                          <CatIcon className="h-3.5 w-3.5" />
-                          {cat ? categoryLabel(cat.slug) : t('row.uncategorized')}
-                        </span>
-                      </td>
-                      <td className="px-4 py-3 hidden lg:table-cell">
-                        {tx.transaction_type && (
-                          <span className={`inline-flex items-center rounded-full border px-2 py-0.5 text-xs font-medium ${TYPE_BADGE[tx.transaction_type]}`}>
-                            {tc(`transaction_type.${tx.transaction_type}`)}
-                          </span>
-                        )}
-                      </td>
-                      <td
-                        className="px-4 py-3 text-right font-medium"
-                        style={{ color: tx.transaction_type === 'no_computable' ? '#64748b' : tx.amount < 0 ? C_EXPENSE : C_INCOME }}
-                      >
-                        {formatCurrency(tx.amount)}
-                      </td>
-                      <td className="px-4 py-3 text-center">
-                        <button
-                          onClick={e => toggleReviewed(tx, e)}
-                          className={`inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-xs font-medium transition-colors ${tx.is_reviewed ? 'border-green-500 bg-green-500/10 text-green-600' : 'border-muted-foreground/30 text-muted-foreground hover:border-green-400 hover:text-green-600'}`}
-                        >
-                          {tx.is_reviewed ? <CheckCheck className="h-3 w-3" /> : <Check className="h-3 w-3" />}
-                          {tx.is_reviewed ? t('row.reviewed') : t('row.pending')}
-                        </button>
-                      </td>
-                    </tr>
-                  )
-                })
-            }
-          </tbody>
-        </table>
-        {!isLoading && transactions.length === 0 && (
-          <div className="py-12 text-center text-muted-foreground">
-            <p>{t('empty.description')}</p>
-          </div>
-        )}
-      </div>
+      <TransactionsList
+        transactions={transactions}
+        categories={categories}
+        groups={groups}
+        accounts={accounts}
+        entityLogoByName={entityLogoByName}
+        isLoading={isLoading}
+        onRowClick={openCategoryDialog}
+        onToggleReviewed={toggleReviewed}
+      />
 
-      {/* Total (siempre visible bajo la tabla) + paginación cuando procede */}
+      {/* Total (siempre visible bajo la lista) + paginación cuando procede */}
       {!isLoading && (
         <div className="flex items-center justify-between">
           <p className="text-sm text-muted-foreground">

@@ -13,6 +13,7 @@ import { reanchorOpeningBalance } from '@/lib/openingBalance'
 import type { AccountType, BankFormat, Category, CategoryGroup, KeywordRule, PlanLimits, PlanType, PlanUsage, Transaction, TransactionType } from '@/lib/database.types'
 import { PlanLimitError } from '@/lib/plan'
 import { parse, isValid, format } from 'date-fns'
+import { NON_FINAL_STATE_VALUES } from '@/lib/automap'
 
 export interface ParsedRow {
   date: string        // YYYY-MM-DD
@@ -206,6 +207,14 @@ export function useProcessRows() {
     }
     const base: BaseRow[] = []
     for (const row of rows) {
+      // Extractos con columna de estado (Revolut, Wise, N26...): descartamos las
+      // filas cuyo dinero nunca llegó a moverse o se revirtió (pendiente,
+      // declinada, revertida...), en vez de importarlas como si fueran reales.
+      if (bankFormat.state_column) {
+        const rawState = (row[bankFormat.state_column] ?? '').trim().toLowerCase()
+        if (rawState && NON_FINAL_STATE_VALUES.includes(rawState)) continue
+      }
+
       const rawDate = row[bankFormat.date_column] ?? ''
       const rawConcept = row[bankFormat.concept_column] ?? ''
 

@@ -32,6 +32,18 @@
     "button": "Marcar todo como leído",
     "done": "Movimientos marcados como leídos"
   },
+  "groups": {
+    "today": "Hoy",
+    "yesterday": "Ayer",
+    "this_week": "Esta semana",
+    "last_week": "La semana pasada",
+    "this_month": "Este mes",
+    "last_month": "El mes pasado",
+    "this_year": "Este año",
+    "last_year": "El año pasado",
+    "older": "Antiguos",
+    "count": "{{count}} movimiento(s)"
+  },
   "auto_categorize": {
     "button": "Categorizar automáticamente",
     "running": "Categorizando...",
@@ -130,6 +142,8 @@
   "summary": {
     "total_expenses": "Total gastos",
     "total_income": "Total ingresos",
-    "count": "{{count}} movimientos"
+    "count": "{{count}} movimientos",
+    "movements_label": "movimientos",
+    "unread_label": "sin leer"
   }
 }

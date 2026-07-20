@@ -1,0 +1,59 @@
+{
+  "title": "Budgets",
+  "subtitle": "Track and project your spending before it happens.",
+  "month_nav": {
+    "prev": "Previous period",
+    "next": "Next period"
+  },
+  "granularity": {
+    "month": "Month",
+    "quarter": "Quarter",
+    "year": "Year"
+  },
+  "summary": {
+    "total_label": "Total budget",
+    "spent_label": "Spent",
+    "available_label": "Available",
+    "of_budget": "{{pct}}% of budget",
+    "days_remaining": "{{count}} days left",
+    "days_remaining_one": "1 day left",
+    "period_end": "Period ends: {{date}}",
+    "period_closed": "Period closed"
+  },
+  "projection": {
+    "title": "Closing projection",
+    "estimate_label": "End-of-period estimate",
+    "vs_budget_label": "vs budget",
+    "on_track": "On track",
+    "over_pace": "Above pace"
+  },
+  "envelopes": {
+    "title": "Categories",
+    "spent_of": "{{spent}} spent of {{budgeted}}",
+    "no_budget": "Not budgeted",
+    "vs_avg": "vs 6-month avg",
+    "projection_label": "Projection",
+    "over_budget": "{{amount}} over budget",
+    "under_budget": "{{amount}} under",
+    "empty": "You don't have any budgeted categories yet."
+  },
+  "add_envelope": {
+    "button": "Add category",
+    "title": "Choose a category to budget",
+    "empty": "All expense categories are already active."
+  },
+  "detail": {
+    "subtitle_spent": "{{spent}} spent of {{budgeted}}",
+    "subtitle_no_budget": "No budget set yet",
+    "amount_label": "Monthly amount",
+    "unbudgeted": "Not budgeted",
+    "proposed_badge": "Suggested",
+    "editing_month": "Editing {{month}}",
+    "history_toggle": "Last 12 months",
+    "history_avg": "Average: {{amount}}",
+    "override_toggle": "This month only",
+    "override_hint": "This amount only applies to this month. Other months keep using the recurring amount.",
+    "reset_override": "Revert to recurring amount",
+    "close": "Close"
+  }
+}

@@ -21,6 +21,8 @@
   },
   "accounts": {
     "section": "Accounts",
+    "show": "View accounts",
+    "hide": "Hide accounts",
     "count_one": "{{count}} account",
     "count_other": "{{count}} accounts",
     "no_balance": "No balance data",

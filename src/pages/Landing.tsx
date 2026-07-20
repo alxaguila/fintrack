@@ -50,6 +50,7 @@ const CSS = `
 .ftl-float{animation:ftFloat 5.5s ease-in-out infinite}
 .ftl-ctacard{transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease}
 .ftl-ctacard:hover{transform:translateY(-2px);box-shadow:0 12px 28px rgba(10,37,64,.12);border-color:#CBD9E4}
+.ftl-footgrid{grid-template-columns:1.4fr 1fr 1fr 1fr}
 @media (max-width:1024px){
   .ftl-hero-card{min-height:auto!important}
   .ftl-hero-body{flex-direction:column!important;gap:36px!important;padding:32px 24px 40px!important}
@@ -61,12 +62,13 @@ const CSS = `
   .ftl-grid-2>*{min-width:0}
   .ftl-steps{flex-direction:column!important;align-items:center!important}
   .ftl-chev{transform:rotate(90deg)!important;padding-top:0!important}
+  .ftl-footgrid{grid-template-columns:repeat(3,1fr)!important}
 }
 @media (max-width:768px){
-  .ftl-navcenter{display:none!important}
   .ftl-h1{font-size:42px!important}
   .ftl-sec-inner,.ftl-cta-inner{padding:44px 24px!important}
   .ftl-mock-tools>:not(:last-child){display:none!important}
+  .ftl-footgrid{grid-template-columns:repeat(2,1fr)!important;gap:24px!important}
 }
 @media (max-width:560px){
   .ftl-h2{font-size:32px!important}
@@ -91,6 +93,7 @@ const CSS = `
   .ftl-h1{font-size:34px!important}
   .ftl-navcta{display:none!important}
   .ftl-mock-side{display:none!important}
+  .ftl-footgrid{grid-template-columns:1fr!important}
 }
 @media (prefers-reduced-motion: reduce){
   .ftl *{animation-duration:.001ms!important;animation-iteration-count:1!important;animation-delay:0ms!important;transition-duration:.001ms!important}
@@ -218,11 +221,6 @@ export default function Landing() {
             <div style={{ display: 'flex', alignItems: 'center', gap: 11 }}>
               <BrandMark size={32} />
               <span style={{ font: `600 24px ${BRAND.display}`, letterSpacing: '-.03em', color: '#fff' }}>fintrack</span>
-            </div>
-            <div className="ftl-navcenter" style={{ display: 'flex', alignItems: 'center', gap: 34 }}>
-              <a className="ftl-nlink" href="#producto" style={{ font: `400 15px ${BRAND.sans}`, color: '#B7CDDA' }}>{t('nav.product')}</a>
-              <a className="ftl-nlink" href="#seguridad" style={{ font: `400 15px ${BRAND.sans}`, color: '#B7CDDA' }}>{t('nav.security')}</a>
-              <a className="ftl-nlink" href="#precios" style={{ font: `400 15px ${BRAND.sans}`, color: '#B7CDDA' }}>{t('nav.pricing')}</a>
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
               <div style={{ display: 'flex', alignItems: 'center', background: 'rgba(255,255,255,.08)', border: '1px solid rgba(255,255,255,.14)', borderRadius: 9, padding: 3 }}>
@@ -457,16 +455,31 @@ export default function Landing() {
 
       {/* ==================== FOOTER ==================== */}
       <footer className="ftl-foot" style={{ borderTop: '1px solid #E3DCCE' }}>
-        <div style={{ maxWidth: 1408, margin: '0 auto', padding: '44px 34px', boxSizing: 'border-box', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 24, flexWrap: 'wrap' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 11 }}>
-            <BrandMark size={28} /><span style={{ font: `600 21px ${BRAND.display}`, letterSpacing: '-.03em', color: BRAND.ink }}>fintrack</span>
+        <div style={{ maxWidth: 1408, margin: '0 auto', padding: '56px 34px 28px', boxSizing: 'border-box' }}>
+          <div className="ftl-footgrid" style={{ display: 'grid', gap: 32 }}>
+            <div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 11 }}>
+                <BrandMark size={28} /><span style={{ font: `600 21px ${BRAND.display}`, letterSpacing: '-.03em', color: BRAND.ink }}>fintrack</span>
+              </div>
+              <p style={{ margin: '16px 0 0', maxWidth: 240, font: `400 14px/1.6 ${BRAND.sans}`, color: '#586470' }}>{t('footer.tagline')}</p>
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 12, font: `400 14px ${BRAND.sans}`, color: '#586470' }}>
+              <a href="#producto">{t('nav.product')}</a>
+              <a href="#seguridad">{t('nav.security')}</a>
+              <a href="#precios">{t('nav.pricing')}</a>
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 12, font: `400 14px ${BRAND.sans}`, color: '#586470' }}>
+              <span>{t('footer.blog')}</span>
+              <span>{t('footer.calculators')}</span>
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 12, font: `400 14px ${BRAND.sans}`, color: '#586470' }}>
+              <span>{t('footer.legalNotice')}</span>
+              <span>{t('footer.privacy')}</span>
+              <span>{t('footer.cookies')}</span>
+              <span>{t('footer.terms')}</span>
+            </div>
           </div>
-          <div style={{ display: 'flex', gap: 30, flexWrap: 'wrap', font: `400 14px ${BRAND.sans}`, color: '#586470' }}>
-            <a href="#producto">{t('nav.product')}</a>
-            <a href="#seguridad">{t('nav.security')}</a>
-            <a href="#precios">{t('nav.pricing')}</a>
-          </div>
-          <div style={{ font: `400 13px ${BRAND.sans}`, color: '#93A1AB' }}>{t('footer.copy')}</div>
+          <div style={{ marginTop: 40, paddingTop: 20, borderTop: '1px solid #E3DCCE', font: `400 13px ${BRAND.sans}`, color: '#93A1AB' }}>{t('footer.copy')}</div>
         </div>
       </footer>
     </div>

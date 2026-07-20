@@ -97,9 +97,7 @@
   },
   "budgets": {
     "hint_title": "Mantén tus gastos bajo control con presupuestos",
-    "hint_body": "Pon un límite mensual a tus categorías y evita sorpresas a fin de mes. Esta función está disponible en los planes PRO y PREMIUM.",
-    "coming_soon_title": "Presupuestos",
-    "coming_soon_body": "Estamos construyendo los presupuestos por categoría. Muy pronto podrás definir aquí tus límites de gasto."
+    "hint_body": "Pon un límite mensual a tus categorías y evita sorpresas a fin de mes. Esta función está disponible en los planes PRO y PREMIUM."
   },
   "plan": {
     "name": { "free": "FREE", "pro": "PRO", "premium": "PREMIUM" },

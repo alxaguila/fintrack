@@ -10,18 +10,54 @@ import type { SignConventionType } from './database.types'
 
 // ── Pattern lists (lowercased substrings to match against header names) ───────
 
-const DATE_PAT     = ['fecha', 'date', 'f.valor', 'f. valor', 'fecha valor', 'fecha operac', 'fec. op', 'fec.op', 'data', 'fecha mov']
+const DATE_PAT     = ['fecha', 'date', 'f.valor', 'f. valor', 'fecha valor', 'fecha operac', 'fec. op', 'fec.op', 'data', 'fecha mov', 'datum']
+// Fecha de liquidación/cierre: cuando un extracto trae varias columnas de fecha
+// (p.ej. Revolut: "Started Date" / "Completed Date"), esta se prueba PRIMERO
+// para quedarnos con la más fiel al momento real del movimiento en vez de la
+// primera columna que aparezca en el fichero.
+const COMPLETED_DATE_PAT = [
+  'completed', 'completion', 'settlement', 'value date', 'fecha valor', 'fecha operac',
+  'fec. op', 'fec.op', 'buchungsdatum', 'date de valeur', 'data valuta',
+]
 const TIME_PAT     = ['hora', 'time', 'hour', 'hh:mm']
-const CONCEPT_PAT  = ['concepto', 'description', 'descripci', 'movimiento', 'detalle', 'observac', 'texto', 'motivo', 'concept']
-const AMOUNT_PAT   = ['importe', 'amount', 'cargo/abono', 'impte', 'importe (eur', 'importe eur', 'movimiento', 'cantidad']
-const BALANCE_PAT  = ['saldo', 'balance', 'disponible', 'saldo (eur', 'saldo eur', 'saldo actual']
+const CONCEPT_PAT  = [
+  'concepto', 'description', 'descripci', 'movimiento', 'detalle', 'observac', 'texto', 'motivo', 'concept',
+  'libellé', 'libelle', 'verwendungszweck', 'omschrijving', 'descrizione', 'descrição', 'descricao',
+]
+const AMOUNT_PAT   = [
+  'importe', 'amount', 'cargo/abono', 'impte', 'importe (eur', 'importe eur', 'movimiento', 'cantidad',
+  'montant', 'betrag', 'importo', 'montante',
+]
+const BALANCE_PAT  = [
+  'saldo', 'balance', 'disponible', 'saldo (eur', 'saldo eur', 'saldo actual',
+  'solde', 'kontostand',
+]
 const DEBIT_PAT    = ['cargo', 'débito', 'debito', 'debit', 'salida', 'debe']
 const CREDIT_PAT   = ['abono', 'crédito', 'credito', 'credit', 'entrada', 'haber']
 const TYPE_PAT     = ['tipo', 'd/h', 'debe/haber', 'db/cr', 'deb/cred']
+// Estado de la transacción (Revolut, Wise, N26...): "State"/"Status"/"Estado".
+// "state" a secas se comprueba por igualdad exacta, no por substring, porque es
+// una palabra corta que aparece dentro de otras cabeceras ("Statement date").
+const STATE_PAT       = ['estado', 'status']
+const STATE_EXACT_PAT = ['state']
+const CURRENCY_PAT    = ['currency', 'moneda', 'divisa', 'währung', 'wahrung', 'devise', 'valuta']
+
+// Estados de transacción que representan dinero que nunca llegó a moverse (o
+// se revirtió). Se descartan al importar. Cubre EN + ES; ampliar aquí cubre
+// cualquier banco/fintech que use este vocabulario, sin tocar el resto del
+// pipeline.
+export const NON_FINAL_STATE_VALUES = [
+  'pending', 'reverted', 'declined', 'failed', 'cancelled', 'canceled',
+  'pendiente', 'revertido', 'rechazado', 'fallido', 'cancelado',
+]
 
 function match(header: string, patterns: string[]): boolean {
   const h = header.toLowerCase().trim()
   return patterns.some(p => h.includes(p))
+}
+
+function matchExact(header: string, values: string[]): boolean {
+  return values.includes(header.toLowerCase().trim())
 }
 
 // ── Date format detection from a sample value ─────────────────────────────────
@@ -80,6 +116,10 @@ export interface AutoMapResult {
   balanceCol:     string
   signConvention: SignConventionType
   dateFormat:     string
+  /** Columna de estado de la transacción (Revolut/Wise/N26...), si el extracto trae una. */
+  stateCol:       string
+  /** Columna de moneda, si el extracto trae una (usada solo para avisar de mezcla de monedas). */
+  currencyCol:    string
 }
 
 export function autoDetectColumns(
@@ -89,10 +129,19 @@ export function autoDetectColumns(
   const result: Partial<AutoMapResult> = {}
 
   // ── Required fields ──────────────────────────────────────────────────────
-  const dateHeader    = headers.find(h => match(h, DATE_PAT))
+  // Si hay varias columnas de fecha (p.ej. Revolut: "Started Date" / "Completed
+  // Date"), se prioriza la de liquidación/cierre; si no hay ninguna así, se cae
+  // a la primera columna que parezca una fecha.
+  const dateHeader    = headers.find(h => match(h, COMPLETED_DATE_PAT)) ?? headers.find(h => match(h, DATE_PAT))
   const conceptHeader = headers.find(h => match(h, CONCEPT_PAT))
   if (dateHeader)    result.dateCol    = dateHeader
   if (conceptHeader) result.conceptCol = conceptHeader
+
+  // ── Optional: estado de la transacción / moneda ───────────────────────────
+  const stateHeader = headers.find(h => match(h, STATE_PAT) || matchExact(h, STATE_EXACT_PAT))
+  if (stateHeader) result.stateCol = stateHeader
+  const currencyHeader = headers.find(h => match(h, CURRENCY_PAT))
+  if (currencyHeader) result.currencyCol = currencyHeader
 
   // ── Optional: time (used for deduplication, not stored) ──────────────────
   const timeHeader = headers.find(h => h !== dateHeader && match(h, TIME_PAT))

@@ -132,7 +132,13 @@
     "note": "Se configura en menos de un minuto"
   },
   "footer": {
+    "tagline": "Organiza tus cuentas sin dar las claves de tu banco a nadie.",
+    "blog": "Blog",
+    "calculators": "Calculadoras financieras",
+    "legalNotice": "Aviso legal",
     "privacy": "Privacidad",
+    "cookies": "Cookies",
+    "terms": "Términos y condiciones",
     "help": "Ayuda",
     "copy": "© 2026 fintrack · Tú subes, tú controlas."
   },

@@ -103,6 +103,8 @@ function ImportInner() {
   const [debitCol, setDebitCol] = useState('')
   const [creditCol, setCreditCol] = useState('')
   const [balanceCol, setBalanceCol] = useState('')
+  const [stateCol, setStateCol] = useState('')
+  const [currencyMismatch, setCurrencyMismatch] = useState(false)
   const [skipRows, setSkipRows] = useState(0)
   // Step 2 starts as a read-only confirmation; manual mapping is revealed on demand.
   const [editingMap, setEditingMap] = useState(false)
@@ -142,6 +144,7 @@ function ImportInner() {
     setDebitCol(fmt.debit_column ?? '')
     setCreditCol(fmt.credit_column ?? '')
     setBalanceCol(fmt.balance_column ?? '')
+    setStateCol(fmt.state_column ?? '')
     setSkipRows(fmt.skip_rows)
   }
 
@@ -168,6 +171,18 @@ function ImportInner() {
       if (auto.debitCol)       setDebitCol(auto.debitCol)
       if (auto.creditCol)      setCreditCol(auto.creditCol)
       if (auto.balanceCol)     setBalanceCol(auto.balanceCol)
+      if (auto.stateCol)       setStateCol(auto.stateCol)
+
+      // Extractos que mezclan varias monedas en la misma columna de importe
+      // (p.ej. exportación multi-divisa consolidada): avisamos sin bloquear.
+      if (auto.currencyCol) {
+        const distinctCurrencies = new Set(
+          result.rows.map(r => (r[auto.currencyCol!] ?? '').trim()).filter(Boolean),
+        )
+        setCurrencyMismatch(distinctCurrencies.size > 1)
+      } else {
+        setCurrencyMismatch(false)
+      }
     } catch (err: any) {
       console.error('[Import] file drop failed:', err)
       toast({ title: t(`errors.${err.message}`, { defaultValue: t('errors.parse_error') }), description: err?.message, variant: 'destructive' })
@@ -223,6 +238,7 @@ function ImportInner() {
       debit_marker: debitMarker || null,
       debit_column: debitCol || null,
       credit_column: creditCol || null,
+      state_column: stateCol || null,
     }
 
     try {
@@ -291,6 +307,7 @@ function ImportInner() {
             debit_marker: debitMarker || null,
             debit_column: debitCol || null,
             credit_column: creditCol || null,
+            state_column: stateCol || null,
           })
           bankFormatId = (upserted as { id: string }).id
         } catch (e) {
@@ -437,6 +454,14 @@ function ImportInner() {
                     {autoDetectedCount >= 2 && ` · ${autoDetectedCount} campos auto-configurados`}
                   </p>
                   <p className="text-xs text-green-600">{headers.join(' · ')}</p>
+                </div>
+              )}
+
+              {/* Mixed-currency warning (non-blocking): amounts get summed as-is */}
+              {currencyMismatch && (
+                <div className="flex items-center gap-2 rounded-lg border border-amber-200 bg-amber-50 p-3 text-sm text-amber-800">
+                  <AlertCircle className="h-4 w-4 shrink-0" />
+                  <span>{t('step1.currency_mismatch_warning')}</span>
                 </div>
               )}
 
@@ -610,6 +635,25 @@ function ImportInner() {
               <Select
                 value={balanceCol || '__none__'}
                 onValueChange={v => setBalanceCol(v === '__none__' ? '' : v)}
+              >
+                <SelectTrigger><SelectValue placeholder={t('step2.no_column')} /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="__none__">{t('step2.no_column')}</SelectItem>
+                  {safeHeaders.map(h => <SelectItem key={h} value={h}>{h}</SelectItem>)}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-1.5">
+              <Label className="flex items-center gap-1.5">
+                {t('step2.state_column')}
+                <HelpCircle className="h-3.5 w-3.5 text-muted-foreground cursor-help" aria-label={t('step2.state_column_help')}>
+                  <title>{t('step2.state_column_help')}</title>
+                </HelpCircle>
+              </Label>
+              <Select
+                value={stateCol || '__none__'}
+                onValueChange={v => setStateCol(v === '__none__' ? '' : v)}
               >
                 <SelectTrigger><SelectValue placeholder={t('step2.no_column')} /></SelectTrigger>
                 <SelectContent>

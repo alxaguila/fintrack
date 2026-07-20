@@ -10,6 +10,10 @@ const HEADER_KEYWORDS = [
   'fecha', 'importe', 'saldo', 'concepto', 'descripci',
   'movimiento', 'cargo', 'abono', 'valor', 'amount',
   'balance', 'haber', 'debe', 'operaci',
+  // Términos de alta señal en otros idiomas europeos (FR/DE/IT/PT/NL), para que
+  // extractos no españoles también encuentren su fila de cabecera real.
+  'montant', 'betrag', 'importo', 'montante', 'datum', 'solde', 'kontostand',
+  'libellé', 'libelle', 'verwendungszweck', 'omschrijving', 'descrizione', 'descrição',
 ]
 
 export function detectHeaderRowIndex(rawRows: string[][]): number {
