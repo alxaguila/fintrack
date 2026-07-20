@@ -1,0 +1,171 @@
+{
+  "avisoLegal": {
+    "metaTitle": "Legal Notice — fintrack",
+    "pageTitle": "Legal Notice",
+    "lastUpdated": "Last updated: 20 July 2026",
+    "back": "Back to fintrack",
+    "courtesyNote": "**Courtesy translation.** This document is an English translation provided for convenience only. FinTrack is operated from Spain and this legal notice is governed by Spanish law. **In the event of any discrepancy or conflict between this translation and the Spanish version, the Spanish version shall prevail.**",
+    "sections": [
+      {
+        "heading": "1. Identification of the owner",
+        "blocks": [
+          { "p": "In compliance with the information duty set out in Article 10 of Spanish Act 34/2002, of 11 July, on Information Society Services and Electronic Commerce (hereinafter, \"LSSI-CE\"), the following identifying details of the owner of this website are made available to users:" },
+          {
+            "table": [
+              ["Owner", "ALEX DEL AGUILA ARCOS"],
+              ["Spanish Tax ID (NIF)", "46718103C"],
+              ["Registered address", "C. Alfons XII 5, 5º-2ª, 08006 Barcelona"],
+              ["Email", "dolfinapp@gmail.com"],
+              ["Website", "alxfintrack.vercel.app"],
+              ["Activity", "Development and operation of a personal finance management web application."]
+            ]
+          },
+          { "p": "The Owner is a natural person acting as a sole trader. No Commercial Registry details are provided, as such registration is not mandatory for natural persons under Article 81 of the Spanish Commercial Registry Regulations." },
+          { "p": "The Owner's activity is not subject to any prior administrative authorisation regime, nor to the supervision of any professional association." },
+          { "p": "In particular, and for the purposes of Spanish Royal Decree-Law 19/2018, of 23 November, on payment services (transposing Directive (EU) 2015/2366, \"PSD2\"), it is expressly stated that **FinTrack is not a payment institution, a credit institution, an account information service provider (AISP), or a payment initiation service provider (PISP)**. FinTrack does not access Users' bank accounts, does not connect to their financial institutions, and does not execute payment transactions of any kind. The financial information displayed in the application derives exclusively from files and statements that **the User uploads manually and voluntarily**." }
+        ]
+      },
+      {
+        "heading": "2. Purpose and scope",
+        "blocks": [
+          { "p": "This Legal Notice governs access to, browsing of and use of the FinTrack website and web application (hereinafter, interchangeably, the \"Website\" or \"FinTrack\"), owned by the Owner identified above." },
+          { "p": "FinTrack is a personal-use tool that allows Users to import their own bank statements, classify them into categories, organise them across separate financial profiles, and view aggregated information about their income and expenses." },
+          { "p": "Access to the Website is free of charge, without prejudice to the cost of the User's own telecommunications connection, and notwithstanding that certain features may require a paid subscription, in which case the applicable financial terms will be disclosed clearly and expressly prior to contracting." }
+        ]
+      },
+      {
+        "heading": "3. User status and acceptance",
+        "blocks": [
+          { "p": "Browsing the Website confers the status of User and entails full and unreserved acceptance of each and every provision of this Legal Notice, in the version published at the time of access." },
+          { "p": "Users who do not agree with this Legal Notice must refrain from using the Website." },
+          { "p": "Use of certain FinTrack services requires prior registration of a user account and is additionally subject to the Terms and Conditions and the Privacy Policy." }
+        ]
+      },
+      {
+        "heading": "4. Conditions of access and use",
+        "blocks": [
+          { "p": "Users undertake to use the Website diligently, correctly and lawfully and, in particular, undertake to refrain from:" },
+          {
+            "list": [
+              "Using the Website for unlawful purposes, or for purposes harmful to the rights and interests of third parties, or which may in any way damage, disable, overload or impair the Website or prevent its normal use.",
+              "Introducing or spreading computer viruses, malicious code or any other physical or logical systems capable of causing damage to the systems of the Owner, its suppliers or third parties.",
+              "Attempting to access, use or manipulate data belonging to the Owner, to third-party suppliers or to other Users.",
+              "Uploading to the Website information or data which the User does not own or for whose processing the User lacks sufficient legal grounds.",
+              "Reproducing, copying, distributing, transforming, publicly communicating or making available to third parties the contents of the Website without the Owner's authorisation.",
+              "Reverse-engineering, decompiling or disassembling the software, except to the extent expressly permitted by applicable law.",
+              "Using automated means (robots, scrapers, crawlers or others) to access the Website or extract its contents without the Owner's express written authorisation.",
+              "Impersonating another User or any third party."
+            ]
+          },
+          { "p": "Users are solely responsible for the truthfulness, lawfulness and accuracy of the information and files they upload to FinTrack, and for holding sufficient rights over them." }
+        ]
+      },
+      {
+        "heading": "5. No financial, tax or investment advice",
+        "blocks": [
+          { "p": "**FinTrack is an informational and personal organisation tool. It does not provide, and does not purport to provide, financial, investment, tax, accounting or legal advice of any kind.**" },
+          { "p": "In particular, the User acknowledges and accepts that:" },
+          {
+            "list": [
+              "The Owner **is not an investment firm** and is not registered as a financial adviser with the Spanish National Securities Market Commission (CNMV), the Bank of Spain or any other supervisory authority.",
+              "The information, classifications, categories, charts, aggregates, indicators and observations displayed by FinTrack are generated **automatically** from data supplied by the User and are **indicative and informational only**.",
+              "Such information **does not under any circumstances constitute a personal recommendation**, an offer, a solicitation or an invitation to contract, acquire or dispose of any financial product or service.",
+              "FinTrack's automated processes — including transaction categorisation and the detection of transfers between the User's own accounts — **may contain errors or inaccuracies**. Users must verify the information before making any decision based on it.",
+              "FinTrack **does not replace the official statements, balances or communications** issued by the User's financial institutions, which shall prevail in the event of any discrepancy.",
+              "**Any economic, financial, tax or investment decision taken by the User is the User's sole responsibility.** Users are advised to consult a duly qualified and authorised professional before making such decisions."
+            ]
+          }
+        ]
+      },
+      {
+        "heading": "6. Intellectual and industrial property",
+        "blocks": [
+          { "p": "All intellectual and industrial property rights in the Website and its contents — including, without limitation, source code, design, navigation structure, texts, databases, graphics, illustrations, icons, trade marks, trade names and logos — belong to the Owner or, where applicable, to third parties who have authorised their use." },
+          { "p": "The reproduction, distribution, public communication, transformation or any other form of exploitation, in whole or in part, of such contents without the Owner's prior express written authorisation is expressly prohibited. Access to the Website grants Users no right or title over such contents." },
+          { "p": "The contents and data that the User uploads to FinTrack **are and shall remain the User's exclusive property**. The Owner processes them solely as set out in the Privacy Policy and for the purpose of providing the service." },
+          { "p": "The Website may incorporate third-party software components subject to their own licences, whose terms are respected in all cases." },
+          { "p": "If a User believes that any content on the Website infringes their intellectual or industrial property rights, they may report this to dolfinapp@gmail.com." }
+        ]
+      },
+      {
+        "heading": "7. Links to third-party sites",
+        "blocks": [
+          { "p": "The Website may contain links to third-party pages. Such links are provided for information purposes only, and the Owner does not control their contents, policies or services." },
+          { "p": "Consequently, the Owner **accepts no liability** for the information, contents, products or services offered on third-party sites, nor for any damage arising from their use. The existence of a link implies no relationship, recommendation, sponsorship or supervision whatsoever." },
+          { "p": "Establishing links to the Website from third-party pages requires that the link points to the home page, that it does not reproduce the Website by framing, and that it makes no false or inaccurate statements about the Owner or the quality of its services." }
+        ]
+      },
+      {
+        "heading": "8. Disclaimer of warranties and liability",
+        "blocks": [
+          { "p": "The Owner provides the FinTrack service with reasonable diligence; however:" },
+          {
+            "list": [
+              "The Owner **does not guarantee the uninterrupted availability and continuity of the Website**, nor the absence of errors, interruptions, delays or omissions, since its operation depends on infrastructure services provided by third parties (hosting, database, authentication) and on the communications network.",
+              "The Owner **is not responsible for the accuracy, completeness or currency of the data supplied by the User**, nor for results derived from incorrect, incomplete or outdated data.",
+              "The Owner **does not guarantee the complete absence of viruses** or other harmful elements; Users are responsible for having adequate detection tools.",
+              "The Owner **is not liable for damage arising from improper use of the Website** by the User, nor from the User's breach of this Legal Notice or of the Terms and Conditions.",
+              "The Owner **is not liable for unauthorised access to a User's account** where such access is attributable to the User's own lack of diligence in safeguarding their credentials."
+            ]
+          },
+          { "p": "The Owner performs backups in accordance with standard industry practice, but **recommends that Users retain their own original statements**. FinTrack is not an archiving or document-retention system." },
+          { "p": "None of the foregoing exclusions limits the Owner's liability where applicable law does not permit such limitation, in particular in cases of **wilful misconduct or gross negligence**, or vis-à-vis Users who qualify as **consumers** where consumer protection legislation provides a more protective regime." }
+        ]
+      },
+      {
+        "heading": "9. Personal data protection",
+        "blocks": [
+          { "p": "The processing of Users' personal data is governed by the **Privacy Policy**, available at alxfintrack.vercel.app/privacidad, drafted in accordance with Regulation (EU) 2016/679 (GDPR) and Spanish Organic Act 3/2018, of 5 December, on the Protection of Personal Data and the Guarantee of Digital Rights (LOPDGDD)." },
+          { "p": "Users are advised to read it carefully before providing their data, paying particular attention to the purposes of processing and the legal bases relied upon." }
+        ]
+      },
+      {
+        "heading": "10. Cookies",
+        "blocks": [
+          { "p": "The use of cookies and other technologies for storing and retrieving data on Users' devices is governed by the **Cookie Policy**, available at alxfintrack.vercel.app/cookies, in accordance with Article 22.2 LSSI-CE." }
+        ]
+      },
+      {
+        "heading": "11. Availability and modification of the service",
+        "blocks": [
+          { "p": "The Owner reserves the right to modify, suspend, interrupt or discontinue access to the Website and to any of its contents or features at any time and without prior notice, as well as to alter its presentation, configuration and conditions of access, for technical, maintenance, security or service reorganisation reasons." },
+          { "p": "Where such modifications materially affect services contracted by Users who qualify as consumers, they will be notified with reasonable advance notice through the contact details provided." }
+        ]
+      },
+      {
+        "heading": "12. Amendments to this Legal Notice",
+        "blocks": [
+          { "p": "The Owner reserves the right to amend this Legal Notice at any time in order to adapt it to legislative or case-law developments or to changes in the service itself." },
+          { "p": "The version in force shall in all cases be the one published on the Website, whose last-updated date appears in the heading. Users are advised to review it periodically." }
+        ]
+      },
+      {
+        "heading": "13. Severability",
+        "blocks": [
+          { "p": "If any clause of this Legal Notice is declared null, invalid or unenforceable, in whole or in part, by a competent authority or court, such declaration shall affect only the clause or the part thereof concerned, and the remainder of this Legal Notice shall remain in force, with the affected provision deemed not to have been included." }
+        ]
+      },
+      {
+        "heading": "14. Governing law and jurisdiction",
+        "blocks": [
+          { "p": "The relationship between the Owner and the User is governed by **Spanish law**." },
+          { "p": "For the resolution of any dispute arising from access to or use of the Website:" },
+          {
+            "list": [
+              "Where the User qualifies as a **consumer** under Spanish law, the competent courts shall be those determined by applicable law in each case, and the territorial jurisdiction legally corresponding to the User may not be altered, in accordance with Article 90.2 of Spanish Royal Legislative Decree 1/2007, of 16 November (TRLGDCU).",
+              "Where the User **does not qualify as a consumer**, the parties expressly waive any other jurisdiction and submit to the courts of the Owner's domicile."
+            ]
+          }
+        ]
+      },
+      {
+        "heading": "15. Complaints and contact",
+        "blocks": [
+          { "p": "Users may direct any query, suggestion or complaint relating to the Website to dolfinapp@gmail.com. The Owner will acknowledge receipt and respond as promptly as possible." },
+          { "p": "Additionally, Users who qualify as consumers may address their complaints to the competent consumer authorities of their Autonomous Community or to the Municipal Consumer Information Offices (OMIC)." },
+          { "p": "In matters of personal data protection, Users may lodge a complaint with the **Spanish Data Protection Agency** (www.aepd.es), without prejudice to their right to contact the Owner first as set out in the Privacy Policy." }
+        ]
+      }
+    ]
+  }
+}

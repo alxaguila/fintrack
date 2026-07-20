@@ -7,6 +7,7 @@ import { Toaster } from '@/components/ui/toaster'
 import Landing from '@/pages/Landing'
 import Register from '@/pages/Register'
 import ResetPassword from '@/pages/ResetPassword'
+import AvisoLegal from '@/pages/AvisoLegal'
 import Home from '@/pages/Home'
 import Dashboard from '@/pages/Dashboard'
 import Budgets from '@/pages/Budgets'
@@ -51,6 +52,7 @@ export default function App() {
           <Route path="/" element={<Landing />} />
           <Route path="/register" element={<Register />} />
           <Route path="/reset-password" element={<ResetPassword />} />
+          <Route path="/aviso-legal" element={<AvisoLegal />} />
           {/* Compatibilidad con enlaces antiguos a /auth */}
           <Route path="/auth" element={<Navigate to="/" replace />} />
 

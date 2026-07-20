@@ -1,0 +1,170 @@
+{
+  "avisoLegal": {
+    "metaTitle": "Aviso Legal — fintrack",
+    "pageTitle": "Aviso Legal",
+    "lastUpdated": "Última actualización: 20 de julio de 2026",
+    "back": "Volver a fintrack",
+    "sections": [
+      {
+        "heading": "1. Datos identificativos del titular",
+        "blocks": [
+          { "p": "En cumplimiento del deber de información recogido en el artículo 10 de la Ley 34/2002, de 11 de julio, de Servicios de la Sociedad de la Información y de Comercio Electrónico (en adelante, «LSSI-CE»), se ponen a disposición de los usuarios los siguientes datos identificativos del titular de este sitio web:" },
+          {
+            "table": [
+              ["Titular", "ALEX DEL AGUILA ARCOS"],
+              ["NIF", "46718103C"],
+              ["Domicilio", "C. Alfons XII 5, 5º-2ª, 08006 Barcelona"],
+              ["Correo electrónico", "dolfinapp@gmail.com"],
+              ["Sitio web", "alxfintrack.vercel.app"],
+              ["Actividad", "Desarrollo y explotación de una aplicación web de gestión de finanzas personales."]
+            ]
+          },
+          { "p": "El Titular es una persona física que actúa en calidad de empresario individual. No constan datos de inscripción en el Registro Mercantil, al no resultar obligatoria dicha inscripción para las personas físicas conforme al artículo 81 del Reglamento del Registro Mercantil." },
+          { "p": "La actividad del Titular no se encuentra sujeta a régimen de autorización administrativa previa ni a la supervisión de ningún colegio profesional." },
+          { "p": "En particular, y a los efectos del Real Decreto-ley 19/2018, de 23 de noviembre, de servicios de pago (que traspone la Directiva (UE) 2015/2366, «PSD2»), se hace constar expresamente que **FinTrack no es una entidad de pago, ni una entidad de crédito, ni un proveedor de servicios de información sobre cuentas (AISP), ni un proveedor de servicios de iniciación de pagos (PISP)**. FinTrack no accede a las cuentas bancarias de los Usuarios, no se conecta a sus entidades financieras y no ejecuta operaciones de pago de ninguna clase. La información financiera que se muestra en la aplicación procede exclusivamente de los archivos y extractos que **el propio Usuario aporta de forma manual y voluntaria**." }
+        ]
+      },
+      {
+        "heading": "2. Objeto y ámbito de aplicación",
+        "blocks": [
+          { "p": "El presente Aviso Legal regula el acceso, la navegación y el uso del sitio web y de la aplicación web FinTrack (en adelante, indistintamente, el «Sitio Web» o «FinTrack»), titularidad del Titular identificado en el apartado anterior." },
+          { "p": "FinTrack es una herramienta de uso personal que permite al Usuario importar sus propios extractos bancarios, clasificarlos por categorías, organizarlos en distintos perfiles financieros y visualizar información agregada sobre sus ingresos y gastos." },
+          { "p": "El acceso al Sitio Web es gratuito, sin perjuicio del coste de la conexión a través de la red de telecomunicaciones contratada por el Usuario, y de que determinadas funcionalidades puedan estar sujetas a una suscripción de pago, en cuyo caso sus condiciones económicas se informarán de forma previa, clara y expresa antes de la contratación." }
+        ]
+      },
+      {
+        "heading": "3. Condición de Usuario y aceptación",
+        "blocks": [
+          { "p": "La navegación por el Sitio Web atribuye la condición de Usuario e implica la aceptación plena y sin reservas de todas y cada una de las disposiciones de este Aviso Legal, en la versión publicada en el momento del acceso." },
+          { "p": "Si el Usuario no está de acuerdo con el contenido de este Aviso Legal, deberá abstenerse de utilizar el Sitio Web." },
+          { "p": "El uso de determinados servicios de FinTrack requiere el registro previo de una cuenta de usuario y queda sometido, adicionalmente, a los Términos y Condiciones y a la Política de Privacidad." }
+        ]
+      },
+      {
+        "heading": "4. Condiciones de acceso y uso",
+        "blocks": [
+          { "p": "El Usuario se compromete a hacer un uso diligente, correcto y lícito del Sitio Web y, en particular, se obliga a abstenerse de:" },
+          {
+            "list": [
+              "Utilizar el Sitio Web con fines o efectos ilícitos, lesivos de los derechos e intereses de terceros, o que de cualquier forma puedan dañar, inutilizar, sobrecargar o deteriorar el Sitio Web o impedir su normal utilización.",
+              "Introducir o difundir virus informáticos, código malicioso o cualesquiera otros sistemas físicos o lógicos susceptibles de provocar daños en los sistemas del Titular, de sus proveedores o de terceros.",
+              "Intentar acceder, utilizar o manipular los datos del Titular, de terceros proveedores o de otros Usuarios.",
+              "Introducir en el Sitio Web información o datos de los que no sea titular o para cuyo tratamiento no cuente con legitimación suficiente.",
+              "Reproducir, copiar, distribuir, transformar, comunicar públicamente o poner a disposición de terceros los contenidos del Sitio Web sin la autorización del Titular.",
+              "Emplear técnicas de ingeniería inversa, descompilación o desensamblado del software, salvo en la medida expresamente permitida por la normativa aplicable.",
+              "Utilizar medios automatizados (robots, scrapers, crawlers u otros) para acceder al Sitio Web o extraer sus contenidos sin autorización expresa y por escrito del Titular.",
+              "Suplantar la identidad de otro Usuario o de cualquier tercero."
+            ]
+          },
+          { "p": "El Usuario es el único responsable de la veracidad, licitud y exactitud de la información y de los archivos que introduce en FinTrack, así como de disponer de legitimación suficiente sobre ellos." }
+        ]
+      },
+      {
+        "heading": "5. Ausencia de asesoramiento financiero, fiscal o de inversión",
+        "blocks": [
+          { "p": "**FinTrack es una herramienta informativa y de organización personal. No presta, ni pretende prestar, servicios de asesoramiento financiero, de inversión, fiscal, contable ni legal de ningún tipo.**" },
+          { "p": "En particular, el Usuario reconoce y acepta que:" },
+          {
+            "list": [
+              "El Titular **no es una empresa de servicios de inversión** ni está registrado como asesor financiero ante la Comisión Nacional del Mercado de Valores (CNMV), el Banco de España ni ninguna otra autoridad supervisora.",
+              "La información, clasificaciones, categorías, gráficos, agregados, indicadores y observaciones que muestra FinTrack se generan de forma **automatizada** a partir de los datos aportados por el propio Usuario, y tienen carácter meramente **orientativo e informativo**.",
+              "Dicha información **no constituye en ningún caso una recomendación personalizada**, una oferta, una solicitud, ni una invitación a contratar, adquirir o enajenar producto o servicio financiero alguno.",
+              "Los procesos automáticos de FinTrack —incluidas la categorización de movimientos y la detección de transferencias entre cuentas propias— **pueden contener errores o imprecisiones**. El Usuario debe verificar la información antes de tomar cualquier decisión basada en ella.",
+              "FinTrack **no sustituye a los extractos, saldos ni comunicaciones oficiales** de las entidades financieras del Usuario, que prevalecen en todo caso en supuesto de discrepancia.",
+              "**Cualquier decisión económica, financiera, fiscal o de inversión que el Usuario adopte es de su exclusiva responsabilidad.** Se recomienda consultar a un profesional debidamente cualificado y habilitado antes de adoptar tales decisiones."
+            ]
+          }
+        ]
+      },
+      {
+        "heading": "6. Propiedad intelectual e industrial",
+        "blocks": [
+          { "p": "Todos los derechos de propiedad intelectual e industrial del Sitio Web y de sus contenidos —incluyendo, con carácter enunciativo y no limitativo, el código fuente, el diseño, la estructura de navegación, los textos, las bases de datos, los gráficos, las ilustraciones, los iconos, las marcas, los nombres comerciales y los logotipos— son titularidad del Titular o, en su caso, de terceros que han autorizado su uso." },
+          { "p": "Queda expresamente prohibida la reproducción, distribución, comunicación pública, transformación o cualquier otra forma de explotación, total o parcial, de dichos contenidos sin la autorización previa, expresa y por escrito del Titular. El acceso al Sitio Web no otorga al Usuario derecho ni titularidad alguna sobre los mismos." },
+          { "p": "Los contenidos y datos que el Usuario incorpora a FinTrack **son y seguirán siendo de su exclusiva titularidad**. El Titular únicamente los trata en los términos previstos en la Política de Privacidad y con la finalidad de prestar el servicio." },
+          { "p": "El Sitio Web puede incorporar componentes de software de terceros sujetos a sus propias licencias, cuyas condiciones se respetan en todo caso." },
+          { "p": "Si el Usuario considera que algún contenido del Sitio Web vulnera sus derechos de propiedad intelectual o industrial, puede comunicarlo a dolfinapp@gmail.com." }
+        ]
+      },
+      {
+        "heading": "7. Enlaces a sitios de terceros",
+        "blocks": [
+          { "p": "El Sitio Web puede contener enlaces a páginas de terceros. Dichos enlaces se facilitan únicamente a título informativo, sin que el Titular controle sus contenidos, políticas o servicios." },
+          { "p": "En consecuencia, el Titular **no asume responsabilidad alguna** por la información, contenidos, productos o servicios ofrecidos en sitios de terceros, ni por los daños que pudieran derivarse de su uso. La existencia de un enlace no implica relación, recomendación, patrocinio ni supervisión alguna." },
+          { "p": "El establecimiento de enlaces hacia el Sitio Web desde páginas de terceros requiere que el enlace se dirija a la página de inicio, no reproduzca el Sitio Web mediante framing, y no realice manifestaciones falsas o inexactas sobre el Titular o sobre la calidad de sus servicios." }
+        ]
+      },
+      {
+        "heading": "8. Exclusión de garantías y responsabilidad",
+        "blocks": [
+          { "p": "El Titular presta el servicio de FinTrack empleando una diligencia razonable, si bien:" },
+          {
+            "list": [
+              "**No garantiza la disponibilidad y continuidad ininterrumpidas del Sitio Web**, ni la ausencia de errores, interrupciones, demoras u omisiones, dado que su funcionamiento depende de servicios de infraestructura prestados por terceros (alojamiento, base de datos, autenticación) y de la red de comunicaciones.",
+              "**No se responsabiliza de la exactitud, integridad o actualización de los datos aportados por el propio Usuario**, ni de los resultados obtenidos a partir de datos incorrectos, incompletos o desactualizados.",
+              "**No garantiza la ausencia absoluta de virus** u otros elementos lesivos, correspondiendo al Usuario disponer de herramientas adecuadas para su detección.",
+              "**No responde de los daños derivados de un uso indebido del Sitio Web** por parte del Usuario, ni del incumplimiento por su parte de este Aviso Legal o de los Términos y Condiciones.",
+              "**No responde del acceso no autorizado a la cuenta del Usuario** cuando dicho acceso sea imputable a la falta de diligencia de este en la custodia de sus credenciales."
+            ]
+          },
+          { "p": "El Titular realiza copias de seguridad conforme a las prácticas habituales del sector, si bien **recomienda al Usuario conservar sus propios extractos originales**. FinTrack no es un sistema de archivo ni de conservación documental." },
+          { "p": "Ninguna de las exclusiones anteriores limita la responsabilidad del Titular en los supuestos en que la normativa aplicable no lo permita, en particular en caso de **dolo o culpa grave**, o frente a Usuarios que tengan la condición de **consumidores** cuando la normativa de consumo establezca un régimen más protector." }
+        ]
+      },
+      {
+        "heading": "9. Protección de datos personales",
+        "blocks": [
+          { "p": "El tratamiento de los datos personales de los Usuarios se rige por la **Política de Privacidad**, disponible en alxfintrack.vercel.app/privacidad, redactada conforme al Reglamento (UE) 2016/679 (RGPD) y a la Ley Orgánica 3/2018, de 5 de diciembre, de Protección de Datos Personales y garantía de los derechos digitales (LOPDGDD)." },
+          { "p": "Se recomienda al Usuario su lectura atenta antes de facilitar sus datos, con especial atención a las finalidades del tratamiento y a las bases jurídicas que lo legitiman." }
+        ]
+      },
+      {
+        "heading": "10. Cookies",
+        "blocks": [
+          { "p": "El uso de cookies y de otras tecnologías de almacenamiento y recuperación de datos en los equipos de los Usuarios se rige por la **Política de Cookies**, disponible en alxfintrack.vercel.app/cookies, conforme al artículo 22.2 de la LSSI-CE." }
+        ]
+      },
+      {
+        "heading": "11. Disponibilidad y modificación del servicio",
+        "blocks": [
+          { "p": "El Titular se reserva el derecho a modificar, suspender, interrumpir o cancelar, en cualquier momento y sin necesidad de preaviso, el acceso al Sitio Web y a cualquiera de sus contenidos o funcionalidades, así como a alterar su presentación, configuración y condiciones de acceso, por razones técnicas, de mantenimiento, de seguridad o de reorganización del servicio." },
+          { "p": "Cuando dichas modificaciones afecten sustancialmente a servicios contratados por Usuarios con la condición de consumidores, se informará de ellas con una antelación razonable a través de los medios de contacto facilitados." }
+        ]
+      },
+      {
+        "heading": "12. Modificaciones del presente Aviso Legal",
+        "blocks": [
+          { "p": "El Titular se reserva el derecho a modificar este Aviso Legal en cualquier momento, con el fin de adaptarlo a novedades legislativas, jurisprudenciales o a cambios en el propio servicio." },
+          { "p": "La versión vigente será, en todo caso, la publicada en el Sitio Web, cuya fecha de última actualización figura en el encabezado. Se recomienda al Usuario su consulta periódica." }
+        ]
+      },
+      {
+        "heading": "13. Nulidad e ineficacia parcial",
+        "blocks": [
+          { "p": "Si alguna cláusula de este Aviso Legal fuera declarada nula, inválida o ineficaz, total o parcialmente, por una autoridad o tribunal competente, dicha declaración afectará únicamente a la cláusula o a la parte de la misma que resulte afectada, subsistiendo el Aviso Legal en todo lo demás y teniéndose tal disposición por no puesta." }
+        ]
+      },
+      {
+        "heading": "14. Legislación aplicable y jurisdicción",
+        "blocks": [
+          { "p": "La relación entre el Titular y el Usuario se rige por la **legislación española**." },
+          { "p": "Para la resolución de cualquier controversia derivada del acceso o uso del Sitio Web:" },
+          {
+            "list": [
+              "Cuando el Usuario tenga la condición de **consumidor** conforme a la normativa española, serán competentes los juzgados y tribunales que en cada caso determine la normativa aplicable, sin que quepa alterar la competencia territorial que legalmente le corresponda, de acuerdo con el artículo 90.2 del Real Decreto Legislativo 1/2007, de 16 de noviembre (TRLGDCU).",
+              "Cuando el Usuario **no tenga la condición de consumidor**, las partes se someten, con renuncia expresa a cualquier otro fuero, a los juzgados y tribunales del domicilio del Titular."
+            ]
+          }
+        ]
+      },
+      {
+        "heading": "15. Reclamaciones y contacto",
+        "blocks": [
+          { "p": "El Usuario puede dirigir cualquier consulta, sugerencia o reclamación relacionada con el Sitio Web a la dirección dolfinapp@gmail.com. El Titular acusará recibo y dará respuesta en el plazo más breve posible." },
+          { "p": "Adicionalmente, los Usuarios con la condición de consumidores pueden dirigir sus reclamaciones a las autoridades de consumo competentes de su Comunidad Autónoma o a las Oficinas Municipales de Información al Consumidor (OMIC)." },
+          { "p": "En materia de protección de datos personales, el Usuario puede presentar una reclamación ante la **Agencia Española de Protección de Datos** (www.aepd.es), sin perjuicio de su derecho a dirigirse previamente al Titular en los términos previstos en la Política de Privacidad." }
+        ]
+      }
+    ]
+  }
+}

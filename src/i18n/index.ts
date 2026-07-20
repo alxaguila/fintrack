@@ -15,6 +15,7 @@ import esHome from './locales/es/home.json'
 import esAdmin from './locales/es/admin.json'
 import esLanding from './locales/es/landing.json'
 import esBudgets from './locales/es/budgets.json'
+import esLegal from './locales/es/legal.json'
 
 import enCommon from './locales/en/common.json'
 import enAuth from './locales/en/auth.json'
@@ -29,6 +30,7 @@ import enHome from './locales/en/home.json'
 import enAdmin from './locales/en/admin.json'
 import enLanding from './locales/en/landing.json'
 import enBudgets from './locales/en/budgets.json'
+import enLegal from './locales/en/legal.json'
 
 i18n
   .use(LanguageDetector)
@@ -52,6 +54,7 @@ i18n
         admin: esAdmin,
         landing: esLanding,
         budgets: esBudgets,
+        legal: esLegal,
       },
       en: {
         common: enCommon,
@@ -67,6 +70,7 @@ i18n
         admin: enAdmin,
         landing: enLanding,
         budgets: enBudgets,
+        legal: enLegal,
       },
     },
     interpolation: { escapeValue: false },

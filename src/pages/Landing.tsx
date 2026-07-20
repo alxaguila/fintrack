@@ -473,7 +473,7 @@ export default function Landing() {
               <span>{t('footer.calculators')}</span>
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 12, font: `400 14px ${BRAND.sans}`, color: '#586470' }}>
-              <span>{t('footer.legalNotice')}</span>
+              <a href="/aviso-legal">{t('footer.legalNotice')}</a>
               <span>{t('footer.privacy')}</span>
               <span>{t('footer.cookies')}</span>
               <span>{t('footer.terms')}</span>
