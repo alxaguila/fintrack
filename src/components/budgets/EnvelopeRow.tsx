@@ -26,7 +26,10 @@ export function EnvelopeRow({ summary, onClick }: EnvelopeRowProps) {
     <button
       type="button"
       onClick={onClick}
-      className="flex w-full flex-col gap-3 rounded-2xl border border-slate-200 bg-white p-4 text-left transition-colors hover:border-slate-300 sm:flex-row sm:items-center sm:gap-4"
+      className={cn(
+        'flex w-full flex-col gap-3 rounded-2xl border bg-white p-4 text-left transition-colors sm:flex-row sm:items-center sm:gap-4',
+        over ? 'border-2 border-[#DC2626] hover:border-[#DC2626]' : 'border-slate-200 hover:border-slate-300',
+      )}
     >
       <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full" style={{ backgroundColor: `${color}1f` }}>
         <Icon className="h-5 w-5" style={{ color }} strokeWidth={1.8} />
@@ -35,7 +38,7 @@ export function EnvelopeRow({ summary, onClick }: EnvelopeRowProps) {
       <div className="min-w-0 flex-1">
         <p className="truncate text-[15px] font-bold text-slate-800">{tc(`category_group.${group.slug}`)}</p>
         <div className="mt-2">
-          <BudgetAmountSlider spent={spent} amount={budgeted} color={over ? '#CB6391' : color} disabled />
+          <BudgetAmountSlider spent={spent} amount={budgeted} color={color} disabled />
         </div>
         <p className="mt-1.5 text-xs text-slate-500">
           {budgeted > 0

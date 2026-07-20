@@ -73,7 +73,6 @@ SELECT id, v.slug, v.icon, v.ord FROM category_groups,
   (VALUES
     ('restaurant',       'utensils', 10),
     ('home_delivery',    'bike',     20),
-    ('cafe_breakfast',   'coffee',   30),
     ('nightlife_drinks', 'beer',     40),
     ('entertainment',    'ticket',   50),
     ('vacations',        'compass',  60),

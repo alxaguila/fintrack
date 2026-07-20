@@ -31,11 +31,8 @@ export const BUILTIN_RULES: BuiltinRule[] = [
   // ── Comida a domicilio ────────────────────────────────────────────────────
   { slug: 'home_delivery', patterns: ['GLOVO', 'JUST EAT', 'JUSTEAT', 'UBER EATS', 'UBEREATS', 'DELIVEROO'] },
 
-  // ── Restauración ──────────────────────────────────────────────────────────
-  { slug: 'restaurant', patterns: ['RESTAURANT', 'RESTAURANTE', 'RESTAURANTES', 'RESTAURACIO', 'BAR', 'BARES', 'MCDONALD', 'MCDONALDS', 'BURGER KING', 'TELEPIZZA', 'DOMINO', 'GOIKO', 'KFC', 'WAGAMAMA', 'PIZZERIA', 'PIZZABAR', 'PANS', 'VIPS', 'FOSTER', 'RODILLA', '100 MONTADITOS', 'MARISQUERIA', 'SUSHI', 'POKE', 'KEBAB', 'KEBAP', 'TAQUERIA', 'TAQUERIAS', 'RAMEN', 'TRATTORIA', 'RISTORANTE', 'BRASSERIE', 'GASTRONOMIC', 'DIM SUM', 'CLEAN MEAL'] },
-
-  // ── Cafeterías / desayuno / panaderías ────────────────────────────────────
-  { slug: 'cafe_breakfast', patterns: ['STARBUCKS', 'CAFETERIA', 'SANTAGLORIA', 'SANTA GLORIA', 'DUNKIN', 'CAFE', 'CAFES', 'COFFEE', 'GRANJA', 'BRUNCH', 'GELATERIA', 'HORCHATERIA', 'PASTISSERIA', 'FORN', 'CROISSANT', 'LEVADURAMADRE', 'PANINO', 'BOLDU', 'ON Y VA', 'MANOLO BAKES', 'MOLI PAN'] },
+  // ── Restauración (incluye cafeterías/desayuno/panaderías, fusionadas aquí — migración 028) ──
+  { slug: 'restaurant', patterns: ['RESTAURANT', 'RESTAURANTE', 'RESTAURANTES', 'RESTAURACIO', 'BAR', 'BARES', 'MCDONALD', 'MCDONALDS', 'BURGER KING', 'TELEPIZZA', 'DOMINO', 'GOIKO', 'KFC', 'WAGAMAMA', 'PIZZERIA', 'PIZZABAR', 'PANS', 'VIPS', 'FOSTER', 'RODILLA', '100 MONTADITOS', 'MARISQUERIA', 'SUSHI', 'POKE', 'KEBAB', 'KEBAP', 'TAQUERIA', 'TAQUERIAS', 'RAMEN', 'TRATTORIA', 'RISTORANTE', 'BRASSERIE', 'GASTRONOMIC', 'DIM SUM', 'CLEAN MEAL', 'STARBUCKS', 'CAFETERIA', 'SANTAGLORIA', 'SANTA GLORIA', 'DUNKIN', 'CAFE', 'CAFES', 'COFFEE', 'GRANJA', 'BRUNCH', 'GELATERIA', 'HORCHATERIA', 'PASTISSERIA', 'FORN', 'CROISSANT', 'LEVADURAMADRE', 'PANINO', 'BOLDU', 'ON Y VA', 'MANOLO BAKES', 'MOLI PAN'] },
 
   // ── Copas / ocio nocturno ─────────────────────────────────────────────────
   { slug: 'nightlife_drinks', patterns: ['CERVECERIA', 'TABERNA', 'PUB', 'DISCOTECA', 'BREWING', 'VERMUTERIA', 'COCKTAIL', 'COCKTELERIA', 'CLUB', 'BODEGA', 'NEW FIZZ'] },

@@ -113,6 +113,7 @@ function SubcategoryEditor({
   const Icon = categoryIcon(periodSub.category.icon)
   const editAmount = editSub.budgeted ?? 0
   const displayAmount = liveAmount ?? editAmount
+  const over = displayAmount > 0 && editSub.spent > displayAmount
   const upsertRule = useUpsertBudgetRule()
 
   async function handleCommit(newAmount: number) {
@@ -126,7 +127,11 @@ function SubcategoryEditor({
   }
 
   return (
-    <div className={cn('rounded-2xl border border-slate-200 bg-white p-4 transition-shadow', isDragging && 'shadow-lg ring-2 ring-slate-300')}>
+    <div className={cn(
+      'rounded-2xl border bg-white p-4 transition-shadow',
+      over ? 'border-2 border-[#DC2626]' : 'border-slate-200',
+      isDragging && 'shadow-lg ring-2 ring-slate-300',
+    )}>
       <div className="flex items-center gap-2">
         <span
           onPointerDown={onDragStart}
@@ -173,7 +178,6 @@ export function EnvelopeDetailDialog({
   open, onOpenChange, groupLabel, groupColor, periodSubcategories, editSubcategories, profileId, editingMonthLabel,
 }: EnvelopeDetailDialogProps) {
   const { t, i18n } = useTranslation('budgets')
-  const [showGroupHistory, setShowGroupHistory] = useState(false)
   const reorder = useReorderBudgetCategories()
 
   const { order, draggingKey, startDrag, moveDrag, endDrag } = useDragReorder(
@@ -200,11 +204,8 @@ export function EnvelopeDetailDialog({
 
         {groupHistory.length > 0 && (
           <div>
-            <button type="button" onClick={() => setShowGroupHistory(v => !v)} className="inline-flex items-center gap-1 text-xs text-slate-500 hover:text-slate-700">
-              <ChevronDown className={cn('h-3.5 w-3.5 transition-transform', showGroupHistory && 'rotate-180')} />
-              {t('detail.history_toggle')}
-            </button>
-            {showGroupHistory && <MonthAmountStrip history={groupHistory} referenceAmount={groupBudgetedNow} lang={i18n.language} />}
+            <p className="text-xs font-medium text-slate-500">{t('detail.history_toggle')}</p>
+            <MonthAmountStrip history={groupHistory} referenceAmount={groupBudgetedNow} lang={i18n.language} />
           </div>
         )}
 

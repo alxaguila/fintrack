@@ -86,6 +86,9 @@ export function BudgetAmountSlider({
 
   const spentPct = Math.min(100, (spent / scale) * 100)
   const markerPct = Math.min(100, Math.max(0, (displayAmount / scale) * 100))
+  // El marcador cae sobre el tramo relleno de color: las flechas grises casi no
+  // se ven ahí, así que se pintan en blanco para mantener contraste.
+  const onFill = markerPct <= spentPct + 1
 
   return (
     <div
@@ -101,9 +104,9 @@ export function BudgetAmountSlider({
     >
       <div className="absolute inset-y-0 left-0 rounded-full" style={{ width: `${spentPct}%`, backgroundColor: color }} />
       <div className="absolute top-1/2 flex items-center gap-1" style={{ left: `${markerPct}%`, transform: 'translate(-50%, -50%)' }}>
-        {showArrows && <ChevronLeft className="h-3 w-3 shrink-0 text-slate-400" strokeWidth={2.5} />}
+        {showArrows && <ChevronLeft className={cn('h-3 w-3 shrink-0', onFill ? 'text-white' : 'text-slate-400')} strokeWidth={2.5} />}
         <div className="h-5 w-[3px] shrink-0 rounded-full bg-slate-900 shadow" />
-        {showArrows && <ChevronRight className="h-3 w-3 shrink-0 text-slate-400" strokeWidth={2.5} />}
+        {showArrows && <ChevronRight className={cn('h-3 w-3 shrink-0', onFill ? 'text-white' : 'text-slate-400')} strokeWidth={2.5} />}
       </div>
     </div>
   )
