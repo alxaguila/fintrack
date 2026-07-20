@@ -143,16 +143,14 @@ export type BudgetRule = {
   updated_at: string
 }
 
-// Excepción puntual de budget_rules para UN mes concreto (migración 026): el
-// importe efectivo de ese mes es este valor en vez del recurrente, sin alterar
-// la regla recurrente para los meses siguientes. `month` = día 1 del mes.
-export type BudgetOverride = {
+// Orden manual (arrastrar) de las subcategorías dentro de un sobre, por perfil
+// (migración 027). Solo existe fila cuando el usuario reordena; el resto usa
+// el `sort_order` por defecto de `categories`.
+export type BudgetCategoryOrder = {
   id: string
   profile_id: string
   category_id: string
-  month: string
-  amount: number
-  created_at: string
+  sort_order: number
   updated_at: string
 }
 
@@ -357,7 +355,7 @@ export type Database = {
       plan_limits: { Row: PlanLimits; Insert: PlanLimits; Update: Partial<PlanLimits>; Relationships: [] }
       plan_history: { Row: PlanHistory; Insert: Omit<PlanHistory, 'id' | 'changed_at'>; Update: never; Relationships: [] }
       budget_rules: { Row: BudgetRule; Insert: Omit<BudgetRule, 'id' | 'created_at' | 'updated_at'>; Update: Partial<BudgetRule>; Relationships: [] }
-      budget_overrides: { Row: BudgetOverride; Insert: Omit<BudgetOverride, 'id' | 'created_at' | 'updated_at'>; Update: Partial<BudgetOverride>; Relationships: [] }
+      budget_category_order: { Row: BudgetCategoryOrder; Insert: Omit<BudgetCategoryOrder, 'id' | 'updated_at'>; Update: Partial<BudgetCategoryOrder>; Relationships: [] }
     }
     Views: Record<string, never>
     Functions: {

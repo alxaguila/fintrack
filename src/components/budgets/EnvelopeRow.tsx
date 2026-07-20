@@ -3,21 +3,23 @@ import { fmtAmount } from '@/components/ui/amount-split'
 import { categoryIcon } from '@/lib/categoryIcons'
 import type { EnvelopeSummary } from '@/lib/budgets'
 import { cn } from '@/lib/utils'
+import { BudgetAmountSlider } from './BudgetAmountSlider'
 
 interface EnvelopeRowProps {
   summary: EnvelopeSummary
   onClick: () => void
 }
 
-/** Fila de sobre (categoría) — agregado de solo lectura. El detalle y la
- *  edición por subcategoría viven en el popup que abre el click. */
+/** Fila de sobre (categoría) — agregado de solo lectura. Muestra el mismo
+ *  selector con marcador que el popup (en modo `disabled`) para insinuar que es
+ *  ajustable; el click en cualquier punto de la fila —incluida la barra— abre
+ *  el detalle real por subcategoría, que es donde se edita de verdad. */
 export function EnvelopeRow({ summary, onClick }: EnvelopeRowProps) {
   const { t } = useTranslation('budgets')
   const { t: tc } = useTranslation('categories')
   const { group, budgeted, spent, projection, vsAvgPct, hasActualBudget } = summary
   const Icon = categoryIcon(group.icon)
   const color = group.color ?? '#64748b'
-  const pct = budgeted > 0 ? Math.min(100, (spent / budgeted) * 100) : 0
   const over = budgeted > 0 && spent > budgeted
 
   return (
@@ -32,8 +34,8 @@ export function EnvelopeRow({ summary, onClick }: EnvelopeRowProps) {
 
       <div className="min-w-0 flex-1">
         <p className="truncate text-[15px] font-bold text-slate-800">{tc(`category_group.${group.slug}`)}</p>
-        <div className="mt-2 h-2 w-full overflow-hidden rounded-full bg-slate-100">
-          <div className="h-full rounded-full" style={{ width: `${pct}%`, backgroundColor: over ? '#CB6391' : color }} />
+        <div className="mt-2">
+          <BudgetAmountSlider spent={spent} amount={budgeted} color={over ? '#CB6391' : color} disabled />
         </div>
         <p className="mt-1.5 text-xs text-slate-500">
           {budgeted > 0

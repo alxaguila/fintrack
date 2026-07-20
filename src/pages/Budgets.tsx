@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { ChevronLeft, ChevronRight, Plus } from 'lucide-react'
 import { useProfile } from '@/contexts/ProfileContext'
 import { useCategoryGroups, useCategories } from '@/hooks/useCategories'
-import { useBudgetRules, useBudgetOverrides } from '@/hooks/useBudgets'
+import { useBudgetRules, useBudgetCategoryOrder } from '@/hooks/useBudgets'
 import { useDashboardBreakdown } from '@/hooks/useTransactions'
 import { bucketKey, bucketRange, prevPeriodKey, nextPeriodKey, type Granularity } from '@/lib/periods'
 import {
@@ -76,8 +76,11 @@ export default function Budgets() {
   const { data: groups = [] } = useCategoryGroups()
   const { data: categories = [] } = useCategories()
   const { data: rules = [] } = useBudgetRules(profileId)
-  const overridesRange = useMemo(() => ({ from: periodMonths[0], to: periodMonths[periodMonths.length - 1] }), [periodMonths])
-  const { data: overrides = [] } = useBudgetOverrides(profileId, overridesRange)
+  const { data: categoryOrderRows = [] } = useBudgetCategoryOrder(profileId)
+  const categoryOrder = useMemo(
+    () => new Map(categoryOrderRows.map(r => [r.category_id, r.sort_order])),
+    [categoryOrderRows],
+  )
 
   const breakdownRange = useMemo(() => {
     const earliestMonth = [periodMonths[0], addMonths(todayMonth, -11), addMonths(referenceMonth, -6)].sort()[0]
@@ -86,11 +89,11 @@ export default function Budgets() {
   }, [periodMonths, todayMonth, referenceMonth])
   const { data: breakdown = [], isLoading: breakdownLoading } = useDashboardBreakdown(profileId, breakdownRange)
 
-  const buildParams = { groups, categories, rules, overrides, breakdown, todayMonth }
+  const buildParams = { groups, categories, rules, breakdown, todayMonth, categoryOrder }
 
   const summaries = useMemo(
     () => buildEnvelopeSummaries({ ...buildParams, periodMonths, referenceMonth, range }),
-    [groups, categories, rules, overrides, breakdown, periodMonths, referenceMonth, range, todayMonth],
+    [groups, categories, rules, breakdown, periodMonths, referenceMonth, range, todayMonth, categoryOrder],
   )
   const totals = useMemo(() => totalsFromSummaries(summaries), [summaries])
   const daysRemaining = daysRemainingInPeriod(range)
@@ -108,10 +111,6 @@ export default function Budgets() {
     }))
   }, [summaries, todayMonth])
 
-  const overridesByReferenceMonth = useMemo(
-    () => new Map(overrides.filter(o => o.month === referenceMonth).map(o => [o.category_id, o])),
-    [overrides, referenceMonth],
-  )
   const inactiveGroups = useMemo(() => inactiveEnvelopeGroups(groups, summaries), [groups, summaries])
 
   const openGroup = summaries.find(s => s.group.id === openGroupId)
@@ -119,11 +118,11 @@ export default function Budgets() {
   const editSummary = useMemo(() => {
     if (!activeGroup) return null
     return buildSingleEnvelopeSummary(activeGroup, { ...buildParams, periodMonths: [referenceMonth], referenceMonth, range: editingRange })
-  }, [activeGroup, groups, categories, rules, overrides, breakdown, referenceMonth, editingRange, todayMonth])
+  }, [activeGroup, groups, categories, rules, breakdown, referenceMonth, editingRange, todayMonth, categoryOrder])
   const pendingSummary = useMemo(() => {
     if (!pendingGroup) return null
     return buildSingleEnvelopeSummary(pendingGroup, { ...buildParams, periodMonths, referenceMonth, range })
-  }, [pendingGroup, groups, categories, rules, overrides, breakdown, periodMonths, referenceMonth, range, todayMonth])
+  }, [pendingGroup, groups, categories, rules, breakdown, periodMonths, referenceMonth, range, todayMonth, categoryOrder])
 
   const dialogGroup = openGroup ?? pendingSummary
   const loading = !profileId || breakdownLoading
@@ -207,9 +206,7 @@ export default function Budgets() {
           groupColor={dialogGroup.group.color ?? '#64748b'}
           periodSubcategories={dialogGroup.subcategories}
           editSubcategories={editSummary.subcategories}
-          overridesByCategory={overridesByReferenceMonth}
           profileId={profileId}
-          referenceMonth={referenceMonth}
           editingMonthLabel={granularity !== 'month' ? monthLabel(referenceMonth, i18n.language) : undefined}
         />
       )}

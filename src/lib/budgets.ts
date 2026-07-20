@@ -7,7 +7,7 @@
 // presupuesto a todos los efectos (barras, totales, proyección) hasta que el
 // usuario lo confirma arrastrando el marcador — momento en el que se guarda de
 // verdad. `isProposed`/`hasRule` distinguen ambos casos para la UI.
-import type { BudgetOverride, BudgetRule, Category, CategoryGroup } from './database.types'
+import type { BudgetRule, Category, CategoryGroup } from './database.types'
 import type { DashboardBreakdownRow } from '@/hooks/useTransactions'
 
 /** Sobres visibles por defecto para todos los usuarios, aunque no tengan nada
@@ -55,12 +55,9 @@ export function pickReferenceMonth(periodMonths: string[], todayMonth: string): 
   return pastOrCurrent[pastOrCurrent.length - 1] ?? periodMonths[periodMonths.length - 1]
 }
 
-/** Importe efectivo de una subcategoría en un mes concreto: la excepción puntual
- *  gana a la regla recurrente; sin ninguna de las dos, no hay importe real. */
-export function effectiveAmount(rule: BudgetRule | undefined, override: BudgetOverride | undefined): number | null {
-  if (override) return override.amount
-  if (rule) return rule.amount
-  return null
+/** Importe efectivo de una subcategoría: el de su regla recurrente, si existe. */
+export function effectiveAmount(rule: BudgetRule | undefined): number | null {
+  return rule ? rule.amount : null
 }
 
 // Semáforo de estado gasto-vs-presupuesto (excepción deliberada a "sin
@@ -141,8 +138,6 @@ export interface BuildContext {
   groups: CategoryGroup[]
   categories: Category[]
   rules: BudgetRule[]
-  /** Excepciones puntuales que cubran, como mínimo, `periodMonths`. */
-  overrides: BudgetOverride[]
   /** Desglose de gasto que cubra, como mínimo, `periodMonths` ∪ los 12 meses naturales ∪ los 6 previos al mes de referencia. */
   breakdown: DashboardBreakdownRow[]
   /** Meses ('YYYY-MM-01') que componen el periodo navegado (1 si es mes, 3 si trimestre, 12 si año). */
@@ -151,12 +146,13 @@ export interface BuildContext {
   referenceMonth: string
   todayMonth: string
   today?: Date
+  /** Orden manual (arrastrar) por subcategoría, category_id → posición. Vacío = orden por defecto de `categories`. */
+  categoryOrder?: Map<string, number>
 }
 
 function subcategoryBudgetsByCategory(params: BuildContext): Map<string, SubcategoryBudget> {
-  const { groups, categories, rules, overrides, breakdown, periodMonths, referenceMonth, todayMonth } = params
+  const { groups, categories, rules, breakdown, periodMonths, referenceMonth, todayMonth } = params
   const ruleByCategory = new Map(rules.map(r => [r.category_id, r]))
-  const overrideByKey = new Map(overrides.map(o => [`${o.category_id}|${o.month}`, o]))
 
   const last6Months: string[] = []
   for (let i = 1; i <= 6; i++) last6Months.push(addMonths(referenceMonth, -i))
@@ -178,7 +174,7 @@ function subcategoryBudgetsByCategory(params: BuildContext): Map<string, Subcate
     let budgeted: number | null
     let isProposed: boolean
     if (rule) {
-      budgeted = periodMonths.reduce((s, m) => s + (overrideByKey.get(`${cat.id}|${m}`)?.amount ?? rule.amount), 0)
+      budgeted = rule.amount * periodMonths.length
       isProposed = false
     } else if (avg6m > 0) {
       budgeted = avg6m * periodMonths.length
@@ -207,12 +203,16 @@ export function summarizeGroup(
   group: CategoryGroup,
   subByCategory: Map<string, SubcategoryBudget>,
   categories: Category[],
-  params: { periodMonths: string[]; range: { from: string; to: string }; today?: Date },
+  params: { periodMonths: string[]; range: { from: string; to: string }; today?: Date; categoryOrder?: Map<string, number> },
 ): EnvelopeSummary {
+  const categoryOrder = params.categoryOrder ?? new Map<string, number>()
+  const orderValue = (s: SubcategoryBudget) => categoryOrder.get(s.category.id) ?? 1000 + s.category.sort_order
+
   const subs = categories
     .filter(c => c.group_id === group.id)
     .map(c => subByCategory.get(c.id))
     .filter((s): s is SubcategoryBudget => !!s)
+    .sort((a, b) => orderValue(a) - orderValue(b))
 
   const budgeted = subs.reduce((s, x) => s + (x.budgeted ?? 0), 0)
   const spent = subs.reduce((s, x) => s + x.spent, 0)
@@ -231,13 +231,13 @@ export function summarizeGroup(
 }
 
 export function buildEnvelopeSummaries(params: BuildContext & { range: { from: string; to: string } }): EnvelopeSummary[] {
-  const { groups, categories, periodMonths, range, today } = params
+  const { groups, categories, periodMonths, range, today, categoryOrder } = params
   const subByCategory = subcategoryBudgetsByCategory(params)
   const expenseGroups = groups.filter(g => g.type === 'gasto')
 
   const summaries: EnvelopeSummary[] = []
   for (const group of expenseGroups) {
-    const summary = summarizeGroup(group, subByCategory, categories, { periodMonths, range, today })
+    const summary = summarizeGroup(group, subByCategory, categories, { periodMonths, range, today, categoryOrder })
     const isDefault = DEFAULT_BUDGET_GROUP_SLUGS.includes(group.slug)
     if (!isDefault && !summary.hasActualBudget) continue
     summaries.push(summary)
@@ -252,7 +252,9 @@ export function buildSingleEnvelopeSummary(
   params: BuildContext & { range: { from: string; to: string } },
 ): EnvelopeSummary {
   const subByCategory = subcategoryBudgetsByCategory(params)
-  return summarizeGroup(group, subByCategory, params.categories, { periodMonths: params.periodMonths, range: params.range, today: params.today })
+  return summarizeGroup(group, subByCategory, params.categories, {
+    periodMonths: params.periodMonths, range: params.range, today: params.today, categoryOrder: params.categoryOrder,
+  })
 }
 
 /** Sobres de gasto que aún no aparecen en la lista (ni son default ni tienen nada presupuestado). */

@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { supabase } from '@/lib/supabase'
-import type { BudgetOverride, BudgetRule } from '@/lib/database.types'
+import type { BudgetCategoryOrder, BudgetRule } from '@/lib/database.types'
 
 /** Todas las reglas recurrentes de presupuesto de un perfil (todas las subcategorías, cualquier mes). */
 export function useBudgetRules(profileId?: string) {
@@ -14,25 +14,6 @@ export function useBudgetRules(profileId?: string) {
         .eq('profile_id', profileId!)
       if (error) throw error
       return data as BudgetRule[]
-    },
-  })
-}
-
-/** Excepciones puntuales que caen dentro de [range.from, range.to] (meses 'YYYY-MM-01').
- *  Un rango de 1 mes cubre la vista Mes; de 3/12 meses, Trimestre/Año. */
-export function useBudgetOverrides(profileId?: string, range?: { from: string; to: string }) {
-  return useQuery({
-    queryKey: ['budget_overrides', profileId, range?.from, range?.to],
-    enabled: !!profileId && !!range,
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from('budget_overrides')
-        .select('*')
-        .eq('profile_id', profileId!)
-        .gte('month', range!.from)
-        .lte('month', range!.to)
-      if (error) throw error
-      return data as BudgetOverride[]
     },
   })
 }
@@ -56,35 +37,33 @@ export function useUpsertBudgetRule() {
   })
 }
 
-/** Fija (o actualiza) la excepción de UN mes concreto, sin tocar la regla recurrente. */
-export function useUpsertBudgetOverride() {
-  const qc = useQueryClient()
-  return useMutation({
-    mutationFn: async (values: { profile_id: string; category_id: string; month: string; amount: number }) => {
+/** Orden manual (arrastrar) de las subcategorías dentro de sus sobres, de todo el perfil. */
+export function useBudgetCategoryOrder(profileId?: string) {
+  return useQuery({
+    queryKey: ['budget_category_order', profileId],
+    enabled: !!profileId,
+    queryFn: async () => {
       const { data, error } = await supabase
-        .from('budget_overrides')
-        .upsert(values, { onConflict: 'profile_id,category_id,month' })
-        .select()
-        .single()
+        .from('budget_category_order')
+        .select('*')
+        .eq('profile_id', profileId!)
       if (error) throw error
-      return data as BudgetOverride
-    },
-    onSuccess: (data) => {
-      qc.invalidateQueries({ queryKey: ['budget_overrides', data.profile_id] })
+      return data as BudgetCategoryOrder[]
     },
   })
 }
 
-/** Quita la excepción de un mes: la subcategoría vuelve a su regla recurrente. */
-export function useDeleteBudgetOverride() {
+/** Guarda el nuevo orden de las subcategorías de UN sobre (índices 0..N-1 dentro de ese sobre). */
+export function useReorderBudgetCategories() {
   const qc = useQueryClient()
   return useMutation({
-    mutationFn: async ({ id }: { id: string; profileId: string }) => {
-      const { error } = await supabase.from('budget_overrides').delete().eq('id', id)
+    mutationFn: async ({ profile_id, categoryIds }: { profile_id: string; categoryIds: string[] }) => {
+      const rows = categoryIds.map((category_id, sort_order) => ({ profile_id, category_id, sort_order }))
+      const { error } = await supabase.from('budget_category_order').upsert(rows, { onConflict: 'profile_id,category_id' })
       if (error) throw error
     },
     onSuccess: (_data, vars) => {
-      qc.invalidateQueries({ queryKey: ['budget_overrides', vars.profileId] })
+      qc.invalidateQueries({ queryKey: ['budget_category_order', vars.profile_id] })
     },
   })
 }

@@ -51,9 +51,6 @@
     "editing_month": "Editando {{month}}",
     "history_toggle": "Últimos 12 meses",
     "history_avg": "Media: {{amount}}",
-    "override_toggle": "Solo este mes",
-    "override_hint": "Este importe aplica solo a este mes. El resto de meses sigue usando el importe recurrente.",
-    "reset_override": "Volver al importe recurrente",
     "close": "Cerrar"
   }
 }

@@ -51,9 +51,6 @@
     "editing_month": "Editing {{month}}",
     "history_toggle": "Last 12 months",
     "history_avg": "Average: {{amount}}",
-    "override_toggle": "This month only",
-    "override_hint": "This amount only applies to this month. Other months keep using the recurring amount.",
-    "reset_override": "Revert to recurring amount",
     "close": "Close"
   }
 }
