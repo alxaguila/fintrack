@@ -2,13 +2,10 @@
 
 > **⚠️ Este bloque no forma parte del texto legal. Bórralo antes de publicar.**
 >
-> **Qué tienes que rellenar** (busca los corchetes `[...]` en el documento):
-> - `[TU NOMBRE Y APELLIDOS]` — nombre completo tal y como figura en tu DNI/NIE.
-> - `[TU NIF]` — tu NIF. Es obligatorio publicarlo (art. 10 LSSI). No hay forma de esquivarlo.
-> - `[TU DOMICILIO COMPLETO]` — ver la nota sobre el domicilio, más abajo.
-> - `[TU EMAIL DE CONTACTO]` — recomendable uno dedicado (p. ej. `legal@…` o `hola@…`), no tu personal.
-> - `[TU DOMINIO]` — el dominio definitivo (hoy el proyecto solo tiene el rewrite de Vercel, sin dominio propio configurado en `vercel.json`).
-> - `[FECHA]` — fecha de publicación real.
+> **Datos ya rellenados con lo que me diste el 2026-07-20.** Dos de ellos son provisionales por tu propia indicación:
+> - `dolfinapp@gmail.com` y `alxfintrack.vercel.app` — **provisionales**. Antes de publicar de verdad, sustitúyelos por el email y el dominio definitivos (búscalos con Ctrl+F, aparecen varias veces en cada idioma: en la tabla, en el cuerpo y en los enlaces a `/privacidad` y `/cookies`).
+> - Nombre, NIF y domicilio: ya son los definitivos, tal y como los diste.
+> - La fecha (20 de julio de 2026) es la de este borrador; actualízala a la fecha real de publicación.
 >
 > **Decisiones que he tomado y conviene que valides:**
 > 1. **Redactado como persona física / autónomo**, según me confirmaste. Sin datos registrales (no son obligatorios para personas físicas).
@@ -23,9 +20,9 @@
 
 ---
 
-# 🇪🇸 AVISO LEGAL
+# AVISO LEGAL (ES)
 
-**Última actualización: [FECHA]**
+**Última actualización: 20 de julio de 2026**
 
 ## 1. Datos identificativos del titular
 
@@ -33,11 +30,11 @@ En cumplimiento del deber de información recogido en el artículo 10 de la Ley 
 
 | | |
 |---|---|
-| **Titular** | [TU NOMBRE Y APELLIDOS] |
-| **NIF** | [TU NIF] |
-| **Domicilio** | [TU DOMICILIO COMPLETO] |
-| **Correo electrónico** | [TU EMAIL DE CONTACTO] |
-| **Sitio web** | [TU DOMINIO] |
+| **Titular** | ALEX DEL AGUILA ARCOS |
+| **NIF** | 46718103C |
+| **Domicilio** | C. Alfons XII 5, 5º-2ª, 08006 Barcelona |
+| **Correo electrónico** | dolfinapp@gmail.com |
+| **Sitio web** | alxfintrack.vercel.app |
 | **Actividad** | Desarrollo y explotación de una aplicación web de gestión de finanzas personales. |
 
 El Titular es una persona física que actúa en calidad de empresario individual. No constan datos de inscripción en el Registro Mercantil, al no resultar obligatoria dicha inscripción para las personas físicas conforme al artículo 81 del Reglamento del Registro Mercantil.
@@ -100,7 +97,7 @@ Los contenidos y datos que el Usuario incorpora a FinTrack **son y seguirán sie
 
 El Sitio Web puede incorporar componentes de software de terceros sujetos a sus propias licencias, cuyas condiciones se respetan en todo caso.
 
-Si el Usuario considera que algún contenido del Sitio Web vulnera sus derechos de propiedad intelectual o industrial, puede comunicarlo a [TU EMAIL DE CONTACTO].
+Si el Usuario considera que algún contenido del Sitio Web vulnera sus derechos de propiedad intelectual o industrial, puede comunicarlo a dolfinapp@gmail.com.
 
 ## 7. Enlaces a sitios de terceros
 
@@ -126,13 +123,13 @@ Ninguna de las exclusiones anteriores limita la responsabilidad del Titular en l
 
 ## 9. Protección de datos personales
 
-El tratamiento de los datos personales de los Usuarios se rige por la **Política de Privacidad**, disponible en [TU DOMINIO]/privacidad, redactada conforme al Reglamento (UE) 2016/679 (RGPD) y a la Ley Orgánica 3/2018, de 5 de diciembre, de Protección de Datos Personales y garantía de los derechos digitales (LOPDGDD).
+El tratamiento de los datos personales de los Usuarios se rige por la **Política de Privacidad**, disponible en alxfintrack.vercel.app/privacidad, redactada conforme al Reglamento (UE) 2016/679 (RGPD) y a la Ley Orgánica 3/2018, de 5 de diciembre, de Protección de Datos Personales y garantía de los derechos digitales (LOPDGDD).
 
 Se recomienda al Usuario su lectura atenta antes de facilitar sus datos, con especial atención a las finalidades del tratamiento y a las bases jurídicas que lo legitiman.
 
 ## 10. Cookies
 
-El uso de cookies y de otras tecnologías de almacenamiento y recuperación de datos en los equipos de los Usuarios se rige por la **Política de Cookies**, disponible en [TU DOMINIO]/cookies, conforme al artículo 22.2 de la LSSI-CE.
+El uso de cookies y de otras tecnologías de almacenamiento y recuperación de datos en los equipos de los Usuarios se rige por la **Política de Cookies**, disponible en alxfintrack.vercel.app/cookies, conforme al artículo 22.2 de la LSSI-CE.
 
 ## 11. Disponibilidad y modificación del servicio
 
@@ -161,7 +158,7 @@ Para la resolución de cualquier controversia derivada del acceso o uso del Siti
 
 ## 15. Reclamaciones y contacto
 
-El Usuario puede dirigir cualquier consulta, sugerencia o reclamación relacionada con el Sitio Web a la dirección [TU EMAIL DE CONTACTO]. El Titular acusará recibo y dará respuesta en el plazo más breve posible.
+El Usuario puede dirigir cualquier consulta, sugerencia o reclamación relacionada con el Sitio Web a la dirección dolfinapp@gmail.com. El Titular acusará recibo y dará respuesta en el plazo más breve posible.
 
 Adicionalmente, los Usuarios con la condición de consumidores pueden dirigir sus reclamaciones a las autoridades de consumo competentes de su Comunidad Autónoma o a las Oficinas Municipales de Información al Consumidor (OMIC).
 
@@ -170,9 +167,9 @@ En materia de protección de datos personales, el Usuario puede presentar una re
 ---
 ---
 
-# 🇬🇧 LEGAL NOTICE
+# LEGAL NOTICE (EN)
 
-**Last updated: [FECHA]**
+**Last updated: 20 July 2026**
 
 > **Courtesy translation.** This document is an English translation provided for convenience only. FinTrack is operated from Spain and this legal notice is governed by Spanish law. **In the event of any discrepancy or conflict between this translation and the Spanish version, the Spanish version shall prevail.**
 
@@ -182,11 +179,11 @@ In compliance with the information duty set out in Article 10 of Spanish Act 34/
 
 | | |
 |---|---|
-| **Owner** | [TU NOMBRE Y APELLIDOS] |
-| **Spanish Tax ID (NIF)** | [TU NIF] |
-| **Registered address** | [TU DOMICILIO COMPLETO] |
-| **Email** | [TU EMAIL DE CONTACTO] |
-| **Website** | [TU DOMINIO] |
+| **Owner** | ALEX DEL AGUILA ARCOS |
+| **Spanish Tax ID (NIF)** | 46718103C |
+| **Registered address** | C. Alfons XII 5, 5º-2ª, 08006 Barcelona |
+| **Email** | dolfinapp@gmail.com |
+| **Website** | alxfintrack.vercel.app |
 | **Activity** | Development and operation of a personal finance management web application. |
 
 The Owner is a natural person acting as a sole trader. No Commercial Registry details are provided, as such registration is not mandatory for natural persons under Article 81 of the Spanish Commercial Registry Regulations.
@@ -249,7 +246,7 @@ The contents and data that the User uploads to FinTrack **are and shall remain t
 
 The Website may incorporate third-party software components subject to their own licences, whose terms are respected in all cases.
 
-If a User believes that any content on the Website infringes their intellectual or industrial property rights, they may report this to [TU EMAIL DE CONTACTO].
+If a User believes that any content on the Website infringes their intellectual or industrial property rights, they may report this to dolfinapp@gmail.com.
 
 ## 7. Links to third-party sites
 
@@ -275,13 +272,13 @@ None of the foregoing exclusions limits the Owner's liability where applicable l
 
 ## 9. Personal data protection
 
-The processing of Users' personal data is governed by the **Privacy Policy**, available at [TU DOMINIO]/privacidad, drafted in accordance with Regulation (EU) 2016/679 (GDPR) and Spanish Organic Act 3/2018, of 5 December, on the Protection of Personal Data and the Guarantee of Digital Rights (LOPDGDD).
+The processing of Users' personal data is governed by the **Privacy Policy**, available at alxfintrack.vercel.app/privacidad, drafted in accordance with Regulation (EU) 2016/679 (GDPR) and Spanish Organic Act 3/2018, of 5 December, on the Protection of Personal Data and the Guarantee of Digital Rights (LOPDGDD).
 
 Users are advised to read it carefully before providing their data, paying particular attention to the purposes of processing and the legal bases relied upon.
 
 ## 10. Cookies
 
-The use of cookies and other technologies for storing and retrieving data on Users' devices is governed by the **Cookie Policy**, available at [TU DOMINIO]/cookies, in accordance with Article 22.2 LSSI-CE.
+The use of cookies and other technologies for storing and retrieving data on Users' devices is governed by the **Cookie Policy**, available at alxfintrack.vercel.app/cookies, in accordance with Article 22.2 LSSI-CE.
 
 ## 11. Availability and modification of the service
 
@@ -310,7 +307,7 @@ For the resolution of any dispute arising from access to or use of the Website:
 
 ## 15. Complaints and contact
 
-Users may direct any query, suggestion or complaint relating to the Website to [TU EMAIL DE CONTACTO]. The Owner will acknowledge receipt and respond as promptly as possible.
+Users may direct any query, suggestion or complaint relating to the Website to dolfinapp@gmail.com. The Owner will acknowledge receipt and respond as promptly as possible.
 
 Additionally, Users who qualify as consumers may address their complaints to the competent consumer authorities of their Autonomous Community or to the Municipal Consumer Information Offices (OMIC).
 

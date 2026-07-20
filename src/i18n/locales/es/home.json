@@ -45,6 +45,7 @@
   },
   "evolution": {
     "title": "Evolución de tu patrimonio",
+    "title_mobile": "Evolución",
     "subtitle": "Añade cuentas para compararlas con el total",
     "series_total": "Total",
     "range_3M": "3M",

@@ -45,6 +45,7 @@
   },
   "evolution": {
     "title": "Net worth evolution",
+    "title_mobile": "Evolution",
     "subtitle": "Add accounts to compare them with the total",
     "series_total": "Total",
     "range_3M": "3M",

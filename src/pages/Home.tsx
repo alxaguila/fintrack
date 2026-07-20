@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import {
-  ComposedChart, Area, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid,
+  ComposedChart, Area, Line, XAxis, Tooltip, ResponsiveContainer, CartesianGrid,
 } from 'recharts'
 import { ChevronDown, CreditCard, Pencil, Wallet } from 'lucide-react'
 import { useProfile } from '@/contexts/ProfileContext'
@@ -94,12 +94,6 @@ function rangeFrom(range: ChartRange): string | null {
   else if (range === '1A') d.setFullYear(d.getFullYear() - 1)
   else if (range === '5A') d.setFullYear(d.getFullYear() - 5)
   return d.toISOString().slice(0, 10)
-}
-
-function fmtAxis(v: number): string {
-  const n = Number(v)
-  if (Math.abs(n) >= 1000) return `${(n / 1000).toFixed(n % 1000 === 0 ? 0 : 1)}k €`
-  return `${n} €`
 }
 
 function formatMonthLabel(iso: string): string {
@@ -360,7 +354,7 @@ export default function Home() {
   const changeColor = changeUp ? '#0F9D6B' : FRESH_STALE
 
   return (
-    <div className="flex min-h-full flex-col gap-4 p-4 md:h-full md:gap-4 md:p-[24px_30px]">
+    <div className="flex h-full flex-col gap-4 p-4 md:gap-4 md:p-[24px_30px]">
       {/* Cabecera */}
       <div className="shrink-0">
         <h1 className="text-[26px] leading-[1.05] tracking-[-0.01em] text-[#0A2540] md:text-[28px]" style={{ fontFamily: '"Newsreader", serif', fontWeight: 400 }}>
@@ -395,10 +389,10 @@ export default function Home() {
           )}
           <button
             onClick={() => setAccountsOpen(o => !o)}
-            className="relative mt-[10px] flex items-center gap-1 text-[11px] font-medium text-[#9DC4D9] md:hidden"
+            aria-label={t(accountsOpen ? 'accounts.hide' : 'accounts.show')}
+            className="absolute bottom-3 right-3 flex h-6 w-6 items-center justify-center rounded-full text-[#9DC4D9] transition-colors hover:bg-white/10 md:hidden"
           >
-            {t(accountsOpen ? 'accounts.hide' : 'accounts.show')}
-            <ChevronDown className={`h-[13px] w-[13px] transition-transform ${accountsOpen ? 'rotate-180' : ''}`} />
+            <ChevronDown className={`h-[14px] w-[14px] transition-transform ${accountsOpen ? 'rotate-180' : ''}`} />
           </button>
         </div>
 
@@ -454,10 +448,13 @@ export default function Home() {
       {/* Gráfica: evolución de patrimonio */}
       <div className="flex min-h-[320px] flex-1 flex-col overflow-hidden rounded-2xl border border-[#ECE7DD] bg-white p-[18px_22px_14px] shadow-[0_4px_14px_rgba(10,37,64,0.04)]">
         {/* Cabecera: título + rango */}
-        <div className="flex flex-wrap items-center justify-between gap-4">
+        <div className="flex flex-nowrap items-center justify-between gap-4 md:flex-wrap">
           <div className="flex flex-col gap-[2px]">
-            <span className="text-[15px] font-semibold text-[#0A2540]" style={{ fontFamily: '"Space Grotesk", sans-serif' }}>{t('evolution.title')}</span>
-            <span className="text-[12px] text-[#94A3B8]">{t('evolution.subtitle')}</span>
+            <span className="text-[15px] font-semibold text-[#0A2540]" style={{ fontFamily: '"Space Grotesk", sans-serif' }}>
+              <span className="md:hidden">{t('evolution.title_mobile')}</span>
+              <span className="hidden md:inline">{t('evolution.title')}</span>
+            </span>
+            <span className="hidden text-[12px] text-[#94A3B8] md:block">{t('evolution.subtitle')}</span>
           </div>
           <div className="hidden gap-[2px] rounded-[9px] bg-[#F2EFE8] p-[3px] md:flex">
             {RANGES.map(r => (
@@ -483,19 +480,19 @@ export default function Home() {
         </div>
 
         {/* Chips de series */}
-        <div className="mt-[14px] flex gap-2 overflow-x-auto no-scrollbar pb-[2px]">
+        <div className="order-last mt-[14px] flex gap-2 overflow-x-auto no-scrollbar pb-[2px] md:order-none">
           {series.map(s => {
             const on = activeSeries.has(s.id)
             return (
               <button
                 key={s.id}
                 onClick={() => toggleSeries(s.id)}
-                className="inline-flex shrink-0 items-center gap-2 rounded-full border-[1.5px] py-[6px] pl-[10px] pr-3 transition-colors"
+                className="inline-flex shrink-0 items-center gap-1.5 rounded-full border-[1.5px] py-[4px] pl-[8px] pr-2 transition-colors md:gap-2 md:py-[6px] md:pl-[10px] md:pr-3"
                 style={{ borderColor: on ? s.color : '#E0DACE', background: on ? '#fff' : 'transparent' }}
               >
-                <span className="h-[9px] w-[9px] shrink-0 rounded-full" style={{ background: on ? s.color : '#C7CFD8' }} />
-                <span className="whitespace-nowrap text-[12.5px] font-semibold" style={{ color: on ? '#0A2540' : '#8A96A3' }}>{s.name}</span>
-                <span className="text-[12px] font-medium" style={{ color: on ? '#94A3B8' : '#BDC6CF' }}>{fmt(s.last)}</span>
+                <span className="h-[7px] w-[7px] shrink-0 rounded-full md:h-[9px] md:w-[9px]" style={{ background: on ? s.color : '#C7CFD8' }} />
+                <span className="whitespace-nowrap text-[11px] font-semibold md:text-[12.5px]" style={{ color: on ? '#0A2540' : '#8A96A3' }}>{s.name}</span>
+                <span className="text-[10px] font-medium md:text-[12px]" style={{ color: on ? '#94A3B8' : '#BDC6CF' }}>{fmt(s.last)}</span>
               </button>
             )
           })}
@@ -518,7 +515,6 @@ export default function Home() {
                 </defs>
                 <CartesianGrid strokeDasharray="0" stroke="#EFEBE2" vertical={false} />
                 <XAxis dataKey="date" tickFormatter={formatMonthLabel} tick={{ fontSize: 11, fill: '#B4BEC9' }} axisLine={false} tickLine={false} minTickGap={40} dy={6} />
-                <YAxis tick={{ fontSize: 11, fill: '#B4BEC9' }} axisLine={false} tickLine={false} width={52} tickFormatter={fmtAxis} />
                 <Tooltip content={<ChartTooltip nameOf={nameOf} />} cursor={{ stroke: INK, strokeOpacity: 0.18, strokeWidth: 1.2, strokeDasharray: '4 4' }} />
                 {/* Área bajo el Total (si está activo) */}
                 {activeSeries.has('__total__') && (
