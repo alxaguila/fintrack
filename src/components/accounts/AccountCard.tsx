@@ -4,15 +4,30 @@ import { Pencil, Trash2 } from 'lucide-react'
 import { accountTypeMeta } from '@/lib/accountTypes'
 import type { Account } from '@/lib/database.types'
 
+// Colores del punto de frescura, igual criterio que en Posición Global (Home.tsx):
+// <7 días verde · 7-15 ámbar · >15 o nunca rojo.
+const FRESH_OK = '#16A34A'
+const FRESH_WARN = '#E0A81E'
+const FRESH_STALE = '#DC5B4B'
+function freshColor(days: number | null): string {
+  if (days == null) return FRESH_STALE
+  if (days < 7) return FRESH_OK
+  if (days <= 15) return FRESH_WARN
+  return FRESH_STALE
+}
+
 interface AccountCardProps {
   account: Account
   /** Logo heredado de la entidad del catálogo (match por nombre). */
   entityLogoUrl?: string | null
+  /** Días desde la última importación de esta cuenta (null = nunca importada). */
+  daysSinceImport: number | null
   onEdit: (account: Account) => void
   onDelete: (account: Account) => void
 }
 
-export function AccountCard({ account, entityLogoUrl, onEdit, onDelete }: AccountCardProps) {
+export function AccountCard({ account, entityLogoUrl, daysSinceImport, onEdit, onDelete }: AccountCardProps) {
+  const { t } = useTranslation('accounts')
   const { t: tc } = useTranslation('common')
   const [logoError, setLogoError] = useState(false)
   const { color: typeColor, icon: Icon } = accountTypeMeta(account.type)
@@ -36,7 +51,8 @@ export function AccountCard({ account, entityLogoUrl, onEdit, onDelete }: Accoun
         }
       }}
       className="group relative flex h-full min-h-[128px] flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white px-5 pb-5 pt-6 text-left
-                 transition-shadow hover:shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 cursor-pointer"
+                 shadow-[0_8px_20px_-6px_rgba(15,23,42,0.18)] transition-shadow hover:shadow-[0_14px_28px_-8px_rgba(15,23,42,0.28)]
+                 focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 cursor-pointer"
     >
       {/* Banda de color: fina y con tono suavizado (alfa) para que no sea estridente */}
       <div className="absolute inset-x-0 top-0 z-20 h-1" style={{ backgroundColor: `${account.color}99` }} />
@@ -106,6 +122,14 @@ export function AccountCard({ account, entityLogoUrl, onEdit, onDelete }: Accoun
         <p className="mt-0.5 text-sm text-slate-500 break-words">
           {alias || ' '}
         </p>
+        <div className="mt-1.5 flex items-center gap-1.5 text-[11px] text-slate-400">
+          <span className="h-[6px] w-[6px] shrink-0 rounded-full" style={{ background: freshColor(daysSinceImport) }} />
+          {daysSinceImport == null
+            ? t('never_updated')
+            : daysSinceImport === 0
+              ? t('updated_today')
+              : t('updated_days_ago', { count: daysSinceImport })}
+        </div>
       </div>
     </div>
   )

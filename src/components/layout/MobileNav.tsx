@@ -1,15 +1,17 @@
 import { useEffect, useState } from 'react'
-import { NavLink, useLocation } from 'react-router-dom'
-import { Home, BarChart3, ArrowLeftRight, Wallet, FileClock, Upload, Shield, Menu, X, PiggyBank } from 'lucide-react'
+import { NavLink, useLocation, useSearchParams } from 'react-router-dom'
+import { Home, BarChart3, ArrowLeftRight, Wallet, FileClock, Upload, Shield, Menu, X, PiggyBank, ChevronDown } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { cn } from '@/lib/utils'
 import { APP_VERSION } from '@/lib/version'
+import type { Granularity } from '@/lib/periods'
 import { useIsAdmin } from '@/hooks/useIsAdmin'
 import { useUnreviewedBankCount } from '@/hooks/useAdminBankEntities'
 import { useUserSettings } from '@/hooks/useUserSettings'
 import { useBudgetsGate } from '@/hooks/useBudgetsGate'
 import { UpgradeHintDialog } from '@/components/plan/UpgradeHintDialog'
+import { DropdownMenu, DropdownMenuContent, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { LanguageSelector } from './LanguageSelector'
 
 // Destinos principales: van en la barra inferior con scroll horizontal.
@@ -79,21 +81,11 @@ function BudgetsBottomNavItem() {
   )
 }
 
-/** Barra inferior de navegación (solo móvil). Mismo lenguaje que el sidebar de
- *  escritorio: fondo navy, activo elevado con indicador coral. */
+/** Barra inferior de navegación (solo móvil): 4 destinos + menú (5º icono, abre
+ *  el drawer con las acciones secundarias — antes vivía flotando arriba). Mismo
+ *  lenguaje que el sidebar de escritorio: fondo navy, activo elevado con
+ *  indicador coral. */
 export function MobileBottomNav() {
-  return (
-    <nav className="flex shrink-0 items-stretch gap-1 overflow-x-auto bg-[var(--brand-ink)] px-2 py-1.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:hidden">
-      {bottomItems.slice(0, 2).map(({ to, icon, label }) => <BottomNavLink key={to} to={to} icon={icon} label={label} />)}
-      <BudgetsBottomNavItem />
-      {bottomItems.slice(2).map(({ to, icon, label }) => <BottomNavLink key={to} to={to} icon={icon} label={label} />)}
-    </nav>
-  )
-}
-
-/** Barra superior con el logo (mismo wordmark/color que el sidebar) + hamburguesa
- *  que abre un drawer con las acciones secundarias. Solo móvil. */
-export function MobileTopBar() {
   const { t } = useTranslation('common')
   const [open, setOpen] = useState(false)
   const location = useLocation()
@@ -117,14 +109,16 @@ export function MobileTopBar() {
 
   return (
     <>
-      <button
-        onClick={() => setOpen(true)}
-        aria-label={t('nav.menu')}
-        className="fixed right-4 z-40 flex h-10 w-10 items-center justify-center rounded-full bg-[var(--brand-ink)] text-white shadow-lg md:hidden"
-        style={{ top: 'calc(env(safe-area-inset-top, 0px) + 12px)' }}
-      >
-        <Menu className="h-5 w-5" />
-      </button>
+      <nav className="flex shrink-0 items-stretch gap-1 overflow-x-auto bg-[var(--brand-ink)] px-2 py-1.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:hidden">
+        {bottomItems.slice(0, 2).map(({ to, icon, label }) => <BottomNavLink key={to} to={to} icon={icon} label={label} />)}
+        <BudgetsBottomNavItem />
+        {bottomItems.slice(2).map(({ to, icon, label }) => <BottomNavLink key={to} to={to} icon={icon} label={label} />)}
+        <button type="button" onClick={() => setOpen(true)} aria-label={t('nav.menu')} aria-expanded={open} className={bottomItemClass(open)}>
+          {open && <span className="absolute left-3 right-3 top-0 h-[3px] rounded-b-[3px] bg-[var(--brand-accent)]" />}
+          <Menu className="h-5 w-5 shrink-0" strokeWidth={1.7} />
+          <span className="max-w-full truncate">{t('nav.short.menu')}</span>
+        </button>
+      </nav>
 
       {/* Drawer */}
       {open && (
@@ -243,5 +237,48 @@ export function MobileTopBar() {
         </div>
       )}
     </>
+  )
+}
+
+/** Hueco superior derecho (solo móvil): antes tenía el botón hamburguesa (ahora
+ *  es el 5º icono de la barra inferior). En Análisis muestra el desplegable de
+ *  granularidad (mes/trimestre/año); en el resto de pantallas no renderiza nada.
+ *  El valor vive en la URL (`?granularity=`) para que Dashboard.tsx y este
+ *  desplegable —dos componentes distintos, sin estado compartido— lean/escriban
+ *  la misma fuente de verdad sin necesitar contexto ni prop-drilling. */
+export function MobileTopBar() {
+  const { t } = useTranslation('dashboard')
+  const location = useLocation()
+  const [searchParams, setSearchParams] = useSearchParams()
+
+  if (!location.pathname.startsWith('/app/analysis')) return null
+
+  const granularity = (searchParams.get('granularity') as Granularity) || 'month'
+  function setGranularity(g: string) {
+    setSearchParams(prev => {
+      const next = new URLSearchParams(prev)
+      next.set('granularity', g)
+      return next
+    }, { replace: true })
+  }
+
+  return (
+    <div className="fixed right-4 z-40 md:hidden" style={{ top: 'calc(env(safe-area-inset-top, 0px) + 12px)' }}>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <button className="flex items-center gap-1 rounded-full bg-[var(--brand-ink)] px-3 py-2 text-xs font-semibold text-white shadow-lg">
+            {t(`granularity.${granularity}`)}
+            <ChevronDown className="h-3.5 w-3.5" />
+          </button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          <DropdownMenuRadioGroup value={granularity} onValueChange={setGranularity}>
+            {(['month', 'quarter', 'year'] as const).map(g => (
+              <DropdownMenuRadioItem key={g} value={g}>{t(`granularity.${g}`)}</DropdownMenuRadioItem>
+            ))}
+          </DropdownMenuRadioGroup>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </div>
   )
 }

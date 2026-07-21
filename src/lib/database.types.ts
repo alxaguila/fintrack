@@ -245,6 +245,10 @@ export type BankFormat = {
   credit_column: string | null
   /** Columna de estado de la transacción (p.ej. Revolut: COMPLETED/REVERTED/PENDING). Migración 025. */
   state_column: string | null
+  /** Columna de retención/impuesto a restar del importe bruto (p.ej. Trade Republic). Migración 030. */
+  tax_column: string | null
+  /** Columna de comisión a restar del importe bruto. Migración 030. */
+  fee_column: string | null
   created_at: string
   updated_at: string
 }
@@ -347,7 +351,7 @@ export type Database = {
       category_translations: { Row: CategoryTranslation; Insert: Omit<CategoryTranslation, 'updated_at'> & { updated_at?: string }; Update: Partial<CategoryTranslation>; Relationships: [] }
       bank_formats: { Row: BankFormat; Insert: Omit<BankFormat, 'id' | 'created_at' | 'updated_at'>; Update: Partial<BankFormat>; Relationships: [] }
       import_batches: { Row: ImportBatch; Insert: Omit<ImportBatch, 'id' | 'imported_at' | 'file_hash'> & { file_hash?: string | null }; Update: Partial<ImportBatch>; Relationships: [] }
-      transactions: { Row: Transaction; Insert: Omit<Transaction, 'id' | 'created_at' | 'updated_at'>; Update: Partial<Transaction>; Relationships: [] }
+      transactions: { Row: Transaction; Insert: Omit<Transaction, 'id' | 'updated_at'> & { created_at?: string }; Update: Partial<Transaction>; Relationships: [] }
       keyword_rules: { Row: KeywordRule; Insert: Omit<KeywordRule, 'id' | 'created_at' | 'amount_min' | 'amount_max'> & { amount_min?: number | null; amount_max?: number | null }; Update: Partial<KeywordRule>; Relationships: [] }
       community_rules: { Row: CommunityRule; Insert: CommunityRule; Update: Partial<CommunityRule>; Relationships: [] }
       community_rule_contributions: { Row: CommunityRuleContribution; Insert: CommunityRuleContribution; Update: Partial<CommunityRuleContribution>; Relationships: [] }

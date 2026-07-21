@@ -4,7 +4,6 @@
     "pageTitle": "Legal Notice",
     "lastUpdated": "Last updated: 20 July 2026",
     "back": "Back to fintrack",
-    "courtesyNote": "**Courtesy translation.** This document is an English translation provided for convenience only. FinTrack is operated from Spain and this legal notice is governed by Spanish law. **In the event of any discrepancy or conflict between this translation and the Spanish version, the Spanish version shall prevail.**",
     "sections": [
       {
         "heading": "1. Identification of the owner",
@@ -164,6 +163,328 @@
           { "p": "Users may direct any query, suggestion or complaint relating to the Website to dolfinapp@gmail.com. The Owner will acknowledge receipt and respond as promptly as possible." },
           { "p": "Additionally, Users who qualify as consumers may address their complaints to the competent consumer authorities of their Autonomous Community or to the Municipal Consumer Information Offices (OMIC)." },
           { "p": "In matters of personal data protection, Users may lodge a complaint with the **Spanish Data Protection Agency** (www.aepd.es), without prejudice to their right to contact the Owner first as set out in the Privacy Policy." }
+        ]
+      }
+    ]
+  },
+  "privacidad": {
+    "metaTitle": "Privacy Policy — fintrack",
+    "pageTitle": "Privacy Policy",
+    "lastUpdated": "Last updated: 21 July 2026",
+    "sections": [
+      {
+        "heading": "1. Data controller",
+        "blocks": [
+          { "p": "The controller responsible for the personal data collected through FinTrack is:" },
+          {
+            "table": [
+              ["Owner", "ALEX DEL AGUILA ARCOS"],
+              ["Spanish Tax ID (NIF)", "46718103C"],
+              ["Registered address", "C. Alfons XII 5, 5º-2ª, 08006 Barcelona"],
+              ["Email", "dolfinapp@gmail.com"],
+              ["Website", "alxfintrack.vercel.app"]
+            ]
+          },
+          { "p": "For any question regarding this Privacy Policy, or to exercise your rights, Users may contact the Owner at the email address indicated above." }
+        ]
+      },
+      {
+        "heading": "2. What data we collect",
+        "blocks": [
+          { "p": "FinTrack collects and processes the following categories of personal data, always data provided by the User themselves when using the application:" },
+          {
+            "list": [
+              "**Account data**: email address and password, managed encrypted by the authentication provider. If the User signs up with Google, their name, email address and profile picture associated with that Google account are also received.",
+              "**Profile and onboarding data**: full name, gender, date of birth, country, province, employment status and, optionally, financial goal.",
+              "**Financial data**: bank transactions manually imported by the User (date, amount, description and assigned category), accounts and their balance, the different financial profiles the User creates within their account, custom classification rules and configured budgets.",
+              "**Files**: the logo the User may voluntarily upload to identify each account.",
+              "**User communications**: the content of messages the User sends through the suggestions or feedback form.",
+              "**Technical data**: IP address, browser and device type, and a technical session cookie needed to keep the User signed in."
+            ]
+          },
+          { "p": "FinTrack does not collect online banking credentials (username, password or keys) from any of the User's financial institutions, and does not connect directly to their banks: all financial information comes from files the User imports manually." }
+        ]
+      },
+      {
+        "heading": "3. Purposes and legal basis for processing",
+        "blocks": [
+          {
+            "table": [
+              ["Creating and managing the account, and providing the application's features (statement import, transaction classification, accounts, profiles, budgets)", "Performance of the service contract (Art. 6(1)(b) GDPR)"],
+              ["Verifying the User meets the minimum age to use the service", "Compliance with a legal obligation (Art. 6(1)(c) GDPR) and protection of minors (Art. 8 GDPR)"],
+              ["Adapting the language, import format and suggested financial institutions to the User's country", "Performance of the contract (Art. 6(1)(b) GDPR)"],
+              ["Producing internal aggregated statistics about the demographic profile of the user base (for example, distribution by country or employment status), visible only in the internal admin panel, to better understand our users and improve the product", "Legitimate interest of the Owner (Art. 6(1)(f) GDPR)"],
+              ["Responding to queries, suggestions or issues submitted through the feedback form", "Performance of the contract and legitimate interest in assisting the User (Art. 6(1)(b) and 6(1)(f) GDPR)"],
+              ["Ensuring the security of the application and preventing fraudulent use", "Legitimate interest of the Owner (Art. 6(1)(f) GDPR)"],
+              ["Complying with tax and accounting obligations where paid features exist", "Compliance with a legal obligation (Art. 6(1)(c) GDPR)"]
+            ]
+          },
+          { "p": "FinTrack does not use onboarding data to automatically personalise the content or features shown to each User within the application: today that information is only used in aggregate form, as indicated in the table above. If any additional processing were introduced in the future — such as producing statistical studies or reports for third parties —, this Policy will be updated before it is activated, and the User's specific consent will be requested where required by law." }
+        ]
+      },
+      {
+        "heading": "4. Automated decision-making",
+        "blocks": [
+          { "p": "FinTrack automatically classifies imported transactions into categories through a chain of rules: first the User's own rules, then rules created by the user community (once they reach sufficient consensus), and finally a dictionary maintained by the Owner. This classification is a personal organisation feature and **does not produce legal effects or significantly affect the User** within the meaning of Article 22 GDPR: the User can review, correct or delete the category assigned to any transaction at any time." },
+          { "p": "FinTrack also automatically detects transfers between the same User's own accounts, in order to exclude them from the main dashboard indicators. This detection likewise produces no legal effects and can equally be reviewed by the User." }
+        ]
+      },
+      {
+        "heading": "5. Who we share data with",
+        "blocks": [
+          { "p": "The Owner **does not sell or transfer Users' personal data to third parties for commercial purposes.** In order to provide the service, it is necessary to share certain data with the following processors, who act solely on the Owner's instructions:" },
+          {
+            "table": [
+              ["Supabase", "Database hosting and authentication. Stores account data and all of the User's financial data."],
+              ["Vercel", "Hosting of the application's frontend. Serves the web application to the User's browser."],
+              ["Google LLC", "Sign-in via Google account, only if the User chooses to register with Google."]
+            ]
+          },
+          { "p": "None of these providers is authorised to use the User's data for its own purposes." }
+        ]
+      },
+      {
+        "heading": "6. International transfers",
+        "blocks": [
+          { "p": "FinTrack's database is hosted in the European Union (Frankfurt, Germany region), so storage of financial and account data **does not involve an international transfer**." },
+          { "p": "Vercel and Google are companies headquartered in the United States and may process certain technical data (for example, the IP address when serving the application, or Google account data at sign-in) outside the European Economic Area. In that case, such processing is covered by the safeguards provided under the GDPR, in particular the EU-US Data Privacy Framework adequacy mechanism and/or the standard contractual clauses approved by the European Commission." }
+        ]
+      },
+      {
+        "heading": "7. Retention period",
+        "blocks": [
+          { "p": "User data is retained for as long as the account remains active." },
+          { "p": "When the User requests deletion of their account from Settings, FinTrack **immediately and irreversibly deletes** all of their personal and financial data (accounts, transactions, profiles, classification rules, budgets and onboarding data). No copy is retained after deletion, except for information strictly necessary to comply with legal obligations (for example, tax obligations) where applicable." },
+          { "p": "Contributions to the community's classification rules (for example, which category is typically applied to a given merchant) are retained in aggregated, anonymous form after account deletion, as they do not allow the User who originated them to be identified." }
+        ]
+      },
+      {
+        "heading": "8. Your rights",
+        "blocks": [
+          { "p": "Users may exercise the following rights over their personal data at any time:" },
+          {
+            "list": [
+              "**Access**: obtain confirmation as to whether their data is being processed, and which data.",
+              "**Rectification**: correct inaccurate or incomplete data.",
+              "**Erasure**: request deletion of their data (also available immediately from Settings → delete account).",
+              "**Restriction of processing**: request that the use of their data be restricted in certain cases.",
+              "**Portability**: receive their data in a structured, commonly used format.",
+              "**Objection**: object to processing based on the Owner's legitimate interest.",
+              "**Withdraw consent** given at any time, without affecting the lawfulness of processing carried out before its withdrawal."
+            ]
+          },
+          { "p": "These rights may be exercised by writing to dolfinapp@gmail.com, indicating the right to be exercised and attaching a copy of an identity document. The Owner will respond within a maximum of one month." },
+          { "p": "If the User believes their rights have not been properly addressed, they may lodge a complaint with the **Spanish Data Protection Agency** (www.aepd.es)." }
+        ]
+      },
+      {
+        "heading": "9. Minors",
+        "blocks": [
+          { "p": "FinTrack is not directed at minors under the age of 14. The Owner does not knowingly collect data from minors under that age. If the Owner becomes aware that a minor under 14 has provided personal data without the consent of their parents or legal guardians, such information will be deleted as soon as the Owner becomes aware of it." }
+        ]
+      },
+      {
+        "heading": "10. Data security",
+        "blocks": [
+          { "p": "FinTrack applies technical and organisational measures to protect User data: encryption in transit (HTTPS/TLS) and at rest, and per-profile data isolation through Row Level Security policies at the database level, so that each User can only access their own data." }
+        ]
+      },
+      {
+        "heading": "11. Cookies and local storage",
+        "blocks": [
+          { "p": "FinTrack uses only technical and functional browser storage (localStorage), not HTTP cookies, to keep the User signed in and remember their usage preferences. This processing does not require prior consent, in accordance with Article 22.2 LSSI-CE. For full details, see the Cookie Policy, available at alxfintrack.vercel.app/cookies." }
+        ]
+      },
+      {
+        "heading": "12. Changes to this Privacy Policy",
+        "blocks": [
+          { "p": "The Owner reserves the right to amend this Privacy Policy to adapt it to legislative or case-law developments or to changes in the service itself. The version in force shall in all cases be the one published on the Website, whose last-updated date appears in the heading." }
+        ]
+      },
+      {
+        "heading": "13. Contact",
+        "blocks": [
+          { "p": "For any question about this Privacy Policy, Users may write to dolfinapp@gmail.com." }
+        ]
+      }
+    ]
+  },
+  "cookies": {
+    "metaTitle": "Cookie Policy — fintrack",
+    "pageTitle": "Cookie Policy",
+    "lastUpdated": "Last updated: 21 July 2026",
+    "sections": [
+      {
+        "heading": "1. What cookies are, and why this page also covers localStorage",
+        "blocks": [
+          { "p": "Cookies are small files that a website stores in the User's browser. Article 22.2 of Spanish Act 34/2002 (LSSI-CE) actually regulates something broader: **any device used to store and retrieve data** on the User's equipment, which also includes technologies such as `localStorage`." },
+          { "p": "FinTrack **does not use traditional HTTP cookies**. It exclusively uses the browser's `localStorage`, which serves exactly the same purpose and is subject to the same rules. For the User's clarity, this page describes both technologies under the usual name «Cookie Policy»." }
+        ]
+      },
+      {
+        "heading": "2. What FinTrack stores in the browser today",
+        "blocks": [
+          { "p": "These are, exhaustively, all the keys FinTrack stores in the User's browser at the time this policy is published:" },
+          {
+            "table": [
+              ["sb-*-auth-token (Supabase)", "Keeps the session signed in after login. Strictly necessary for the service to work. Deleted when the User signs out."],
+              ["fintrack_language", "Remembers the chosen language (Spanish or English). Only stored when the User explicitly changes the language."],
+              ["fintrack_active_profile_id", "Remembers which financial profile (for example, Alex, Dad or Mum) is active within the account."],
+              ["gp_chart_range / gp_chart_series", "Remembers the date range and the visible series on the wealth evolution chart on the Home screen."]
+            ]
+          },
+          { "p": "**FinTrack does not, today, use any third-party analytics, advertising or tracking cookie or technology.** This information is not shared with anyone outside the application itself." }
+        ]
+      },
+      {
+        "heading": "3. Why no consent is requested for these cookies",
+        "blocks": [
+          { "p": "Under Article 22.2 LSSI-CE, prior User consent is not required when storage is used exclusively to:" },
+          {
+            "list": [
+              "Allow communication between the User's equipment and the network (for example, keeping the session signed in).",
+              "Provide a service expressly requested by the User (for example, remembering the language they themselves chose, or the financial profile they selected)."
+            ]
+          },
+          { "p": "All keys listed in the previous section fall under one of these two cases, so FinTrack **does not display a cookie consent banner**: it is enough to inform, which is precisely the purpose of this page." }
+        ]
+      },
+      {
+        "heading": "4. If third-party analytics are added in the future",
+        "blocks": [
+          { "p": "If FinTrack were to incorporate analytics tools that do require consent in the future (for example, Google Analytics, which uses third-party cookies to distinguish users), this Policy will be updated before they are activated and the User will be shown a granular prior-consent panel, with the option to accept, reject or customise each category of non-essential cookies. No non-essential cookie will be installed before the User gives their express consent." }
+        ]
+      },
+      {
+        "heading": "5. How to delete this data",
+        "blocks": [
+          { "p": "The User can delete the contents of `localStorage` at any time from their browser settings (usually under «Privacy and security» → «Clear browsing data»), or by signing out of FinTrack, which removes the session token." },
+          { "p": "Deleting this browser data **does not delete the User's account or financial data**, which is kept on the server: signing in again will make the information available once more. To fully delete the account and all its data, the account deletion option available in Settings must be used, as described in the Privacy Policy." }
+        ]
+      },
+      {
+        "heading": "6. Changes to this Cookie Policy",
+        "blocks": [
+          { "p": "The Owner reserves the right to amend this Cookie Policy to adapt it to legislative developments or to changes in the technologies used by FinTrack. The version in force shall in all cases be the one published on the Website." }
+        ]
+      },
+      {
+        "heading": "7. Contact",
+        "blocks": [
+          { "p": "For any question about this Cookie Policy, Users may write to dolfinapp@gmail.com." }
+        ]
+      }
+    ]
+  },
+  "terminos": {
+    "metaTitle": "Terms and Conditions — fintrack",
+    "pageTitle": "Terms and Conditions",
+    "lastUpdated": "Last updated: 21 July 2026",
+    "sections": [
+      {
+        "heading": "1. Purpose and acceptance",
+        "blocks": [
+          { "p": "These Terms and Conditions (hereinafter, the \"Terms\") govern access to and use of FinTrack by the User, and apply together with the Legal Notice and the Privacy Policy, available at alxfintrack.vercel.app/aviso-legal and alxfintrack.vercel.app/privacidad respectively." },
+          { "p": "By registering and creating an account, the User expressly accepts these Terms in the version in force at that time. If the User does not agree, they must refrain from registering or continuing to use the service." }
+        ]
+      },
+      {
+        "heading": "2. Description of the service",
+        "blocks": [
+          { "p": "FinTrack is a personal finance management web application that allows the User to import their own bank statements, classify them into categories, organise them across separate financial profiles within a single account, set budgets, and view aggregated information about their income and expenses." },
+          { "p": "FinTrack **does not connect to any financial institution or access online banking credentials**: all financial information comes from files the User imports manually. See the Legal Notice for further detail on the nature of the service." }
+        ]
+      },
+      {
+        "heading": "3. Registration and user account",
+        "blocks": [
+          {
+            "list": [
+              "Users must be **over 14 years of age** to register. If under that age, they need the consent of a parent or legal guardian, as set out in the Privacy Policy.",
+              "Users must provide truthful information and keep it up to date. FinTrack does not actively verify the identity of its Users.",
+              "A single account may contain several financial profiles (for example, to manage the finances of different family members). All profiles within an account share the same account holder and the same login credentials.",
+              "Users are responsible for keeping their password confidential and for all activity that occurs under their account."
+            ]
+          }
+        ]
+      },
+      {
+        "heading": "4. Plans and features",
+        "blocks": [
+          { "p": "FinTrack offers different plans (FREE, PRO and PREMIUM) with different features. **As of today, all plans are free of charge**: FinTrack does not yet have a payment gateway and does not charge Users any amount. When paid subscription to the PRO or PREMIUM plans is activated, these Terms will be updated to include the applicable pricing, the contracting process, and the withdrawal right applicable under consumer protection law." },
+          { "p": "The Owner reserves the right to modify the features included in each plan, notifying Users with reasonable advance notice when a change materially affects them." }
+        ]
+      },
+      {
+        "heading": "5. Acceptable use",
+        "blocks": [
+          { "p": "When using FinTrack, the User agrees not to:" },
+          {
+            "list": [
+              "Use the service for unlawful purposes or purposes harmful to third parties.",
+              "Attempt to access, manipulate or interfere with the data of other Users or of the Owner.",
+              "Reverse-engineer, decompile or disassemble the software, except as expressly permitted by law.",
+              "Use automated means to extract content from the service without authorisation.",
+              "Impersonate another person or use another User's account without their consent."
+            ]
+          },
+          { "p": "Breach of these rules may result in suspension or cancellation of the account, in accordance with section 9." }
+        ]
+      },
+      {
+        "heading": "6. Contributions to community classification rules",
+        "blocks": [
+          { "p": "When a User creates a transaction classification rule and it reaches sufficient consensus among different Users, FinTrack incorporates it **in anonymous, aggregated form** into the community's classification rules, showing it to other Users as an automatic category suggestion." },
+          { "p": "The User retains ownership of their contributions but grants FinTrack a **free, non-exclusive, worldwide licence** to use, store and display that contribution in anonymous, aggregated form, without the originating User ever being identified. If the User deletes their account, their personal data is deleted entirely; the aggregated, anonymous contribution may remain, as set out in the Privacy Policy." }
+        ]
+      },
+      {
+        "heading": "7. No financial advice",
+        "blocks": [
+          { "p": "FinTrack is a personal organisation tool and **does not provide financial, investment, tax or legal advice of any kind**. The corresponding section of the Legal Notice, which sets out this limitation in greater detail, forms an integral part of these Terms." }
+        ]
+      },
+      {
+        "heading": "8. Intellectual property",
+        "blocks": [
+          { "p": "Intellectual and industrial property rights in FinTrack belong to the Owner, as described in the Legal Notice. Data and content that the User enters into the application remain the User's property, without prejudice to the licence described in section 6 for contributions to the community." }
+        ]
+      },
+      {
+        "heading": "9. Suspension and cancellation",
+        "blocks": [
+          { "p": "The Owner may suspend or cancel a User's account, with prior notice where reasonably possible, in the event of a serious breach of these Terms, fraudulent or abusive use of the service, or where required by law." },
+          { "p": "Users may cancel their account at any time from Settings → delete account. Deletion is **immediate and irreversible** and removes all of the User's personal and financial data, as described in the Privacy Policy." }
+        ]
+      },
+      {
+        "heading": "10. Service availability and limitation of liability",
+        "blocks": [
+          { "p": "FinTrack is provided \"as is\", without guaranteeing uninterrupted availability. The Owner's limitation of liability is governed by the corresponding section of the Legal Notice, which applies in full to these Terms." }
+        ]
+      },
+      {
+        "heading": "11. Amendments to these Terms",
+        "blocks": [
+          { "p": "The Owner reserves the right to amend these Terms at any time, to adapt them to legislative or case-law developments or to changes in the service itself. The version in force shall in all cases be the one published on the Website, whose last-updated date appears in the heading." }
+        ]
+      },
+      {
+        "heading": "12. Governing law and jurisdiction",
+        "blocks": [
+          { "p": "These Terms are governed by **Spanish law**." },
+          {
+            "list": [
+              "Where the User qualifies as a **consumer**, the competent courts shall be those determined by applicable law in each case, in accordance with Article 90.2 of Royal Legislative Decree 1/2007 (TRLGDCU).",
+              "Where the User **does not qualify as a consumer**, the parties submit to the courts of the Owner's domicile."
+            ]
+          }
+        ]
+      },
+      {
+        "heading": "13. Contact",
+        "blocks": [
+          { "p": "For any question about these Terms and Conditions, Users may write to dolfinapp@gmail.com." }
         ]
       }
     ]

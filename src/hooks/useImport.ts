@@ -247,6 +247,21 @@ export function useProcessRows() {
 
       if (amount === null) continue
 
+      // Retención/impuesto y comisión en columna aparte (Trade Republic...): el
+      // importe real que entra/sale de la cuenta es amount+tax+fee (ya vienen con
+      // el signo de la resta). Si no hay columna o la fila la trae vacía, no afecta.
+      if (bankFormat.tax_column) {
+        const tax = parseAmount(row[bankFormat.tax_column] ?? '')
+        if (tax !== null) amount += tax
+      }
+      if (bankFormat.fee_column) {
+        const fee = parseAmount(row[bankFormat.fee_column] ?? '')
+        if (fee !== null) amount += fee
+      }
+      if (bankFormat.tax_column || bankFormat.fee_column) {
+        amount = Math.round((amount + Number.EPSILON) * 100) / 100
+      }
+
       const balance = bankFormat.balance_column
         ? parseAmount(row[bankFormat.balance_column] ?? '')
         : null
@@ -303,10 +318,12 @@ export function useProcessRows() {
       let transactionType: TransactionType =
         (matchedCat ? groupTypeById.get(matchedCat.group_id) : undefined) ?? signType
 
-      // Recibo/liquidación de tarjeta de crédito: un abono (importe positivo) cuyo
-      // concepto es una liquidación no es un ingreso real, sino la recuperación del
-      // crédito ya gastado → no_computable con la subcategoría "Recibo de tarjeta".
-      if (isCreditCard && amount > 0 && isCardSettlementConcept(rawConcept)) {
+      // Recibo/liquidación de tarjeta de crédito. Dos patas del mismo hecho, ninguna
+      // es ingreso/gasto real: 1) el abono (importe positivo) en la propia tarjeta,
+      // que es la recuperación del crédito ya gastado; 2) el cargo (importe negativo)
+      // en la cuenta bancaria que financia esa liquidación. El concepto por sí solo
+      // ya es una señal fiable en ambos lados (no hace falta emparejar por importe).
+      if (isCardSettlementConcept(rawConcept) && ((isCreditCard && amount > 0) || (!isCreditCard && amount < 0))) {
         categoryId = catBySlug.get('card_settlement')?.id ?? null
         transactionType = 'no_computable'
       }
@@ -328,7 +345,10 @@ export function useProcessRows() {
  * cuenten como ingreso ni gasto real.
  *
  * Devuelve el nº de parejas enlazadas. Es idempotente: los movimientos ya marcados
- * `no_computable` se ignoran como candidatos, así que volver a ejecutarla no duplica.
+ * `no_computable` con OTRA categoría más específica (inversión, liquidación de
+ * tarjeta…) se ignoran como candidatos; los ya marcados "Transferencias entre
+ * cuentas" siguen participando, porque su pareja puede seguir sin encontrarse
+ * (p. ej. si se borró y se volvió a importar solo un lado).
  */
 export async function reconcileProfileTransfers(profileId: string): Promise<number> {
   // Solo las cuentas bancarias (corriente/ahorro) participan en transferencias
@@ -343,23 +363,30 @@ export async function reconcileProfileTransfers(profileId: string): Promise<numb
     .map(a => a.id)
   if (bankAccountIds.length < 2) return 0 // hacen falta ≥2 cuentas bancarias
 
-  const { data: txs, error } = await supabase
-    .from('transactions')
-    .select('id, account_id, date, amount, concept, transaction_type')
-    .eq('profile_id', profileId)
-    .in('account_id', bankAccountIds)
-  if (error) throw error
-
-  const pairs = findTransferPairs(txs ?? [])
-  if (pairs.length === 0) return 0
-
-  // Categoría destino (grupo non_computable → tipo no_computable).
+  // Categoría destino (grupo non_computable → tipo no_computable). Se necesita
+  // ya aquí (no solo al final) para saber qué `no_computable` existentes siguen
+  // siendo candidatos válidos a emparejar.
   const { data: cat } = await supabase
     .from('categories')
     .select('id')
     .eq('slug', 'inter_account_transfer')
     .maybeSingle()
   const categoryId = cat?.id ?? null
+
+  const { data: txs, error } = await supabase
+    .from('transactions')
+    .select('id, account_id, date, amount, concept, transaction_type, category_id')
+    .eq('profile_id', profileId)
+    .in('account_id', bankAccountIds)
+  if (error) throw error
+
+  const candidates = (txs ?? []).map(t => ({
+    ...t,
+    isConfirmedTransfer: categoryId != null && t.category_id === categoryId,
+  }))
+
+  const pairs = findTransferPairs(candidates)
+  if (pairs.length === 0) return 0
 
   const ids = pairs.flat()
   const { error: upErr } = await supabase
@@ -570,7 +597,17 @@ export function useConfirmImport() {
         .single()
       if (batchError) throw batchError
 
-      const transactions: Omit<Transaction, 'id' | 'created_at' | 'updated_at'>[] = newRows.map((r, i) => ({
+      // `created_at` se fija EXPLÍCITAMENTE (no se deja al DEFAULT NOW() de la BD):
+      // Postgres evalúa NOW() una sola vez por transacción, así que un upsert masivo
+      // dejaría el MISMO created_at en todas las filas del lote. El re-anclaje de
+      // saldo (reanchorOpeningBalance) ordena por (date, created_at) para saber cuál
+      // es el último movimiento de un día con varios movimientos — con creados_at
+      // empatados, Postgres puede devolverlos en un orden distinto al del fichero
+      // original y anclar al movimiento equivocado dentro de ese día. Un offset de
+      // 1ms por fila (mismo orden que `rank` en resolveComputedBalances) hace el
+      // orden determinista y coherente entre el cálculo y el re-anclaje posterior.
+      const importInstant = Date.now()
+      const transactions: Omit<Transaction, 'id' | 'updated_at'>[] = newRows.map((r, i) => ({
         profile_id: profileId,
         account_id: accountId,
         import_batch_id: batch.id,
@@ -584,6 +621,7 @@ export function useConfirmImport() {
         is_manual: false,
         is_reviewed: false,
         dedup_hash: r.dedup_hash,
+        created_at: new Date(importInstant + i).toISOString(),
       }))
 
       const { error: txError } = await supabase

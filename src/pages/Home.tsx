@@ -172,12 +172,16 @@ function AccountTile({ account, logoUrl, amount, daysSinceImport, isLoading, typ
 // ── Tooltip de la gráfica ─────────────────────────────────────────────────────
 function ChartTooltip({ active, payload, label, nameOf }: any) {
   if (!active || !payload?.length) return null
+  // El Area del Total y su Line comparten dataKey ("__total__") → Recharts duplica
+  // la entrada en el payload. Deduplicamos quedándonos con la última (la del Line,
+  // que trae el color correcto).
+  const dedupedPayload = [...new Map((payload as any[]).map(entry => [entry.dataKey, entry])).values()]
   return (
     <div className="min-w-[170px] rounded-xl border border-[#ECE7DD] bg-white px-[13px] py-[11px] shadow-[0_12px_30px_rgba(10,37,64,0.16)]">
       <div className="mb-2 text-[11px] font-semibold uppercase tracking-[0.03em] text-[#94A3B8]" style={{ fontFamily: '"Space Grotesk", sans-serif' }}>
         {formatMonthLabel(String(label))}
       </div>
-      {(payload as any[]).map((entry: any) => (
+      {dedupedPayload.map((entry: any) => (
         <div key={entry.dataKey} className="flex items-center gap-[9px] py-[2px]">
           <span className="h-2 w-2 shrink-0 rounded-full" style={{ background: entry.color }} />
           <span className="flex-1 whitespace-nowrap text-[12px] text-[#6B7C8C]">{nameOf(entry.dataKey)}</span>

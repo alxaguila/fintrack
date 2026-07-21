@@ -20,7 +20,8 @@
       "budgets": "Presupuestos",
       "transactions": "Movimientos",
       "accounts": "Cuentas",
-      "history": "Historial"
+      "history": "Historial",
+      "menu": "Menú"
     }
   },
   "actions": {

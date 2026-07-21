@@ -1,14 +1,17 @@
 /**
  * Detección del recibo/liquidación de una tarjeta de crédito.
  *
- * En una tarjeta de crédito, el pago mensual con el que se salda lo gastado
- * ("recuperación del crédito") aparece como un abono (importe positivo). No es
- * un ingreso real del patrimonio, sino la devolución de un crédito ya
- * consumido, así que debe marcarse como `no_computable`.
+ * Es un mismo hecho con dos patas, ninguna es ingreso/gasto real:
+ *   1. En la propia tarjeta: el pago mensual con el que se salda lo gastado
+ *      ("recuperación del crédito") aparece como un abono (importe positivo).
+ *   2. En la cuenta bancaria que la financia: el cargo (importe negativo) que
+ *      sale para pagar esa liquidación.
+ * Ambas deben marcarse como `no_computable`.
  *
- * Función pura para poder razonarla/probarla aislada. Solo debe aplicarse a
- * cuentas de tipo `tarjeta_credito` y a movimientos de importe positivo (el
- * emisor del cargo lo decide quien la llama, en useImport).
+ * Función pura para poder razonarla/probarla aislada. El concepto por sí solo
+ * es una señal fiable en ambos lados (no hace falta emparejar por importe,
+ * a diferencia de las transferencias entre cuentas en transferMatch.ts). Quien
+ * llama (useImport) decide qué combinación de tipo de cuenta + signo aplica.
  */
 
 function normalizeConcept(s: string): string {

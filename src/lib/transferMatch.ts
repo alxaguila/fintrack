@@ -93,16 +93,30 @@ export interface TxLite {
   amount: number
   concept: string
   transaction_type: TransactionType | null
+  /**
+   * Ya está marcado `no_computable` con la categoría "Transferencias entre
+   * cuentas" — por una regla de usuario, la comunidad, o un emparejamiento
+   * anterior. Estos SÍ siguen siendo candidatos: su pareja puede no haberse
+   * encontrado todavía (p. ej. se borró y se volvió a subir el otro lado).
+   * El resto de `no_computable` (aportación a inversión, liquidación de
+   * tarjeta...) no se tocan, para no rebajar una categoría más específica a
+   * un traspaso genérico solo porque coincide en importe.
+   */
+  isConfirmedTransfer?: boolean
 }
 
 /**
  * Devuelve las parejas `[idSalida, idEntrada]` de movimientos que son las dos
  * patas de una misma transferencia entre cuentas del perfil. Cada movimiento se
- * empareja como mucho una vez. Los ya marcados `no_computable` se ignoran como
- * candidatos (evita re-emparejar sin necesidad de una columna de enlace).
+ * empareja como mucho una vez. Se excluyen como candidatos los `no_computable`
+ * que YA sean de otra categoría más específica (inversión, liquidación de
+ * tarjeta…); los que ya son "Transferencias entre cuentas" (`isConfirmedTransfer`)
+ * siguen participando, porque su pareja puede seguir sin encontrarse.
  */
 export function findTransferPairs(txs: TxLite[]): Array<[string, string]> {
-  const candidates = txs.filter(t => t.transaction_type !== 'no_computable' && t.amount !== 0)
+  const candidates = txs.filter(t =>
+    t.amount !== 0 && (t.transaction_type !== 'no_computable' || t.isConfirmedTransfer),
+  )
 
   // Agrupar por importe absoluto (en céntimos) para comparar solo espejos.
   const byAmount = new Map<number, TxLite[]>()

@@ -45,6 +45,8 @@ interface AccountFormDialogProps {
   editing?: Account | null
   /** Preselected account type when creating (e.g. from a section's "add" card). */
   defaultType?: AccountType
+  /** Preselected entity when creating (e.g. from the import wizard's type dropdown). */
+  defaultEntity?: string
   /** sort_order to assign to a newly created account (usually accounts.length). */
   sortOrder?: number
   /** Called with the created/updated account after a successful save. */
@@ -57,6 +59,7 @@ export function AccountFormDialog({
   profileId,
   editing,
   defaultType,
+  defaultEntity,
   sortOrder = 0,
   onSaved,
 }: AccountFormDialogProps) {
@@ -87,9 +90,9 @@ export function AccountFormDialog({
         openingBalance: editing.opening_balance != null ? String(editing.opening_balance) : '',
       })
     } else {
-      setForm({ ...emptyForm, type: defaultType ?? emptyForm.type })
+      setForm({ ...emptyForm, type: defaultType ?? emptyForm.type, entity: defaultEntity ?? emptyForm.entity })
     }
-  }, [open, editing, defaultType])
+  }, [open, editing, defaultType, defaultEntity])
 
   // Débito no se permite (duplicaría movimientos ya presentes en la cuenta corriente):
   // se muestra un aviso y no se aplica la selección.

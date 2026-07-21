@@ -1,12 +1,13 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { ComposedChart, Bar, XAxis, YAxis, Tooltip, PieChart, Pie, Cell, Sector } from 'recharts'
-import { ArrowUp, ArrowDown, Minus, Eye, Check, Info, TriangleAlert, ChevronLeft } from 'lucide-react'
+import { ArrowUp, ArrowDown, Minus, Eye, Check, Info, TriangleAlert, ChevronLeft, ChevronDown } from 'lucide-react'
 import { useProfile } from '@/contexts/ProfileContext'
 import { useDashboardTotals, useDashboardBreakdown, useDashboardCategorySeries, useTransactionCounts } from '@/hooks/useTransactions'
 import { useCategories } from '@/hooks/useCategories'
 import { usePlan } from '@/hooks/usePlan'
+import { useIsMobile } from '@/hooks/useIsMobile'
 import { UpgradeHintDialog } from '@/components/plan/UpgradeHintDialog'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -16,19 +17,22 @@ import { bucketKey, bucketLabel, bucketRange, type Granularity } from '@/lib/per
 import { categoryIcon, categoryLabel } from '@/lib/categoryIcons'
 import type { TransactionType } from '@/lib/database.types'
 
-const BAR_PX = 76 // ancho por periodo (para el scroll horizontal)
-const CHART_H = 232 // alto del cash flow
+const BAR_PX = 76 // ancho por periodo en escritorio (para el scroll horizontal)
+const BAR_PX_M = 54 // ancho por periodo en la tira compacta móvil
+const CHART_H = 232 // alto del cash flow en escritorio
+const CHART_H_M = 160 // alto de la tira compacta móvil (más espacio liberado al comprimir el resto)
 const VISIBLE_BARS = 12 // ventana visible por defecto (grupos de columnas)
 
-// Geometría del donut (px).
+// Geometría del donut — escritorio y una variante más pequeña para móvil.
 const DONUT = 224, DCX = 112, DCY = 112, D_INNER = 62, D_OUTER = 90, D_ICON_R = 102
+const DONUT_M = 196, DCX_M = 98, DCY_M = 98, D_INNER_M = 52, D_OUTER_M = 76, D_ICON_R_M = 84
 
 // Paleta. Ingreso = navy azul (más azul que negro); gasto rosa palo; balance
 // neutro; navy oscuro del sidebar para la tarjeta de tasa. Sin semáforo.
 const C_INCOME = '#1F4E8C'   // navy azul — ingresos
 const C_EXPENSE = '#CB6391'  // rosa palo — gastos
 const C_NEUTRAL = '#64748b'  // gris pizarra — balance
-const C_TASA = '#0A2540'     // navy del sidebar — fondo tarjeta tasa de ahorro
+const C_TASA = '#0A2540'     // navy del sidebar — fondo tarjeta/banda de tasa
 
 function pastel(hex: string): string {
   const h = hex?.replace('#', '')
@@ -146,18 +150,52 @@ function renderActiveShape(props: any) {
   return <Sector cx={cx} cy={cy} innerRadius={innerRadius} outerRadius={outerRadius + 8} startAngle={startAngle} endAngle={endAngle} fill={fill} />
 }
 
+// Posición (px) de cada icono por fuera del anillo del donut, según el ángulo
+// medio de su segmento (arranca a las 12h y avanza en horario). Función pura,
+// compartida entre la geometría de escritorio y la de móvil.
+function computeDonutIcons(data: { value: number; icon: string | null; colorSolid: string }[], cx: number, cy: number, r: number) {
+  const total = data.reduce((s, d) => s + d.value, 0)
+  if (total <= 0) return [] as { icon: string; color: string; left: number; top: number }[]
+  let acc = 0
+  const out: { icon: string; color: string; left: number; top: number }[] = []
+  for (const d of data) {
+    const mid = acc + d.value / total / 2
+    acc += d.value / total
+    if (!d.icon) continue
+    const ang = mid * 2 * Math.PI
+    out.push({ icon: d.icon, color: d.colorSolid, left: cx + r * Math.sin(ang), top: cy - r * Math.cos(ang) })
+  }
+  return out
+}
+
 export default function Dashboard() {
   const { t } = useTranslation('dashboard')
   const { t: tcommon } = useTranslation('common')
   const { activeProfile } = useProfile()
   const navigate = useNavigate()
+  const isMobile = useIsMobile()
 
-  const [granularity, setGranularity] = useState<Granularity>('month')
+  // La granularidad vive en la URL (?granularity=) para que el desplegable del
+  // hueco superior móvil (MobileTopBar, componente distinto sin estado
+  // compartido) y esta página lean/escriban la misma fuente de verdad.
+  const [searchParams, setSearchParams] = useSearchParams()
+  const granularity = (searchParams.get('granularity') as Granularity) || 'month'
+  function setGranularity(g: Granularity) {
+    setSearchParams(prev => {
+      const next = new URLSearchParams(prev)
+      next.set('granularity', g)
+      return next
+    }, { replace: true })
+  }
   const [selectedPeriod, setSelectedPeriod] = useState<string | null>(null)
   const [breakdownType, setBreakdownType] = useState<TransactionType>('gasto')
   const [donutActive, setDonutActive] = useState<number | null>(null)
   const [donutXY, setDonutXY] = useState<{ x: number; y: number } | null>(null)
+  // Selección del donut en móvil: por tap (persistente), no por hover como en escritorio.
+  const [donutActiveMobile, setDonutActiveMobile] = useState<number | null>(null)
   const [selectedCat, setSelectedCat] = useState<{ key: string; categoryId: string | null; name: string } | null>(null)
+  // "Ver más análisis" (móvil): pliega Cambios relevantes + Insights por defecto.
+  const [showMoreMobile, setShowMoreMobile] = useState(false)
 
   const { data: totals = [], isLoading } = useDashboardTotals(activeProfile?.id)
   const { data: counts } = useTransactionCounts(activeProfile?.id)
@@ -170,6 +208,18 @@ export default function Dashboard() {
   const [showAllHistory, setShowAllHistory] = useState(false)
   const [showUpgradeHint, setShowUpgradeHint] = useState(false)
   useEffect(() => { setShowAllHistory(false) }, [activeProfile?.id])
+
+  // Al cambiar de granularidad (desde cualquier control — barra inferior en
+  // escritorio, desplegable del hueco superior en móvil) se limpia la
+  // selección de periodo/subcategoría, igual que hacían antes los botones.
+  const prevGranularityRef = useRef(granularity)
+  useEffect(() => {
+    if (prevGranularityRef.current !== granularity) {
+      setSelectedPeriod(null)
+      setSelectedCat(null)
+      prevGranularityRef.current = granularity
+    }
+  }, [granularity])
 
   // Tope de histórico del Dashboard según el plan (NULL = ilimitado). Se recorta
   // aquí, antes de agrupar en periodos, para que ningún bloque posterior (KPIs,
@@ -278,20 +328,8 @@ export default function Dashboard() {
     return big
   }, [breakdown, t])
 
-  const donutIcons = useMemo(() => {
-    const total = donutData.reduce((s, d) => s + d.value, 0)
-    if (total <= 0) return []
-    let acc = 0
-    const out: { icon: string; color: string; left: number; top: number }[] = []
-    for (const d of donutData) {
-      const mid = acc + d.value / total / 2
-      acc += d.value / total
-      if (!d.icon) continue
-      const ang = mid * 2 * Math.PI
-      out.push({ icon: d.icon, color: d.colorSolid, left: DCX + D_ICON_R * Math.sin(ang), top: DCY - D_ICON_R * Math.cos(ang) })
-    }
-    return out
-  }, [donutData])
+  const donutIcons = useMemo(() => computeDonutIcons(donutData, DCX, DCY, D_ICON_R), [donutData])
+  const donutIconsMobile = useMemo(() => computeDonutIcons(donutData, DCX_M, DCY_M, D_ICON_R_M), [donutData])
 
   // Cambios relevantes: subcategorías que más varían vs el periodo anterior.
   const movers = useMemo(() => {
@@ -343,6 +381,7 @@ export default function Dashboard() {
     key: p.key, ingreso: p.ingreso, gasto: p.gasto, value: catByPeriod.get(p.key) ?? 0,
   }))
   const chartWidth = Math.max(chartData.length * BAR_PX, 320)
+  const chartWidthMobile = Math.max(chartData.length * BAR_PX_M, 240)
   // Botón "<": carga todo el histórico de golpe. Siempre es clicable — en FREE
   // muestra un aviso de mejora de plan en vez de quedar inerte; solo se
   // deshabilita quitando el brillo cuando de verdad no hay nada más que
@@ -368,7 +407,7 @@ export default function Dashboard() {
   useEffect(() => {
     const el = scrollRef.current
     if (el) el.scrollLeft = el.scrollWidth
-  }, [chartWidth, granularity])
+  }, [chartWidth, chartWidthMobile, granularity, isMobile])
 
   function openSubcategory(categoryId: string | null) {
     if (!activeKey) return
@@ -390,22 +429,88 @@ export default function Dashboard() {
 
   const activeLabel = activeKey ? bucketLabel(activeKey, granularity, monthNames) : ''
 
+  // Filas de subcategorías: compartidas entre el desglose de escritorio y móvil.
+  const breakdownListEl = breakdownLoading ? [0, 1, 2, 3, 4].map(i => <Skeleton key={i} className="h-11" />)
+    : breakdown.rows.length === 0 ? (
+      <p className="py-6 text-center text-sm text-muted-foreground">{t('no_data.title')}</p>
+    ) : breakdown.rows.map(r => {
+      const Icon = categoryIcon(r.icon)
+      const pct = breakdown.total > 0 ? (r.total / breakdown.total) * 100 : 0
+      // La barra es proporcional a la subcategoría MAYOR (que llena su
+      // carril), no al total del periodo; el % de la derecha sí es sobre el total.
+      const barPct = maxRowTotal > 0 ? (r.total / maxRowTotal) * 100 : 0
+      const key = r.categoryId ?? '__uncat__'
+      const soft = pastel(r.color)
+      const name = r.slug ? categoryLabel(r.slug) : t('no_category')
+      const isSel = selectedCat?.key === key
+      const toggle = () => setSelectedCat(isSel ? null : { key, categoryId: r.categoryId, name })
+      return (
+        <div key={key} role="button" tabIndex={0} onClick={toggle}
+          onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle() } }}
+          className={`flex w-full cursor-pointer items-center gap-3 rounded-lg px-2 py-1.5 text-left transition-colors ${isSel ? 'bg-slate-200/80' : 'hover:bg-slate-200/70'}`}>
+          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full" style={{ backgroundColor: `${soft}38`, color: r.color }}><Icon className="h-4 w-4" /></span>
+          <div className="min-w-0 flex-1">
+            <div className="flex items-baseline justify-between gap-2">
+              <span className="truncate text-sm font-medium">{name}</span>
+              <span className="shrink-0 text-xs text-muted-foreground">{pct.toFixed(0)}%</span>
+            </div>
+            <div className="mt-1 flex items-center gap-3">
+              <div className="h-1.5 min-w-0 flex-1 overflow-hidden rounded-full bg-muted"><div className="h-full rounded-full" style={{ width: `${barPct}%`, backgroundColor: soft }} /></div>
+              <span className="shrink-0 whitespace-nowrap text-sm font-semibold">{fmtAmount(r.total)}</span>
+            </div>
+          </div>
+          <div className="flex w-7 shrink-0 items-center justify-center self-center">
+            {isSel && (
+              <button onClick={(e) => { e.stopPropagation(); openSubcategory(r.categoryId) }} title={t('view_transactions')} aria-label={t('view_transactions')}
+                className="rounded-md p-1 text-slate-500 transition-colors hover:bg-slate-300/70 hover:text-slate-900"><Eye className="h-4 w-4" /></button>
+            )}
+          </div>
+        </div>
+      )
+    })
+
+  // Cambios relevantes: compartido entre escritorio y móvil.
+  const moversListEl = movers.map(m => {
+    const Icon = categoryIcon(m.icon)
+    const up = m.pct > 0
+    const Arrow = up ? ArrowUp : ArrowDown
+    const color = trendColor(m.pct, breakdownType === 'ingreso')
+    const soft = pastel(m.color)
+    const isSel = selectedCat?.key === m.key
+    const toggle = () => setSelectedCat(isSel ? null : { key: m.key, categoryId: m.categoryId, name: m.name })
+    return (
+      <div key={m.key} role="button" tabIndex={0} onClick={toggle}
+        onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle() } }}
+        className={`flex cursor-pointer items-center gap-2.5 rounded-lg px-2 py-1 transition-colors ${isSel ? 'bg-slate-200/80' : 'hover:bg-slate-200/70'}`}>
+        <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full" style={{ backgroundColor: `${soft}38`, color: m.color }}><Icon className="h-3.5 w-3.5" /></span>
+        <span className="min-w-0 flex-1 truncate text-sm font-medium">{m.name}</span>
+        <span className="flex shrink-0 items-center gap-0.5 text-sm font-semibold" style={{ color }}><Arrow className="h-3.5 w-3.5" />{Math.abs(m.pct).toFixed(0)}%</span>
+      </div>
+    )
+  })
+
+  // Insights: compartido entre escritorio y móvil.
+  const insightsListEl = observations.length === 0 ? (
+    <p className="text-[13px] text-muted-foreground">{t('observations.none')}</p>
+  ) : observations.map((o, i) => {
+    const Icon = o.kind === 'good' ? Check : o.kind === 'warn' ? TriangleAlert : Info
+    const tint = o.kind === 'good' ? '#0F766E' : o.kind === 'warn' ? '#B5842E' : '#64748b'
+    return (
+      <div key={i} className="flex items-start gap-2.5">
+        <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full" style={{ backgroundColor: `${tint}1f`, color: tint }}><Icon className="h-3 w-3" /></span>
+        <p className="text-[13px] leading-snug text-foreground/80">{o.text}</p>
+      </div>
+    )
+  })
+
+  const hasData = !(totals.length === 0 && !isLoading)
+
   return (
-    <div className="flex flex-col gap-3 p-6 lg:h-full lg:overflow-hidden">
-      {/* Cabecera */}
-      <div className="flex flex-wrap items-start justify-between gap-3">
-        <div>
-          <h1 className="text-3xl font-extrabold tracking-tight">{t('title')}</h1>
-          <p className="mt-1 text-sm text-muted-foreground">{t('subtitle')}</p>
-        </div>
-        <div className="inline-flex rounded-lg border p-0.5 text-sm">
-          {(['month', 'quarter', 'year'] as const).map(g => (
-            <button key={g} onClick={() => { setGranularity(g); setSelectedPeriod(null); setSelectedCat(null) }}
-              className={`px-3 py-1 rounded-md transition-colors ${granularity === g ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:text-foreground'}`}>
-              {t(`granularity.${g}`)}
-            </button>
-          ))}
-        </div>
+    <div className="flex flex-col gap-3 p-4 sm:p-6 lg:h-full lg:overflow-hidden">
+      {/* Cabecera — el selector de periodo vive ahora en la barra inferior */}
+      <div className="shrink-0">
+        <h1 className="text-2xl font-extrabold tracking-tight sm:text-3xl">{t('title')}</h1>
+        <p className="mt-1 text-sm text-muted-foreground">{t('subtitle')}</p>
       </div>
 
       {/* Aviso de movimientos sin categoría */}
@@ -418,13 +523,150 @@ export default function Dashboard() {
         </button>
       )}
 
-      {totals.length === 0 && !isLoading ? (
+      {!hasData ? (
         <div className="flex flex-col items-center justify-center gap-3 py-16 text-center">
           <p className="text-lg font-medium">{t('no_data.title')}</p>
           <p className="text-muted-foreground text-sm">{t('no_data.description')}</p>
           <Button onClick={() => navigate('/app/import')}>{t('no_data.action')}</Button>
         </div>
+      ) : isMobile ? (
+        // ── Vista móvil — inspirada en Fintonic, con nuestra marca ──────────
+        <div className="flex flex-col gap-3">
+          {/* Tira mensual compacta */}
+          <Card className="rounded-2xl">
+            <CardContent className="p-3">
+              {isLoading ? <Skeleton style={{ height: CHART_H_M }} /> : (
+                <div className="flex items-center gap-1.5">
+                  <button
+                    type="button"
+                    onClick={handleHistoryClick}
+                    disabled={!historyLockedByPlan && !hasMoreHistory}
+                    title={historyLockedByPlan ? t('history_expand.locked_hint') : t('history_expand.hint')}
+                    aria-label={historyLockedByPlan ? t('history_expand.locked_hint') : t('history_expand.hint')}
+                    className="flex h-7 w-7 shrink-0 items-center justify-center self-center rounded-full border border-slate-300 bg-white text-slate-600 shadow-sm transition-colors hover:border-slate-400 hover:bg-slate-50 hover:text-slate-900 disabled:cursor-not-allowed disabled:opacity-30"
+                  >
+                    <ChevronLeft className="h-3.5 w-3.5" />
+                  </button>
+                  <div ref={scrollRef} className="no-scrollbar min-w-0 cursor-pointer overflow-x-auto" style={{ maxWidth: VISIBLE_BARS * BAR_PX_M }}>
+                    <ComposedChart width={chartWidthMobile} height={CHART_H_M} data={chartData} barCategoryGap="24%" barGap={2}
+                      onClick={(e: any) => { if (e?.activeLabel) { const k = String(e.activeLabel); setSelectedPeriod(prev => prev === k ? null : k) } }}
+                      margin={{ top: 0, right: 4, bottom: 0, left: 4 }}>
+                      <YAxis hide domain={[0, cap]} allowDataOverflow />
+                      <XAxis dataKey="key" tickFormatter={(k) => bucketLabel(k, granularity, monthNames)} tick={{ fontSize: 10, fill: '#94a3b8' }} axisLine={false} tickLine={false} interval={0} height={16} dy={2} padding={{ left: 8, right: 8 }} />
+                      {/* Sin leyenda flotante: al tocar un periodo el resto de la
+                          pantalla cambia al instante, así que solo dejamos el
+                          resalte de fondo (misma señal, sin burbuja redundante). */}
+                      <Tooltip cursor={{ fill: 'rgba(100,116,139,0.10)', radius: 6 }} content={() => null} />
+                      {isFiltered ? (
+                        <Bar dataKey="value" fill={filterColor} barSize={22} isAnimationActive={false} background={makeActiveBg(selectedPeriod, -22, 60)} shape={makeBarShape(filterColor, 'value', cap, selectedPeriod, 0.35)} />
+                      ) : (
+                        <>
+                          <Bar dataKey="ingreso" fill={C_INCOME} barSize={16} isAnimationActive={false} background={makeActiveBg(selectedPeriod, -14, 56)} shape={makeBarShape(C_INCOME, 'ingreso', cap, selectedPeriod, 0.3)} />
+                          <Bar dataKey="gasto" fill={C_EXPENSE} barSize={16} isAnimationActive={false} shape={makeBarShape(C_EXPENSE, 'gasto', cap, selectedPeriod, 0.24)} />
+                        </>
+                      )}
+                    </ComposedChart>
+                  </div>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+
+          {/* Ingresos / Gastos / Balance — una sola línea de 3 columnas. La tasa
+              de ahorro ya no tiene su propia pastilla: va debajo del Balance,
+              donde se entiende por contexto (el mismo importe, en %). */}
+          <Card className="rounded-2xl">
+            <CardContent className="grid grid-cols-3 divide-x p-3">
+              <div className="flex flex-col items-center gap-0.5 px-1 text-center">
+                <span className="text-[11px] font-medium text-muted-foreground">{t('kpis.income_short')}</span>
+                <span className="text-sm font-extrabold tabular-nums" style={{ color: C_INCOME }}>{fmtAmount(income)}</span>
+              </div>
+              <div className="flex flex-col items-center gap-0.5 px-1 text-center">
+                <span className="text-[11px] font-medium text-muted-foreground">{t('kpis.expenses_short')}</span>
+                <span className="text-sm font-extrabold tabular-nums" style={{ color: C_EXPENSE }}>{fmtAmount(expenses)}</span>
+              </div>
+              <div className="flex flex-col items-center gap-0.5 px-1 text-center">
+                <span className="text-[11px] font-medium text-muted-foreground">{t('kpis.balance_short')}</span>
+                <span className="text-sm font-extrabold tabular-nums" style={{ color: C_NEUTRAL }}>{fmtAmount(balance)}</span>
+                <span className="text-[10px] font-semibold" style={{ color: savingsRate >= 0 ? '#0F766E' : '#A03A66' }}>{t('kpis.savings_rate_short', { rate: savingsRate.toFixed(0) })}</span>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Toggle de tipo + Donut */}
+          <Card className="rounded-2xl">
+            <CardContent className="flex flex-col items-center gap-3 p-4">
+              <div className="inline-flex rounded-lg border p-0.5 text-sm">
+                {(['gasto', 'ingreso', 'no_computable'] as const).map(ty => (
+                  <button key={ty} onClick={() => { setBreakdownType(ty); setSelectedCat(null); setDonutActiveMobile(null) }}
+                    className={`px-3 py-1 rounded-md transition-colors ${breakdownType === ty ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:text-foreground'}`}>
+                    {tcommon(`transaction_type.${ty}`)}
+                  </button>
+                ))}
+              </div>
+              {breakdownLoading ? <Skeleton className="h-48 w-48 rounded-full" />
+                : breakdown.rows.length === 0 ? (<p className="py-6 text-center text-sm text-muted-foreground">{t('no_data.title')}</p>)
+                : (
+                  <>
+                    <div className="relative" style={{ width: DONUT_M, height: DONUT_M }}>
+                      <PieChart width={DONUT_M} height={DONUT_M}>
+                        <Pie data={donutData} dataKey="value" nameKey="name" cx={DCX_M} cy={DCY_M} innerRadius={D_INNER_M} outerRadius={D_OUTER_M} paddingAngle={1.5} stroke="none" startAngle={90} endAngle={-270}
+                          activeIndex={donutActiveMobile ?? undefined} activeShape={renderActiveShape}
+                          onClick={(_: any, i: number) => setDonutActiveMobile(prev => prev === i ? null : i)} isAnimationActive={false}>
+                          {donutData.map((d, i) => <Cell key={i} fill={d.color} />)}
+                        </Pie>
+                      </PieChart>
+                      {donutIconsMobile.map((ic, i) => {
+                        const Icon = categoryIcon(ic.icon)
+                        return (<span key={i} className="pointer-events-none absolute flex h-5 w-5 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-card shadow-sm" style={{ left: ic.left, top: ic.top, color: ic.color }}><Icon className="h-3 w-3" /></span>)
+                      })}
+                      <div className="pointer-events-none absolute flex flex-col items-center" style={{ left: DCX_M, top: DCY_M, transform: 'translate(-50%, -50%)' }}>
+                        <span className="text-[10px] capitalize text-muted-foreground">{activeLabel}</span>
+                        <span className="text-sm font-bold">{fmtAmount(breakdown.total)}</span>
+                      </div>
+                    </div>
+                    {donutActiveMobile != null && donutData[donutActiveMobile] && (
+                      <p className="text-center text-xs text-muted-foreground">
+                        <span className="font-semibold text-foreground">{donutData[donutActiveMobile].name}</span> · {fmtAmount(donutData[donutActiveMobile].value)} · {donutData[donutActiveMobile].pct.toFixed(0)}%
+                      </p>
+                    )}
+                  </>
+                )}
+            </CardContent>
+          </Card>
+
+          {/* Desglose por subcategoría */}
+          <Card className="rounded-2xl">
+            <CardHeader className="p-4 pb-2"><CardTitle className="text-[15px] font-bold">{t('sections.by_subcategory')}</CardTitle></CardHeader>
+            <CardContent className="p-4 pt-0">
+              <div className="space-y-0.5">{breakdownListEl}</div>
+            </CardContent>
+          </Card>
+
+          {/* Ver más análisis (colapsable): Cambios relevantes + Insights */}
+          <button type="button" onClick={() => setShowMoreMobile(v => !v)}
+            className="flex items-center justify-center gap-1.5 rounded-xl border bg-card px-4 py-2.5 text-sm font-semibold text-foreground transition-colors hover:bg-slate-50">
+            {showMoreMobile ? t('sections.show_less') : t('sections.show_more')}
+            <ChevronDown className={`h-4 w-4 transition-transform ${showMoreMobile ? 'rotate-180' : ''}`} />
+          </button>
+
+          {showMoreMobile && (
+            <>
+              {movers.length > 0 && (
+                <Card className="rounded-2xl">
+                  <CardHeader className="p-4 pb-1"><CardTitle className="text-[15px] font-bold">{t('sections.relevant_changes')}</CardTitle></CardHeader>
+                  <CardContent className="space-y-0.5 p-4 pt-1">{moversListEl}</CardContent>
+                </Card>
+              )}
+              <Card className="rounded-2xl">
+                <CardHeader className="p-4 pb-1"><CardTitle className="text-[15px] font-bold">{t('sections.observations')}</CardTitle></CardHeader>
+                <CardContent className="space-y-2.5 p-4 pt-1">{insightsListEl}</CardContent>
+              </Card>
+            </>
+          )}
+        </div>
       ) : (
+        // ── Vista escritorio/tablet ──────────────────────────────────────────
         <>
           {/* KPIs (fila compacta) */}
           <div className="grid shrink-0 grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
@@ -536,44 +778,7 @@ export default function Dashboard() {
                 </CardHeader>
                 <CardContent className="p-4 pt-0 lg:min-h-0 lg:flex-1">
                   <div className="no-scrollbar max-h-[280px] space-y-0.5 overflow-y-auto lg:max-h-none lg:h-full">
-                    {breakdownLoading ? [0, 1, 2, 3, 4].map(i => <Skeleton key={i} className="h-11" />)
-                      : breakdown.rows.length === 0 ? (
-                        <p className="py-6 text-center text-sm text-muted-foreground">{t('no_data.title')}</p>
-                      ) : breakdown.rows.map(r => {
-                        const Icon = categoryIcon(r.icon)
-                        const pct = breakdown.total > 0 ? (r.total / breakdown.total) * 100 : 0
-                        // La barra es proporcional a la subcategoría MAYOR (que llena su
-                        // carril), no al total del periodo; el % de la derecha sí es sobre el total.
-                        const barPct = maxRowTotal > 0 ? (r.total / maxRowTotal) * 100 : 0
-                        const key = r.categoryId ?? '__uncat__'
-                        const soft = pastel(r.color)
-                        const name = r.slug ? categoryLabel(r.slug) : t('no_category')
-                        const isSel = selectedCat?.key === key
-                        const toggle = () => setSelectedCat(isSel ? null : { key, categoryId: r.categoryId, name })
-                        return (
-                          <div key={key} role="button" tabIndex={0} onClick={toggle}
-                            onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle() } }}
-                            className={`flex w-full cursor-pointer items-center gap-3 rounded-lg px-2 py-1.5 text-left transition-colors ${isSel ? 'bg-slate-200/80' : 'hover:bg-slate-200/70'}`}>
-                            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full" style={{ backgroundColor: `${soft}38`, color: r.color }}><Icon className="h-4 w-4" /></span>
-                            <div className="min-w-0 flex-1">
-                              <div className="flex items-baseline justify-between gap-2">
-                                <span className="truncate text-sm font-medium">{name}</span>
-                                <span className="shrink-0 text-xs text-muted-foreground">{pct.toFixed(0)}%</span>
-                              </div>
-                              <div className="mt-1 flex items-center gap-3">
-                                <div className="h-1.5 min-w-0 flex-1 overflow-hidden rounded-full bg-muted"><div className="h-full rounded-full" style={{ width: `${barPct}%`, backgroundColor: soft }} /></div>
-                                <span className="shrink-0 whitespace-nowrap text-sm font-semibold">{fmtAmount(r.total)}</span>
-                              </div>
-                            </div>
-                            <div className="flex w-7 shrink-0 items-center justify-center self-center">
-                              {isSel && (
-                                <button onClick={(e) => { e.stopPropagation(); openSubcategory(r.categoryId) }} title={t('view_transactions')} aria-label={t('view_transactions')}
-                                  className="rounded-md p-1 text-slate-500 transition-colors hover:bg-slate-300/70 hover:text-slate-900"><Eye className="h-4 w-4" /></button>
-                              )}
-                            </div>
-                          </div>
-                        )
-                      })}
+                    {breakdownListEl}
                   </div>
                 </CardContent>
               </Card>
@@ -621,50 +826,33 @@ export default function Dashboard() {
               {movers.length > 0 && (
                 <Card className="shrink-0 rounded-2xl">
                   <CardHeader className="p-4 pb-1"><CardTitle className="text-[15px] font-bold">{t('sections.relevant_changes')}</CardTitle></CardHeader>
-                  <CardContent className="space-y-0.5 p-4 pt-1">
-                    {movers.map(m => {
-                      const Icon = categoryIcon(m.icon)
-                      const up = m.pct > 0
-                      const Arrow = up ? ArrowUp : ArrowDown
-                      const color = trendColor(m.pct, breakdownType === 'ingreso')
-                      const soft = pastel(m.color)
-                      const isSel = selectedCat?.key === m.key
-                      const toggle = () => setSelectedCat(isSel ? null : { key: m.key, categoryId: m.categoryId, name: m.name })
-                      return (
-                        <div key={m.key} role="button" tabIndex={0} onClick={toggle}
-                          onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle() } }}
-                          className={`flex cursor-pointer items-center gap-2.5 rounded-lg px-2 py-1 transition-colors ${isSel ? 'bg-slate-200/80' : 'hover:bg-slate-200/70'}`}>
-                          <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full" style={{ backgroundColor: `${soft}38`, color: m.color }}><Icon className="h-3.5 w-3.5" /></span>
-                          <span className="min-w-0 flex-1 truncate text-sm font-medium">{m.name}</span>
-                          <span className="flex shrink-0 items-center gap-0.5 text-sm font-semibold" style={{ color }}><Arrow className="h-3.5 w-3.5" />{Math.abs(m.pct).toFixed(0)}%</span>
-                        </div>
-                      )
-                    })}
-                  </CardContent>
+                  <CardContent className="space-y-0.5 p-4 pt-1">{moversListEl}</CardContent>
                 </Card>
               )}
 
               {/* Insights */}
               <Card className="flex flex-col rounded-2xl lg:min-h-0 lg:flex-1">
                 <CardHeader className="shrink-0 p-4 pb-1"><CardTitle className="text-[15px] font-bold">{t('sections.observations')}</CardTitle></CardHeader>
-                <CardContent className="no-scrollbar space-y-2.5 p-4 pt-1 lg:min-h-0 lg:flex-1 lg:overflow-y-auto">
-                  {observations.length === 0 ? (
-                    <p className="text-[13px] text-muted-foreground">{t('observations.none')}</p>
-                  ) : observations.map((o, i) => {
-                    const Icon = o.kind === 'good' ? Check : o.kind === 'warn' ? TriangleAlert : Info
-                    const tint = o.kind === 'good' ? '#0F766E' : o.kind === 'warn' ? '#B5842E' : '#64748b'
-                    return (
-                      <div key={i} className="flex items-start gap-2.5">
-                        <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full" style={{ backgroundColor: `${tint}1f`, color: tint }}><Icon className="h-3 w-3" /></span>
-                        <p className="text-[13px] leading-snug text-foreground/80">{o.text}</p>
-                      </div>
-                    )
-                  })}
-                </CardContent>
+                <CardContent className="no-scrollbar space-y-2.5 p-4 pt-1 lg:min-h-0 lg:flex-1 lg:overflow-y-auto">{insightsListEl}</CardContent>
               </Card>
             </div>
           </div>
         </>
+      )}
+
+      {/* Barra inferior: selector de periodo — solo escritorio/tablet (en móvil
+          vive en el desplegable del hueco superior derecho) */}
+      {!isMobile && hasData && (
+        <div className="mt-1 flex shrink-0 items-center justify-center border-t pt-3">
+          <div className="inline-flex rounded-lg border p-0.5 text-sm">
+            {(['month', 'quarter', 'year'] as const).map(g => (
+              <button key={g} onClick={() => setGranularity(g)}
+                className={`px-3 py-1 rounded-md transition-colors ${granularity === g ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:text-foreground'}`}>
+                {t(`granularity.${g}`)}
+              </button>
+            ))}
+          </div>
+        </div>
       )}
 
       <UpgradeHintDialog

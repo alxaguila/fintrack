@@ -61,6 +61,22 @@ export async function upsertCommunityVote(key: string | null, categoryId: string
   if (error) console.warn('[community] upsert vote failed:', error)
 }
 
+/** Lista completa de reglas de la comunidad (una fila por comercio+categoría), para el admin. */
+export function useAdminCommunityRules() {
+  return useQuery({
+    queryKey: ['admin_community_rules'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('community_rules')
+        .select('merchant_key, category_id, votes, updated_at')
+        .order('votes', { ascending: false })
+      if (error) throw error
+      return data as CommunityRule[]
+    },
+    staleTime: 1000 * 60,
+  })
+}
+
 /** Retira el voto del usuario para un comercio (no bloquea ante error). */
 export async function deleteCommunityVote(key: string | null): Promise<void> {
   if (!key) return

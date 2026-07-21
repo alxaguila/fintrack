@@ -71,5 +71,9 @@
   "balance": "Saldo estimado",
   "transactions_count": "{{count}} movimientos",
   "last_import": "Última importación: {{date}}",
-  "no_imports": "Sin importaciones"
+  "no_imports": "Sin importaciones",
+  "updated_today": "Actualizado hoy",
+  "updated_days_ago_one": "Actualizado hace {{count}} día",
+  "updated_days_ago_other": "Actualizado hace {{count}} días",
+  "never_updated": "Sin importaciones todavía"
 }

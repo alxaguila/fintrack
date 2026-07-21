@@ -71,5 +71,9 @@
   "balance": "Estimated balance",
   "transactions_count": "{{count}} transactions",
   "last_import": "Last import: {{date}}",
-  "no_imports": "No imports yet"
+  "no_imports": "No imports yet",
+  "updated_today": "Updated today",
+  "updated_days_ago_one": "Updated {{count}} day ago",
+  "updated_days_ago_other": "Updated {{count}} days ago",
+  "never_updated": "No imports yet"
 }

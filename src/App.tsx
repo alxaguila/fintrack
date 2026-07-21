@@ -8,6 +8,9 @@ import Landing from '@/pages/Landing'
 import Register from '@/pages/Register'
 import ResetPassword from '@/pages/ResetPassword'
 import AvisoLegal from '@/pages/AvisoLegal'
+import Privacidad from '@/pages/Privacidad'
+import Cookies from '@/pages/Cookies'
+import Terminos from '@/pages/Terminos'
 import Home from '@/pages/Home'
 import Dashboard from '@/pages/Dashboard'
 import Budgets from '@/pages/Budgets'
@@ -26,6 +29,7 @@ import AdminBancos from '@/pages/admin/Bancos'
 import AdminCategorias from '@/pages/admin/Categorias'
 import AdminUsuarios from '@/pages/admin/Usuarios'
 import AdminEstadisticas from '@/pages/admin/Estadisticas'
+import AdminReglas from '@/pages/admin/Reglas'
 import AdminFeedback from '@/pages/admin/Feedback'
 import { AdminRoute } from '@/components/auth/AdminRoute'
 
@@ -53,6 +57,9 @@ export default function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/aviso-legal" element={<AvisoLegal />} />
+          <Route path="/privacidad" element={<Privacidad />} />
+          <Route path="/cookies" element={<Cookies />} />
+          <Route path="/terminos" element={<Terminos />} />
           {/* Compatibilidad con enlaces antiguos a /auth */}
           <Route path="/auth" element={<Navigate to="/" replace />} />
 
@@ -76,6 +83,7 @@ export default function App() {
             <Route path="admin/categorias" element={<AdminRoute><AdminCategorias /></AdminRoute>} />
             <Route path="admin/usuarios" element={<AdminRoute><AdminUsuarios /></AdminRoute>} />
             <Route path="admin/estadisticas" element={<AdminRoute><AdminEstadisticas /></AdminRoute>} />
+            <Route path="admin/reglas" element={<AdminRoute><AdminReglas /></AdminRoute>} />
             <Route path="admin/feedback" element={<AdminRoute><AdminFeedback /></AdminRoute>} />
           </Route>
 

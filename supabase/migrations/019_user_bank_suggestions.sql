@@ -48,10 +48,11 @@ ON CONFLICT (id) DO UPDATE
       file_size_limit = EXCLUDED.file_size_limit,
       allowed_mime_types = EXCLUDED.allowed_mime_types;
 
-DROP POLICY IF EXISTS "bank-logos public read" ON storage.objects;
-CREATE POLICY "bank-logos public read"
-  ON storage.objects FOR SELECT
-  USING (bucket_id = 'bank-logos');
+-- NOTA: NO se recrea la policy "bank-logos public read". En un bucket PÚBLICO
+-- la descarga por URL (getPublicUrl → <img src>) no depende de ninguna policy de
+-- storage.objects; esa policy solo habilitaría `.list()` de todo el bucket, que
+-- es exactamente lo que la migración 018 eliminó por seguridad (linter
+-- public_bucket_allows_listing). No la vuelvas a añadir aquí.
 
 DROP POLICY IF EXISTS "bank-logos admin insert" ON storage.objects;
 CREATE POLICY "bank-logos admin insert"

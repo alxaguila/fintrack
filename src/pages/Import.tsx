@@ -3,6 +3,8 @@ import { useTranslation } from 'react-i18next'
 import { Upload, CheckCircle, AlertCircle, ArrowRight, ArrowLeft, HelpCircle } from 'lucide-react'
 import { useProfile } from '@/contexts/ProfileContext'
 import { useAccounts } from '@/hooks/useAccounts'
+import { useBankEntities } from '@/hooks/useBankEntities'
+import { BankLogo } from '@/components/BankLogo'
 import { useBankFormats, useUpsertBankFormat } from '@/hooks/useBankFormats'
 import { useKeywordRules } from '@/hooks/useKeywordRules'
 import { useCommunityRuleMap } from '@/hooks/useCommunityRules'
@@ -71,6 +73,7 @@ function ImportInner() {
   const navigate = useNavigate()
   const { activeProfile } = useProfile()
   const { data: accounts = [] } = useAccounts(activeProfile?.id)
+  const { data: entities = [] } = useBankEntities()
   const { data: bankFormats = [] } = useBankFormats()
   const { data: rules = [] } = useKeywordRules()
   const { data: communityMap = new Map<string, string>() } = useCommunityRuleMap()
@@ -86,6 +89,10 @@ function ImportInner() {
   const [processedRows, setProcessedRows] = useState<ParsedRow[]>([])
   const [showDuplicates, setShowDuplicates] = useState(false)
   const [accountDialogOpen, setAccountDialogOpen] = useState(false)
+  // Entidad elegida en el 1er desplegable de la cuenta destino (2º desplegable = tipo).
+  const [selectedEntity, setSelectedEntity] = useState('')
+  // Entidad a prellenar si "+ Crear cuenta" se abre desde el desplegable de tipo.
+  const [newAccountDefaultEntity, setNewAccountDefaultEntity] = useState<string | undefined>(undefined)
 
   const { headers, previewRows, parseFile } = useParseFile()
   const processRows = useProcessRows()
@@ -104,6 +111,8 @@ function ImportInner() {
   const [creditCol, setCreditCol] = useState('')
   const [balanceCol, setBalanceCol] = useState('')
   const [stateCol, setStateCol] = useState('')
+  const [taxCol, setTaxCol] = useState('')
+  const [feeCol, setFeeCol] = useState('')
   const [currencyMismatch, setCurrencyMismatch] = useState(false)
   const [skipRows, setSkipRows] = useState(0)
   // Step 2 starts as a read-only confirmation; manual mapping is revealed on demand.
@@ -121,6 +130,56 @@ function ImportInner() {
 
   const selectedAccount = accounts.find(a => a.id === accountId)
   const entity = selectedAccount?.entity ?? ''
+
+  // Mapa entidad (minúsculas) → logo del catálogo, para el desplegable de entidad.
+  const entityLogoByName = useMemo(() => {
+    const m = new Map<string, string | null>()
+    for (const e of entities) m.set(e.name.trim().toLowerCase(), e.logo_url)
+    return m
+  }, [entities])
+
+  // 1er desplegable: una fila por entidad distinta entre las cuentas del perfil.
+  const entityOptions = useMemo(() => {
+    const seen = new Map<string, { name: string; color: string }>()
+    for (const a of accounts) {
+      const key = a.entity.trim().toLowerCase()
+      if (!seen.has(key)) seen.set(key, { name: a.entity, color: a.color })
+    }
+    return [...seen.values()].sort((x, y) => x.name.localeCompare(y.name, 'es', { sensitivity: 'base' }))
+  }, [accounts])
+
+  // 2º desplegable: cuentas de la entidad elegida, etiquetadas por tipo (+ alias si difiere).
+  const accountsForEntity = useMemo(() => {
+    if (!selectedEntity) return []
+    return accounts
+      .filter(a => a.entity === selectedEntity)
+      .map(a => {
+        const alias = a.name.trim().toLowerCase() !== a.entity.trim().toLowerCase() ? a.name : ''
+        return { id: a.id, label: [tc(`account_type.${a.type}`), alias].filter(Boolean).join(' - ') }
+      })
+      .sort((x, y) => x.label.localeCompare(y.label, 'es', { sensitivity: 'base' }))
+  }, [accounts, selectedEntity, tc])
+
+  function handleEntityChange(v: string) {
+    if (v === '__new__') {
+      setNewAccountDefaultEntity(undefined)
+      setAccountDialogOpen(true)
+      return
+    }
+    setSelectedEntity(v)
+    // Si la entidad tiene una única cuenta, se autoselecciona en el 2º desplegable.
+    const matches = accounts.filter(a => a.entity === v)
+    setAccountId(matches.length === 1 ? matches[0].id : '')
+  }
+
+  function handleAccountTypeChange(v: string) {
+    if (v === '__new__') {
+      setNewAccountDefaultEntity(selectedEntity)
+      setAccountDialogOpen(true)
+      return
+    }
+    setAccountId(v)
+  }
 
   // true only when a file is loaded and parsing produced at least one header
   const fileParsedOk = file !== null && headers.length > 0
@@ -145,6 +204,8 @@ function ImportInner() {
     setCreditCol(fmt.credit_column ?? '')
     setBalanceCol(fmt.balance_column ?? '')
     setStateCol(fmt.state_column ?? '')
+    setTaxCol(fmt.tax_column ?? '')
+    setFeeCol(fmt.fee_column ?? '')
     setSkipRows(fmt.skip_rows)
   }
 
@@ -172,6 +233,8 @@ function ImportInner() {
       if (auto.creditCol)      setCreditCol(auto.creditCol)
       if (auto.balanceCol)     setBalanceCol(auto.balanceCol)
       if (auto.stateCol)       setStateCol(auto.stateCol)
+      if (auto.taxCol)         setTaxCol(auto.taxCol)
+      if (auto.feeCol)         setFeeCol(auto.feeCol)
 
       // Extractos que mezclan varias monedas en la misma columna de importe
       // (p.ej. exportación multi-divisa consolidada): avisamos sin bloquear.
@@ -200,6 +263,7 @@ function ImportInner() {
     if (f.sign_convention === 'signed' && !has(f.amount_column)) return false
     if (f.sign_convention === 'unsigned_type' && (!has(f.amount_column) || !has(f.type_column))) return false
     if (f.sign_convention === 'split_columns' && (!has(f.debit_column) || !has(f.credit_column))) return false
+    if (!has(f.tax_column) || !has(f.fee_column)) return false
     const sample = parsedRows.find(r => r[f.date_column]?.trim())?.[f.date_column]
     if (sample && !isValid(parse(sample.trim(), f.date_format, new Date()))) return false
     return true
@@ -239,6 +303,8 @@ function ImportInner() {
       debit_column: debitCol || null,
       credit_column: creditCol || null,
       state_column: stateCol || null,
+      tax_column: taxCol || null,
+      fee_column: feeCol || null,
     }
 
     try {
@@ -308,6 +374,8 @@ function ImportInner() {
             debit_column: debitCol || null,
             credit_column: creditCol || null,
             state_column: stateCol || null,
+            tax_column: taxCol || null,
+            fee_column: feeCol || null,
           })
           bankFormatId = (upserted as { id: string }).id
         } catch (e) {
@@ -465,31 +533,43 @@ function ImportInner() {
                 </div>
               )}
 
-              <div className="space-y-1.5">
-                <Label className="flex items-center gap-1.5">
-                  {t('step1.account_label')}
-                  <HelpCircle className="h-3.5 w-3.5 text-muted-foreground cursor-help" aria-label={t('step1.account_help')}>
-                    <title>{t('step1.account_help')}</title>
-                  </HelpCircle>
-                </Label>
-                <Select
-                  value={accountId}
-                  onValueChange={v => { if (v === '__new__') setAccountDialogOpen(true); else setAccountId(v) }}
-                >
-                  <SelectTrigger><SelectValue placeholder={t('step1.account_placeholder')} /></SelectTrigger>
-                  <SelectContent>
-                    {accounts
-                      .map(a => {
-                        // Entidad - Tipo de cuenta - Alias (el alias solo si difiere de la entidad).
-                        const alias = a.name.trim().toLowerCase() !== a.entity.trim().toLowerCase() ? a.name : ''
-                        return { id: a.id, label: [a.entity, tc(`account_type.${a.type}`), alias].filter(Boolean).join(' - ') }
-                      })
-                      // Orden alfabético (insensible a mayúsculas/acentos); "Crear cuenta" va aparte, al final.
-                      .sort((x, y) => x.label.localeCompare(y.label, 'es', { sensitivity: 'base' }))
-                      .map(o => <SelectItem key={o.id} value={o.id}>{o.label}</SelectItem>)}
-                    <SelectItem value="__new__">+ {t('step1.create_account')}</SelectItem>
-                  </SelectContent>
-                </Select>
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                {/* 1. Entidad — con logo del catálogo en cada opción */}
+                <div className="space-y-1.5">
+                  <Label>{t('step1.entity_label')}</Label>
+                  <Select value={selectedEntity} onValueChange={handleEntityChange}>
+                    <SelectTrigger><SelectValue placeholder={t('step1.entity_select_placeholder')} /></SelectTrigger>
+                    <SelectContent>
+                      {entityOptions.map(o => (
+                        <SelectItem key={o.name} value={o.name}>
+                          <span className="flex items-center gap-2">
+                            <BankLogo
+                              entity={o.name}
+                              color={o.color}
+                              logoUrl={entityLogoByName.get(o.name.trim().toLowerCase()) ?? null}
+                              size={20}
+                              radius={6}
+                            />
+                            {o.name}
+                          </span>
+                        </SelectItem>
+                      ))}
+                      <SelectItem value="__new__">+ {t('step1.create_account')}</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                {/* 2. Tipo de cuenta — cuentas de la entidad elegida */}
+                <div className="space-y-1.5">
+                  <Label>{t('step1.type_label')}</Label>
+                  <Select value={accountId} onValueChange={handleAccountTypeChange} disabled={!selectedEntity}>
+                    <SelectTrigger><SelectValue placeholder={t('step1.type_placeholder')} /></SelectTrigger>
+                    <SelectContent>
+                      {accountsForEntity.map(o => <SelectItem key={o.id} value={o.id}>{o.label}</SelectItem>)}
+                      <SelectItem value="__new__">+ {t('step1.create_account')}</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
               <Button
                 onClick={handleStep2}
@@ -654,6 +734,44 @@ function ImportInner() {
               <Select
                 value={stateCol || '__none__'}
                 onValueChange={v => setStateCol(v === '__none__' ? '' : v)}
+              >
+                <SelectTrigger><SelectValue placeholder={t('step2.no_column')} /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="__none__">{t('step2.no_column')}</SelectItem>
+                  {safeHeaders.map(h => <SelectItem key={h} value={h}>{h}</SelectItem>)}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-1.5">
+              <Label className="flex items-center gap-1.5">
+                {t('step2.tax_column')}
+                <HelpCircle className="h-3.5 w-3.5 text-muted-foreground cursor-help" aria-label={t('step2.tax_column_help')}>
+                  <title>{t('step2.tax_column_help')}</title>
+                </HelpCircle>
+              </Label>
+              <Select
+                value={taxCol || '__none__'}
+                onValueChange={v => setTaxCol(v === '__none__' ? '' : v)}
+              >
+                <SelectTrigger><SelectValue placeholder={t('step2.no_column')} /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="__none__">{t('step2.no_column')}</SelectItem>
+                  {safeHeaders.map(h => <SelectItem key={h} value={h}>{h}</SelectItem>)}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-1.5">
+              <Label className="flex items-center gap-1.5">
+                {t('step2.fee_column')}
+                <HelpCircle className="h-3.5 w-3.5 text-muted-foreground cursor-help" aria-label={t('step2.fee_column_help')}>
+                  <title>{t('step2.fee_column_help')}</title>
+                </HelpCircle>
+              </Label>
+              <Select
+                value={feeCol || '__none__'}
+                onValueChange={v => setFeeCol(v === '__none__' ? '' : v)}
               >
                 <SelectTrigger><SelectValue placeholder={t('step2.no_column')} /></SelectTrigger>
                 <SelectContent>
@@ -861,8 +979,9 @@ function ImportInner() {
           open={accountDialogOpen}
           onOpenChange={setAccountDialogOpen}
           profileId={activeProfile.id}
+          defaultEntity={newAccountDefaultEntity}
           sortOrder={accounts.length}
-          onSaved={acc => setAccountId(acc.id)}
+          onSaved={acc => { setSelectedEntity(acc.entity); setAccountId(acc.id) }}
         />
       )}
 

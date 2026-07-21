@@ -4,6 +4,7 @@ import { Plus, Archive, Trash2, AlertTriangle } from 'lucide-react'
 import { useProfile } from '@/contexts/ProfileContext'
 import { useAccounts, useDeleteAccount, useUpdateAccount } from '@/hooks/useAccounts'
 import { useBankEntities } from '@/hooks/useBankEntities'
+import { useAccountBalances } from '@/hooks/useHomeOverview'
 import { useLimitGate } from '@/hooks/usePlan'
 import { AccountFormDialog } from '@/components/accounts/AccountForm'
 import { AccountCard } from '@/components/accounts/AccountCard'
@@ -23,6 +24,7 @@ export default function Accounts() {
   const { activeProfile } = useProfile()
   const { data: accounts = [] } = useAccounts(activeProfile?.id)
   const { data: entities = [] } = useBankEntities()
+  const { data: balances } = useAccountBalances(activeProfile?.id, accounts)
   const deleteAccount = useDeleteAccount()
   const updateAccount = useUpdateAccount()
   const accountsLimit = useLimitGate('accounts')
@@ -156,6 +158,7 @@ export default function Accounts() {
                     key={account.id}
                     account={account}
                     entityLogoUrl={entityLogoByName.get(account.entity.trim().toLowerCase()) ?? null}
+                    daysSinceImport={balances?.get(account.id)?.daysSinceImport ?? null}
                     onEdit={openEdit}
                     onDelete={openDelete}
                   />

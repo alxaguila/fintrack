@@ -10,6 +10,8 @@
     "users_desc": "User list and activity",
     "stats": "Statistics",
     "stats_desc": "Global usage KPIs",
+    "rules": "Community rules",
+    "rules_desc": "Merchants voted by users, most to least voted",
     "feedback": "Feedback",
     "feedback_desc": "User suggestions, complaints and bugs",
     "soon": "Coming soon"
@@ -127,5 +129,16 @@
     "by_country": "By country",
     "by_employment": "By employment",
     "by_goal": "By goal"
+  },
+  "rules": {
+    "title": "Community rules",
+    "search": "Search merchant…",
+    "empty": "No community votes yet.",
+    "no_search_results": "No results for that search.",
+    "threshold_note": "A rule becomes active (applied in auto-classification) from {{count}} votes onward.",
+    "active": "Active rule",
+    "inactive": "Not active yet",
+    "votes_one": "{{count}} vote",
+    "votes_other": "{{count}} votes"
   }
 }

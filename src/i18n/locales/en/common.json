@@ -20,7 +20,8 @@
       "budgets": "Budgets",
       "transactions": "Transactions",
       "accounts": "Accounts",
-      "history": "History"
+      "history": "History",
+      "menu": "Menu"
     }
   },
   "actions": {

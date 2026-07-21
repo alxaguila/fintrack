@@ -41,6 +41,10 @@ const TYPE_PAT     = ['tipo', 'd/h', 'debe/haber', 'db/cr', 'deb/cred']
 const STATE_PAT       = ['estado', 'status']
 const STATE_EXACT_PAT = ['state']
 const CURRENCY_PAT    = ['currency', 'moneda', 'divisa', 'währung', 'wahrung', 'devise', 'valuta']
+// Retención/impuesto y comisión que algunos brokers (Trade Republic...) separan
+// del importe bruto en su propia columna: el importe real es amount+tax+fee.
+const TAX_PAT = ['tax', 'impuesto', 'retenc', 'withholding']
+const FEE_PAT = ['fee', 'comisi']
 
 // Estados de transacción que representan dinero que nunca llegó a moverse (o
 // se revirtió). Se descartan al importar. Cubre EN + ES; ampliar aquí cubre
@@ -120,6 +124,10 @@ export interface AutoMapResult {
   stateCol:       string
   /** Columna de moneda, si el extracto trae una (usada solo para avisar de mezcla de monedas). */
   currencyCol:    string
+  /** Columna de retención/impuesto a restar del importe bruto (Trade Republic...), si la hay. */
+  taxCol:         string
+  /** Columna de comisión a restar del importe bruto, si la hay. */
+  feeCol:         string
 }
 
 export function autoDetectColumns(
@@ -175,6 +183,14 @@ export function autoDetectColumns(
     result.signConvention = 'signed'
     result.amountCol      = amountHeader
   }
+
+  // ── Optional: retención/impuesto y comisión (Trade Republic...) ──────────
+  // Excluidas las columnas ya asignadas a otro campo para no robárselas.
+  const assigned = new Set([dateHeader, conceptHeader, stateHeader, currencyHeader, timeHeader, balanceHeader, debitHeader, creditHeader, typeHeader, amountHeader])
+  const taxHeader = headers.find(h => match(h, TAX_PAT) && !assigned.has(h))
+  if (taxHeader) result.taxCol = taxHeader
+  const feeHeader = headers.find(h => match(h, FEE_PAT) && !assigned.has(h) && h !== taxHeader)
+  if (feeHeader) result.feeCol = feeHeader
 
   // ── Date format from first non-empty sample value ────────────────────────
   if (result.dateCol) {

@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { Landmark, Tags, Users, BarChart3, MessageSquare, ChevronRight } from 'lucide-react'
+import { Landmark, Tags, Users, BarChart3, MessageSquare, ChevronRight, Vote } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 import { useUnreviewedBankCount } from '@/hooks/useAdminBankEntities'
 import { useUnreadFeedbackCount } from '@/hooks/useAdminFeedback'
@@ -23,6 +23,7 @@ export default function Admin() {
         <MenuLink to="/app/admin/categorias" icon={Tags} label={t('hub.categories')} desc={t('hub.categories_desc')} />
         <MenuLink to="/app/admin/usuarios" icon={Users} label={t('hub.users')} desc={t('hub.users_desc')} />
         <MenuLink to="/app/admin/estadisticas" icon={BarChart3} label={t('hub.stats')} desc={t('hub.stats_desc')} />
+        <MenuLink to="/app/admin/reglas" icon={Vote} label={t('hub.rules')} desc={t('hub.rules_desc')} />
         <MenuLink to="/app/admin/feedback" icon={MessageSquare} label={t('hub.feedback')} desc={t('hub.feedback_desc')} dot={unreadFeedback > 0} />
       </nav>
     </div>
