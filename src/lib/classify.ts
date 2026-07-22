@@ -1,6 +1,6 @@
-import type { Category, KeywordRule } from './database.types'
+import type { Category, DictionaryRule, KeywordRule, Merchant } from './database.types'
 import { applyKeywordRules } from './categorizer'
-import { matchBuiltinCategory, merchantKey } from './categoryRules'
+import { matchBuiltinCategory, matchMerchant, merchantKey } from './categoryRules'
 
 export type ClassificationSource = 'user_rule' | 'community' | 'builtin' | null
 
@@ -13,6 +13,10 @@ export interface ClassifyContext {
   categories: Category[]
   /** Índice slug → categoría (opcional; se construye si no se pasa). */
   catBySlug?: Map<string, Category>
+  /** Diccionario integrado (tabla dictionary_rules, migración 032). */
+  dictionaryRules: DictionaryRule[]
+  /** Catálogo de comercios con logo (tabla merchants, migración 034). */
+  merchants: Merchant[]
   /** Perfil activo, para priorizar reglas específicas de perfil. */
   profileId: string
   /** Importe del movimiento (para reglas con condición de importe). */
@@ -30,6 +34,12 @@ export interface ClassifyResult {
   categoryId: string | null
   category?: Category
   source: ClassificationSource
+  /** Regla concreta del diccionario que casó (solo si source === 'builtin'), para el contador de uso. */
+  dictionaryRuleId?: string
+  /** Merchant key de comunidad que casó (solo si source === 'community'), para el contador de uso. */
+  communityMerchantKey?: string
+  /** Comercio del catálogo (merchants) reconocido en el concepto, si lo hay — independiente de la categoría. */
+  merchantId?: string
 }
 
 /**
@@ -40,10 +50,14 @@ export interface ClassifyResult {
  *   4. Sin categoría.
  */
 export function classifyConcept(concept: string, ctx: ClassifyContext): ClassifyResult {
+  // Comercio reconocido (independiente de la categoría — un movimiento puede
+  // tener categoría y comercio, solo comercio, solo categoría, o ninguno).
+  const merchantId = matchMerchant(concept, ctx.merchants)?.id
+
   // 1 ── Reglas del usuario
   const userCatId = applyKeywordRules(concept, ctx.amount, ctx.userRules, ctx.profileId)
   if (userCatId) {
-    return { categoryId: userCatId, category: ctx.categories.find(c => c.id === userCatId), source: 'user_rule' }
+    return { categoryId: userCatId, category: ctx.categories.find(c => c.id === userCatId), source: 'user_rule', merchantId }
   }
 
   // 2 ── Reglas de la comunidad (por merchant key)
@@ -51,18 +65,23 @@ export function classifyConcept(concept: string, ctx: ClassifyContext): Classify
   if (key) {
     const communityCatId = ctx.communityMap.get(key)
     if (communityCatId) {
-      return { categoryId: communityCatId, category: ctx.categories.find(c => c.id === communityCatId), source: 'community' }
+      return {
+        categoryId: communityCatId,
+        category: ctx.categories.find(c => c.id === communityCatId),
+        source: 'community',
+        communityMerchantKey: key,
+        merchantId,
+      }
     }
   }
 
   // 3 ── Diccionario integrado
-  const slug = matchBuiltinCategory(concept)
-  if (slug) {
-    const catBySlug = ctx.catBySlug ?? new Map(ctx.categories.map(c => [c.slug, c]))
-    const cat = catBySlug.get(slug)
-    if (cat) return { categoryId: cat.id, category: cat, source: 'builtin' }
+  const dictRule = matchBuiltinCategory(concept, ctx.dictionaryRules)
+  if (dictRule) {
+    const cat = ctx.categories.find(c => c.id === dictRule.category_id)
+    if (cat) return { categoryId: dictRule.category_id, category: cat, source: 'builtin', dictionaryRuleId: dictRule.id, merchantId }
   }
 
   // 4 ── Sin categoría
-  return { categoryId: null, source: null }
+  return { categoryId: null, source: null, merchantId }
 }

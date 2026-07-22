@@ -8,6 +8,8 @@ import { useProfile } from '@/contexts/ProfileContext'
 import { useTransactions, useTransactionCounts, useMarkFilteredAsRead, type TransactionFilters } from '@/hooks/useTransactions'
 import { useAccounts } from '@/hooks/useAccounts'
 import { useCategories, useCategoryGroups } from '@/hooks/useCategories'
+import { useMerchants } from '@/hooks/useMerchants'
+import { useDictionaryRules } from '@/hooks/useDictionaryRules'
 import { useBankEntities } from '@/hooks/useBankEntities'
 import { useUpdateTransaction, invalidateTransactionData } from '@/hooks/useTransactions'
 import { useCreateKeywordRule } from '@/hooks/useKeywordRules'
@@ -106,6 +108,8 @@ export default function Transactions() {
   const { data: accounts = [] } = useAccounts(activeProfile?.id, { includeArchived: true })
   const { data: categories = [] } = useCategories()
   const { data: groups = [] } = useCategoryGroups()
+  const { data: merchants = [] } = useMerchants()
+  const { data: dictionaryRules = [] } = useDictionaryRules()
   const { data: bankEntities = [] } = useBankEntities()
   const updateTx = useUpdateTransaction()
   const markAllRead = useMarkFilteredAsRead()
@@ -207,9 +211,10 @@ export default function Transactions() {
     }
   }
 
-  // Clave de comercio del movimiento abierto: si existe, se puede crear regla
+  // Clave de comercio del movimiento abierto (sugerencia para el aviso de
+  // "movimientos similares"; la creación de regla siempre está disponible,
+  // el usuario escribe la palabra clave a mano en el paso 2).
   const ruleKey = categoryTx ? merchantKey(categoryTx.concept) : ''
-  const canCreateRule = !!ruleKey
   // El comentario cambió respecto al guardado → permite guardar solo la nota.
   const noteChanged = !!categoryTx && (noteText.trim() || null) !== (categoryTx.notes ?? null)
   const canSave = !!selCategoryId || noteChanged
@@ -526,6 +531,8 @@ export default function Transactions() {
         categories={categories}
         groups={groups}
         accounts={accounts}
+        merchants={merchants}
+        dictionaryRules={dictionaryRules}
         entityLogoByName={entityLogoByName}
         isLoading={isLoading}
         onRowClick={openCategoryDialog}
@@ -652,13 +659,13 @@ export default function Transactions() {
                     : t('category_dialog.rule_apply_count', { count: ruleMatchCount })}
                 </span>
               </p>
-            ) : canCreateRule ? (
+            ) : (
               <p className="text-xs text-muted-foreground">
                 {similarIds.length > 1
                   ? t('category_dialog.rule_hint_similar', { count: similarIds.length })
                   : t('category_dialog.rule_hint')}
               </p>
-            ) : null}
+            )}
           </div>
           <DialogFooter className="sm:justify-between sm:items-center gap-2">
             {rulePreview ? (
@@ -666,7 +673,7 @@ export default function Transactions() {
                 <Button variant="outline" onClick={() => setRulePreview(false)}>{tc('actions.back')}</Button>
                 <Button onClick={confirmRule} disabled={!selCategoryId || !ruleKeyword.trim()}>{tc('actions.confirm')}</Button>
               </>
-            ) : canCreateRule ? (
+            ) : (
               <>
                 <button
                   onClick={applyOnlyThis}
@@ -678,11 +685,6 @@ export default function Transactions() {
                 <Button onClick={goToRulePreview} disabled={!selCategoryId}>
                   {t('category_dialog.create_rule_button')}
                 </Button>
-              </>
-            ) : (
-              <>
-                <Button variant="outline" onClick={closeDialog}>{tc('actions.cancel')}</Button>
-                <Button onClick={applyOnlyThis} disabled={!canSave}>{t('category_dialog.save')}</Button>
               </>
             )}
           </DialogFooter>

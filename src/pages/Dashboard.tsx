@@ -23,9 +23,10 @@ const CHART_H = 232 // alto del cash flow en escritorio
 const CHART_H_M = 160 // alto de la tira compacta móvil (más espacio liberado al comprimir el resto)
 const VISIBLE_BARS = 12 // ventana visible por defecto (grupos de columnas)
 
-// Geometría del donut — escritorio y una variante más pequeña para móvil.
+// Geometría del donut — escritorio y una variante más pequeña para móvil (sin
+// el toggle de tipo encima, que ahora vive en la propia pastilla, cabe más chico).
 const DONUT = 224, DCX = 112, DCY = 112, D_INNER = 62, D_OUTER = 90, D_ICON_R = 102
-const DONUT_M = 196, DCX_M = 98, DCY_M = 98, D_INNER_M = 52, D_OUTER_M = 76, D_ICON_R_M = 84
+const DONUT_M = 168, DCX_M = 84, DCY_M = 84, D_INNER_M = 44, D_OUTER_M = 64, D_ICON_R_M = 72
 
 // Paleta. Ingreso = navy azul (más azul que negro); gasto rosa palo; balance
 // neutro; navy oscuro del sidebar para la tarjeta de tasa. Sin semáforo.
@@ -203,6 +204,32 @@ export default function Dashboard() {
   const { plan, limits: planLimits } = usePlan()
   const monthNames = t('charts.months', { returnObjects: true }) as string[]
   const scrollRef = useRef<HTMLDivElement>(null)
+
+  // Móvil: dos grupos apilados quedan fijos al hacer scroll (cabecera+aviso, y
+  // tira mensual+pastilla), y el título del desglose se ancla justo debajo. Se
+  // mide su alto real (cambia con el aviso de sin categoría, el skeleton, etc.)
+  // para no depender de valores fijos.
+  const topFixedRef = useRef<HTMLDivElement>(null)
+  const summaryStickyRef = useRef<HTMLDivElement>(null)
+  const [topFixedH, setTopFixedH] = useState(0)
+  const [summaryStickyH, setSummaryStickyH] = useState(0)
+  const hasContent = totals.length > 0 || isLoading // el bloque con la tira+pastilla solo existe montado con datos
+  useEffect(() => {
+    if (!isMobile) return
+    const el = topFixedRef.current
+    if (!el) return
+    const ro = new ResizeObserver(([entry]) => setTopFixedH(entry.contentRect.height))
+    ro.observe(el)
+    return () => ro.disconnect()
+  }, [isMobile])
+  useEffect(() => {
+    if (!isMobile) return
+    const el = summaryStickyRef.current
+    if (!el) return
+    const ro = new ResizeObserver(([entry]) => setSummaryStickyH(entry.contentRect.height))
+    ro.observe(el)
+    return () => ro.disconnect()
+  }, [isMobile, hasContent])
   // Ventana de histórico del cash flow: por defecto VISIBLE_BARS; "<" carga
   // todo de golpe (bloqueado en FREE). Se reinicia al cambiar de perfil.
   const [showAllHistory, setShowAllHistory] = useState(false)
@@ -507,21 +534,38 @@ export default function Dashboard() {
 
   return (
     <div className="flex flex-col gap-3 p-4 sm:p-6 lg:h-full lg:overflow-hidden">
-      {/* Cabecera — el selector de periodo vive ahora en la barra inferior */}
-      <div className="shrink-0">
-        <h1 className="text-2xl font-extrabold tracking-tight sm:text-3xl">{t('title')}</h1>
-        <p className="mt-1 text-sm text-muted-foreground">{t('subtitle')}</p>
-      </div>
+      {/* Cabecera + aviso — en móvil quedan fijos al hacer scroll (junto con la
+          tira mensual y la pastilla, ver más abajo); en escritorio es estático. */}
+      <div ref={topFixedRef} className={isMobile ? 'sticky top-0 z-30 flex flex-col gap-3 bg-background pb-1' : 'flex flex-col gap-3'}>
+        {/* El selector de periodo va arriba a la derecha (solo escritorio/tablet;
+            en móvil vive en el desplegable del hueco superior derecho) */}
+        <div className="flex shrink-0 items-start justify-between gap-3">
+          <div>
+            <h1 className="text-2xl font-extrabold tracking-tight sm:text-3xl">{t('title')}</h1>
+            <p className="mt-1 text-sm text-muted-foreground">{t('subtitle')}</p>
+          </div>
+          {!isMobile && hasData && (
+            <div className="inline-flex shrink-0 rounded-lg border p-0.5 text-sm">
+              {(['month', 'quarter', 'year'] as const).map(g => (
+                <button key={g} onClick={() => setGranularity(g)}
+                  className={`px-3 py-1 rounded-md transition-colors ${granularity === g ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:text-foreground'}`}>
+                  {t(`granularity.${g}`)}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
 
-      {/* Aviso de movimientos sin categoría */}
-      {!!counts?.uncategorized && (
-        <button onClick={() => navigate('/app/transactions?uncategorized=true')}
-          className="flex items-center gap-[11px] rounded-xl border border-[#EDDCA8] bg-[#FBF3DC] px-4 py-[9px] text-left transition-colors hover:bg-[#F8ECC8]">
-          <svg width="17" height="17" viewBox="0 0 20 20" className="shrink-0"><path d="M10 2 L18.5 17 H1.5 Z" fill="none" stroke="#B5842E" strokeWidth="1.6" strokeLinejoin="round" /><line x1="10" y1="8" x2="10" y2="12" stroke="#B5842E" strokeWidth="1.7" strokeLinecap="round" /><circle cx="10" cy="14.5" r="1" fill="#B5842E" /></svg>
-          <span className="text-[13.5px] text-[#6B5A2B]"><span className="font-semibold text-[#4A3D18]">{t('uncategorized.count', { count: counts.uncategorized })}</span></span>
-          <span className="ml-auto text-[13px] font-semibold text-[#B5842E]">{t('uncategorized.review')} →</span>
-        </button>
-      )}
+        {/* Aviso de movimientos sin categoría */}
+        {!!counts?.uncategorized && (
+          <button onClick={() => navigate('/app/transactions?uncategorized=true')}
+            className="flex items-center gap-[11px] rounded-xl border border-[#EDDCA8] bg-[#FBF3DC] px-4 py-[9px] text-left transition-colors hover:bg-[#F8ECC8]">
+            <svg width="17" height="17" viewBox="0 0 20 20" className="shrink-0"><path d="M10 2 L18.5 17 H1.5 Z" fill="none" stroke="#B5842E" strokeWidth="1.6" strokeLinejoin="round" /><line x1="10" y1="8" x2="10" y2="12" stroke="#B5842E" strokeWidth="1.7" strokeLinecap="round" /><circle cx="10" cy="14.5" r="1" fill="#B5842E" /></svg>
+            <span className="text-[13.5px] text-[#6B5A2B]"><span className="font-semibold text-[#4A3D18]">{t('uncategorized.count', { count: counts.uncategorized })}</span></span>
+            <span className="ml-auto text-[13px] font-semibold text-[#B5842E]">{t('uncategorized.review')} →</span>
+          </button>
+        )}
+      </div>
 
       {!hasData ? (
         <div className="flex flex-col items-center justify-center gap-3 py-16 text-center">
@@ -532,79 +576,83 @@ export default function Dashboard() {
       ) : isMobile ? (
         // ── Vista móvil — inspirada en Fintonic, con nuestra marca ──────────
         <div className="flex flex-col gap-3">
-          {/* Tira mensual compacta */}
-          <Card className="rounded-2xl">
-            <CardContent className="p-3">
-              {isLoading ? <Skeleton style={{ height: CHART_H_M }} /> : (
-                <div className="flex items-center gap-1.5">
-                  <button
-                    type="button"
-                    onClick={handleHistoryClick}
-                    disabled={!historyLockedByPlan && !hasMoreHistory}
-                    title={historyLockedByPlan ? t('history_expand.locked_hint') : t('history_expand.hint')}
-                    aria-label={historyLockedByPlan ? t('history_expand.locked_hint') : t('history_expand.hint')}
-                    className="flex h-7 w-7 shrink-0 items-center justify-center self-center rounded-full border border-slate-300 bg-white text-slate-600 shadow-sm transition-colors hover:border-slate-400 hover:bg-slate-50 hover:text-slate-900 disabled:cursor-not-allowed disabled:opacity-30"
-                  >
-                    <ChevronLeft className="h-3.5 w-3.5" />
-                  </button>
-                  <div ref={scrollRef} className="no-scrollbar min-w-0 cursor-pointer overflow-x-auto" style={{ maxWidth: VISIBLE_BARS * BAR_PX_M }}>
-                    <ComposedChart width={chartWidthMobile} height={CHART_H_M} data={chartData} barCategoryGap="24%" barGap={2}
-                      onClick={(e: any) => { if (e?.activeLabel) { const k = String(e.activeLabel); setSelectedPeriod(prev => prev === k ? null : k) } }}
-                      margin={{ top: 0, right: 4, bottom: 0, left: 4 }}>
-                      <YAxis hide domain={[0, cap]} allowDataOverflow />
-                      <XAxis dataKey="key" tickFormatter={(k) => bucketLabel(k, granularity, monthNames)} tick={{ fontSize: 10, fill: '#94a3b8' }} axisLine={false} tickLine={false} interval={0} height={16} dy={2} padding={{ left: 8, right: 8 }} />
-                      {/* Sin leyenda flotante: al tocar un periodo el resto de la
-                          pantalla cambia al instante, así que solo dejamos el
-                          resalte de fondo (misma señal, sin burbuja redundante). */}
-                      <Tooltip cursor={{ fill: 'rgba(100,116,139,0.10)', radius: 6 }} content={() => null} />
-                      {isFiltered ? (
-                        <Bar dataKey="value" fill={filterColor} barSize={22} isAnimationActive={false} background={makeActiveBg(selectedPeriod, -22, 60)} shape={makeBarShape(filterColor, 'value', cap, selectedPeriod, 0.35)} />
-                      ) : (
-                        <>
-                          <Bar dataKey="ingreso" fill={C_INCOME} barSize={16} isAnimationActive={false} background={makeActiveBg(selectedPeriod, -14, 56)} shape={makeBarShape(C_INCOME, 'ingreso', cap, selectedPeriod, 0.3)} />
-                          <Bar dataKey="gasto" fill={C_EXPENSE} barSize={16} isAnimationActive={false} shape={makeBarShape(C_EXPENSE, 'gasto', cap, selectedPeriod, 0.24)} />
-                        </>
-                      )}
-                    </ComposedChart>
+          {/* Tira mensual + pastilla: quedan fijas al hacer scroll, justo debajo
+              de la cabecera (el donut y el resto pasan por debajo y se ocultan). */}
+          <div ref={summaryStickyRef} className="sticky z-20 flex flex-col gap-3 bg-background pb-1" style={{ top: topFixedH }}>
+            {/* Tira mensual compacta */}
+            <Card className="rounded-2xl">
+              <CardContent className="p-3">
+                {isLoading ? <Skeleton style={{ height: CHART_H_M }} /> : (
+                  <div className="flex items-center gap-1.5">
+                    <button
+                      type="button"
+                      onClick={handleHistoryClick}
+                      disabled={!historyLockedByPlan && !hasMoreHistory}
+                      title={historyLockedByPlan ? t('history_expand.locked_hint') : t('history_expand.hint')}
+                      aria-label={historyLockedByPlan ? t('history_expand.locked_hint') : t('history_expand.hint')}
+                      className="flex h-7 w-7 shrink-0 items-center justify-center self-center rounded-full border border-slate-300 bg-white text-slate-600 shadow-sm transition-colors hover:border-slate-400 hover:bg-slate-50 hover:text-slate-900 disabled:cursor-not-allowed disabled:opacity-30"
+                    >
+                      <ChevronLeft className="h-3.5 w-3.5" />
+                    </button>
+                    <div ref={scrollRef} className="no-scrollbar min-w-0 cursor-pointer overflow-x-auto" style={{ maxWidth: VISIBLE_BARS * BAR_PX_M }}>
+                      <ComposedChart width={chartWidthMobile} height={CHART_H_M} data={chartData} barCategoryGap="24%" barGap={2}
+                        onClick={(e: any) => { if (e?.activeLabel) { const k = String(e.activeLabel); setSelectedPeriod(prev => prev === k ? null : k) } }}
+                        margin={{ top: 0, right: 4, bottom: 0, left: 4 }}>
+                        <YAxis hide domain={[0, cap]} allowDataOverflow />
+                        <XAxis dataKey="key" tickFormatter={(k) => bucketLabel(k, granularity, monthNames)} tick={{ fontSize: 10, fill: '#94a3b8' }} axisLine={false} tickLine={false} interval={0} height={16} dy={2} padding={{ left: 8, right: 8 }} />
+                        {/* Sin leyenda flotante: al tocar un periodo el resto de la
+                            pantalla cambia al instante, así que solo dejamos el
+                            resalte de fondo (misma señal, sin burbuja redundante). */}
+                        <Tooltip cursor={{ fill: 'rgba(100,116,139,0.10)', radius: 6 }} content={() => null} />
+                        {isFiltered ? (
+                          <Bar dataKey="value" fill={filterColor} barSize={22} isAnimationActive={false} background={makeActiveBg(selectedPeriod, -22, 60)} shape={makeBarShape(filterColor, 'value', cap, selectedPeriod, 0.35)} />
+                        ) : (
+                          <>
+                            <Bar dataKey="ingreso" fill={C_INCOME} barSize={16} isAnimationActive={false} background={makeActiveBg(selectedPeriod, -14, 56)} shape={makeBarShape(C_INCOME, 'ingreso', cap, selectedPeriod, 0.3)} />
+                            <Bar dataKey="gasto" fill={C_EXPENSE} barSize={16} isAnimationActive={false} shape={makeBarShape(C_EXPENSE, 'gasto', cap, selectedPeriod, 0.24)} />
+                          </>
+                        )}
+                      </ComposedChart>
+                    </div>
                   </div>
+                )}
+              </CardContent>
+            </Card>
+
+            {/* Ingresos / Gastos / Balance — una sola línea de 3 columnas. Ingresos
+                y Gastos son pulsables: hacen lo mismo que el antiguo toggle (fijan
+                el tipo del donut/desglose) y marcan cuál está activo con un
+                subrayado de color. Balance no filtra nada, solo informa; la tasa
+                de ahorro va debajo, entendida por contexto. */}
+            <Card className="rounded-2xl">
+              <CardContent className="grid grid-cols-3 divide-x p-3">
+                <button type="button" onClick={() => { setBreakdownType('ingreso'); setSelectedCat(null); setDonutActiveMobile(null) }}
+                  className={`flex flex-col items-center gap-0.5 rounded-lg px-1 py-1 text-center transition-colors ${breakdownType === 'ingreso' ? 'bg-slate-100' : 'hover:bg-slate-50'}`}>
+                  <span className="text-[11px] font-medium text-muted-foreground">{t('kpis.income_short')}</span>
+                  <span className="text-sm font-extrabold tabular-nums" style={{ color: C_INCOME }}>{fmtAmount(income)}</span>
+                  <span className="mt-0.5 h-0.5 w-6 rounded-full transition-colors" style={{ backgroundColor: breakdownType === 'ingreso' ? C_INCOME : 'transparent' }} />
+                </button>
+                <button type="button" onClick={() => { setBreakdownType('gasto'); setSelectedCat(null); setDonutActiveMobile(null) }}
+                  className={`flex flex-col items-center gap-0.5 rounded-lg px-1 py-1 text-center transition-colors ${breakdownType === 'gasto' ? 'bg-slate-100' : 'hover:bg-slate-50'}`}>
+                  <span className="text-[11px] font-medium text-muted-foreground">{t('kpis.expenses_short')}</span>
+                  <span className="text-sm font-extrabold tabular-nums" style={{ color: C_EXPENSE }}>{fmtAmount(expenses)}</span>
+                  <span className="mt-0.5 h-0.5 w-6 rounded-full transition-colors" style={{ backgroundColor: breakdownType === 'gasto' ? C_EXPENSE : 'transparent' }} />
+                </button>
+                <div className="flex flex-col items-center gap-0.5 px-1 py-1 text-center">
+                  <span className="text-[11px] font-medium text-muted-foreground">{t('kpis.balance_short')}</span>
+                  <span className="text-sm font-extrabold tabular-nums" style={{ color: C_NEUTRAL }}>{fmtAmount(balance)}</span>
+                  <span className="text-[10px] font-semibold" style={{ color: savingsRate >= 0 ? '#0F766E' : '#A03A66' }}>{t('kpis.savings_rate_short', { rate: savingsRate.toFixed(0) })}</span>
                 </div>
-              )}
-            </CardContent>
-          </Card>
+              </CardContent>
+            </Card>
+          </div>
 
-          {/* Ingresos / Gastos / Balance — una sola línea de 3 columnas. La tasa
-              de ahorro ya no tiene su propia pastilla: va debajo del Balance,
-              donde se entiende por contexto (el mismo importe, en %). */}
+          {/* Donut — sin toggle propio (se controla desde la pastilla de arriba);
+              al hacer scroll queda por debajo de la tira+pastilla y se oculta. */}
           <Card className="rounded-2xl">
-            <CardContent className="grid grid-cols-3 divide-x p-3">
-              <div className="flex flex-col items-center gap-0.5 px-1 text-center">
-                <span className="text-[11px] font-medium text-muted-foreground">{t('kpis.income_short')}</span>
-                <span className="text-sm font-extrabold tabular-nums" style={{ color: C_INCOME }}>{fmtAmount(income)}</span>
-              </div>
-              <div className="flex flex-col items-center gap-0.5 px-1 text-center">
-                <span className="text-[11px] font-medium text-muted-foreground">{t('kpis.expenses_short')}</span>
-                <span className="text-sm font-extrabold tabular-nums" style={{ color: C_EXPENSE }}>{fmtAmount(expenses)}</span>
-              </div>
-              <div className="flex flex-col items-center gap-0.5 px-1 text-center">
-                <span className="text-[11px] font-medium text-muted-foreground">{t('kpis.balance_short')}</span>
-                <span className="text-sm font-extrabold tabular-nums" style={{ color: C_NEUTRAL }}>{fmtAmount(balance)}</span>
-                <span className="text-[10px] font-semibold" style={{ color: savingsRate >= 0 ? '#0F766E' : '#A03A66' }}>{t('kpis.savings_rate_short', { rate: savingsRate.toFixed(0) })}</span>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Toggle de tipo + Donut */}
-          <Card className="rounded-2xl">
-            <CardContent className="flex flex-col items-center gap-3 p-4">
-              <div className="inline-flex rounded-lg border p-0.5 text-sm">
-                {(['gasto', 'ingreso', 'no_computable'] as const).map(ty => (
-                  <button key={ty} onClick={() => { setBreakdownType(ty); setSelectedCat(null); setDonutActiveMobile(null) }}
-                    className={`px-3 py-1 rounded-md transition-colors ${breakdownType === ty ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:text-foreground'}`}>
-                    {tcommon(`transaction_type.${ty}`)}
-                  </button>
-                ))}
-              </div>
-              {breakdownLoading ? <Skeleton className="h-48 w-48 rounded-full" />
+            <CardHeader className="p-4 pb-1"><CardTitle className="text-[15px] font-bold">{t('sections.spending_distribution')}</CardTitle></CardHeader>
+            <CardContent className="flex flex-col items-center gap-3 p-4 pt-1">
+              {breakdownLoading ? <Skeleton className="h-40 w-40 rounded-full" />
                 : breakdown.rows.length === 0 ? (<p className="py-6 text-center text-sm text-muted-foreground">{t('no_data.title')}</p>)
                 : (
                   <>
@@ -635,9 +683,12 @@ export default function Dashboard() {
             </CardContent>
           </Card>
 
-          {/* Desglose por subcategoría */}
+          {/* Desglose por subcategoría — el título queda fijo justo debajo de los
+              dos grupos de arriba, y solo las categorías hacen scroll debajo. */}
           <Card className="rounded-2xl">
-            <CardHeader className="p-4 pb-2"><CardTitle className="text-[15px] font-bold">{t('sections.by_subcategory')}</CardTitle></CardHeader>
+            <CardHeader className="sticky z-10 rounded-t-2xl bg-card p-4 pb-2" style={{ top: topFixedH + summaryStickyH }}>
+              <CardTitle className="text-[15px] font-bold">{t('sections.by_subcategory')}</CardTitle>
+            </CardHeader>
             <CardContent className="p-4 pt-0">
               <div className="space-y-0.5">{breakdownListEl}</div>
             </CardContent>
@@ -838,21 +889,6 @@ export default function Dashboard() {
             </div>
           </div>
         </>
-      )}
-
-      {/* Barra inferior: selector de periodo — solo escritorio/tablet (en móvil
-          vive en el desplegable del hueco superior derecho) */}
-      {!isMobile && hasData && (
-        <div className="mt-1 flex shrink-0 items-center justify-center border-t pt-3">
-          <div className="inline-flex rounded-lg border p-0.5 text-sm">
-            {(['month', 'quarter', 'year'] as const).map(g => (
-              <button key={g} onClick={() => setGranularity(g)}
-                className={`px-3 py-1 rounded-md transition-colors ${granularity === g ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:text-foreground'}`}>
-                {t(`granularity.${g}`)}
-              </button>
-            ))}
-          </div>
-        </div>
       )}
 
       <UpgradeHintDialog

@@ -8,6 +8,8 @@ import { BankLogo } from '@/components/BankLogo'
 import { useBankFormats, useUpsertBankFormat } from '@/hooks/useBankFormats'
 import { useKeywordRules } from '@/hooks/useKeywordRules'
 import { useCommunityRuleMap } from '@/hooks/useCommunityRules'
+import { useDictionaryRules } from '@/hooks/useDictionaryRules'
+import { useMerchants } from '@/hooks/useMerchants'
 import { useCategories, useCategoryGroups } from '@/hooks/useCategories'
 import { AccountFormDialog } from '@/components/accounts/AccountForm'
 import { useParseFile, useProcessRows, useConfirmImport, parseAmount, type ParsedRow } from '@/hooks/useImport'
@@ -77,6 +79,8 @@ function ImportInner() {
   const { data: bankFormats = [] } = useBankFormats()
   const { data: rules = [] } = useKeywordRules()
   const { data: communityMap = new Map<string, string>() } = useCommunityRuleMap()
+  const { data: dictionaryRules = [], refetch: refetchDictionary } = useDictionaryRules()
+  const { data: merchants = [] } = useMerchants()
   const { data: categories = [], refetch: refetchCategories } = useCategories()
   const { data: groups = [], refetch: refetchGroups } = useCategoryGroups()
   const upsertFormat = useUpsertBankFormat()
@@ -309,10 +313,11 @@ function ImportInner() {
 
     try {
       const result = await parseFile(file, ',', skipRows)
-      // Refrescar la taxonomía por si el admin añadió (sub)categorías nuevas en BD:
-      // useCategories usa staleTime: Infinity y, sin esto, un import con la app ya
-      // abierta clasificaría con la lista antigua (categoría nueva → category_id null).
-      const [catsRes, groupsRes] = await Promise.all([refetchCategories(), refetchGroups()])
+      // Refrescar la taxonomía y el diccionario por si el admin añadió (sub)categorías
+      // o palabras nuevas en BD: useCategories/useDictionaryRules usan staleTime:
+      // Infinity y, sin esto, un import con la app ya abierta clasificaría con la
+      // lista antigua (categoría nueva → category_id null, palabra nueva ignorada).
+      const [catsRes, groupsRes, dictRes] = await Promise.all([refetchCategories(), refetchGroups(), refetchDictionary()])
       const processed = await processRows(result.rows, {
         accountId,
         profileId: activeProfile.id,
@@ -321,6 +326,8 @@ function ImportInner() {
         categories: catsRes.data ?? categories,
         groups: groupsRes.data ?? groups,
         communityMap,
+        dictionaryRules: dictRes.data ?? dictionaryRules,
+        merchants,
         accountType: selectedAccount?.type,
       })
       setProcessedRows(processed)

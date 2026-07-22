@@ -9,8 +9,8 @@ const STYLE = `
 .fts-nlink{transition:color .2s ease}
 .fts-nlink:hover{color:#fff}
 .fts-cta{transition:background .2s ease}
-.fts-cta:hover{background:#EAF4FA!important}
-@media (max-width:520px){.fts-cta{display:none!important}}
+.fts-cta:hover{background:${BRAND.accentHover}!important}
+@media (max-width:520px){.fts-lang{display:none!important}}
 `
 
 /**
@@ -112,15 +112,15 @@ export function SiteHeader({ visible = true, onLogoClick, onLogin, onRegister, p
             <span style={{ font: `600 18px ${BRAND.display}`, letterSpacing: '-.03em', color: '#fff' }}>fintrack</span>
           </button>
           <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
-            <div style={{ display: 'flex', alignItems: 'center', background: 'rgba(255,255,255,.08)', border: '1px solid rgba(255,255,255,.14)', borderRadius: 9, padding: 3 }}>
+            <div className="fts-lang" style={{ display: 'flex', alignItems: 'center', background: 'rgba(255,255,255,.08)', border: '1px solid rgba(255,255,255,.14)', borderRadius: 9, padding: 3 }}>
               <button onClick={() => setLang('es')} style={{ ...segBase, ...(lang === 'es' ? langOn : langOff) }}>ES</button>
               <button onClick={() => setLang('en')} style={{ ...segBase, ...(lang === 'en' ? langOn : langOff) }}>EN</button>
             </div>
             <button onClick={onLogin ?? (() => navigate('/?login=1'))} className="fts-nlink" style={{ font: `500 14px ${BRAND.sans}`, color: '#B7CDDA', background: 'none', border: 'none', cursor: 'pointer' }}>
               {t('nav.login')}
             </button>
-            <button onClick={onRegister ?? (() => navigate('/register'))} className="fts-cta" style={{ background: '#fff', color: BRAND.ink, font: `600 14px ${BRAND.sans}`, padding: '9px 18px', borderRadius: 999, border: 'none', cursor: 'pointer' }}>
-              {t('nav.cta')}
+            <button onClick={onRegister ?? (() => navigate('/register'))} className="fts-cta" style={{ background: BRAND.accent, color: '#fff', font: `600 14px ${BRAND.sans}`, padding: '9px 18px', borderRadius: 999, border: 'none', cursor: 'pointer' }}>
+              {t('nav.ctaSticky')}
             </button>
           </div>
         </div>

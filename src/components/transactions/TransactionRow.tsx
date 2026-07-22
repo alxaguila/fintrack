@@ -2,20 +2,21 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Check, CheckCheck } from 'lucide-react'
 import { categoryIcon, categoryLabel } from '@/lib/categoryIcons'
+import { matchBuiltinCategory } from '@/lib/categoryRules'
 import { resolveEntityAvatar } from '@/lib/entityAvatar'
 import { formatCurrency, formatDate } from '@/lib/utils'
 import { cn } from '@/lib/utils'
-import type { Account, Category, CategoryGroup, Transaction } from '@/lib/database.types'
+import type { Account, Category, CategoryGroup, DictionaryRule, Merchant, Transaction } from '@/lib/database.types'
 
 // Plantilla de columnas compartida entre la cabecera (TransactionsList) y cada
 // fila, para que ambas se alineen exactamente en cada breakpoint. Orden:
 // [dot+icono] [concepto 1fr] [fecha] [entidad*] [categoría**] [tipo***] [importe] [leído]
 // *sm+  **md+  ***lg+
 export const TX_ROW_GRID_COLS =
-  'grid-cols-[40px_1fr_92px_108px_112px] ' +
-  'sm:grid-cols-[40px_1fr_92px_132px_108px_112px] ' +
-  'md:grid-cols-[40px_1fr_92px_132px_168px_108px_112px] ' +
-  'lg:grid-cols-[40px_1fr_92px_132px_168px_112px_108px_112px]'
+  'grid-cols-[52px_1fr_92px_108px_112px] ' +
+  'sm:grid-cols-[52px_1fr_92px_132px_108px_112px] ' +
+  'md:grid-cols-[52px_1fr_92px_132px_168px_108px_112px] ' +
+  'lg:grid-cols-[52px_1fr_92px_132px_168px_112px_108px_112px]'
 
 // Divide un importe ya formateado (formatCurrency, siempre es-ES → coma decimal)
 // en parte entera + parte decimal, para el tratamiento tipográfico de dos tonos
@@ -25,6 +26,13 @@ function splitAmount(formatted: string): { int: string; dec: string } {
   const i = formatted.lastIndexOf(',')
   if (i === -1) return { int: formatted, dec: '' }
   return { int: formatted.slice(0, i), dec: formatted.slice(i) }
+}
+
+// Presentación de un patrón de diccionario ("MERCADONA", "NEW FIZZ") cuando no
+// hay comercio del catálogo: solo cosmético (capitaliza cada palabra), no se
+// usa para matching en ningún sitio.
+function titleCase(s: string): string {
+  return s.toLowerCase().replace(/\b\p{L}/gu, c => c.toUpperCase())
 }
 
 // Badge de tipo: "Gasto" usa el token expense (ya existente, evita semáforo puro
@@ -40,19 +48,30 @@ interface TransactionRowProps {
   category: Category | undefined
   group: CategoryGroup | undefined
   account: Account | undefined
+  merchant: Merchant | undefined
+  dictionaryRules: DictionaryRule[]
   entityLogoByName: Map<string, string | null>
   onClick: () => void
   onToggleReviewed: (e: React.MouseEvent) => void
 }
 
-export function TransactionRow({ tx, category, group, account, entityLogoByName, onClick, onToggleReviewed }: TransactionRowProps) {
+export function TransactionRow({ tx, category, group, account, merchant, dictionaryRules, entityLogoByName, onClick, onToggleReviewed }: TransactionRowProps) {
   const { t } = useTranslation('transactions')
   const { t: tc } = useTranslation('common')
   const [logoError, setLogoError] = useState(false)
+  const [merchantLogoError, setMerchantLogoError] = useState(false)
 
   const CatIcon = categoryIcon(category?.icon)
   const catColor = group?.color ?? '#94a3b8'
   const avatar = resolveEntityAvatar(account, entityLogoByName)
+  const showMerchantLogo = !!merchant?.logo_url && !merchantLogoError
+  // Sin comercio del catálogo, se reutiliza el patrón del diccionario integrado
+  // que ya clasifica la categoría (mismo mecanismo, misma palabra/frase exacta
+  // que un admin ya curó) — a diferencia de adivinar por nº de palabras del
+  // concepto, esto es consistente: "SANTA GLORIA"/"NEW FIZZ" salen enteros,
+  // "MERCADONA C/ARIBAU" solo "MERCADONA" (el patrón no incluye la sucursal).
+  const dictRule = merchant ? null : matchBuiltinCategory(tx.concept, dictionaryRules)
+  const detectedName = merchant?.name ?? (dictRule ? titleCase(dictRule.pattern) : null)
   const amountColor = tx.transaction_type === 'ingreso' ? 'text-income' : 'text-foreground'
   const { int, dec } = splitAmount(formatCurrency(tx.amount))
 
@@ -72,18 +91,34 @@ export function TransactionRow({ tx, category, group, account, entityLogoByName,
           title={tx.is_reviewed ? undefined : t('row.pending')}
         />
         <span
-          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl"
-          style={{ backgroundColor: `${catColor}1f` }}
+          className="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-xl"
+          style={{ backgroundColor: showMerchantLogo ? undefined : `${catColor}1f` }}
         >
-          <CatIcon className="h-4 w-4" style={{ color: catColor }} />
+          {showMerchantLogo ? (
+            <img
+              src={merchant!.logo_url!}
+              alt=""
+              className="h-full w-full object-contain"
+              onError={() => setMerchantLogoError(true)}
+            />
+          ) : (
+            <CatIcon className="h-4 w-4" style={{ color: catColor }} />
+          )}
         </span>
       </div>
 
-      {/* Concepto + nota (si existe) */}
+      {/* Comercio (del catálogo o detectado) + concepto tal cual del extracto + nota (si existe) */}
       <div className="min-w-0 leading-tight">
-        <div className={cn('truncate font-mono text-[13px] uppercase', tx.is_reviewed ? '' : 'font-semibold text-foreground')}>
-          {tx.concept}
-        </div>
+        {detectedName ? (
+          <>
+            <div className="truncate text-[13px] font-semibold text-foreground">{detectedName}</div>
+            <div className="truncate font-mono text-[11px] uppercase text-muted-foreground">{tx.concept}</div>
+          </>
+        ) : (
+          <div className={cn('truncate font-mono text-[13px] uppercase', tx.is_reviewed ? '' : 'font-semibold text-foreground')}>
+            {tx.concept}
+          </div>
+        )}
         {tx.notes && (
           <div className="truncate text-[11px] font-normal normal-case text-muted-foreground">{tx.notes}</div>
         )}

@@ -6,13 +6,15 @@ import { formatCurrency } from '@/lib/utils'
 import { cn } from '@/lib/utils'
 import { Skeleton } from '@/components/ui/skeleton'
 import { TransactionRow, TX_ROW_GRID_COLS } from './TransactionRow'
-import type { Account, Category, CategoryGroup, Transaction } from '@/lib/database.types'
+import type { Account, Category, CategoryGroup, DictionaryRule, Merchant, Transaction } from '@/lib/database.types'
 
 interface TransactionsListProps {
   transactions: Transaction[]
   categories: Category[]
   groups: CategoryGroup[]
   accounts: Account[]
+  merchants: Merchant[]
+  dictionaryRules: DictionaryRule[]
   entityLogoByName: Map<string, string | null>
   isLoading: boolean
   onRowClick: (tx: Transaction) => void
@@ -29,7 +31,7 @@ function groupNet(rows: Transaction[]): number {
 }
 
 export function TransactionsList({
-  transactions, categories, groups, accounts, entityLogoByName, isLoading, onRowClick, onToggleReviewed,
+  transactions, categories, groups, accounts, merchants, dictionaryRules, entityLogoByName, isLoading, onRowClick, onToggleReviewed,
 }: TransactionsListProps) {
   const { t } = useTranslation('transactions')
 
@@ -90,6 +92,7 @@ export function TransactionsList({
                     const category = categories.find(c => c.id === tx.category_id)
                     const group = groups.find(g => g.id === category?.group_id)
                     const account = accounts.find(a => a.id === tx.account_id)
+                    const merchant = merchants.find(m => m.id === tx.merchant_id)
                     return (
                       <TransactionRow
                         key={tx.id}
@@ -97,6 +100,8 @@ export function TransactionsList({
                         category={category}
                         group={group}
                         account={account}
+                        merchant={merchant}
+                        dictionaryRules={dictionaryRules}
                         entityLogoByName={entityLogoByName}
                         onClick={() => onRowClick(tx)}
                         onToggleReviewed={e => onToggleReviewed(tx, e)}

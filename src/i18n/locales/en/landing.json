@@ -4,7 +4,8 @@
     "security": "Security",
     "pricing": "Pricing",
     "login": "Log in",
-    "cta": "Get started free"
+    "cta": "Get started free",
+    "ctaSticky": "Sign up"
   },
   "hero": {
     "badge": "No bank connection · you upload your statements",
@@ -40,7 +41,7 @@
     "uploadCta": "Sign up free to upload your statement",
     "uploadFormats": "CSV · XLSX · OFX — from any bank",
     "f2title": "We never ask for your credentials",
-    "f2body": "If an app asks for your bank password, it already asked for too much. We don't connect to your bank or third parties: no credentials to hand over, no doubts about what happens to them.",
+    "f2body": "We don't connect to your bank or third parties: no credentials to hand over, no doubts about what happens to them.",
     "f3title": "Automatic classification",
     "f3body": "A dictionary and your own rules label every transaction for you. You just review."
   },

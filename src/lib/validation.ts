@@ -125,6 +125,13 @@ export const keywordSchema = z
   .min(1, 'required')
   .max(LIMITS.keyword, 'too_long')
 
+/** Formulario de palabra del diccionario integrado (admin, migración 032). */
+export const dictionaryRuleFormSchema = z.object({
+  pattern: z.string().trim().min(2, 'too_short').max(LIMITS.keyword, 'too_long'),
+  category_id: z.string().uuid('required'),
+  applies_to_bizum: z.boolean(),
+})
+
 /** Nombre de un perfil financiero. */
 export const profileNameSchema = z
   .string()
@@ -200,6 +207,7 @@ export const ADMIN_LIMITS = {
   catSlug: 80,
   catLabel: 120,
   iconName: 60,
+  merchantName: 80,
 } as const
 
 const CATEGORY_TYPES = ['gasto', 'ingreso', 'no_computable'] as const
@@ -224,6 +232,12 @@ export const bankEntityFormSchema = z.object({
   name: z.string().trim().min(1, 'required').max(ADMIN_LIMITS.bankName, 'too_long'),
   logo_url: safeUrlSchema,
   sort_order: z.number().int('invalid').min(0, 'out_of_range').max(32767, 'out_of_range'),
+})
+
+/** Formulario de comercio (admin, migración 034). */
+export const merchantFormSchema = z.object({
+  name: z.string().trim().min(1, 'required').max(ADMIN_LIMITS.merchantName, 'too_long'),
+  logo_url: safeUrlSchema,
 })
 
 const labelEsEn = {

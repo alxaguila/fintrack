@@ -65,6 +65,7 @@
     "invalid_input": "Revisa los campos: hay datos no válidos o demasiado largos.",
     "required": "Obligatorio",
     "too_long": "Demasiado largo",
+    "too_short": "Demasiado corto",
     "invalid": "Valor no válido",
     "invalid_slug": "Solo minúsculas, números y guion bajo",
     "invalid_icon": "Nombre de icono no válido (kebab-case)",

@@ -77,6 +77,25 @@ export function useAdminCommunityRules() {
   })
 }
 
+/**
+ * Mapa merchant_key → nº de veces que esa regla de comunidad ha clasificado un
+ * movimiento (migración 033). Va en tabla aparte (community_rule_usage) porque
+ * community_rules se borra/reinserta en cada voto (recompute_community_rule).
+ */
+export function useCommunityUsageMap() {
+  return useQuery({
+    queryKey: ['community_rule_usage'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('community_rule_usage')
+        .select('merchant_key, use_count')
+      if (error) throw error
+      return new Map(((data ?? []) as { merchant_key: string; use_count: number }[]).map(r => [r.merchant_key, r.use_count]))
+    },
+    staleTime: 1000 * 60,
+  })
+}
+
 /** Retira el voto del usuario para un comercio (no bloquea ante error). */
 export async function deleteCommunityVote(key: string | null): Promise<void> {
   if (!key) return

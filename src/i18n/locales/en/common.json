@@ -65,6 +65,7 @@
     "invalid_input": "Please check the fields: some values are invalid or too long.",
     "required": "Required",
     "too_long": "Too long",
+    "too_short": "Too short",
     "invalid": "Invalid value",
     "invalid_slug": "Lowercase letters, numbers and underscore only",
     "invalid_icon": "Invalid icon name (kebab-case)",

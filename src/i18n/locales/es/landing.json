@@ -4,7 +4,8 @@
     "security": "Seguridad",
     "pricing": "Precios",
     "login": "Entrar",
-    "cta": "Empieza gratis"
+    "cta": "Empieza gratis",
+    "ctaSticky": "Regístrate"
   },
   "hero": {
     "badge": "Sin conectar tu banco · tú subes tus extractos",
@@ -40,7 +41,7 @@
     "uploadCta": "Empieza gratis para subir tu extracto",
     "uploadFormats": "CSV · XLSX · OFX — de cualquier banco",
     "f2title": "Nunca pedimos tus claves",
-    "f2body": "Si una app pide la contraseña de tu banco, ya ha pedido demasiado. Nosotros no conectamos con tu banco ni con terceros: sin credenciales que ceder, sin dudas de qué hacen con ellas.",
+    "f2body": "Nosotros no conectamos con tu banco ni con terceros: sin credenciales que ceder, sin dudas de qué hacen con ellas.",
     "f3title": "Clasificación automática",
     "f3body": "Diccionario y reglas propias etiquetan cada movimiento por ti. Tú solo revisas."
   },

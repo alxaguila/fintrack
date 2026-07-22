@@ -10,7 +10,7 @@ import { findTransferPairs } from '@/lib/transferMatch'
 import { isCardSettlementConcept } from '@/lib/cardSettlement'
 import { propagateBalances } from '@/lib/computeBalances'
 import { reanchorOpeningBalance } from '@/lib/openingBalance'
-import type { AccountType, BankFormat, Category, CategoryGroup, KeywordRule, PlanLimits, PlanType, PlanUsage, Transaction, TransactionType } from '@/lib/database.types'
+import type { AccountType, BankFormat, Category, CategoryGroup, DictionaryRule, KeywordRule, Merchant, PlanLimits, PlanType, PlanUsage, Transaction, TransactionType } from '@/lib/database.types'
 import { PlanLimitError } from '@/lib/plan'
 import { parse, isValid, format } from 'date-fns'
 import { NON_FINAL_STATE_VALUES } from '@/lib/automap'
@@ -24,6 +24,12 @@ export interface ParsedRow {
   isDuplicate: boolean
   categoryId: string | null
   transactionType: TransactionType
+  /** Regla de diccionario que clasificó este movimiento (para el contador de uso). */
+  dictionaryRuleId: string | null
+  /** Merchant key de comunidad que clasificó este movimiento (para el contador de uso). */
+  communityMerchantKey: string | null
+  /** Comercio del catálogo (merchants) reconocido en el concepto, si lo hay. */
+  merchantId: string | null
   rawLine: Record<string, string>
   /** Clave (fecha|hora|importe|concepto) usada para detectar colisiones exactas. */
   dupKey: string
@@ -41,6 +47,10 @@ interface UseImportOptions {
   groups: CategoryGroup[]
   /** Mapa merchant_key → category_id de la comunidad (≥ umbral de votos). */
   communityMap: Map<string, string>
+  /** Diccionario integrado (tabla dictionary_rules, migración 032). */
+  dictionaryRules: DictionaryRule[]
+  /** Catálogo de comercios con logo (tabla merchants, migración 034). */
+  merchants: Merchant[]
   /** Tipo de cuenta destino: en tarjetas de crédito se normaliza el signo del importe. */
   accountType?: AccountType
 }
@@ -174,7 +184,7 @@ export function useProcessRows() {
     rows: Record<string, string>[],
     opts: UseImportOptions,
   ): Promise<ParsedRow[]> {
-    const { accountId, profileId, bankFormat, rules, categories, groups, communityMap, accountType } = opts
+    const { accountId, profileId, bankFormat, rules, categories, groups, communityMap, dictionaryRules, merchants, accountType } = opts
 
     // Mapa slug → categoría (para resolver el diccionario integrado)
     const catBySlug = new Map(categories.map(c => [c.slug, c]))
@@ -297,14 +307,18 @@ export function useProcessRows() {
       const isDuplicate = existingHashes.has(dedup_hash)
 
       // Categorización: 1) regla de usuario → 2) comunidad → 3) diccionario → 4) sin categoría
-      let { categoryId, category: matchedCat } = classifyConcept(rawConcept, {
+      let { categoryId, category: matchedCat, dictionaryRuleId, communityMerchantKey, merchantId } = classifyConcept(rawConcept, {
         userRules: rules,
         communityMap,
         categories,
         catBySlug,
+        dictionaryRules,
+        merchants,
         profileId,
         amount,
       })
+      let dictionaryRuleIdFinal = dictionaryRuleId ?? null
+      let communityMerchantKeyFinal = communityMerchantKey ?? null
       // El signo del importe manda: un movimiento positivo no puede ser un gasto
       // (p.ej. una nómina). Si la categoría casada contradice el signo, la descartamos
       // y caemos en "sin categoría", dejando que el tipo lo fije el signo.
@@ -313,6 +327,8 @@ export function useProcessRows() {
       if ((matchedType === 'gasto' || matchedType === 'ingreso') && matchedType !== signType) {
         categoryId = null
         matchedCat = undefined
+        dictionaryRuleIdFinal = null
+        communityMerchantKeyFinal = null
       }
       // Tipo: del grupo de la categoría casada (incluye no_computable); si no hay, por el signo
       let transactionType: TransactionType =
@@ -326,9 +342,16 @@ export function useProcessRows() {
       if (isCardSettlementConcept(rawConcept) && ((isCreditCard && amount > 0) || (!isCreditCard && amount < 0))) {
         categoryId = catBySlug.get('card_settlement')?.id ?? null
         transactionType = 'no_computable'
+        dictionaryRuleIdFinal = null
+        communityMerchantKeyFinal = null
       }
 
-      result.push({ date, concept: rawConcept, amount, balance, dedup_hash, isDuplicate, categoryId, transactionType, rawLine: row, dupKey, occurrence })
+      result.push({
+        date, concept: rawConcept, amount, balance, dedup_hash, isDuplicate, categoryId, transactionType,
+        dictionaryRuleId: dictionaryRuleIdFinal, communityMerchantKey: communityMerchantKeyFinal,
+        merchantId: merchantId ?? null,
+        rawLine: row, dupKey, occurrence,
+      })
     }
 
     return result
@@ -621,6 +644,7 @@ export function useConfirmImport() {
         is_manual: false,
         is_reviewed: false,
         dedup_hash: r.dedup_hash,
+        merchant_id: r.merchantId,
         created_at: new Date(importInstant + i).toISOString(),
       }))
 
@@ -631,6 +655,18 @@ export function useConfirmImport() {
         // No dejar lotes huérfanos si falla el insert de movimientos
         await supabase.from('import_batches').delete().eq('id', batch.id)
         throw txError
+      }
+
+      // Contador de uso (diccionario + comunidad): solo de los movimientos
+      // realmente confirmados (no en la vista previa). No bloquea el import
+      // ya confirmado si falla — es un dato informativo para /admin/reglas.
+      const dictionaryRuleIds = newRows.map(r => r.dictionaryRuleId).filter((id): id is string => !!id)
+      const communityMerchantKeys = newRows.map(r => r.communityMerchantKey).filter((k): k is string => !!k)
+      try {
+        if (dictionaryRuleIds.length) await supabase.rpc('increment_dictionary_usage', { p_rule_ids: dictionaryRuleIds })
+        if (communityMerchantKeys.length) await supabase.rpc('increment_community_usage', { p_merchant_keys: communityMerchantKeys })
+      } catch (e) {
+        console.error('No se pudo actualizar el contador de uso de reglas:', e)
       }
 
       // Re-anclar el saldo inicial al saldo conocido más reciente (modelo de saldo

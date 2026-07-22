@@ -112,6 +112,15 @@ export type BankEntity = {
   created_at: string
 }
 
+// Catálogo de comercios reconocidos (migración 034), con logo. Enlazado desde
+// dictionary_rules/community_rule_usage vía merchant_id.
+export type Merchant = {
+  id: string
+  name: string
+  logo_url: string | null
+  created_at: string
+}
+
 export type CategoryGroup = {
   id: string
   slug: string
@@ -284,6 +293,7 @@ export type Transaction = {
   is_manual: boolean
   is_reviewed: boolean
   dedup_hash: string
+  merchant_id: string | null // migración 035
   created_at: string
   updated_at: string
   // joined
@@ -323,6 +333,32 @@ export type CommunityRuleContribution = {
   updated_at: string
 }
 
+// Contador de uso de una regla de comunidad (migración 033), aparte de
+// community_rules porque esa tabla se borra/reinserta en cada voto
+// (recompute_community_rule) y perdería cualquier columna extra.
+export type CommunityRuleUsage = {
+  merchant_key: string
+  use_count: number
+  updated_at: string
+  merchant_id: string | null // migración 034
+}
+
+// Diccionario de clasificación integrado (migración 032), editable desde
+// /admin/reglas. Sustituye al array fijo BUILTIN_RULES/ALWAYS_RULES que antes
+// vivía en categoryRules.ts.
+export type DictionaryRule = {
+  id: string
+  category_id: string
+  pattern: string           // normalizado en mayúsculas
+  applies_to_bizum: boolean // ver ALWAYS_RULES en categoryRules.ts
+  sort_order: number
+  use_count: number         // migración 033
+  merchant_id: string | null // migración 034
+  created_at: string
+  // joined
+  category?: Category
+}
+
 // Feedback / soporte enviado por el usuario (migración 014).
 // Solo-inserción para el usuario; lo lee el admin desde /admin/feedback (migración 021).
 export type FeedbackType = 'suggestion' | 'complaint' | 'bug' | 'other'
@@ -346,15 +382,18 @@ export type Database = {
       financial_profiles: { Row: FinancialProfile; Insert: Omit<FinancialProfile, 'id' | 'created_at' | 'updated_at' | 'sort_order'> & { sort_order?: number }; Update: Partial<FinancialProfile>; Relationships: [] }
       accounts: { Row: Account; Insert: Omit<Account, 'id' | 'created_at' | 'updated_at' | 'logo_url' | 'opening_balance'> & { logo_url?: string | null; opening_balance?: number | null }; Update: Partial<Account>; Relationships: [] }
       bank_entities: { Row: BankEntity; Insert: Omit<BankEntity, 'id' | 'created_at' | 'sort_order' | 'reviewed' | 'created_by'> & { sort_order?: number; reviewed?: boolean; created_by?: string | null }; Update: Partial<BankEntity>; Relationships: [] }
+      merchants: { Row: Merchant; Insert: Omit<Merchant, 'id' | 'created_at'>; Update: Partial<Merchant>; Relationships: [] }
       category_groups: { Row: CategoryGroup; Insert: Omit<CategoryGroup, 'id'>; Update: Partial<CategoryGroup>; Relationships: [] }
       categories: { Row: Category; Insert: Omit<Category, 'id' | 'group'>; Update: Partial<Omit<Category, 'group'>>; Relationships: [] }
       category_translations: { Row: CategoryTranslation; Insert: Omit<CategoryTranslation, 'updated_at'> & { updated_at?: string }; Update: Partial<CategoryTranslation>; Relationships: [] }
       bank_formats: { Row: BankFormat; Insert: Omit<BankFormat, 'id' | 'created_at' | 'updated_at'>; Update: Partial<BankFormat>; Relationships: [] }
       import_batches: { Row: ImportBatch; Insert: Omit<ImportBatch, 'id' | 'imported_at' | 'file_hash'> & { file_hash?: string | null }; Update: Partial<ImportBatch>; Relationships: [] }
-      transactions: { Row: Transaction; Insert: Omit<Transaction, 'id' | 'updated_at'> & { created_at?: string }; Update: Partial<Transaction>; Relationships: [] }
+      transactions: { Row: Transaction; Insert: Omit<Transaction, 'id' | 'updated_at' | 'merchant_id'> & { created_at?: string; merchant_id?: string | null }; Update: Partial<Transaction>; Relationships: [] }
       keyword_rules: { Row: KeywordRule; Insert: Omit<KeywordRule, 'id' | 'created_at' | 'amount_min' | 'amount_max'> & { amount_min?: number | null; amount_max?: number | null }; Update: Partial<KeywordRule>; Relationships: [] }
       community_rules: { Row: CommunityRule; Insert: CommunityRule; Update: Partial<CommunityRule>; Relationships: [] }
       community_rule_contributions: { Row: CommunityRuleContribution; Insert: CommunityRuleContribution; Update: Partial<CommunityRuleContribution>; Relationships: [] }
+      dictionary_rules: { Row: DictionaryRule; Insert: Omit<DictionaryRule, 'id' | 'created_at' | 'use_count' | 'category' | 'merchant_id'> & { use_count?: number; merchant_id?: string | null }; Update: Partial<Omit<DictionaryRule, 'category'>>; Relationships: [] }
+      community_rule_usage: { Row: CommunityRuleUsage; Insert: Omit<CommunityRuleUsage, 'updated_at' | 'merchant_id'> & { updated_at?: string; merchant_id?: string | null }; Update: Partial<CommunityRuleUsage>; Relationships: [] }
       feedback: { Row: Feedback; Insert: Omit<Feedback, 'id' | 'created_at' | 'read_at'>; Update: Partial<Feedback>; Relationships: [] }
       plan_limits: { Row: PlanLimits; Insert: PlanLimits; Update: Partial<PlanLimits>; Relationships: [] }
       plan_history: { Row: PlanHistory; Insert: Omit<PlanHistory, 'id' | 'changed_at'>; Update: never; Relationships: [] }
@@ -364,6 +403,9 @@ export type Database = {
     Views: Record<string, never>
     Functions: {
       upsert_community_vote: { Args: { p_merchant_key: string; p_category_id: string }; Returns: undefined }
+      increment_dictionary_usage: { Args: { p_rule_ids: string[] }; Returns: undefined }
+      increment_community_usage: { Args: { p_merchant_keys: string[] }; Returns: undefined }
+      admin_link_merchant_transactions: { Args: { p_merchant_id: string }; Returns: number }
       delete_community_vote: { Args: { p_merchant_key: string }; Returns: undefined }
       recompute_community_rule: { Args: { p_merchant_key: string }; Returns: undefined }
       admin_list_users: { Args: Record<string, never>; Returns: AdminUserRow[] }

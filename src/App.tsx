@@ -30,6 +30,7 @@ import AdminCategorias from '@/pages/admin/Categorias'
 import AdminUsuarios from '@/pages/admin/Usuarios'
 import AdminEstadisticas from '@/pages/admin/Estadisticas'
 import AdminReglas from '@/pages/admin/Reglas'
+import AdminComercios from '@/pages/admin/Comercios'
 import AdminFeedback from '@/pages/admin/Feedback'
 import { AdminRoute } from '@/components/auth/AdminRoute'
 
@@ -84,6 +85,7 @@ export default function App() {
             <Route path="admin/usuarios" element={<AdminRoute><AdminUsuarios /></AdminRoute>} />
             <Route path="admin/estadisticas" element={<AdminRoute><AdminEstadisticas /></AdminRoute>} />
             <Route path="admin/reglas" element={<AdminRoute><AdminReglas /></AdminRoute>} />
+            <Route path="admin/comercios" element={<AdminRoute><AdminComercios /></AdminRoute>} />
             <Route path="admin/feedback" element={<AdminRoute><AdminFeedback /></AdminRoute>} />
           </Route>
 

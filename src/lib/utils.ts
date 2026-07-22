@@ -11,6 +11,11 @@ export function formatCurrency(amount: number, currency = 'EUR'): string {
     style: 'currency',
     currency,
     minimumFractionDigits: 2,
+    // Sin esto, Intl con style:'currency' en es-ES omite el separador de miles
+    // solo para números de 4 cifras (p. ej. "4807,10 €" pero "10.862,64 €"),
+    // por una particularidad de sus datos CLDR (minimumGroupingDigits). Forzamos
+    // el agrupado siempre para que el formato sea consistente en toda la app.
+    useGrouping: true,
   }).format(amount)
 }
 

@@ -2,6 +2,56 @@
 
 Lista de cambios por versión (`APP_VERSION` en `src/lib/version.ts`). Solo se añade una entrada cuando el código de la app cambia.
 
+## v1.546
+- Corregido de raíz: el nombre de comercio detectado en Movimientos (cuando aún no existe en el catálogo) ya no se adivina contando palabras del concepto — eso rompía tanto comercios de una palabra con sucursal ("Mercadona Aribau" → ahora "Mercadona") como comercios de nombre compuesto ("Santa Gloria"/"New Fizz", que con el conteo salían recortados a "Santa"/"New"). Ahora se reutiliza el propio patrón del diccionario integrado que ya clasifica la categoría de ese movimiento, que ya tiene el nombre completo correcto en cada caso.
+
+## v1.544
+- Corregido: el nombre de comercio "adivinado" en Movimientos (cuando aún no existe en el catálogo) a veces arrastraba una segunda palabra que era la sucursal o calle, no parte del nombre ("Mercadona Aribau", "Lidl Bcn", "Mooby Balmes"). Ahora se queda solo con la primera palabra significativa del concepto.
+
+## v1.542
+- Movimientos: el tratamiento en dos líneas (nombre en negrita + concepto original debajo) ya no depende de que el comercio exista en el catálogo `/admin/comercios` — se aplica a cualquier movimiento donde se pueda identificar un comercio a partir del concepto (sin logo si todavía no está creado como tal).
+
+## v1.540
+- Movimientos: más separación entre el logo del comercio y el texto (antes quedaban muy pegados), y cuando hay comercio reconocido se muestra en dos líneas — el nombre del comercio en negrita arriba, el concepto original del extracto debajo.
+
+## v1.538
+- Movimientos: cuando el concepto de un movimiento reconoce un comercio del catálogo (Admin > Comercios), su logo sustituye al icono genérico de categoría. Al guardar un comercio con su logo, la app vincula automáticamente (sin pasos manuales) todos los movimientos históricos que lo mencionen, de cualquier usuario, y a partir de ese momento las importaciones nuevas también lo detectan solas.
+
+## v1.534
+- Análisis en móvil: quitado el toggle Gasto/Ingreso/No computable — ahora se pulsa directamente la columna de Ingresos o Gastos en la pastilla para filtrar el donut y el desglose (con un subrayado de color indicando cuál está activo). El donut se ha hecho más pequeño con el espacio ganado.
+- Análisis en móvil: al hacer scroll, la cabecera + la tira mensual + la pastilla quedan fijas arriba (el donut pasa por debajo y se oculta); al llegar al desglose por subcategoría, su título también queda fijo y solo la lista de categorías se desplaza debajo.
+
+## v1.522
+- Nueva sección Admin > Comercios: catálogo de comercios reconocidos por el sistema de clasificación, cada uno con su logo (buscador, alta/edición/borrado). Es la base para que, más adelante, los movimientos muestren el logo del comercio en vez del icono genérico de categoría.
+
+## v1.516
+- Admin > Reglas de clasificación: las cabeceras de ambas tablas (Diccionario y Comunidad) ahora son clicables para ordenar por cualquier columna (palabra/comercio, categoría, votos, usos), alternando ascendente/descendente.
+- Corregido: en la pestaña Diccionario, la pastilla de veces usada mostraba la clave sin traducir ("rules.used_count") en vez del texto ("Usada N veces") cuando el contador aún no tenía valor; ahora se comporta igual que en Comunidad.
+
+## v1.513
+- Admin > Reglas de clasificación: tanto el diccionario como las reglas de comunidad muestran ahora cuántas veces han clasificado un movimiento (contador de uso), junto al resto de datos de cada fila. Se cuenta al confirmar una importación, no en la vista previa.
+
+## v1.511
+- Admin > Reglas de clasificación: ahora tiene dos pestañas, "Diccionario" y "Comunidad". El diccionario integrado de categorización (antes fijo en el código) se mueve a base de datos: se puede ver todo el listado de palabras actuales agrupadas por categoría, buscarlas, añadir palabras nuevas y borrar las que sobren, sin necesidad de tocar código. La clasificación al importar sigue exactamente el mismo orden de siempre (reglas propias → comunidad → diccionario → sin categoría).
+
+## v1.508
+- Corregido: los importes de 4 cifras (1.000–9.999) se mostraban sin separador de millar (p. ej. "4807,10 €") mientras que los de 5+ cifras sí lo llevaban ("10.862,64 €"), por una particularidad del formateador de números del navegador en español. Ahora el separador de millar es siempre consistente en toda la app.
+
+## v1.506
+- Corregido: al abrir un movimiento con un concepto sin nombre de comercio reconocible (p. ej. solo números/códigos de referencia), el diálogo mostraba un pie simplificado ("Cancelar" / "Guardar categoría") en vez de las opciones habituales "Aplicar solo a este movimiento" / "Crear regla". Ahora ese pie es siempre el mismo, sin depender de si se detecta un comercio.
+
+## v1.504
+- Análisis (escritorio/tablet): el selector de periodo (Meses/Trimestres/Años) se mueve de la barra inferior a la cabecera, arriba a la derecha del título. Se libera el espacio de esa franja para que el resto de paneles lo aprovechen. En móvil no cambia (sigue en el desplegable del hueco superior derecho).
+
+## v1.502
+- Menú móvil (drawer): la cabecera ya no dice "Menú" — ahora muestra el logo y la marca "fintrack", igual que en el sidebar de escritorio. Se quita el selector de idioma del pie (ya vive en Ajustes). Arriba se listan todos los destinos de navegación (Inicio, Análisis, Presupuestos, Movimientos —con Reglas de clasificación si esa pantalla está activa—, Cuentas, Historial), y abajo del todo quedan agrupados Importar extractos, el bloque de usuario/plan y Administración, igual que en el sidebar de escritorio.
+
+## v1.500
+- Landing: en la barra fija que aparece al hacer scroll, el botón de registro pasa a decir "Regístrate" (antes "Empieza gratis") y usa el mismo coral que el resto de botones de la marca (antes era blanco). En móvil ya no desaparece este botón: se quita el toggle de idioma (ES/EN) de esa barra y quedan visibles "Entrar" y "Regístrate".
+
+## v1.498
+- Landing: quitada la frase "Si una app pide la contraseña de tu banco, ya ha pedido demasiado" de la pastilla "Nunca pedimos tus claves", por ser redundante con el mismo claim que ya aparece al final de la página.
+
 ## v1.494
 - Móvil: el botón de menú (☰) ya no flota arriba a la derecha — es ahora el 5º icono de la barra inferior de navegación, en todas las pantallas. En Análisis, ese hueco superior derecho pasa a mostrar el selector de periodo como desplegable.
 - Análisis en móvil: Ingresos, Gastos y Balance se muestran en una sola línea de 3 columnas en vez de tres filas; la tasa de ahorro ya no tiene tarjeta propia, aparece como un pequeño porcentaje bajo el Balance. Se ha dado más tamaño a la gráfica de evolución con el espacio ganado, y al tocar un periodo ya no aparece una leyenda flotante (el resto de la pantalla se actualiza al instante, así que era redundante).
