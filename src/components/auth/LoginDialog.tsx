@@ -57,8 +57,8 @@ export function LoginDialog({ open, onOpenChange, onGoRegister, onGoForgot }: Pr
         <div style={{ background: BRAND.ink, padding: '22px 26px 20px', position: 'relative', overflow: 'hidden' }}>
           <div style={{ position: 'absolute', right: -60, top: -70, width: 200, height: 200, borderRadius: '50%', background: 'radial-gradient(circle,rgba(56,176,214,.3),transparent 70%)' }} />
           <div style={{ position: 'relative', display: 'flex', alignItems: 'center', gap: 10 }}>
-            <BrandMark size={26} />
-            <span style={{ font: `600 20px ${BRAND.display}`, letterSpacing: '-.03em', color: '#fff' }}>fintrack</span>
+            <BrandMark size={26} filled={false} />
+            <span style={{ font: `600 20px ${BRAND.wordmark}`, letterSpacing: '-.03em', color: '#fff' }}>zafyros</span>
           </div>
           <DialogTitle asChild>
             <h2 style={{ position: 'relative', margin: '16px 0 0', font: `500 24px ${BRAND.display}`, letterSpacing: '-.02em', color: '#EAF4FA' }}>{t('login.title')}</h2>

@@ -1,5 +1,5 @@
 -- ============================================================
--- FinTrack — Seed: taxonomía de categorías (v2)
+-- zafyros — Seed: taxonomía de categorías (v2)
 -- Ejecutar DESPUÉS de 001_schema.sql
 -- Icono por subcategoría (categories.icon = nombre lucide kebab-case).
 -- El admin puede editar/añadir (sub)categorías desde el backend de Supabase.

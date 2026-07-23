@@ -108,8 +108,8 @@ export function SiteHeader({ visible = true, onLogoClick, onLogin, onRegister, p
 
           <div style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 24px', gap: 16 }}>
           <button onClick={onLogoClick ?? (() => navigate('/'))} style={{ display: 'flex', alignItems: 'center', gap: 9, background: 'none', border: 'none', cursor: 'pointer' }}>
-            <BrandMark size={24} />
-            <span style={{ font: `600 18px ${BRAND.display}`, letterSpacing: '-.03em', color: '#fff' }}>fintrack</span>
+            <BrandMark size={24} filled={false} />
+            <span style={{ font: `600 18px ${BRAND.wordmark}`, letterSpacing: '-.03em', color: '#fff' }}>zafyros</span>
           </button>
           <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
             <div className="fts-lang" style={{ display: 'flex', alignItems: 'center', background: 'rgba(255,255,255,.08)', border: '1px solid rgba(255,255,255,.14)', borderRadius: 9, padding: 3 }}>

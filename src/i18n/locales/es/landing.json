@@ -12,7 +12,7 @@
     "line1": "Todas tus cuentas,",
     "line2": "sin dar las claves",
     "emph": "de tu banco.",
-    "sub": "Importa el extracto CSV o Excel que ya te da tu banca online y fintrack organiza al instante todos tus movimientos, categorías, patrimonio y presupuestos — sin conectar tu banco ni ceder acceso a nadie.",
+    "sub": "Importa el extracto CSV o Excel que ya te da tu banca online y zafyros organiza al instante todos tus movimientos, categorías, patrimonio y presupuestos — sin conectar tu banco ni ceder acceso a nadie.",
     "cta": "Empieza gratis",
     "note": "Gratis para siempre en el plan Free · sin tarjeta",
     "trust1": "Sin claves bancarias",
@@ -25,7 +25,7 @@
   "excel": {
     "eyebrow": "El problema de siempre",
     "title": "¿Tu Excel de gastos lleva meses sin abrir?",
-    "sub": "Lo empezaste con toda la ilusión. Luego actualizarlo a mano cada semana dio pereza… y lo abandonaste. fintrack se actualiza solo: subes el extracto y ya está.",
+    "sub": "Lo empezaste con toda la ilusión. Luego actualizarlo a mano cada semana dio pereza… y lo abandonaste. zafyros se actualiza solo: subes el extracto y ya está.",
     "pt1": "Cero fórmulas rotas ni celdas a mano",
     "pt2": "Se pone al día en el momento que subes un CSV",
     "pt3": "Categorías, gráficos y patrimonio, automáticos",
@@ -34,10 +34,10 @@
     "newStatus": "Actualizado hace 2 minutos"
   },
   "features": {
-    "title": "Conoce fintrack.",
+    "title": "Conoce zafyros.",
     "sub": "Una cuenta clara de tu dinero que se pone al día sola cada vez que subes un extracto.",
     "f1title": "Sube tu CSV y listo",
-    "f1body": "Arrastra el extracto que exportas de tu banca online. fintrack lo lee, ordena y clasifica al instante.",
+    "f1body": "Arrastra el extracto que exportas de tu banca online. zafyros lo lee, ordena y clasifica al instante.",
     "uploadCta": "Empieza gratis para subir tu extracto",
     "uploadFormats": "CSV · XLSX · OFX — de cualquier banco",
     "f2title": "Nunca pedimos tus claves",
@@ -50,7 +50,7 @@
     "title": "Del extracto al control en un minuto.",
     "s1title": "Exporta tu extracto",
     "s1body": "Descarga el CSV que ya te ofrece tu banca online. No hace falta nada más de tu banco.",
-    "s2title": "Súbelo a fintrack",
+    "s2title": "Súbelo a zafyros",
     "s2body": "Arrástralo y déjalo. Detectamos duplicados y transferencias entre tus cuentas automáticamente.",
     "s3title": "Todo ordenado",
     "s3body": "Dashboards, posición global y análisis al día. Sin tocar una hoja de cálculo nunca más."
@@ -141,7 +141,7 @@
     "cookies": "Cookies",
     "terms": "Términos y condiciones",
     "help": "Ayuda",
-    "copy": "© 2026 fintrack · Tú subes, tú controlas."
+    "copy": "© 2026 zafyros · Tú subes, tú controlas."
   },
   "mock": {
     "greeting": "Buenos días, Marta",

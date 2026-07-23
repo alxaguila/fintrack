@@ -28,7 +28,7 @@ export function SiteFooter() {
         <div className="ftf-grid" style={{ display: 'grid', gap: 32 }}>
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 11 }}>
-              <BrandMark size={28} /><span style={{ font: `600 21px ${BRAND.display}`, letterSpacing: '-.03em', color: BRAND.ink }}>fintrack</span>
+              <BrandMark size={28} /><span style={{ font: `600 21px ${BRAND.wordmark}`, letterSpacing: '-.03em', color: BRAND.ink }}>zafyros</span>
             </div>
             <p style={{ margin: '16px 0 0', maxWidth: 240, font: `400 14px/1.6 ${BRAND.sans}`, color: '#586470' }}>{t('footer.tagline')}</p>
           </div>

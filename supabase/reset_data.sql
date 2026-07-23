@@ -1,5 +1,5 @@
 -- ============================================================
--- FinTrack — Borrado total de datos de usuario (todos los usuarios)
+-- zafyros — Borrado total de datos de usuario (todos los usuarios)
 -- Ejecutar en el SQL Editor de Supabase.
 --
 -- Objetivo: dejar la base de datos como recién instalada para probar

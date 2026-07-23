@@ -110,7 +110,7 @@ export default function Register() {
       return
     }
     setCooldown(RESEND_COOLDOWN)
-    toast({ title: 'FinTrack', description: t('verify.resent'), variant: 'success' })
+    toast({ title: 'zafyros', description: t('verify.resent'), variant: 'success' })
   }
 
   function backToSignup() {
@@ -135,8 +135,8 @@ export default function Register() {
       {/* Top bar: logo (→ landing) + idioma */}
       <div style={{ position: 'relative', zIndex: 10, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '20px 24px', maxWidth: 1100, width: '100%', margin: '0 auto', boxSizing: 'border-box' }}>
         <button onClick={() => navigate('/')} style={{ display: 'flex', alignItems: 'center', gap: 10, background: 'none', border: 'none', cursor: 'pointer' }}>
-          <BrandMark size={30} />
-          <span style={{ font: `600 22px ${BRAND.display}`, letterSpacing: '-.03em', color: '#fff' }}>fintrack</span>
+          <BrandMark size={30} filled={false} />
+          <span style={{ font: `600 22px ${BRAND.wordmark}`, letterSpacing: '-.03em', color: '#fff' }}>zafyros</span>
         </button>
         <div style={{ display: 'flex', alignItems: 'center', background: 'rgba(255,255,255,.08)', border: '1px solid rgba(255,255,255,.14)', borderRadius: 9, padding: 3 }}>
           <button onClick={() => setLang('es')} style={{ ...seg, ...(lang === 'es' ? { background: '#fff', color: BRAND.ink } : { background: 'transparent', color: '#8FA9B8' }) }}>ES</button>

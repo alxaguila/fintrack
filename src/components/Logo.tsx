@@ -1,6 +1,7 @@
-// Marca encapsulada en un único sitio: nombre e isotipo aún NO son definitivos
-// (FinTrack / dolfin están por decidir). Cambiar aquí se propaga a toda la app.
-// Wordmark en minúsculas (Space Grotesk). El isotipo es provisional.
+// Marca encapsulada en un único sitio: isotipo zafyros (diamante de líneas) + wordmark.
+// Cambiar aquí se propaga a toda la app. Wordmark en minúsculas (Poppins). Sin disco de
+// fondo: el sidebar/drawer donde vive ya es navy (con su propio foco de luz decorativo
+// en el sidebar) — un disco plano encima taparía ese degradado en vez de fundirse.
 
 interface LogoProps {
   /** Tamaño del isotipo en px (el wordmark escala en proporción). */
@@ -15,16 +16,21 @@ interface LogoProps {
 export function Logo({ size = 30, iconOnly = false, version, className }: LogoProps) {
   return (
     <div className={className} style={{ display: 'flex', alignItems: 'center', gap: 11 }}>
-      <svg width={size} height={size} viewBox="0 0 40 40" aria-hidden="true">
-        <circle cx="20" cy="20" r="20" fill="var(--brand-primary)" />
-        <path d="M7 27 Q20 4 33 27" fill="none" stroke="#EAF4FA" strokeWidth="3.4" strokeLinecap="round" />
-        <circle cx="26.5" cy="15" r="2" fill="#EAF4FA" />
+      <svg width={size} height={size} viewBox="0 0 100 100" aria-hidden="true">
+        <path
+          d="M30,28 L66,28 L80,44 L50,80 L20,44 Z M20,44 L80,44 M30,44 L50,80 M66,44 L50,80"
+          fill="none"
+          stroke="#FFFFFF"
+          strokeWidth="5"
+          strokeLinejoin="round"
+          strokeLinecap="round"
+        />
       </svg>
       {!iconOnly && (
         <span style={{ display: 'inline-flex', alignItems: 'baseline', gap: 6 }}>
           <span
             style={{
-              fontFamily: '"Space Grotesk", sans-serif',
+              fontFamily: '"Poppins", sans-serif',
               fontWeight: 600,
               fontSize: size * 0.73,
               lineHeight: 1,
@@ -32,7 +38,7 @@ export function Logo({ size = 30, iconOnly = false, version, className }: LogoPr
               color: 'currentColor',
             }}
           >
-            fintrack
+            zafyros
           </span>
           {version && (
             <span style={{ fontSize: 10, fontWeight: 500, color: 'currentColor', opacity: 0.45 }}>{version}</span>

@@ -1,5 +1,5 @@
-// Identidad visual de la landing / registro (diseño "Fintrack Landing", distinta
-// del sistema dolfin interno de la app). Se comparte entre Landing, LoginDialog y
+// Identidad visual de la landing / registro (diseño "zafyros Landing", distinta
+// del sistema interno de la app). Se comparte entre Landing, LoginDialog y
 // Register para que la puerta de entrada sea coherente.
 export const BRAND = {
   ink: '#0A2540',
@@ -13,15 +13,26 @@ export const BRAND = {
   display: "'Space Grotesk',system-ui,sans-serif",
   serif: "'Newsreader',Georgia,serif",
   mono: "'IBM Plex Mono',ui-monospace,monospace",
+  wordmark: "'Poppins',system-ui,sans-serif",
 } as const
 
-// SVG del logotipo (círculo azul + curva), reutilizado en nav, footer y auth.
-export function BrandMark({ size = 32 }: { size?: number }) {
+// Isotipo zafyros (diamante de líneas, con o sin disco navy de respaldo), reutilizado
+// en nav, footer y auth. Versión plana (sin degradados/sombras), pensada para aguantar
+// a tamaños pequeños. `filled=false` cuando el icono ya va sobre un fondo navy propio
+// (p. ej. la cabecera/hero, que tiene su propio foco de luz decorativo) — así el
+// diamante se funde con ese fondo en vez de mostrar un disco plano que tapa el degradado.
+export function BrandMark({ size = 32, filled = true }: { size?: number; filled?: boolean }) {
   return (
-    <svg width={size} height={size} viewBox="0 0 40 40" aria-hidden="true">
-      <circle cx="20" cy="20" r="20" fill="#0A7BAE" />
-      <path d="M7 27 Q20 4 33 27" fill="none" stroke="#EAF4FA" strokeWidth="3.4" strokeLinecap="round" />
-      <circle cx="26.5" cy="15" r="2" fill="#EAF4FA" />
+    <svg width={size} height={size} viewBox="0 0 100 100" aria-hidden="true">
+      {filled && <circle cx="50" cy="50" r="48" fill={BRAND.ink} />}
+      <path
+        d="M30,28 L66,28 L80,44 L50,80 L20,44 Z M20,44 L80,44 M30,44 L50,80 M66,44 L50,80"
+        fill="none"
+        stroke="#FFFFFF"
+        strokeWidth="5"
+        strokeLinejoin="round"
+        strokeLinecap="round"
+      />
     </svg>
   )
 }

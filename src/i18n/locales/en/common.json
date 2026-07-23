@@ -1,6 +1,6 @@
 {
-  "app_name": "FinTrack",
-  "app_title": "fintrack — personal finances",
+  "app_name": "zafyros",
+  "app_title": "zafyros — personal finances",
   "nav": {
     "home": "Global Position",
     "analysis": "Analysis",
@@ -85,7 +85,7 @@
   },
   "onboarding_upload": {
     "title": "Upload your first statement",
-    "body": "FinTrack analyzes your finances from your bank statements. Upload them in Excel or CSV; the older it is, the more complete your analysis.",
+    "body": "zafyros analyzes your finances from your bank statements. Upload them in Excel or CSV; the older it is, the more complete your analysis.",
     "cta": "Upload statement"
   },
   "language": {
@@ -119,7 +119,7 @@
   },
   "sidebar": {
     "trust_title": "You're in control",
-    "trust_body": "No bank connection, no more spreadsheets to update by hand: fintrack keeps your finances organized for you.",
+    "trust_body": "No bank connection, no more spreadsheets to update by hand: zafyros keeps your finances organized for you.",
     "user_fallback": "User",
     "plan_label": "Plan: {{plan}}",
     "upgrade_plan": "Upgrade plan"

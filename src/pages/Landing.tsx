@@ -239,8 +239,8 @@ export default function Landing() {
           {/* NAV */}
           <nav style={{ position: 'relative', zIndex: 20, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '20px 26px', gap: 16 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 11 }}>
-              <BrandMark size={32} />
-              <span style={{ font: `600 24px ${BRAND.display}`, letterSpacing: '-.03em', color: '#fff' }}>fintrack</span>
+              <BrandMark size={32} filled={false} />
+              <span style={{ font: `600 24px ${BRAND.wordmark}`, letterSpacing: '-.03em', color: '#fff' }}>zafyros</span>
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
               <div style={{ display: 'flex', alignItems: 'center', background: 'rgba(255,255,255,.08)', border: '1px solid rgba(255,255,255,.14)', borderRadius: 9, padding: 3 }}>
@@ -347,7 +347,7 @@ export default function Landing() {
 
             <div className="ftl-card ftl-ba-app" style={{ flex: 1, transform: 'rotate(3deg)', background: '#fff', border: '1px solid #E7E0D4', borderRadius: 14, overflow: 'hidden', boxShadow: '0 24px 54px rgba(10,37,64,.16)' }}>
               <div className="ftl-ba-appbar" style={{ background: BRAND.ink, padding: '12px 15px', display: 'flex', alignItems: 'center', gap: 9 }}>
-                <BrandMark size={20} /><span style={{ font: `600 15px ${BRAND.display}`, color: '#fff', letterSpacing: '-.02em' }}>fintrack</span>
+                <BrandMark size={20} /><span style={{ font: `600 15px ${BRAND.wordmark}`, color: '#fff', letterSpacing: '-.02em' }}>zafyros</span>
               </div>
               <div className="ftl-ba-appbody" style={{ padding: '18px 18px 20px' }}>
                 <div style={{ font: `500 11px ${BRAND.sans}`, color: '#6B7C8C' }}>{t('excel.newLabel')}</div>

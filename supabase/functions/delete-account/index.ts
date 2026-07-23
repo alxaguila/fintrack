@@ -1,5 +1,5 @@
 // ============================================================
-// FinTrack — Edge Function: delete-account
+// zafyros — Edge Function: delete-account
 // ============================================================
 //
 // Borra por completo la cuenta del usuario autenticado:

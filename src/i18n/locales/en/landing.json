@@ -12,7 +12,7 @@
     "line1": "All your accounts,",
     "line2": "without sharing your",
     "emph": "bank logins.",
-    "sub": "Import the CSV or Excel statement your online bank already gives you, and fintrack instantly organizes all your transactions, categories, net worth and budgets — no bank connection, no access handed to anyone.",
+    "sub": "Import the CSV or Excel statement your online bank already gives you, and zafyros instantly organizes all your transactions, categories, net worth and budgets — no bank connection, no access handed to anyone.",
     "cta": "Get started free",
     "note": "Free forever on the Free plan · no card",
     "trust1": "No bank credentials",
@@ -25,7 +25,7 @@
   "excel": {
     "eyebrow": "The same old problem",
     "title": "Hasn’t your budgeting spreadsheet been opened in months?",
-    "sub": "You started it full of good intentions. Then updating it by hand every week got tedious… and you gave up. fintrack updates itself: you upload the statement and you’re done.",
+    "sub": "You started it full of good intentions. Then updating it by hand every week got tedious… and you gave up. zafyros updates itself: you upload the statement and you’re done.",
     "pt1": "No broken formulas, no manual cells",
     "pt2": "Catches up the moment you upload a CSV",
     "pt3": "Categories, charts and net worth, automatic",
@@ -34,10 +34,10 @@
     "newStatus": "Updated 2 minutes ago"
   },
   "features": {
-    "title": "Meet fintrack.",
+    "title": "Meet zafyros.",
     "sub": "A clear picture of your money that catches itself up every time you upload a statement.",
     "f1title": "Upload your CSV, done",
-    "f1body": "Drag in the statement you export from your online bank. fintrack reads, sorts and classifies it instantly.",
+    "f1body": "Drag in the statement you export from your online bank. zafyros reads, sorts and classifies it instantly.",
     "uploadCta": "Sign up free to upload your statement",
     "uploadFormats": "CSV · XLSX · OFX — from any bank",
     "f2title": "We never ask for your credentials",
@@ -50,7 +50,7 @@
     "title": "From statement to control in a minute.",
     "s1title": "Export your statement",
     "s1body": "Download the CSV your online bank already offers. Nothing else needed from your bank.",
-    "s2title": "Upload it to fintrack",
+    "s2title": "Upload it to zafyros",
     "s2body": "Drag and drop. We detect duplicates and transfers between your accounts automatically.",
     "s3title": "Everything in order",
     "s3body": "Dashboards, global position and analysis up to date. Never touch a spreadsheet again."
@@ -141,7 +141,7 @@
     "cookies": "Cookies",
     "terms": "Terms and conditions",
     "help": "Help",
-    "copy": "© 2026 fintrack · You upload, you’re in control."
+    "copy": "© 2026 zafyros · You upload, you’re in control."
   },
   "mock": {
     "greeting": "Good morning, Marta",

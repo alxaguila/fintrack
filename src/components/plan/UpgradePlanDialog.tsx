@@ -28,8 +28,8 @@ export function UpgradePlanDialog({ open, onOpenChange }: UpgradePlanDialogProps
         <div style={{ background: BRAND.ink, padding: '26px 30px 24px', position: 'relative', overflow: 'hidden' }}>
           <div style={{ position: 'absolute', right: -80, top: -90, width: 260, height: 260, borderRadius: '50%', background: 'radial-gradient(circle,rgba(56,176,214,.3),transparent 70%)' }} />
           <div style={{ position: 'relative', display: 'flex', alignItems: 'center', gap: 10 }}>
-            <BrandMark size={26} />
-            <span style={{ font: `600 18px ${BRAND.display}`, letterSpacing: '-.03em', color: '#fff' }}>fintrack</span>
+            <BrandMark size={26} filled={false} />
+            <span style={{ font: `600 18px ${BRAND.wordmark}`, letterSpacing: '-.03em', color: '#fff' }}>zafyros</span>
           </div>
           <DialogTitle asChild>
             <h2 style={{ position: 'relative', margin: '16px 0 0', font: `500 28px ${BRAND.display}`, letterSpacing: '-.025em', color: '#EAF4FA' }}>{t('upgrade_dialog.title')}</h2>

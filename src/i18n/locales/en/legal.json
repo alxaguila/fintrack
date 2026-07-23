@@ -1,9 +1,9 @@
 {
   "avisoLegal": {
-    "metaTitle": "Legal Notice — fintrack",
+    "metaTitle": "Legal Notice — zafyros",
     "pageTitle": "Legal Notice",
     "lastUpdated": "Last updated: 20 July 2026",
-    "back": "Back to fintrack",
+    "back": "Back to zafyros",
     "sections": [
       {
         "heading": "1. Identification of the owner",
@@ -21,14 +21,14 @@
           },
           { "p": "The Owner is a natural person acting as a sole trader. No Commercial Registry details are provided, as such registration is not mandatory for natural persons under Article 81 of the Spanish Commercial Registry Regulations." },
           { "p": "The Owner's activity is not subject to any prior administrative authorisation regime, nor to the supervision of any professional association." },
-          { "p": "In particular, and for the purposes of Spanish Royal Decree-Law 19/2018, of 23 November, on payment services (transposing Directive (EU) 2015/2366, \"PSD2\"), it is expressly stated that **FinTrack is not a payment institution, a credit institution, an account information service provider (AISP), or a payment initiation service provider (PISP)**. FinTrack does not access Users' bank accounts, does not connect to their financial institutions, and does not execute payment transactions of any kind. The financial information displayed in the application derives exclusively from files and statements that **the User uploads manually and voluntarily**." }
+          { "p": "In particular, and for the purposes of Spanish Royal Decree-Law 19/2018, of 23 November, on payment services (transposing Directive (EU) 2015/2366, \"PSD2\"), it is expressly stated that **zafyros is not a payment institution, a credit institution, an account information service provider (AISP), or a payment initiation service provider (PISP)**. zafyros does not access Users' bank accounts, does not connect to their financial institutions, and does not execute payment transactions of any kind. The financial information displayed in the application derives exclusively from files and statements that **the User uploads manually and voluntarily**." }
         ]
       },
       {
         "heading": "2. Purpose and scope",
         "blocks": [
-          { "p": "This Legal Notice governs access to, browsing of and use of the FinTrack website and web application (hereinafter, interchangeably, the \"Website\" or \"FinTrack\"), owned by the Owner identified above." },
-          { "p": "FinTrack is a personal-use tool that allows Users to import their own bank statements, classify them into categories, organise them across separate financial profiles, and view aggregated information about their income and expenses." },
+          { "p": "This Legal Notice governs access to, browsing of and use of the zafyros website and web application (hereinafter, interchangeably, the \"Website\" or \"zafyros\"), owned by the Owner identified above." },
+          { "p": "zafyros is a personal-use tool that allows Users to import their own bank statements, classify them into categories, organise them across separate financial profiles, and view aggregated information about their income and expenses." },
           { "p": "Access to the Website is free of charge, without prejudice to the cost of the User's own telecommunications connection, and notwithstanding that certain features may require a paid subscription, in which case the applicable financial terms will be disclosed clearly and expressly prior to contracting." }
         ]
       },
@@ -37,7 +37,7 @@
         "blocks": [
           { "p": "Browsing the Website confers the status of User and entails full and unreserved acceptance of each and every provision of this Legal Notice, in the version published at the time of access." },
           { "p": "Users who do not agree with this Legal Notice must refrain from using the Website." },
-          { "p": "Use of certain FinTrack services requires prior registration of a user account and is additionally subject to the Terms and Conditions and the Privacy Policy." }
+          { "p": "Use of certain zafyros services requires prior registration of a user account and is additionally subject to the Terms and Conditions and the Privacy Policy." }
         ]
       },
       {
@@ -56,21 +56,21 @@
               "Impersonating another User or any third party."
             ]
           },
-          { "p": "Users are solely responsible for the truthfulness, lawfulness and accuracy of the information and files they upload to FinTrack, and for holding sufficient rights over them." }
+          { "p": "Users are solely responsible for the truthfulness, lawfulness and accuracy of the information and files they upload to zafyros, and for holding sufficient rights over them." }
         ]
       },
       {
         "heading": "5. No financial, tax or investment advice",
         "blocks": [
-          { "p": "**FinTrack is an informational and personal organisation tool. It does not provide, and does not purport to provide, financial, investment, tax, accounting or legal advice of any kind.**" },
+          { "p": "**zafyros is an informational and personal organisation tool. It does not provide, and does not purport to provide, financial, investment, tax, accounting or legal advice of any kind.**" },
           { "p": "In particular, the User acknowledges and accepts that:" },
           {
             "list": [
               "The Owner **is not an investment firm** and is not registered as a financial adviser with the Spanish National Securities Market Commission (CNMV), the Bank of Spain or any other supervisory authority.",
-              "The information, classifications, categories, charts, aggregates, indicators and observations displayed by FinTrack are generated **automatically** from data supplied by the User and are **indicative and informational only**.",
+              "The information, classifications, categories, charts, aggregates, indicators and observations displayed by zafyros are generated **automatically** from data supplied by the User and are **indicative and informational only**.",
               "Such information **does not under any circumstances constitute a personal recommendation**, an offer, a solicitation or an invitation to contract, acquire or dispose of any financial product or service.",
-              "FinTrack's automated processes — including transaction categorisation and the detection of transfers between the User's own accounts — **may contain errors or inaccuracies**. Users must verify the information before making any decision based on it.",
-              "FinTrack **does not replace the official statements, balances or communications** issued by the User's financial institutions, which shall prevail in the event of any discrepancy.",
+              "zafyros's automated processes — including transaction categorisation and the detection of transfers between the User's own accounts — **may contain errors or inaccuracies**. Users must verify the information before making any decision based on it.",
+              "zafyros **does not replace the official statements, balances or communications** issued by the User's financial institutions, which shall prevail in the event of any discrepancy.",
               "**Any economic, financial, tax or investment decision taken by the User is the User's sole responsibility.** Users are advised to consult a duly qualified and authorised professional before making such decisions."
             ]
           }
@@ -81,7 +81,7 @@
         "blocks": [
           { "p": "All intellectual and industrial property rights in the Website and its contents — including, without limitation, source code, design, navigation structure, texts, databases, graphics, illustrations, icons, trade marks, trade names and logos — belong to the Owner or, where applicable, to third parties who have authorised their use." },
           { "p": "The reproduction, distribution, public communication, transformation or any other form of exploitation, in whole or in part, of such contents without the Owner's prior express written authorisation is expressly prohibited. Access to the Website grants Users no right or title over such contents." },
-          { "p": "The contents and data that the User uploads to FinTrack **are and shall remain the User's exclusive property**. The Owner processes them solely as set out in the Privacy Policy and for the purpose of providing the service." },
+          { "p": "The contents and data that the User uploads to zafyros **are and shall remain the User's exclusive property**. The Owner processes them solely as set out in the Privacy Policy and for the purpose of providing the service." },
           { "p": "The Website may incorporate third-party software components subject to their own licences, whose terms are respected in all cases." },
           { "p": "If a User believes that any content on the Website infringes their intellectual or industrial property rights, they may report this to dolfinapp@gmail.com." }
         ]
@@ -97,7 +97,7 @@
       {
         "heading": "8. Disclaimer of warranties and liability",
         "blocks": [
-          { "p": "The Owner provides the FinTrack service with reasonable diligence; however:" },
+          { "p": "The Owner provides the zafyros service with reasonable diligence; however:" },
           {
             "list": [
               "The Owner **does not guarantee the uninterrupted availability and continuity of the Website**, nor the absence of errors, interruptions, delays or omissions, since its operation depends on infrastructure services provided by third parties (hosting, database, authentication) and on the communications network.",
@@ -107,7 +107,7 @@
               "The Owner **is not liable for unauthorised access to a User's account** where such access is attributable to the User's own lack of diligence in safeguarding their credentials."
             ]
           },
-          { "p": "The Owner performs backups in accordance with standard industry practice, but **recommends that Users retain their own original statements**. FinTrack is not an archiving or document-retention system." },
+          { "p": "The Owner performs backups in accordance with standard industry practice, but **recommends that Users retain their own original statements**. zafyros is not an archiving or document-retention system." },
           { "p": "None of the foregoing exclusions limits the Owner's liability where applicable law does not permit such limitation, in particular in cases of **wilful misconduct or gross negligence**, or vis-à-vis Users who qualify as **consumers** where consumer protection legislation provides a more protective regime." }
         ]
       },
@@ -168,14 +168,14 @@
     ]
   },
   "privacidad": {
-    "metaTitle": "Privacy Policy — fintrack",
+    "metaTitle": "Privacy Policy — zafyros",
     "pageTitle": "Privacy Policy",
     "lastUpdated": "Last updated: 21 July 2026",
     "sections": [
       {
         "heading": "1. Data controller",
         "blocks": [
-          { "p": "The controller responsible for the personal data collected through FinTrack is:" },
+          { "p": "The controller responsible for the personal data collected through zafyros is:" },
           {
             "table": [
               ["Owner", "ALEX DEL AGUILA ARCOS"],
@@ -191,7 +191,7 @@
       {
         "heading": "2. What data we collect",
         "blocks": [
-          { "p": "FinTrack collects and processes the following categories of personal data, always data provided by the User themselves when using the application:" },
+          { "p": "zafyros collects and processes the following categories of personal data, always data provided by the User themselves when using the application:" },
           {
             "list": [
               "**Account data**: email address and password, managed encrypted by the authentication provider. If the User signs up with Google, their name, email address and profile picture associated with that Google account are also received.",
@@ -202,7 +202,7 @@
               "**Technical data**: IP address, browser and device type, and a technical session cookie needed to keep the User signed in."
             ]
           },
-          { "p": "FinTrack does not collect online banking credentials (username, password or keys) from any of the User's financial institutions, and does not connect directly to their banks: all financial information comes from files the User imports manually." }
+          { "p": "zafyros does not collect online banking credentials (username, password or keys) from any of the User's financial institutions, and does not connect directly to their banks: all financial information comes from files the User imports manually." }
         ]
       },
       {
@@ -219,14 +219,14 @@
               ["Complying with tax and accounting obligations where paid features exist", "Compliance with a legal obligation (Art. 6(1)(c) GDPR)"]
             ]
           },
-          { "p": "FinTrack does not use onboarding data to automatically personalise the content or features shown to each User within the application: today that information is only used in aggregate form, as indicated in the table above. If any additional processing were introduced in the future — such as producing statistical studies or reports for third parties —, this Policy will be updated before it is activated, and the User's specific consent will be requested where required by law." }
+          { "p": "zafyros does not use onboarding data to automatically personalise the content or features shown to each User within the application: today that information is only used in aggregate form, as indicated in the table above. If any additional processing were introduced in the future — such as producing statistical studies or reports for third parties —, this Policy will be updated before it is activated, and the User's specific consent will be requested where required by law." }
         ]
       },
       {
         "heading": "4. Automated decision-making",
         "blocks": [
-          { "p": "FinTrack automatically classifies imported transactions into categories through a chain of rules: first the User's own rules, then rules created by the user community (once they reach sufficient consensus), and finally a dictionary maintained by the Owner. This classification is a personal organisation feature and **does not produce legal effects or significantly affect the User** within the meaning of Article 22 GDPR: the User can review, correct or delete the category assigned to any transaction at any time." },
-          { "p": "FinTrack also automatically detects transfers between the same User's own accounts, in order to exclude them from the main dashboard indicators. This detection likewise produces no legal effects and can equally be reviewed by the User." }
+          { "p": "zafyros automatically classifies imported transactions into categories through a chain of rules: first the User's own rules, then rules created by the user community (once they reach sufficient consensus), and finally a dictionary maintained by the Owner. This classification is a personal organisation feature and **does not produce legal effects or significantly affect the User** within the meaning of Article 22 GDPR: the User can review, correct or delete the category assigned to any transaction at any time." },
+          { "p": "zafyros also automatically detects transfers between the same User's own accounts, in order to exclude them from the main dashboard indicators. This detection likewise produces no legal effects and can equally be reviewed by the User." }
         ]
       },
       {
@@ -246,7 +246,7 @@
       {
         "heading": "6. International transfers",
         "blocks": [
-          { "p": "FinTrack's database is hosted in the European Union (Frankfurt, Germany region), so storage of financial and account data **does not involve an international transfer**." },
+          { "p": "zafyros's database is hosted in the European Union (Frankfurt, Germany region), so storage of financial and account data **does not involve an international transfer**." },
           { "p": "Vercel and Google are companies headquartered in the United States and may process certain technical data (for example, the IP address when serving the application, or Google account data at sign-in) outside the European Economic Area. In that case, such processing is covered by the safeguards provided under the GDPR, in particular the EU-US Data Privacy Framework adequacy mechanism and/or the standard contractual clauses approved by the European Commission." }
         ]
       },
@@ -254,7 +254,7 @@
         "heading": "7. Retention period",
         "blocks": [
           { "p": "User data is retained for as long as the account remains active." },
-          { "p": "When the User requests deletion of their account from Settings, FinTrack **immediately and irreversibly deletes** all of their personal and financial data (accounts, transactions, profiles, classification rules, budgets and onboarding data). No copy is retained after deletion, except for information strictly necessary to comply with legal obligations (for example, tax obligations) where applicable." },
+          { "p": "When the User requests deletion of their account from Settings, zafyros **immediately and irreversibly deletes** all of their personal and financial data (accounts, transactions, profiles, classification rules, budgets and onboarding data). No copy is retained after deletion, except for information strictly necessary to comply with legal obligations (for example, tax obligations) where applicable." },
           { "p": "Contributions to the community's classification rules (for example, which category is typically applied to a given merchant) are retained in aggregated, anonymous form after account deletion, as they do not allow the User who originated them to be identified." }
         ]
       },
@@ -280,19 +280,19 @@
       {
         "heading": "9. Minors",
         "blocks": [
-          { "p": "FinTrack is not directed at minors under the age of 14. The Owner does not knowingly collect data from minors under that age. If the Owner becomes aware that a minor under 14 has provided personal data without the consent of their parents or legal guardians, such information will be deleted as soon as the Owner becomes aware of it." }
+          { "p": "zafyros is not directed at minors under the age of 14. The Owner does not knowingly collect data from minors under that age. If the Owner becomes aware that a minor under 14 has provided personal data without the consent of their parents or legal guardians, such information will be deleted as soon as the Owner becomes aware of it." }
         ]
       },
       {
         "heading": "10. Data security",
         "blocks": [
-          { "p": "FinTrack applies technical and organisational measures to protect User data: encryption in transit (HTTPS/TLS) and at rest, and per-profile data isolation through Row Level Security policies at the database level, so that each User can only access their own data." }
+          { "p": "zafyros applies technical and organisational measures to protect User data: encryption in transit (HTTPS/TLS) and at rest, and per-profile data isolation through Row Level Security policies at the database level, so that each User can only access their own data." }
         ]
       },
       {
         "heading": "11. Cookies and local storage",
         "blocks": [
-          { "p": "FinTrack uses only technical and functional browser storage (localStorage), not HTTP cookies, to keep the User signed in and remember their usage preferences. This processing does not require prior consent, in accordance with Article 22.2 LSSI-CE. For full details, see the Cookie Policy, available at alxfintrack.vercel.app/cookies." }
+          { "p": "zafyros uses only technical and functional browser storage (localStorage), not HTTP cookies, to keep the User signed in and remember their usage preferences. This processing does not require prior consent, in accordance with Article 22.2 LSSI-CE. For full details, see the Cookie Policy, available at alxfintrack.vercel.app/cookies." }
         ]
       },
       {
@@ -310,7 +310,7 @@
     ]
   },
   "cookies": {
-    "metaTitle": "Cookie Policy — fintrack",
+    "metaTitle": "Cookie Policy — zafyros",
     "pageTitle": "Cookie Policy",
     "lastUpdated": "Last updated: 21 July 2026",
     "sections": [
@@ -318,13 +318,13 @@
         "heading": "1. What cookies are, and why this page also covers localStorage",
         "blocks": [
           { "p": "Cookies are small files that a website stores in the User's browser. Article 22.2 of Spanish Act 34/2002 (LSSI-CE) actually regulates something broader: **any device used to store and retrieve data** on the User's equipment, which also includes technologies such as `localStorage`." },
-          { "p": "FinTrack **does not use traditional HTTP cookies**. It exclusively uses the browser's `localStorage`, which serves exactly the same purpose and is subject to the same rules. For the User's clarity, this page describes both technologies under the usual name «Cookie Policy»." }
+          { "p": "zafyros **does not use traditional HTTP cookies**. It exclusively uses the browser's `localStorage`, which serves exactly the same purpose and is subject to the same rules. For the User's clarity, this page describes both technologies under the usual name «Cookie Policy»." }
         ]
       },
       {
-        "heading": "2. What FinTrack stores in the browser today",
+        "heading": "2. What zafyros stores in the browser today",
         "blocks": [
-          { "p": "These are, exhaustively, all the keys FinTrack stores in the User's browser at the time this policy is published:" },
+          { "p": "These are, exhaustively, all the keys zafyros stores in the User's browser at the time this policy is published:" },
           {
             "table": [
               ["sb-*-auth-token (Supabase)", "Keeps the session signed in after login. Strictly necessary for the service to work. Deleted when the User signs out."],
@@ -333,7 +333,7 @@
               ["gp_chart_range / gp_chart_series", "Remembers the date range and the visible series on the wealth evolution chart on the Home screen."]
             ]
           },
-          { "p": "**FinTrack does not, today, use any third-party analytics, advertising or tracking cookie or technology.** This information is not shared with anyone outside the application itself." }
+          { "p": "**zafyros does not, today, use any third-party analytics, advertising or tracking cookie or technology.** This information is not shared with anyone outside the application itself." }
         ]
       },
       {
@@ -346,26 +346,26 @@
               "Provide a service expressly requested by the User (for example, remembering the language they themselves chose, or the financial profile they selected)."
             ]
           },
-          { "p": "All keys listed in the previous section fall under one of these two cases, so FinTrack **does not display a cookie consent banner**: it is enough to inform, which is precisely the purpose of this page." }
+          { "p": "All keys listed in the previous section fall under one of these two cases, so zafyros **does not display a cookie consent banner**: it is enough to inform, which is precisely the purpose of this page." }
         ]
       },
       {
         "heading": "4. If third-party analytics are added in the future",
         "blocks": [
-          { "p": "If FinTrack were to incorporate analytics tools that do require consent in the future (for example, Google Analytics, which uses third-party cookies to distinguish users), this Policy will be updated before they are activated and the User will be shown a granular prior-consent panel, with the option to accept, reject or customise each category of non-essential cookies. No non-essential cookie will be installed before the User gives their express consent." }
+          { "p": "If zafyros were to incorporate analytics tools that do require consent in the future (for example, Google Analytics, which uses third-party cookies to distinguish users), this Policy will be updated before they are activated and the User will be shown a granular prior-consent panel, with the option to accept, reject or customise each category of non-essential cookies. No non-essential cookie will be installed before the User gives their express consent." }
         ]
       },
       {
         "heading": "5. How to delete this data",
         "blocks": [
-          { "p": "The User can delete the contents of `localStorage` at any time from their browser settings (usually under «Privacy and security» → «Clear browsing data»), or by signing out of FinTrack, which removes the session token." },
+          { "p": "The User can delete the contents of `localStorage` at any time from their browser settings (usually under «Privacy and security» → «Clear browsing data»), or by signing out of zafyros, which removes the session token." },
           { "p": "Deleting this browser data **does not delete the User's account or financial data**, which is kept on the server: signing in again will make the information available once more. To fully delete the account and all its data, the account deletion option available in Settings must be used, as described in the Privacy Policy." }
         ]
       },
       {
         "heading": "6. Changes to this Cookie Policy",
         "blocks": [
-          { "p": "The Owner reserves the right to amend this Cookie Policy to adapt it to legislative developments or to changes in the technologies used by FinTrack. The version in force shall in all cases be the one published on the Website." }
+          { "p": "The Owner reserves the right to amend this Cookie Policy to adapt it to legislative developments or to changes in the technologies used by zafyros. The version in force shall in all cases be the one published on the Website." }
         ]
       },
       {
@@ -377,22 +377,22 @@
     ]
   },
   "terminos": {
-    "metaTitle": "Terms and Conditions — fintrack",
+    "metaTitle": "Terms and Conditions — zafyros",
     "pageTitle": "Terms and Conditions",
     "lastUpdated": "Last updated: 21 July 2026",
     "sections": [
       {
         "heading": "1. Purpose and acceptance",
         "blocks": [
-          { "p": "These Terms and Conditions (hereinafter, the \"Terms\") govern access to and use of FinTrack by the User, and apply together with the Legal Notice and the Privacy Policy, available at alxfintrack.vercel.app/aviso-legal and alxfintrack.vercel.app/privacidad respectively." },
+          { "p": "These Terms and Conditions (hereinafter, the \"Terms\") govern access to and use of zafyros by the User, and apply together with the Legal Notice and the Privacy Policy, available at alxfintrack.vercel.app/aviso-legal and alxfintrack.vercel.app/privacidad respectively." },
           { "p": "By registering and creating an account, the User expressly accepts these Terms in the version in force at that time. If the User does not agree, they must refrain from registering or continuing to use the service." }
         ]
       },
       {
         "heading": "2. Description of the service",
         "blocks": [
-          { "p": "FinTrack is a personal finance management web application that allows the User to import their own bank statements, classify them into categories, organise them across separate financial profiles within a single account, set budgets, and view aggregated information about their income and expenses." },
-          { "p": "FinTrack **does not connect to any financial institution or access online banking credentials**: all financial information comes from files the User imports manually. See the Legal Notice for further detail on the nature of the service." }
+          { "p": "zafyros is a personal finance management web application that allows the User to import their own bank statements, classify them into categories, organise them across separate financial profiles within a single account, set budgets, and view aggregated information about their income and expenses." },
+          { "p": "zafyros **does not connect to any financial institution or access online banking credentials**: all financial information comes from files the User imports manually. See the Legal Notice for further detail on the nature of the service." }
         ]
       },
       {
@@ -401,7 +401,7 @@
           {
             "list": [
               "Users must be **over 14 years of age** to register. If under that age, they need the consent of a parent or legal guardian, as set out in the Privacy Policy.",
-              "Users must provide truthful information and keep it up to date. FinTrack does not actively verify the identity of its Users.",
+              "Users must provide truthful information and keep it up to date. zafyros does not actively verify the identity of its Users.",
               "A single account may contain several financial profiles (for example, to manage the finances of different family members). All profiles within an account share the same account holder and the same login credentials.",
               "Users are responsible for keeping their password confidential and for all activity that occurs under their account."
             ]
@@ -411,14 +411,14 @@
       {
         "heading": "4. Plans and features",
         "blocks": [
-          { "p": "FinTrack offers different plans (FREE, PRO and PREMIUM) with different features. **As of today, all plans are free of charge**: FinTrack does not yet have a payment gateway and does not charge Users any amount. When paid subscription to the PRO or PREMIUM plans is activated, these Terms will be updated to include the applicable pricing, the contracting process, and the withdrawal right applicable under consumer protection law." },
+          { "p": "zafyros offers different plans (FREE, PRO and PREMIUM) with different features. **As of today, all plans are free of charge**: zafyros does not yet have a payment gateway and does not charge Users any amount. When paid subscription to the PRO or PREMIUM plans is activated, these Terms will be updated to include the applicable pricing, the contracting process, and the withdrawal right applicable under consumer protection law." },
           { "p": "The Owner reserves the right to modify the features included in each plan, notifying Users with reasonable advance notice when a change materially affects them." }
         ]
       },
       {
         "heading": "5. Acceptable use",
         "blocks": [
-          { "p": "When using FinTrack, the User agrees not to:" },
+          { "p": "When using zafyros, the User agrees not to:" },
           {
             "list": [
               "Use the service for unlawful purposes or purposes harmful to third parties.",
@@ -434,20 +434,20 @@
       {
         "heading": "6. Contributions to community classification rules",
         "blocks": [
-          { "p": "When a User creates a transaction classification rule and it reaches sufficient consensus among different Users, FinTrack incorporates it **in anonymous, aggregated form** into the community's classification rules, showing it to other Users as an automatic category suggestion." },
-          { "p": "The User retains ownership of their contributions but grants FinTrack a **free, non-exclusive, worldwide licence** to use, store and display that contribution in anonymous, aggregated form, without the originating User ever being identified. If the User deletes their account, their personal data is deleted entirely; the aggregated, anonymous contribution may remain, as set out in the Privacy Policy." }
+          { "p": "When a User creates a transaction classification rule and it reaches sufficient consensus among different Users, zafyros incorporates it **in anonymous, aggregated form** into the community's classification rules, showing it to other Users as an automatic category suggestion." },
+          { "p": "The User retains ownership of their contributions but grants zafyros a **free, non-exclusive, worldwide licence** to use, store and display that contribution in anonymous, aggregated form, without the originating User ever being identified. If the User deletes their account, their personal data is deleted entirely; the aggregated, anonymous contribution may remain, as set out in the Privacy Policy." }
         ]
       },
       {
         "heading": "7. No financial advice",
         "blocks": [
-          { "p": "FinTrack is a personal organisation tool and **does not provide financial, investment, tax or legal advice of any kind**. The corresponding section of the Legal Notice, which sets out this limitation in greater detail, forms an integral part of these Terms." }
+          { "p": "zafyros is a personal organisation tool and **does not provide financial, investment, tax or legal advice of any kind**. The corresponding section of the Legal Notice, which sets out this limitation in greater detail, forms an integral part of these Terms." }
         ]
       },
       {
         "heading": "8. Intellectual property",
         "blocks": [
-          { "p": "Intellectual and industrial property rights in FinTrack belong to the Owner, as described in the Legal Notice. Data and content that the User enters into the application remain the User's property, without prejudice to the licence described in section 6 for contributions to the community." }
+          { "p": "Intellectual and industrial property rights in zafyros belong to the Owner, as described in the Legal Notice. Data and content that the User enters into the application remain the User's property, without prejudice to the licence described in section 6 for contributions to the community." }
         ]
       },
       {
@@ -460,7 +460,7 @@
       {
         "heading": "10. Service availability and limitation of liability",
         "blocks": [
-          { "p": "FinTrack is provided \"as is\", without guaranteeing uninterrupted availability. The Owner's limitation of liability is governed by the corresponding section of the Legal Notice, which applies in full to these Terms." }
+          { "p": "zafyros is provided \"as is\", without guaranteeing uninterrupted availability. The Owner's limitation of liability is governed by the corresponding section of the Legal Notice, which applies in full to these Terms." }
         ]
       },
       {

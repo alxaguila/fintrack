@@ -85,7 +85,7 @@ export function HeroDashboardMock() {
       <div className="ftl-mock-side" style={{ width: '19%', minWidth: 118, background: BRAND.ink, padding: '14px 12px', flex: 'none' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 7, marginBottom: 18 }}>
           <BrandMark size={18} />
-          <span style={{ font: `600 13px ${BRAND.display}`, color: '#fff', letterSpacing: '-.02em' }}>fintrack</span>
+          <span style={{ font: `600 13px ${BRAND.wordmark}`, color: '#fff', letterSpacing: '-.02em' }}>zafyros</span>
         </div>
         <div style={{ font: `500 8px ${BRAND.sans}`, letterSpacing: '.12em', color: '#4F7691', marginBottom: 9 }}>PERSONAL</div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 3 }}>

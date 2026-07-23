@@ -2,6 +2,30 @@
 
 Lista de cambios por versión (`APP_VERSION` en `src/lib/version.ts`). Solo se añade una entrada cuando el código de la app cambia.
 
+## v1.624
+- El icono zafyros pierde el disco navy de fondo en la cabecera de la landing, los diálogos de login/registro/upgrade y el sidebar de la app: esos sitios ya tienen su propio fondo navy con foco de luz decorativo, y el disco plano lo tapaba en vez de fundirse. Nuevo prop `filled` en `BrandMark` (por defecto `true`, se desactiva en cabeceras con foco de luz); en `Logo.tsx` (sidebar) se quita directamente. El footer y el resto de usos sobre fondo claro mantienen el disco.
+
+## v1.622
+- El círculo del isotipo zafyros pasa a `#0A2540` (`BRAND.ink`), el mismo navy que la cabecera/hero de la landing, en vez del tono más oscuro usado hasta ahora.
+
+## v1.620
+- Nuevo isotipo zafyros: se abandona la gema facetada hexagonal y se adopta el diseño de círculo navy con un diamante de líneas blancas (mesa, hombros y facetas convergiendo en un punto), en versión plana sin degradados ni sombra para que aguante bien en tamaños pequeños (favicon, sidebar). Reconstruido a partir del vector real aportado por el usuario. Afecta a `Logo.tsx`, `BrandMark` (`brand.tsx`) y los assets de `public/` (favicon, logo, apple-touch-icon, etc.).
+
+## v1.619
+- Se retira el resplandor de fondo (`BrandGlow`) añadido en v1.618 detrás del logo/wordmark en cabeceras y diálogos — se abandona ese tratamiento a la espera de la nueva versión del logo.
+
+## v1.618
+- Ajuste del foco de luz de marca: se quita el brillo que estaba dentro del propio icono (en el hueco central) y se pasa a un resplandor difuminado en el fondo, detrás del logo y el wordmark completos — igual que en la cabecera de la landing/app. Nuevo `BrandGlow` en `brand.tsx`, aplicado en `SiteHeader`, `Landing` (nav), `LoginDialog`, `UpgradePlanDialog`, `Register`, `ResetPassword` y en `Logo.tsx` (sidebar).
+
+## v1.617
+- Isotipo zafyros: la faceta central ("tabla") pasa de blanco sólido a transparente, dejando ver el fondo real. En el isotipo de la app y de la landing (`Logo.tsx`, `BrandMark`) se añade además un foco de luz radial centrado en el hueco, visible sobre fondos oscuros (sidebar, cabeceras navy) y casi imperceptible sobre fondos claros.
+
+## v1.616
+- Corrección del isotipo zafyros: se sustituye la reconstrucción aproximada del icono por el trazado vectorial exacto del logo real (gema facetada con la tabla central en blanco), recortado y limpiado de fondo para usarse como favicon/icono de app.
+
+## v1.614
+- Rebrand de marca: FinTrack pasa a llamarse **zafyros** (siempre en minúscula) en toda la app, la landing y los textos legales. Nuevo isotipo (gema facetada) y wordmark en tipografía Poppins; sin cambios en el sistema de diseño (paleta, layout, resto de tipografías).
+
 ## v1.606
 - Admin > Categorías: el árbol de "Jerarquía actual" ya no usa pastillas de color — iconos y texto planos directamente sobre el fondo, para que se note que es una vista de referencia, no editable.
 

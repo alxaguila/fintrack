@@ -1,12 +1,12 @@
 @echo off
 setlocal
-title FinTrack
+title zafyros
 
 REM Situarse en la carpeta del script (la raiz del proyecto)
 cd /d "%~dp0"
 
 echo ============================================
-echo            Iniciando FinTrack
+echo            Iniciando zafyros
 echo ============================================
 echo.
 

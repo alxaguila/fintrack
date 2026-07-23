@@ -10,7 +10,7 @@ web
 
 ## Users
 
-Particulares y familias que quieren entender y ordenar sus finanzas domésticas sin ser expertos. El modelo es multi-perfil sobre un único usuario: una misma persona gestiona varias "personas financieras" del hogar (Alex, Papá, Mamá…), cada una con sus cuentas, tarjetas y movimientos. Su contexto de uso es tranquilo y reflexivo —revisando en casa cómo va el mes—, no operativo ni bajo presión. El trabajo que le encargan a FinTrack es tener a mano una foto financiera completa y creíble sin tener que pelearse con hojas de cálculo.
+Particulares y familias que quieren entender y ordenar sus finanzas domésticas sin ser expertos. El modelo es multi-perfil sobre un único usuario: una misma persona gestiona varias "personas financieras" del hogar (Alex, Papá, Mamá…), cada una con sus cuentas, tarjetas y movimientos. Su contexto de uso es tranquilo y reflexivo —revisando en casa cómo va el mes—, no operativo ni bajo presión. El trabajo que le encargan a zafyros es tener a mano una foto financiera completa y creíble sin tener que pelearse con hojas de cálculo.
 
 ## Product Purpose
 
@@ -26,7 +26,7 @@ Cercana, clara y de confianza. Habla de dinero **sin jerga**, con un tono tranqu
 
 ## Anti-references
 
-- **Banca tradicional aburrida**: tablas densas, gris corporativo, frío y burocrático. FinTrack sintetiza y da jerarquía en vez de volcar datos.
+- **Banca tradicional aburrida**: tablas densas, gris corporativo, frío y burocrático. zafyros sintetiza y da jerarquía en vez de volcar datos.
 - **Una hoja de cálculo**: rejillas de celdas sin síntesis visual. Los movimientos existen, pero la pantalla principal es una foto, no una grilla de Excel.
 
 ## Design Principles
