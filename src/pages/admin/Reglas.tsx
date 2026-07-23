@@ -1,16 +1,22 @@
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Search, Plus, Trash2, ArrowUp, ArrowDown, ArrowUpDown } from 'lucide-react'
+import { Search, Plus, Trash2, Store } from 'lucide-react'
+import { SortHeader, nextSort, type SortDir } from './SortHeader'
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select'
 import { useAdminCommunityRules, useCommunityUsageMap, COMMUNITY_VOTE_THRESHOLD } from '@/hooks/useCommunityRules'
 import {
   useDictionaryRules, useSaveDictionaryRule, useDeleteDictionaryRule, nextDictionarySortOrder,
 } from '@/hooks/useDictionaryRules'
 import { useCategories, useCategoryGroups } from '@/hooks/useCategories'
+import { useMerchants } from '@/hooks/useMerchants'
+import { useCreateMerchant, useUpdateMerchant, linkMerchantTransactions, addMerchantPatterns } from '@/hooks/useAdminMerchants'
+import { MerchantDialog } from './Comercios'
 import { categoryIcon, categoryLabel } from '@/lib/categoryIcons'
+import { normalizePattern, matchMerchant } from '@/lib/categoryRules'
 import { dictionaryRuleFormSchema, fieldErrors } from '@/lib/validation'
 import { CategoryCombobox } from '@/components/ui/category-combobox'
 import { cn } from '@/lib/utils'
-import type { Category, CategoryGroup, DictionaryRule } from '@/lib/database.types'
+import type { Category, CategoryGroup, DictionaryRule, Merchant } from '@/lib/database.types'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Button } from '@/components/ui/button'
@@ -25,40 +31,10 @@ function normalize(s: string): string {
   return s.toLowerCase().normalize('NFD').replace(/\p{Diacritic}/gu, '')
 }
 
-// El motor de coincidencia (categoryRules.ts) compara conceptos ya normalizados
-// (mayúsculas, sin acentos): si aquí solo hiciéramos toUpperCase(), una palabra
-// con tilde (p. ej. "café") nunca haría match contra el concepto normalizado.
-function normalizePattern(s: string): string {
-  return s.trim().toUpperCase().normalize('NFD').replace(/\p{Diacritic}/gu, '').replace(/\s+/g, ' ')
-}
-
-type SortDir = 'asc' | 'desc'
-
-/** Cabecera de columna clicable, para las tablas de diccionario y comunidad. */
-function SortHeader({ label, active, dir, onClick, className }: {
-  label: string
-  active: boolean
-  dir: SortDir
-  onClick: () => void
-  className?: string
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      className={cn('flex items-center gap-1 text-left text-xs font-semibold text-slate-500 transition-colors hover:text-slate-700', className)}
-    >
-      {label}
-      {active ? (dir === 'asc' ? <ArrowUp className="h-3 w-3" /> : <ArrowDown className="h-3 w-3" />) : <ArrowUpDown className="h-3 w-3 opacity-30" />}
-    </button>
-  )
-}
-
-/** Alterna la dirección si ya se ordena por esa columna; si no, la activa con
- *  una dirección por defecto (numéricas → desc primero, texto → asc primero). */
-function nextSort<K extends string>(prev: { key: K; dir: SortDir }, key: K, numeric: boolean): { key: K; dir: SortDir } {
-  if (prev.key === key) return { key, dir: prev.dir === 'asc' ? 'desc' : 'asc' }
-  return { key, dir: numeric ? 'desc' : 'asc' }
+// Nombre de comercio a partir de un patrón de diccionario ("GLOVO" → "Glovo"):
+// solo cosmético, para prellenar el nombre al crear el comercio desde aquí.
+function titleCase(s: string): string {
+  return s.toLowerCase().replace(/\b\p{L}/gu, (c) => c.toUpperCase())
 }
 
 /** Admin: reglas de clasificación — diccionario integrado + comunidad. */
@@ -98,23 +74,42 @@ function DictionaryPanel() {
   const { data: rules = [], isLoading } = useDictionaryRules()
   const { data: categories = [] } = useCategories()
   const { data: groups = [] } = useCategoryGroups()
+  const { data: merchants = [] } = useMerchants()
   const saveM = useSaveDictionaryRule()
   const deleteM = useDeleteDictionaryRule()
+  const createMerchantM = useCreateMerchant()
+  const updateMerchantM = useUpdateMerchant()
   const [query, setQuery] = useState('')
-  const [sort, setSort] = useState<{ key: DictSortKey; dir: SortDir }>({ key: 'pattern', dir: 'asc' })
+  const [sort, setSort] = useState<{ key: DictSortKey; dir: SortDir }>({ key: 'use_count', dir: 'desc' })
+  const [merchantFilter, setMerchantFilter] = useState<'all' | 'with' | 'without'>('all')
   const [editing, setEditing] = useState<DictionaryRule | null | undefined>(undefined)
   const [toDelete, setToDelete] = useState<DictionaryRule | null>(null)
+  // Palabra desde la que se pulsó "+" (abre el mismo diálogo de creación que
+  // /admin/comercios, prellenado, sin salir de esta pantalla).
+  const [quickCreateFrom, setQuickCreateFrom] = useState<string | null>(null)
+  // Comercio ya vinculado en el que se pulsó el logo (mismo diálogo de edición
+  // que al hacer clic en su fila en /admin/comercios).
+  const [editingMerchant, setEditingMerchant] = useState<Merchant | null>(null)
 
   const categoryById = useMemo(() => new Map(categories.map((c) => [c.id, c])), [categories])
+  // Comercio ya creado que reconocería esta misma palabra (misma función que
+  // usa el import) — para ver de un vistazo qué palabras ya tienen comercio y
+  // cuáles son candidatas a crear uno.
+  const merchantByPattern = useMemo(
+    () => new Map(rules.map((r) => [r.id, matchMerchant(r.pattern, merchants)])),
+    [rules, merchants],
+  )
 
   const q = normalize(query.trim())
   const filtered = useMemo(() => {
-    if (!q) return rules
     return rules.filter((r) => {
+      if (merchantFilter === 'with' && !merchantByPattern.get(r.id)) return false
+      if (merchantFilter === 'without' && merchantByPattern.get(r.id)) return false
+      if (!q) return true
       const cat = categoryById.get(r.category_id)
       return normalize(r.pattern).includes(q) || normalize(categoryLabel(cat?.slug, cat?.slug ?? '')).includes(q)
     })
-  }, [rules, q, categoryById])
+  }, [rules, q, categoryById, merchantFilter, merchantByPattern])
 
   const sorted = useMemo(() => {
     const arr = [...filtered]
@@ -135,14 +130,26 @@ function DictionaryPanel() {
 
   return (
     <div className="space-y-4">
-      <div className="relative">
-        <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
-        <Input
-          className="pl-9"
-          placeholder={t('rules.dictionary.search')}
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-        />
+      <div className="flex gap-2">
+        <div className="relative flex-1">
+          <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+          <Input
+            className="pl-9"
+            placeholder={t('rules.dictionary.search')}
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+          />
+        </div>
+        <Select value={merchantFilter} onValueChange={(v) => setMerchantFilter(v as typeof merchantFilter)}>
+          <SelectTrigger className="w-[190px] shrink-0">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">{t('rules.dictionary.merchant_filter_all')}</SelectItem>
+            <SelectItem value="with">{t('rules.dictionary.merchant_filter_with')}</SelectItem>
+            <SelectItem value="without">{t('rules.dictionary.merchant_filter_without')}</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
 
       <div className="flex items-center justify-between">
@@ -153,70 +160,169 @@ function DictionaryPanel() {
       {isLoading ? (
         <p className="text-sm text-slate-500">{tc('actions.loading')}</p>
       ) : filtered.length === 0 ? (
-        <p className="text-sm text-slate-500">{q ? t('rules.dictionary.no_search_results') : t('rules.dictionary.empty')}</p>
+        <p className="text-sm text-slate-500">{q || merchantFilter !== 'all' ? t('rules.dictionary.no_search_results') : t('rules.dictionary.empty')}</p>
       ) : (
-        <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white">
-          <div className="flex items-center gap-3 border-b border-slate-200 bg-slate-50 px-4 py-2">
-            <SortHeader
-              label={t('rules.dictionary.col_pattern')}
-              active={sort.key === 'pattern'} dir={sort.dir}
-              onClick={() => setSort((s) => nextSort(s, 'pattern', false))}
-              className="min-w-0 flex-1"
-            />
-            <SortHeader
-              label={t('rules.col_category')}
-              active={sort.key === 'category'} dir={sort.dir}
-              onClick={() => setSort((s) => nextSort(s, 'category', false))}
-              className="w-[150px] shrink-0"
-            />
-            <SortHeader
-              label={t('rules.col_usage')}
-              active={sort.key === 'use_count'} dir={sort.dir}
-              onClick={() => setSort((s) => nextSort(s, 'use_count', true))}
-              className="hidden w-[110px] shrink-0 sm:flex"
-            />
-            <span className="w-8 shrink-0" aria-hidden="true" />
+        <div>
+          {/* Cabecera: espaciadores a los lados para alinear con el logo/botón de las filas, fuera del recuadro */}
+          <div className="flex items-center gap-2">
+            <span className="w-7 shrink-0" aria-hidden="true" />
+            <div className="flex flex-1 items-center gap-3 rounded-t-2xl border border-slate-200 bg-slate-50 px-4 py-2">
+              <SortHeader
+                label={t('rules.dictionary.col_pattern')}
+                active={sort.key === 'pattern'} dir={sort.dir}
+                onClick={() => setSort((s) => nextSort(s, 'pattern', false))}
+                className="min-w-0 flex-1"
+              />
+              <SortHeader
+                label={t('rules.col_category')}
+                active={sort.key === 'category'} dir={sort.dir}
+                onClick={() => setSort((s) => nextSort(s, 'category', false))}
+                className="w-[150px] shrink-0"
+              />
+              <SortHeader
+                label={t('rules.col_usage')}
+                active={sort.key === 'use_count'} dir={sort.dir}
+                onClick={() => setSort((s) => nextSort(s, 'use_count', true))}
+                className="hidden w-[110px] shrink-0 sm:flex"
+              />
+              <span className="w-8 shrink-0" aria-hidden="true" />
+            </div>
+            <span className="w-7 shrink-0" aria-hidden="true" />
           </div>
 
-          {sorted.map((r) => {
+          {sorted.map((r, i) => {
             const cat = categoryById.get(r.category_id)
             const CatIcon = categoryIcon(cat?.icon)
             const color = cat?.group?.color ?? '#64748b'
+            const merchant = merchantByPattern.get(r.id)
+            const isLast = i === sorted.length - 1
             return (
-              <div
-                key={r.id}
-                role="button"
-                tabIndex={0}
-                onClick={() => setEditing(r)}
-                onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setEditing(r) } }}
-                className="flex cursor-pointer items-center gap-3 border-b border-slate-100 px-4 py-3 transition-colors last:border-b-0 hover:bg-slate-50"
-              >
-                <p className="min-w-0 flex-1 truncate font-mono text-sm uppercase">{r.pattern}</p>
-                <div className="w-[150px] shrink-0">
-                  <span
-                    className="inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 text-xs font-medium"
-                    style={{ backgroundColor: `${color}1f`, color }}
-                  >
-                    <CatIcon className="h-3.5 w-3.5" />
-                    {categoryLabel(cat?.slug, cat?.slug ?? '')}
-                  </span>
-                </div>
-                <div className="hidden w-[110px] shrink-0 sm:block">
-                  <span className="inline-flex rounded-full bg-slate-100 px-2 py-0.5 text-xs font-bold tabular-nums text-slate-600">
-                    {t('rules.used_count', { count: r.use_count ?? 0 })}
-                  </span>
-                </div>
-                <button
-                  onClick={(e) => { e.stopPropagation(); setToDelete(r) }}
-                  aria-label={tc('actions.delete')}
-                  className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-[#CB6391] hover:bg-[#CB6391]/10"
+              <div key={r.id} className="flex items-center gap-2">
+                {/* Logo del comercio, fuera del recuadro a la izquierda — clicable, abre su edición (igual que su fila en /admin/comercios) */}
+                <span className="flex w-7 shrink-0 items-center justify-center">
+                  {merchant && (
+                    <button
+                      type="button"
+                      onClick={() => setEditingMerchant(merchant)}
+                      className="flex h-6 w-6 items-center justify-center overflow-hidden rounded-full bg-slate-100"
+                      title={t('rules.dictionary.merchant_linked', { name: merchant.name })}
+                      aria-label={t('rules.dictionary.merchant_linked', { name: merchant.name })}
+                    >
+                      {merchant.logo_url
+                        ? <img src={merchant.logo_url} alt="" className="h-full w-full object-contain" />
+                        : <Store className="h-3 w-3 text-slate-400" />}
+                    </button>
+                  )}
+                </span>
+
+                <div
+                  role="button"
+                  tabIndex={0}
+                  onClick={() => setEditing(r)}
+                  onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setEditing(r) } }}
+                  className={cn(
+                    'flex flex-1 cursor-pointer items-center gap-3 border-x border-t border-slate-100 bg-white px-4 py-3 transition-colors hover:bg-slate-50',
+                    isLast && 'rounded-b-2xl border-b',
+                  )}
                 >
-                  <Trash2 className="h-4 w-4" />
-                </button>
+                  <p className="min-w-0 flex-1 truncate font-mono text-sm uppercase">{r.pattern}</p>
+                  <div className="w-[150px] shrink-0">
+                    <span
+                      className="inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 text-xs font-medium"
+                      style={{ backgroundColor: `${color}1f`, color }}
+                    >
+                      <CatIcon className="h-3.5 w-3.5" />
+                      {categoryLabel(cat?.slug, cat?.slug ?? '')}
+                    </span>
+                  </div>
+                  <div className="hidden w-[110px] shrink-0 sm:block">
+                    <span className="inline-flex rounded-full bg-slate-100 px-2 py-0.5 text-xs font-bold tabular-nums text-slate-600">
+                      {t('rules.used_count', { count: r.use_count ?? 0 })}
+                    </span>
+                  </div>
+                  <button
+                    onClick={(e) => { e.stopPropagation(); setToDelete(r) }}
+                    aria-label={tc('actions.delete')}
+                    className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-[#CB6391] hover:bg-[#CB6391]/10"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </button>
+                </div>
+
+                {/* Crear comercio con esta palabra, fuera del recuadro a la derecha (solo si aún no existe) */}
+                <span className="flex w-7 shrink-0 items-center justify-center">
+                  {!merchant && (
+                    <button
+                      type="button"
+                      onClick={(e) => { e.stopPropagation(); setQuickCreateFrom(r.pattern) }}
+                      aria-label={t('rules.dictionary.create_merchant')}
+                      title={t('rules.dictionary.create_merchant')}
+                      className="flex h-6 w-6 items-center justify-center rounded-full text-slate-400 hover:bg-slate-100 hover:text-teal-600"
+                    >
+                      <Plus className="h-3.5 w-3.5" />
+                    </button>
+                  )}
+                </span>
               </div>
             )
           })}
         </div>
+      )}
+
+      {quickCreateFrom !== null && (
+        <MerchantDialog
+          merchant={null}
+          initialName={titleCase(quickCreateFrom)}
+          saving={createMerchantM.isPending}
+          onClose={() => setQuickCreateFrom(null)}
+          onSave={async (values) => {
+            try {
+              const merchant = await createMerchantM.mutateAsync({ name: values.name, logo_url: values.logo_url })
+              if (values.patterns?.length) {
+                try {
+                  await addMerchantPatterns(merchant.id, values.patterns)
+                } catch (e) {
+                  console.error('No se pudieron guardar las variaciones escritas al crear el comercio:', e)
+                }
+              }
+              toast({ title: t('comercios.saved') })
+              setQuickCreateFrom(null)
+              try {
+                const count = await linkMerchantTransactions(merchant.id)
+                if (count > 0) toast({ title: t('comercios.linked_count', { count }) })
+              } catch {
+                toast({ title: t('comercios.link_failed'), variant: 'destructive' })
+              }
+            } catch (err: any) {
+              const dup = err?.code === '23505' || String(err?.message ?? '').includes('duplicate')
+              toast({ title: dup ? t('comercios.duplicate') : tc('errors.generic'), variant: 'destructive' })
+            }
+          }}
+        />
+      )}
+
+      {editingMerchant && (
+        <MerchantDialog
+          merchant={editingMerchant}
+          saving={updateMerchantM.isPending}
+          onClose={() => setEditingMerchant(null)}
+          onSave={async (values) => {
+            try {
+              await updateMerchantM.mutateAsync({ id: editingMerchant.id, name: values.name, logo_url: values.logo_url })
+              toast({ title: t('comercios.saved') })
+              setEditingMerchant(null)
+              try {
+                const count = await linkMerchantTransactions(editingMerchant.id)
+                if (count > 0) toast({ title: t('comercios.linked_count', { count }) })
+              } catch {
+                toast({ title: t('comercios.link_failed'), variant: 'destructive' })
+              }
+            } catch (err: any) {
+              const dup = err?.code === '23505' || String(err?.message ?? '').includes('duplicate')
+              toast({ title: dup ? t('comercios.duplicate') : tc('errors.generic'), variant: 'destructive' })
+            }
+          }}
+        />
       )}
 
       {editing !== undefined && (
@@ -371,7 +477,7 @@ function CommunityPanel() {
   const { data: categories = [] } = useCategories()
   const { data: usageMap = new Map<string, number>() } = useCommunityUsageMap()
   const [query, setQuery] = useState('')
-  const [sort, setSort] = useState<{ key: CommunitySortKey; dir: SortDir }>({ key: 'votes', dir: 'desc' })
+  const [sort, setSort] = useState<{ key: CommunitySortKey; dir: SortDir }>({ key: 'use_count', dir: 'desc' })
 
   const categoryById = useMemo(() => new Map(categories.map((c) => [c.id, c])), [categories])
 

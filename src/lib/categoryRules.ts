@@ -57,6 +57,25 @@ export function merchantKey(concept: string): string {
 }
 
 /**
+ * Normaliza un patrón escrito a mano (diccionario o variación de comercio)
+ * para que case con el concepto ya normalizado: mayúsculas, sin tildes, sin
+ * puntuación (todo lo que no sea letra/número/espacio se convierte en
+ * espacio, igual que tokenString() hace con el concepto) y espacios
+ * colapsados. El asterisco (*) es la única excepción: se conserva como
+ * comodín ("cualquier secuencia de caracteres", ver matchMerchant).
+ */
+export function normalizePattern(s: string): string {
+  return s
+    .trim()
+    .toUpperCase()
+    .normalize('NFD')
+    .replace(/\p{Diacritic}/gu, '')
+    .replace(/[^A-Z0-9 *]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+}
+
+/**
  * Convierte un concepto en una cadena de tokens con espacios de guarda para
  * poder buscar patrones por palabra/frase completa: `" MERCADONA C ARIBAU "`.
  */
@@ -90,18 +109,45 @@ export function matchBuiltinCategory(concept: string, rules: DictionaryRule[]): 
 }
 
 /**
- * Returns the merchant whose name appears as a whole word/phrase in the
- * concept, or null. Independent of category classification (a transaction
- * can have both a matched category and a matched merchant, or either alone).
- * Same Bizum exclusion as the dictionary: a Bizum between people is never a
- * merchant purchase.
+ * Compila un patrón con comodines (*) a una regex, anclada según dónde estén
+ * los asteriscos (mismo criterio que un glob): sin * al principio, el
+ * concepto tiene que EMPEZAR por el patrón; sin * al final, tiene que
+ * TERMINAR en él; con * en ambos lados, puede aparecer en cualquier
+ * posición. Cada * en medio es "cualquier secuencia de caracteres"; el resto
+ * se escapa literal. Se compara contra el concepto SIN los espacios de
+ * guarda de tokenString (ver matchMerchant), para que ^/$ sean el principio
+ * y el final reales del concepto, no de la cadena con padding.
+ */
+function wildcardToRegex(pattern: string): RegExp {
+  const body = pattern
+    .split('*')
+    .map((part) => part.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'))
+    .join('.*')
+  const anchored = (pattern.startsWith('*') ? '' : '^') + body + (pattern.endsWith('*') ? '' : '$')
+  return new RegExp(anchored)
+}
+
+/**
+ * Returns the merchant matched in the concept, or null. If a merchant has
+ * concept variations (merchant_patterns, migración 036), those are checked
+ * INSTEAD OF the name; the name is only the fallback pattern when a merchant
+ * has no variations defined. A variation containing * is a wildcard, anchored
+ * per wildcardToRegex(); without *, matching is by whole word/phrase as
+ * usual. Independent of category classification (a transaction can have both
+ * a matched category and a matched merchant, or either alone). Same Bizum
+ * exclusion as the dictionary: a Bizum between people is never a merchant
+ * purchase.
  */
 export function matchMerchant(concept: string, merchants: Merchant[]): Merchant | null {
   const ts = tokenString(concept)
   if (!ts || ts.includes(' BIZUM ')) return null
+  const trimmed = ts.trim()
   for (const m of merchants) {
-    const pattern = normalize(m.name)
-    if (pattern && ts.includes(` ${pattern} `)) return m
+    const candidates = m.patterns?.length ? m.patterns.map((p) => normalizePattern(p.pattern)) : [normalizePattern(m.name)]
+    for (const p of candidates) {
+      if (!p) continue
+      if (p.includes('*') ? wildcardToRegex(p).test(trimmed) : ts.includes(` ${p} `)) return m
+    }
   }
   return null
 }

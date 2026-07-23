@@ -119,6 +119,17 @@ export type Merchant = {
   name: string
   logo_url: string | null
   created_at: string
+  // joined (migración 036) — variaciones de concepto; si hay alguna, sustituyen
+  // al nombre para efectos de matching (ver matchMerchant en categoryRules.ts)
+  patterns?: { pattern: string }[]
+}
+
+// Variación de concepto asociada a un comercio (migración 036).
+export type MerchantPattern = {
+  id: string
+  merchant_id: string
+  pattern: string
+  created_at: string
 }
 
 export type CategoryGroup = {
@@ -382,7 +393,8 @@ export type Database = {
       financial_profiles: { Row: FinancialProfile; Insert: Omit<FinancialProfile, 'id' | 'created_at' | 'updated_at' | 'sort_order'> & { sort_order?: number }; Update: Partial<FinancialProfile>; Relationships: [] }
       accounts: { Row: Account; Insert: Omit<Account, 'id' | 'created_at' | 'updated_at' | 'logo_url' | 'opening_balance'> & { logo_url?: string | null; opening_balance?: number | null }; Update: Partial<Account>; Relationships: [] }
       bank_entities: { Row: BankEntity; Insert: Omit<BankEntity, 'id' | 'created_at' | 'sort_order' | 'reviewed' | 'created_by'> & { sort_order?: number; reviewed?: boolean; created_by?: string | null }; Update: Partial<BankEntity>; Relationships: [] }
-      merchants: { Row: Merchant; Insert: Omit<Merchant, 'id' | 'created_at'>; Update: Partial<Merchant>; Relationships: [] }
+      merchants: { Row: Merchant; Insert: Omit<Merchant, 'id' | 'created_at' | 'patterns'>; Update: Partial<Omit<Merchant, 'patterns'>>; Relationships: [] }
+      merchant_patterns: { Row: MerchantPattern; Insert: Omit<MerchantPattern, 'id' | 'created_at'>; Update: Partial<MerchantPattern>; Relationships: [] }
       category_groups: { Row: CategoryGroup; Insert: Omit<CategoryGroup, 'id'>; Update: Partial<CategoryGroup>; Relationships: [] }
       categories: { Row: Category; Insert: Omit<Category, 'id' | 'group'>; Update: Partial<Omit<Category, 'group'>>; Relationships: [] }
       category_translations: { Row: CategoryTranslation; Insert: Omit<CategoryTranslation, 'updated_at'> & { updated_at?: string }; Update: Partial<CategoryTranslation>; Relationships: [] }
@@ -406,6 +418,7 @@ export type Database = {
       increment_dictionary_usage: { Args: { p_rule_ids: string[] }; Returns: undefined }
       increment_community_usage: { Args: { p_merchant_keys: string[] }; Returns: undefined }
       admin_link_merchant_transactions: { Args: { p_merchant_id: string }; Returns: number }
+      admin_merchant_usage_counts: { Args: Record<string, never>; Returns: { merchant_id: string; use_count: number }[] }
       delete_community_vote: { Args: { p_merchant_key: string }; Returns: undefined }
       recompute_community_rule: { Args: { p_merchant_key: string }; Returns: undefined }
       admin_list_users: { Args: Record<string, never>; Returns: AdminUserRow[] }

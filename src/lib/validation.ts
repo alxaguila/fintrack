@@ -132,6 +132,9 @@ export const dictionaryRuleFormSchema = z.object({
   applies_to_bizum: z.boolean(),
 })
 
+/** Variación de concepto de un comercio (admin, migración 036). */
+export const merchantPatternSchema = z.string().trim().min(2, 'too_short').max(LIMITS.keyword, 'too_long')
+
 /** Nombre de un perfil financiero. */
 export const profileNameSchema = z
   .string()

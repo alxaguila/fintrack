@@ -9,7 +9,6 @@ import { useTransactions, useTransactionCounts, useMarkFilteredAsRead, type Tran
 import { useAccounts } from '@/hooks/useAccounts'
 import { useCategories, useCategoryGroups } from '@/hooks/useCategories'
 import { useMerchants } from '@/hooks/useMerchants'
-import { useDictionaryRules } from '@/hooks/useDictionaryRules'
 import { useBankEntities } from '@/hooks/useBankEntities'
 import { useUpdateTransaction, invalidateTransactionData } from '@/hooks/useTransactions'
 import { useCreateKeywordRule } from '@/hooks/useKeywordRules'
@@ -109,7 +108,6 @@ export default function Transactions() {
   const { data: categories = [] } = useCategories()
   const { data: groups = [] } = useCategoryGroups()
   const { data: merchants = [] } = useMerchants()
-  const { data: dictionaryRules = [] } = useDictionaryRules()
   const { data: bankEntities = [] } = useBankEntities()
   const updateTx = useUpdateTransaction()
   const markAllRead = useMarkFilteredAsRead()
@@ -532,7 +530,6 @@ export default function Transactions() {
         groups={groups}
         accounts={accounts}
         merchants={merchants}
-        dictionaryRules={dictionaryRules}
         entityLogoByName={entityLogoByName}
         isLoading={isLoading}
         onRowClick={openCategoryDialog}

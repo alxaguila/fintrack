@@ -2,6 +2,47 @@
 
 Lista de cambios por versión (`APP_VERSION` en `src/lib/version.ts`). Solo se añade una entrada cuando el código de la app cambia.
 
+## v1.601
+- Admin > Comercios: cabecera ordenable (Nombre / Usos), por defecto de más a menos usado.
+- Admin > Reglas: en Diccionario y Comunidad, el orden por defecto pasa a ser por usos (de mayor a menor) en vez de por nombre/votos.
+- Admin > Reglas (Diccionario): nuevo filtro para ver solo las palabras con comercio ya creado, sin comercio, o todas.
+
+## v1.598
+- Subida de logos (comercios y entidades bancarias): quitado `upsert` de la subida a Storage — no hacía falta (cada archivo ya se sube con un nombre único) y exige permisos de `SELECT`/`UPDATE` en `storage.objects` que no teníamos configurados, lo que podía ser la causa de que la subida fallara con error de RLS.
+
+## v1.570
+- Admin > Comercios: el diálogo de "Nuevo comercio" ya permite añadir variaciones de concepto también al crear (antes solo se podía tras guardar y volver a editar) — se guardan todas de una vez junto con el comercio.
+- Admin > Reglas (Diccionario): el logo de un comercio ya vinculado es clicable y abre su edición (mismo comportamiento que su fila en Admin > Comercios), sin salir de la pantalla de Reglas.
+
+## v1.567
+- Admin > Reglas (Diccionario): el botón "+" ahora abre el mismo diálogo de crear comercio que hay en Admin > Comercios (nombre prellenado con la palabra, logo opcional), en vez de crear el comercio al instante sin confirmación — sigue sin salir de la pantalla.
+
+## v1.565
+- Admin > Reglas (Diccionario): el logo del comercio se movió fuera de la tabla, a la izquierda de cada fila. Cuando la palabra todavía no tiene comercio, aparece un botón "+" fuera de la tabla a la derecha para crearlo al momento (con el nombre de la palabra, alias por defecto y enlazado retroactivo automáticos) sin salir de la pantalla.
+
+## v1.563
+- Admin > Reglas (Diccionario): cada palabra muestra ahora un pequeño icono/logo si ya existe un comercio en el catálogo que la reconocería — de un vistazo se ve qué palabras ya tienen comercio creado y cuáles son candidatas.
+
+## v1.561
+- Movimientos: el nombre en negrita + logo de comercio solo aparece cuando el movimiento tiene un comercio real del catálogo (`/admin/comercios`) vinculado — se quita la "adivinanza" por diccionario que a veces mostraba palabras genéricas (bares, taxis...) como si fueran un comercio.
+- Admin > Comercios: cada fila muestra ahora cuántos movimientos tiene vinculados ese comercio (en vivo, sin contador aparte que mantener), igual que ya se ve en el diccionario de Reglas.
+
+## v1.559
+- Admin > Comercios: la posición del asterisco en una variación ahora importa — "NOMBRE*" exige que el concepto EMPIECE por NOMBRE, "*NOMBRE" que TERMINE en NOMBRE, y "*NOMBRE*" que aparezca en cualquier posición (antes las tres se comportaban igual).
+- Al crear un comercio nuevo, se generan automáticamente esos tres alias a partir del nombre (se pueden borrar o completar luego desde "Variaciones de concepto").
+
+## v1.555
+- Admin > Comercios: el asterisco (*) en una variación de concepto ahora funciona como comodín real ("cualquier texto"), no como texto literal — p. ej. "GLOVO*" casa con cualquier concepto que empiece por GLOVO, incluido "GLOVOGLOVO PRIME". Sin asterisco, sigue siendo coincidencia exacta por palabra/frase completa.
+
+## v1.553
+- Corregido: una variación de concepto de comercio con puntuación (p. ej. "GLOVO*") no casaba nunca con ningún movimiento, porque el concepto se limpiaba de puntuación antes de comparar pero el patrón escrito a mano no. Ahora ambos se limpian igual.
+
+## v1.551
+- Admin > Comercios: toda la fila de la lista es ahora clicable para editar (antes había que acertar en el lápiz); el botón de borrar sigue funcionando aparte sin abrir la edición.
+
+## v1.549
+- Admin > Comercios: al editar un comercio ya existente, se pueden añadir "variaciones de concepto" (grafías alternativas exactas, p. ej. "SANTAGLORIA" y "S GLORIA" para el mismo comercio) — si tiene alguna, se usan en vez del nombre para buscar coincidencias en los movimientos, y cada variación nueva re-etiqueta al momento el histórico.
+
 ## v1.546
 - Corregido de raíz: el nombre de comercio detectado en Movimientos (cuando aún no existe en el catálogo) ya no se adivina contando palabras del concepto — eso rompía tanto comercios de una palabra con sucursal ("Mercadona Aribau" → ahora "Mercadona") como comercios de nombre compuesto ("Santa Gloria"/"New Fizz", que con el conteo salían recortados a "Santa"/"New"). Ahora se reutiliza el propio patrón del diccionario integrado que ya clasifica la categoría de ese movimiento, que ya tiene el nombre completo correcto en cada caso.
 

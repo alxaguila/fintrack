@@ -57,12 +57,16 @@
     "title": "Merchants",
     "add": "New merchant",
     "search": "Search merchant...",
+    "col_name": "Name",
+    "col_usage": "Usage",
     "empty": "No merchants yet.",
     "no_search_results": "No merchant found.",
     "saved": "Merchant saved",
     "linked_count_one": "Linked to {{count}} movement",
     "linked_count_other": "Linked to {{count}} movements",
     "link_failed": "Merchant saved, but its movements couldn't be linked.",
+    "used_count_one": "{{count}} movement",
+    "used_count_other": "{{count}} movements",
     "deleted": "Merchant deleted",
     "duplicate": "A merchant with that name already exists.",
     "new_title": "New merchant",
@@ -74,6 +78,11 @@
     "logo_invalid": "The file must be an image.",
     "logo_too_big": "The image exceeds 1 MB.",
     "logo_failed": "Could not upload the logo.",
+    "patterns_title": "Concept variations",
+    "patterns_hint": "Texts that identify this merchant in movements, in addition to the name. If you add any, these are used instead of the name to look for matches. Use * for \"any text\" (e.g. GLOVO* matches any concept starting with GLOVO); without *, it has to be the exact word or phrase.",
+    "patterns_ph": "e.g. SANTAGLORIA or GLOVO*",
+    "pattern_add": "Add",
+    "pattern_duplicate": "This merchant already has that variation.",
     "delete_title": "Delete merchant?",
     "delete_body": "“{{name}}” will be deleted. This action cannot be undone."
   },
@@ -195,7 +204,12 @@
       "delete_title": "Delete this word?",
       "delete_body": "\"{{name}}\" will stop auto-classifying transactions. Already classified transactions are not affected.",
       "count_one": "{{count}} word",
-      "count_other": "{{count}} words"
+      "count_other": "{{count}} words",
+      "merchant_linked": "Merchant \"{{name}}\" already exists",
+      "create_merchant": "Create merchant from this word",
+      "merchant_filter_all": "All merchants",
+      "merchant_filter_with": "With merchant created",
+      "merchant_filter_without": "Without merchant created"
     }
   }
 }

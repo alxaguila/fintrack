@@ -6,7 +6,7 @@ import { formatCurrency } from '@/lib/utils'
 import { cn } from '@/lib/utils'
 import { Skeleton } from '@/components/ui/skeleton'
 import { TransactionRow, TX_ROW_GRID_COLS } from './TransactionRow'
-import type { Account, Category, CategoryGroup, DictionaryRule, Merchant, Transaction } from '@/lib/database.types'
+import type { Account, Category, CategoryGroup, Merchant, Transaction } from '@/lib/database.types'
 
 interface TransactionsListProps {
   transactions: Transaction[]
@@ -14,7 +14,6 @@ interface TransactionsListProps {
   groups: CategoryGroup[]
   accounts: Account[]
   merchants: Merchant[]
-  dictionaryRules: DictionaryRule[]
   entityLogoByName: Map<string, string | null>
   isLoading: boolean
   onRowClick: (tx: Transaction) => void
@@ -31,7 +30,7 @@ function groupNet(rows: Transaction[]): number {
 }
 
 export function TransactionsList({
-  transactions, categories, groups, accounts, merchants, dictionaryRules, entityLogoByName, isLoading, onRowClick, onToggleReviewed,
+  transactions, categories, groups, accounts, merchants, entityLogoByName, isLoading, onRowClick, onToggleReviewed,
 }: TransactionsListProps) {
   const { t } = useTranslation('transactions')
 
@@ -101,7 +100,6 @@ export function TransactionsList({
                         group={group}
                         account={account}
                         merchant={merchant}
-                        dictionaryRules={dictionaryRules}
                         entityLogoByName={entityLogoByName}
                         onClick={() => onRowClick(tx)}
                         onToggleReviewed={e => onToggleReviewed(tx, e)}

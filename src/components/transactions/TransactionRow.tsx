@@ -2,11 +2,10 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Check, CheckCheck } from 'lucide-react'
 import { categoryIcon, categoryLabel } from '@/lib/categoryIcons'
-import { matchBuiltinCategory } from '@/lib/categoryRules'
 import { resolveEntityAvatar } from '@/lib/entityAvatar'
 import { formatCurrency, formatDate } from '@/lib/utils'
 import { cn } from '@/lib/utils'
-import type { Account, Category, CategoryGroup, DictionaryRule, Merchant, Transaction } from '@/lib/database.types'
+import type { Account, Category, CategoryGroup, Merchant, Transaction } from '@/lib/database.types'
 
 // Plantilla de columnas compartida entre la cabecera (TransactionsList) y cada
 // fila, para que ambas se alineen exactamente en cada breakpoint. Orden:
@@ -28,13 +27,6 @@ function splitAmount(formatted: string): { int: string; dec: string } {
   return { int: formatted.slice(0, i), dec: formatted.slice(i) }
 }
 
-// Presentación de un patrón de diccionario ("MERCADONA", "NEW FIZZ") cuando no
-// hay comercio del catálogo: solo cosmético (capitaliza cada palabra), no se
-// usa para matching en ningún sitio.
-function titleCase(s: string): string {
-  return s.toLowerCase().replace(/\b\p{L}/gu, c => c.toUpperCase())
-}
-
 // Badge de tipo: "Gasto" usa el token expense (ya existente, evita semáforo puro
 // rojo); "Ingreso" income; "No computable" neutro. Sin inventar hex nuevos.
 const TYPE_BADGE: Record<string, string> = {
@@ -49,13 +41,12 @@ interface TransactionRowProps {
   group: CategoryGroup | undefined
   account: Account | undefined
   merchant: Merchant | undefined
-  dictionaryRules: DictionaryRule[]
   entityLogoByName: Map<string, string | null>
   onClick: () => void
   onToggleReviewed: (e: React.MouseEvent) => void
 }
 
-export function TransactionRow({ tx, category, group, account, merchant, dictionaryRules, entityLogoByName, onClick, onToggleReviewed }: TransactionRowProps) {
+export function TransactionRow({ tx, category, group, account, merchant, entityLogoByName, onClick, onToggleReviewed }: TransactionRowProps) {
   const { t } = useTranslation('transactions')
   const { t: tc } = useTranslation('common')
   const [logoError, setLogoError] = useState(false)
@@ -65,13 +56,6 @@ export function TransactionRow({ tx, category, group, account, merchant, diction
   const catColor = group?.color ?? '#94a3b8'
   const avatar = resolveEntityAvatar(account, entityLogoByName)
   const showMerchantLogo = !!merchant?.logo_url && !merchantLogoError
-  // Sin comercio del catálogo, se reutiliza el patrón del diccionario integrado
-  // que ya clasifica la categoría (mismo mecanismo, misma palabra/frase exacta
-  // que un admin ya curó) — a diferencia de adivinar por nº de palabras del
-  // concepto, esto es consistente: "SANTA GLORIA"/"NEW FIZZ" salen enteros,
-  // "MERCADONA C/ARIBAU" solo "MERCADONA" (el patrón no incluye la sucursal).
-  const dictRule = merchant ? null : matchBuiltinCategory(tx.concept, dictionaryRules)
-  const detectedName = merchant?.name ?? (dictRule ? titleCase(dictRule.pattern) : null)
   const amountColor = tx.transaction_type === 'ingreso' ? 'text-income' : 'text-foreground'
   const { int, dec } = splitAmount(formatCurrency(tx.amount))
 
@@ -107,11 +91,13 @@ export function TransactionRow({ tx, category, group, account, merchant, diction
         </span>
       </div>
 
-      {/* Comercio (del catálogo o detectado) + concepto tal cual del extracto + nota (si existe) */}
+      {/* Comercio del catálogo (con logo) + concepto tal cual del extracto + nota (si existe).
+          Solo se muestran las dos líneas si hay un comercio real vinculado (tx.merchant_id) —
+          nada de adivinar a partir del concepto, para evitar falsos positivos. */}
       <div className="min-w-0 leading-tight">
-        {detectedName ? (
+        {merchant ? (
           <>
-            <div className="truncate text-[13px] font-semibold text-foreground">{detectedName}</div>
+            <div className="truncate text-[13px] font-semibold text-foreground">{merchant.name}</div>
             <div className="truncate font-mono text-[11px] uppercase text-muted-foreground">{tx.concept}</div>
           </>
         ) : (

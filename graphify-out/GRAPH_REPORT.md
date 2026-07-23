@@ -1,16 +1,16 @@
-# Graph Report - alx_FinTrack  (2026-07-16)
+# Graph Report - alx_FinTrack  (2026-07-21)
 
 ## Corpus Check
-- 209 files · ~137,670 words
+- 243 files · ~156,171 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 841 nodes · 1096 edges · 83 communities (66 shown, 17 thin omitted)
-- Extraction: 82% EXTRACTED · 18% INFERRED · 0% AMBIGUOUS · INFERRED: 200 edges (avg confidence: 0.79)
+- 949 nodes · 1293 edges · 81 communities (68 shown, 13 thin omitted)
+- Extraction: 81% EXTRACTED · 19% INFERRED · 0% AMBIGUOUS · INFERRED: 248 edges (avg confidence: 0.79)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `e2131366`
+- Built from commit: `79485670`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -29,7 +29,7 @@
 - [[_COMMUNITY_History|History]]
 - [[_COMMUNITY_xlsx.ts|xlsx.ts]]
 - [[_COMMUNITY_cn|cn]]
-- [[_COMMUNITY_automap.ts|automap.ts]]
+- [[_COMMUNITY_Transactions|Transactions]]
 - [[_COMMUNITY_compilerOptions|compilerOptions]]
 - [[_COMMUNITY_transferMatch.ts|transferMatch.ts]]
 - [[_COMMUNITY_devDependencies|devDependencies]]
@@ -60,53 +60,51 @@
 - [[_COMMUNITY_Landing.tsx|Landing.tsx]]
 - [[_COMMUNITY_toast.tsx|toast.tsx]]
 - [[_COMMUNITY_plan.ts|plan.ts]]
-- [[_COMMUNITY_package.json|package.json]]
+- [[_COMMUNITY_Settings.tsx|Settings.tsx]]
 - [[_COMMUNITY_index.ts|index.ts]]
 - [[_COMMUNITY_Settings.tsx|Settings.tsx]]
 - [[_COMMUNITY_toast.tsx|toast.tsx]]
 - [[_COMMUNITY_Informe de auditoría RLS — Fase 0 (Arquitectura de administración)|Informe de auditoría RLS — Fase 0 (Arquitectura de administración)]]
-- [[_COMMUNITY_package.json|package.json]]
 - [[_COMMUNITY_transferMatch.ts|transferMatch.ts]]
-- [[_COMMUNITY_dropdown-menu.tsx|dropdown-menu.tsx]]
-- [[_COMMUNITY_badge.tsx|badge.tsx]]
 - [[_COMMUNITY_tabs.tsx|tabs.tsx]]
-- [[_COMMUNITY_date-picker-field.tsx|date-picker-field.tsx]]
+- [[_COMMUNITY_Settings.tsx|Settings.tsx]]
+- [[_COMMUNITY_badge.tsx|badge.tsx]]
+- [[_COMMUNITY_ClassificationRules.tsx|ClassificationRules.tsx]]
+- [[_COMMUNITY_ImportErrorBoundary|ImportErrorBoundary]]
 - [[_COMMUNITY_PopoverContent|PopoverContent]]
-- [[_COMMUNITY_Separator|Separator]]
-- [[_COMMUNITY_Skeleton|Skeleton]]
-- [[_COMMUNITY_TooltipContent|TooltipContent]]
 - [[_COMMUNITY_lucideCatalog.ts|lucideCatalog.ts]]
-- [[_COMMUNITY_useUnreviewedBankCount|useUnreviewedBankCount]]
+- [[_COMMUNITY_useCategoryTranslations.ts|useCategoryTranslations.ts]]
+- [[_COMMUNITY_entityAvatar.ts|entityAvatar.ts]]
 - [[_COMMUNITY_Product|Product]]
 
 ## God Nodes (most connected - your core abstractions)
-1. `cn()` - 43 edges
-2. `Dashboard()` - 19 edges
-3. `Transactions()` - 19 edges
+1. `cn()` - 48 edges
+2. `Budgets()` - 26 edges
+3. `Dashboard()` - 19 edges
 4. `compilerOptions` - 19 edges
-5. `ImportInner()` - 16 edges
-6. `🇪🇸 AVISO LEGAL` - 16 edges
-7. `🇬🇧 LEGAL NOTICE` - 16 edges
-8. `Home()` - 15 edges
-9. `compilerOptions` - 12 edges
-10. `ClassificationRules()` - 11 edges
+5. `ImportInner()` - 17 edges
+6. `Transactions()` - 17 edges
+7. `AVISO LEGAL (ES)` - 16 edges
+8. `LEGAL NOTICE (EN)` - 16 edges
+9. `Home()` - 15 edges
+10. `categoryIcon()` - 12 edges
 
 ## Surprising Connections (you probably didn't know these)
 - `ComboSelect()` --calls--> `cn()`  [INFERRED]
   src/components/PersonalDataFields.tsx → src/lib/utils.ts
+- `SubcategoryEditor()` --calls--> `useUpsertBudgetRule()`  [INFERRED]
+  src/components/budgets/EnvelopeDetailDialog.tsx → src/hooks/useBudgets.ts
 - `ProfileAvatar()` --calls--> `cn()`  [INFERRED]
   src/components/layout/ProfileSwitcher.tsx → src/lib/utils.ts
-- `DatePickerField()` --calls--> `cn()`  [INFERRED]
-  src/components/ui/date-picker-field.tsx → src/lib/utils.ts
-- `DropdownMenuShortcut()` --calls--> `cn()`  [INFERRED]
-  src/components/ui/dropdown-menu.tsx → src/lib/utils.ts
-- `PopoverContent()` --calls--> `cn()`  [INFERRED]
-  src/components/ui/popover.tsx → src/lib/utils.ts
+- `TransactionRow()` --calls--> `resolveEntityAvatar()`  [INFERRED]
+  src/components/transactions/TransactionRow.tsx → src/lib/entityAvatar.ts
+- `useBudgetsGate()` --calls--> `hasFeature()`  [INFERRED]
+  src/hooks/useBudgetsGate.ts → src/lib/plan.ts
 
 ## Import Cycles
 - None detected.
 
-## Communities (83 total, 17 thin omitted)
+## Communities (81 total, 13 thin omitted)
 
 ### Community 0 - "Transactions"
 Cohesion: 0.06
@@ -125,16 +123,16 @@ Cohesion: 0.33
 Nodes (4): RequestData, requestSchema, ResetData, resetSchema
 
 ### Community 4 - "Home.tsx"
-Cohesion: 0.11
-Nodes (24): AccountBalanceInfo, BalanceHistoryPoint, calendarDaysSince(), round2(), SpendingHistoryPoint, useAccountBalanceHistory(), useAccountBalances(), useCardSpending30Days() (+16 more)
+Cohesion: 0.06
+Nodes (38): ACCOUNT_TYPES, AccountFormDialog(), AccountFormDialogProps, COLORS, emptyForm, EntityOption, FormState, isBankType() (+30 more)
 
 ### Community 5 - "Dashboard"
-Cohesion: 0.09
-Nodes (21): AccountCard(), AccountCardProps, OnboardingGate(), ProfileContext, ProfileContextValue, useProfile(), ImportBatchRow, invalidateAfterBatchChange() (+13 more)
+Cohesion: 0.13
+Nodes (12): splitAmount(), TransactionRow(), TransactionRowProps, TYPE_BADGE, groupNet(), TransactionsList(), TransactionsListProps, groupByRelativeDate() (+4 more)
 
 ### Community 6 - "useImport.ts"
-Cohesion: 0.07
-Nodes (27): useBankFormats(), useUpsertBankFormat(), DATE_PARSE_FORMATS, fetchAllAccountMovements(), ManualBalance, normalizeTime(), parseAmount(), ParsedRow (+19 more)
+Cohesion: 0.08
+Nodes (30): DATE_PARSE_FORMATS, fetchAllAccountMovements(), ManualBalance, normalizeTime(), parseAmount(), parseDate(), ParsedRow, reconcileProfileTransfers() (+22 more)
 
 ### Community 7 - "validation.ts"
 Cohesion: 0.06
@@ -145,52 +143,52 @@ Cohesion: 0.09
 Nodes (21): compilerOptions, allowImportingTsExtensions, baseUrl, isolatedModules, jsx, lib, module, moduleDetection (+13 more)
 
 ### Community 9 - "useTransactions.ts"
-Cohesion: 0.08
-Nodes (36): fmtAmount(), applyConceptSearch(), applyTransactionFilters(), DashboardBreakdownRow, DashboardTotalRow, escapePgRegex(), invalidateTransactionData(), num() (+28 more)
+Cohesion: 0.09
+Nodes (22): AccountCard(), AccountCardProps, freshColor(), OnboardingGate(), ProfileContext, ProfileContextValue, useProfile(), ImportBatchRow (+14 more)
 
 ### Community 10 - "AccountForm.tsx"
-Cohesion: 0.08
-Nodes (21): ACCOUNT_TYPES, AccountFormDialog(), AccountFormDialogProps, COLORS, emptyForm, EntityOption, FormState, isBankType() (+13 more)
+Cohesion: 0.40
+Nodes (4): useUpdateUserProfile(), useUserSettings(), Onboarding(), SettingsProfile()
 
 ### Community 11 - "History"
 Cohesion: 0.06
-Nodes (26): PlanEvolutionGranularity, useAdminPlanEvolution(), useAdminSetPlan(), useAdminStats(), useAdminUserActivity(), useAdminUsers(), useAdminFeedback(), useMarkFeedbackRead() (+18 more)
+Nodes (31): PlanEvolutionGranularity, useAdminPlanEvolution(), useAdminSetPlan(), useAdminStats(), useAdminUserActivity(), useAdminUsers(), BankEntityInput, useCreateBankEntity() (+23 more)
 
 ### Community 12 - "xlsx.ts"
 Cohesion: 0.20
 Nodes (14): file, root, xlsx, parseCSV(), ParsedFile, detectHeaderRowIndex(), HEADER_KEYWORDS, buildRows() (+6 more)
 
 ### Community 14 - "cn"
-Cohesion: 0.16
-Nodes (16): DialogContent(), DialogDescription(), DialogFooter(), DialogHeader(), DialogOverlay(), DialogTitle(), SelectContent(), SelectItem() (+8 more)
-
-### Community 15 - "automap.ts"
 Cohesion: 0.06
-Nodes (40): IconPicker(), CategoryCombobox(), CategoryComboboxProps, normalize(), CategoryInput, deleteTranslations(), GroupInput, invalidateAll() (+32 more)
+Nodes (39): Badge(), BadgeProps, badgeVariants, DialogContent(), DialogDescription(), DialogFooter(), DialogHeader(), DialogOverlay() (+31 more)
+
+### Community 15 - "Transactions"
+Cohesion: 0.11
+Nodes (22): App(), queryClient, invalidatePlanUsage(), applyConceptSearch(), applyTransactionFilters(), DashboardBreakdownRow, DashboardTotalRow, escapePgRegex() (+14 more)
 
 ### Community 16 - "compilerOptions"
 Cohesion: 0.14
 Nodes (13): compilerOptions, allowImportingTsExtensions, isolatedModules, lib, module, moduleDetection, moduleResolution, noEmit (+5 more)
 
 ### Community 17 - "transferMatch.ts"
-Cohesion: 0.15
-Nodes (9): TYPES, Cell(), numOrUnlimited(), PLAN_ORDER, PlanCompareRows(), USAGE_DIMENSIONS, ChangePasswordData, changePasswordSchema (+1 more)
+Cohesion: 0.23
+Nodes (5): TYPES, USAGE_DIMENSIONS, ChangePasswordData, changePasswordSchema, SettingsHeader()
 
 ### Community 18 - "devDependencies"
-Cohesion: 0.18
-Nodes (11): devDependencies, autoprefixer, postcss, tailwindcss, @types/node, @types/papaparse, @types/react, @types/react-dom (+3 more)
+Cohesion: 0.10
+Nodes (20): devDependencies, autoprefixer, postcss, tailwindcss, @types/node, @types/papaparse, @types/react, @types/react-dom (+12 more)
 
 ### Community 19 - "transferMatch.ts"
-Cohesion: 0.16
-Nodes (13): AMOUNT_PAT, autoDetectColumns(), AutoMapResult, BALANCE_PAT, CONCEPT_PAT, CREDIT_PAT, DATE_PAT, DEBIT_PAT (+5 more)
+Cohesion: 0.11
+Nodes (20): AMOUNT_PAT, autoDetectColumns(), AutoMapResult, BALANCE_PAT, COMPLETED_DATE_PAT, CONCEPT_PAT, CREDIT_PAT, CURRENCY_PAT (+12 more)
 
 ### Community 20 - "dropdown-menu.tsx"
-Cohesion: 0.09
-Nodes (22): App(), queryClient, AppShell(), ProfileAvatar(), ProfileSwitcher(), KEY, useCategoryTranslations(), useMergeCategoryTranslations() (+14 more)
+Cohesion: 0.15
+Nodes (18): CategoryInput, deleteTranslations(), GroupInput, invalidateAll(), Labels, upsertTranslations(), useDeleteCategory(), useDeleteCategoryGroup() (+10 more)
 
 ### Community 21 - "FinTrack"
-Cohesion: 0.25
-Nodes (7): Arquitectura clave, Comandos / setup, FinTrack, Gotchas ya resueltos (no reintroducir), Reglas de trabajo obligatorias (aunque no se pidan explícitamente), Sistema de diseño (obligatorio converger en pantallas nuevas), Stack
+Cohesion: 0.12
+Nodes (15): Changelog, v1.437, v1.439, v1.442, v1.446, v1.448, v1.453, v1.456 (+7 more)
 
 ### Community 22 - "useToast.ts"
 Cohesion: 0.32
@@ -209,16 +207,16 @@ Cohesion: 0.43
 Nodes (6): dispatch(), listeners, memToasts, toast(), ToastMessage, useToast()
 
 ### Community 27 - "Auth.tsx"
-Cohesion: 0.14
-Nodes (21): deleteCommunityVote(), ruleCommunityKey(), RuleLike, syncCommunityVoteOnEdit(), upsertCommunityVote(), useCommunityRuleMap(), applyKeywordRules(), matches() (+13 more)
+Cohesion: 0.13
+Nodes (22): deleteCommunityVote(), ruleCommunityKey(), RuleLike, syncCommunityVoteOnEdit(), upsertCommunityVote(), useCommunityRuleMap(), SubcategoryBudget, applyKeywordRules() (+14 more)
 
 ### Community 28 - "settings.json"
 Cohesion: 0.50
 Nodes (3): hooks, UserPromptSubmit, $schema
 
 ### Community 29 - "Settings.tsx"
-Cohesion: 0.29
-Nodes (6): ACCOUNT_SECTIONS, ACCOUNT_TYPE_META, AccountFilter, AccountSection, FILTER_TYPES, AccountType
+Cohesion: 0.06
+Nodes (41): IconPicker(), BudgetAmountSlider(), BudgetAmountSliderProps, niceScale(), stepFor(), BudgetSummaryCard(), BudgetSummaryCardProps, EnvelopeDetailDialog() (+33 more)
 
 ### Community 30 - "button.tsx"
 Cohesion: 0.50
@@ -229,8 +227,8 @@ Cohesion: 0.40
 Nodes (3): LoginData, loginSchema, Props
 
 ### Community 32 - "tabs.tsx"
-Cohesion: 0.29
-Nodes (4): BRAND, BrandMark(), HeroDashboardMock(), useCountUp()
+Cohesion: 0.17
+Nodes (6): BRAND, BrandMark(), HeroDashboardMock(), useCountUp(), PricingCardsProps, Props
 
 ### Community 38 - "date-picker-field.tsx"
 Cohesion: 0.40
@@ -241,76 +239,84 @@ Cohesion: 0.15
 Nodes (12): ComboSelect(), emptyPersonalForm, PersonalDataFields(), PersonalFormValue, Props, CountryOption, CountryTuple, getCountries() (+4 more)
 
 ### Community 63 - "toast.tsx"
-Cohesion: 0.24
-Nodes (6): AdminRoute(), itemClass(), navItems, Sidebar(), UserPlanNavItem(), useIsAdmin()
+Cohesion: 0.29
+Nodes (6): ACCOUNT_SECTIONS, ACCOUNT_TYPE_META, AccountFilter, AccountSection, FILTER_TYPES, AccountType
 
 ### Community 64 - "plan.ts"
-Cohesion: 0.18
-Nodes (9): PlanLimits, PlanType, PlanUsage, DIMENSION_KEYS, FeatureFlag, LimitCheck, LimitDimension, PLAN_COLORS (+1 more)
+Cohesion: 0.15
+Nodes (13): LimitReachedDialog(), PlanLimits, PlanType, PlanUsage, daysUntilReset(), DIMENSION_KEYS, FeatureFlag, hasFeature() (+5 more)
 
-### Community 65 - "package.json"
-Cohesion: 0.43
-Nodes (4): LanguageSelector(), bottomItems, MobileBottomNav(), MobileTopBar()
+### Community 65 - "Settings.tsx"
+Cohesion: 0.50
+Nodes (4): AvisoLegal(), Block, renderInline(), Section
+
+### Community 67 - "Settings.tsx"
+Cohesion: 0.32
+Nodes (4): LimitReachedDialogProps, UpgradeHintDialogProps, UpgradePlanDialog(), UpgradePlanDialogProps
 
 ### Community 68 - "toast.tsx"
-Cohesion: 0.26
-Nodes (9): Toast(), ToastAction(), ToastActionElement, ToastClose(), ToastDescription(), ToastProps, ToastTitle(), toastVariants (+1 more)
+Cohesion: 0.08
+Nodes (21): useBankFormats(), useUpsertBankFormat(), useCategories(), useCategoryGroups(), useCreateKeywordRule(), useDeleteKeywordRule(), useKeywordRules(), useUpdateKeywordRule() (+13 more)
 
 ### Community 69 - "Informe de auditoría RLS — Fase 0 (Arquitectura de administración)"
 Cohesion: 0.25
 Nodes (7): Agujeros cerrados, Auditoría tabla por tabla, Clasificación de tablas, Criterio de aceptación (prueba de fuego), Informe de auditoría RLS — Fase 0 (Arquitectura de administración), Modelo de roles, Pasos manuales pendientes (owner)
 
-### Community 70 - "package.json"
-Cohesion: 0.20
-Nodes (9): name, private, scripts, build, dev, lint, preview, type (+1 more)
-
 ### Community 71 - "transferMatch.ts"
-Cohesion: 0.38
-Nodes (9): daysBetween(), findTransferPairs(), haveSharedToken(), isTransferConcept(), normalizeConcept(), STOPWORDS, TRANSFER_ROOTS, transferTokens() (+1 more)
-
-### Community 72 - "dropdown-menu.tsx"
-Cohesion: 0.22
-Nodes (8): DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuRadioItem, DropdownMenuSeparator, DropdownMenuShortcut(), DropdownMenuSubTrigger
-
-### Community 73 - "badge.tsx"
-Cohesion: 0.67
-Nodes (3): Badge(), BadgeProps, badgeVariants
+Cohesion: 0.10
+Nodes (31): DatePickerField(), DatePickerFieldProps, useBudgetCategoryOrder(), useBudgetRules(), useReorderBudgetCategories(), useUpsertBudgetRule(), addMonths(), BUDGET_STATUS_COLOR (+23 more)
 
 ### Community 74 - "tabs.tsx"
+Cohesion: 0.33
+Nodes (7): useBudgetsGate(), useLimitGate(), usePlan(), usePlanLimits(), usePlanUsage(), checkLimit(), SettingsPlan()
+
+### Community 75 - "Settings.tsx"
 Cohesion: 0.29
 Nodes (3): useUpdateLanguage(), DeleteAccountRow(), LanguageRow()
 
-### Community 78 - "Skeleton"
-Cohesion: 0.40
-Nodes (4): LimitReachedDialog(), LimitReachedDialogProps, daysUntilReset(), MONTHLY_DIMENSIONS
+### Community 77 - "ClassificationRules.tsx"
+Cohesion: 0.31
+Nodes (7): LanguageSelector(), bottomItemClass(), bottomItems, BottomNavLink(), BudgetsBottomNavItem(), MobileBottomNav(), MobileTopBar()
 
-### Community 81 - "useUnreviewedBankCount"
-Cohesion: 0.40
-Nodes (3): useUnreviewedBankCount(), useUnreadFeedbackCount(), Admin()
+### Community 78 - "ImportErrorBoundary"
+Cohesion: 0.28
+Nodes (5): AppShell(), ProfileAvatar(), ProfileSwitcher(), useCreateProfile(), useProfiles()
+
+### Community 79 - "PopoverContent"
+Cohesion: 0.21
+Nodes (9): BudgetsNavItem(), itemClass(), navItemsBottom, navItemsTop, Sidebar(), UpgradePlanNavItem(), UserPlanNavItem(), useUnreviewedBankCount() (+1 more)
+
+### Community 82 - "useCategoryTranslations.ts"
+Cohesion: 0.67
+Nodes (3): KEY, useCategoryTranslations(), useMergeCategoryTranslations()
+
+### Community 83 - "entityAvatar.ts"
+Cohesion: 0.50
+Nodes (3): Account, EntityAvatar, resolveEntityAvatar()
 
 ### Community 154 - "Product"
 Cohesion: 0.18
 Nodes (10): Accessibility & Inclusion, Anti-references, Brand Personality, Design Principles, Platform, Positioning, Product, Product Purpose (+2 more)
 
 ## Knowledge Gaps
-- **334 isolated node(s):** `root`, `$schema`, `UserPromptSubmit`, `name`, `private` (+329 more)
+- **363 isolated node(s):** `root`, `$schema`, `UserPromptSubmit`, `name`, `private` (+358 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **17 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **13 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `cn()` connect `cn` to `package.json`, `toast.tsx`, `dropdown-menu.tsx`, `badge.tsx`, `AccountForm.tsx`, `date-picker-field.tsx`, `PopoverContent`, `Separator`, `History`, `automap.ts`, `TooltipContent`, `tabs.tsx`, `transferMatch.ts`, `dropdown-menu.tsx`, `PasswordStrengthBar`, `Landing.tsx`, `toast.tsx`?**
-  _High betweenness centrality (0.144) - this node is a cross-community bridge._
-- **Why does `ImportInner()` connect `useImport.ts` to `Dashboard`, `AccountForm.tsx`, `History`, `automap.ts`, `Auth.tsx`?**
-  _High betweenness centrality (0.065) - this node is a cross-community bridge._
-- **Why does `useProfile()` connect `Dashboard` to `Home.tsx`, `useImport.ts`, `useTransactions.ts`, `AccountForm.tsx`, `automap.ts`, `dropdown-menu.tsx`?**
-  _High betweenness centrality (0.065) - this node is a cross-community bridge._
-- **Are the 42 inferred relationships involving `cn()` (e.g. with `LanguageSelector()` and `MobileBottomNav()`) actually correct?**
-  _`cn()` has 42 INFERRED edges - model-reasoned connections that need verification._
+- **Why does `cn()` connect `cn` to `Home.tsx`, `Dashboard`, `transferMatch.ts`, `tabs.tsx`, `History`, `Settings.tsx`, `ClassificationRules.tsx`, `ImportErrorBoundary`, `PopoverContent`, `Landing.tsx`, `PasswordStrengthBar`, `Settings.tsx`?**
+  _High betweenness centrality (0.150) - this node is a cross-community bridge._
+- **Why does `ImportInner()` connect `toast.tsx` to `Home.tsx`, `Dashboard`, `useImport.ts`, `useTransactions.ts`, `Auth.tsx`?**
+  _High betweenness centrality (0.075) - this node is a cross-community bridge._
+- **Why does `useProfile()` connect `useTransactions.ts` to `Home.tsx`, `toast.tsx`, `transferMatch.ts`, `ImportErrorBoundary`, `Transactions`, `Settings.tsx`?**
+  _High betweenness centrality (0.054) - this node is a cross-community bridge._
+- **Are the 47 inferred relationships involving `cn()` (e.g. with `BudgetAmountSlider()` and `SubcategoryEditor()`) actually correct?**
+  _`cn()` has 47 INFERRED edges - model-reasoned connections that need verification._
+- **Are the 22 inferred relationships involving `Budgets()` (e.g. with `useProfile()` and `useBudgetCategoryOrder()`) actually correct?**
+  _`Budgets()` has 22 INFERRED edges - model-reasoned connections that need verification._
 - **Are the 13 inferred relationships involving `Dashboard()` (e.g. with `fmtAmount()` and `useProfile()`) actually correct?**
   _`Dashboard()` has 13 INFERRED edges - model-reasoned connections that need verification._
-- **Are the 15 inferred relationships involving `Transactions()` (e.g. with `useProfile()` and `useAccounts()`) actually correct?**
-  _`Transactions()` has 15 INFERRED edges - model-reasoned connections that need verification._
 - **What connects `root`, `$schema`, `UserPromptSubmit` to the rest of the system?**
-  _334 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _363 weakly-connected nodes found - possible documentation gaps or missing edges._

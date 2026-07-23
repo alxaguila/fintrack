@@ -57,12 +57,16 @@
     "title": "Comercios",
     "add": "Nuevo comercio",
     "search": "Buscar comercio...",
+    "col_name": "Nombre",
+    "col_usage": "Usos",
     "empty": "Todavía no hay comercios.",
     "no_search_results": "No se ha encontrado ningún comercio.",
     "saved": "Comercio guardado",
     "linked_count_one": "Vinculado a {{count}} movimiento",
     "linked_count_other": "Vinculado a {{count}} movimientos",
     "link_failed": "Comercio guardado, pero no se pudieron vincular sus movimientos.",
+    "used_count_one": "{{count}} movimiento",
+    "used_count_other": "{{count}} movimientos",
     "deleted": "Comercio eliminado",
     "duplicate": "Ya existe un comercio con ese nombre.",
     "new_title": "Nuevo comercio",
@@ -74,6 +78,11 @@
     "logo_invalid": "El archivo debe ser una imagen.",
     "logo_too_big": "La imagen supera 1 MB.",
     "logo_failed": "No se pudo subir el logo.",
+    "patterns_title": "Variaciones de concepto",
+    "patterns_hint": "Textos que identifican a este comercio en los movimientos, además del nombre. Si añades alguna, se usan estas en vez del nombre para buscar coincidencias. Usa * para \"cualquier texto\" (p. ej. GLOVO* casa con cualquier concepto que empiece por GLOVO); sin *, tiene que ser la palabra o frase exacta.",
+    "patterns_ph": "p. ej. SANTAGLORIA o GLOVO*",
+    "pattern_add": "Añadir",
+    "pattern_duplicate": "Ese comercio ya tiene esa variación.",
     "delete_title": "¿Eliminar comercio?",
     "delete_body": "Se eliminará «{{name}}». Esta acción no se puede deshacer."
   },
@@ -195,7 +204,12 @@
       "delete_title": "¿Eliminar esta palabra?",
       "delete_body": "\"{{name}}\" dejará de clasificar movimientos automáticamente. No afecta a los movimientos ya clasificados.",
       "count_one": "{{count}} palabra",
-      "count_other": "{{count}} palabras"
+      "count_other": "{{count}} palabras",
+      "merchant_linked": "Ya existe el comercio «{{name}}»",
+      "create_merchant": "Crear comercio con esta palabra",
+      "merchant_filter_all": "Todos los comercios",
+      "merchant_filter_with": "Con comercio creado",
+      "merchant_filter_without": "Sin comercio creado"
     }
   }
 }

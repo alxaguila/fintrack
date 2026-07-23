@@ -28,9 +28,12 @@ export function useUnreviewedBankCount(enabled: boolean) {
 export async function uploadBankLogo(file: File): Promise<string> {
   const ext = file.name.split('.').pop()?.toLowerCase() || 'png'
   const path = `${crypto.randomUUID()}.${ext}`
+  // Sin upsert: el path ya es único (randomUUID), nunca hay nada que sobrescribir
+  // — y upsert exige permisos de SELECT/UPDATE en storage.objects que no
+  // tenemos configurados (solo INSERT/UPDATE/DELETE para is_admin()).
   const { error } = await supabase.storage
     .from(BANK_LOGO_BUCKET)
-    .upload(path, file, { cacheControl: '3600', upsert: true })
+    .upload(path, file, { cacheControl: '3600' })
   if (error) throw error
   const { data } = supabase.storage.from(BANK_LOGO_BUCKET).getPublicUrl(path)
   return data.publicUrl
