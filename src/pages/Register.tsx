@@ -12,6 +12,7 @@ import { PasswordInput } from '@/components/auth/PasswordInput'
 import { GoogleButton, OrDivider } from '@/components/auth/GoogleButton'
 import { toast } from '@/hooks/useToast'
 import { BRAND, BrandMark } from '@/components/landing/brand'
+import { getAppUrl } from '@/lib/appUrl'
 
 const RESEND_COOLDOWN = 60
 const OTP_MIN = 6
@@ -25,7 +26,7 @@ type SignupData = z.infer<typeof signupSchema>
 /**
  * Página de registro con la estética de la landing (fondo navy + tarjeta). Reutiliza
  * el flujo signup → verificación por código OTP de Supabase (idéntico a Auth). Al
- * verificar, `onAuthStateChange` crea la sesión y redirige a /app.
+ * verificar, `onAuthStateChange` crea la sesión y redirige a la app (`getAppUrl()`).
  */
 export default function Register() {
   const { t, i18n } = useTranslation('auth')
@@ -49,10 +50,10 @@ export default function Register() {
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session) navigate('/app', { replace: true })
+      if (session) window.location.assign(getAppUrl())
     })
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_e, session) => {
-      if (session) navigate('/app', { replace: true })
+      if (session) window.location.assign(getAppUrl())
     })
     return () => subscription.unsubscribe()
   }, [navigate])

@@ -9,6 +9,7 @@ import { LoginDialog } from '@/components/auth/LoginDialog'
 import { PricingCards } from '@/components/landing/PricingCards'
 import { SiteHeader } from '@/components/landing/SiteHeader'
 import { SiteFooter } from '@/components/landing/SiteFooter'
+import { getAppUrl } from '@/lib/appUrl'
 
 // Copia local de estilos de la landing (keyframes, hover y responsive). Se inyecta
 // una sola vez; el diseño va con estilos inline para ser fiel al mockup aprobado.
@@ -170,13 +171,13 @@ export default function Landing() {
   // Si ya hay sesión, la landing no aplica → directo a la app.
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session) navigate('/app', { replace: true })
+      if (session) window.location.assign(getAppUrl())
     })
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_e, session) => {
-      if (session) navigate('/app', { replace: true })
+      if (session) window.location.assign(getAppUrl())
     })
     return () => subscription.unsubscribe()
-  }, [navigate])
+  }, [])
 
   const goRegister = () => navigate('/register')
   const openLogin = () => setLoginOpen(true)

@@ -40,8 +40,39 @@ const queryClient = new QueryClient({
   },
 })
 
+// Rutas hijas de la app autenticada, compartidas entre el árbol de app.zafyros.com
+// (montadas en "/") y el árbol de desarrollo/preview (montadas bajo "/app").
+function appChildren() {
+  return (
+    <>
+      <Route index element={<Home />} />
+      <Route path="analysis" element={<Dashboard />} />
+      <Route path="budgets" element={<Budgets />} />
+      <Route path="transactions" element={<Transactions />} />
+      <Route path="transactions/rules" element={<ClassificationRules />} />
+      <Route path="import" element={<Import />} />
+      <Route path="accounts" element={<Accounts />} />
+      <Route path="history" element={<History />} />
+      <Route path="settings" element={<Settings />} />
+      <Route path="settings/profile" element={<SettingsProfile />} />
+      <Route path="settings/security" element={<SettingsSecurity />} />
+      <Route path="settings/plan" element={<SettingsPlan />} />
+      <Route path="settings/feedback" element={<SettingsFeedback />} />
+      <Route path="admin" element={<AdminRoute><Admin /></AdminRoute>} />
+      <Route path="admin/bancos" element={<AdminRoute><AdminBancos /></AdminRoute>} />
+      <Route path="admin/categorias" element={<AdminRoute><AdminCategorias /></AdminRoute>} />
+      <Route path="admin/usuarios" element={<AdminRoute><AdminUsuarios /></AdminRoute>} />
+      <Route path="admin/estadisticas" element={<AdminRoute><AdminEstadisticas /></AdminRoute>} />
+      <Route path="admin/reglas" element={<AdminRoute><AdminReglas /></AdminRoute>} />
+      <Route path="admin/comercios" element={<AdminRoute><AdminComercios /></AdminRoute>} />
+      <Route path="admin/feedback" element={<AdminRoute><AdminFeedback /></AdminRoute>} />
+    </>
+  )
+}
+
 export default function App() {
   const { t } = useTranslation()
+  const isAppHost = window.location.hostname === 'app.zafyros.com'
 
   // El <title> de index.html es estático (fallback para crawlers); aquí lo
   // reescribimos con el idioma activo. `t` cambia de identidad al cambiar idioma.
@@ -53,43 +84,35 @@ export default function App() {
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
         <Routes>
-          {/* Puerta pública */}
-          <Route path="/" element={<Landing />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/reset-password" element={<ResetPassword />} />
-          <Route path="/aviso-legal" element={<AvisoLegal />} />
-          <Route path="/privacidad" element={<Privacidad />} />
-          <Route path="/cookies" element={<Cookies />} />
-          <Route path="/terminos" element={<Terminos />} />
-          {/* Compatibilidad con enlaces antiguos a /auth */}
-          <Route path="/auth" element={<Navigate to="/" replace />} />
+          {isAppHost ? (
+            <>
+              {/* app.zafyros.com: solo la app autenticada, montada en "/" */}
+              <Route path="/" element={<AppShell />}>
+                {appChildren()}
+              </Route>
+              <Route path="*" element={<Navigate to="/" replace />} />
+            </>
+          ) : (
+            <>
+              {/* Puerta pública */}
+              <Route path="/" element={<Landing />} />
+              <Route path="/register" element={<Register />} />
+              <Route path="/reset-password" element={<ResetPassword />} />
+              <Route path="/aviso-legal" element={<AvisoLegal />} />
+              <Route path="/privacidad" element={<Privacidad />} />
+              <Route path="/cookies" element={<Cookies />} />
+              <Route path="/terminos" element={<Terminos />} />
+              {/* Compatibilidad con enlaces antiguos a /auth */}
+              <Route path="/auth" element={<Navigate to="/" replace />} />
 
-          {/* App autenticada (bajo /app) */}
-          <Route path="/app" element={<AppShell />}>
-            <Route index element={<Home />} />
-            <Route path="analysis" element={<Dashboard />} />
-            <Route path="budgets" element={<Budgets />} />
-            <Route path="transactions" element={<Transactions />} />
-            <Route path="transactions/rules" element={<ClassificationRules />} />
-            <Route path="import" element={<Import />} />
-            <Route path="accounts" element={<Accounts />} />
-            <Route path="history" element={<History />} />
-            <Route path="settings" element={<Settings />} />
-            <Route path="settings/profile" element={<SettingsProfile />} />
-            <Route path="settings/security" element={<SettingsSecurity />} />
-            <Route path="settings/plan" element={<SettingsPlan />} />
-            <Route path="settings/feedback" element={<SettingsFeedback />} />
-            <Route path="admin" element={<AdminRoute><Admin /></AdminRoute>} />
-            <Route path="admin/bancos" element={<AdminRoute><AdminBancos /></AdminRoute>} />
-            <Route path="admin/categorias" element={<AdminRoute><AdminCategorias /></AdminRoute>} />
-            <Route path="admin/usuarios" element={<AdminRoute><AdminUsuarios /></AdminRoute>} />
-            <Route path="admin/estadisticas" element={<AdminRoute><AdminEstadisticas /></AdminRoute>} />
-            <Route path="admin/reglas" element={<AdminRoute><AdminReglas /></AdminRoute>} />
-            <Route path="admin/comercios" element={<AdminRoute><AdminComercios /></AdminRoute>} />
-            <Route path="admin/feedback" element={<AdminRoute><AdminFeedback /></AdminRoute>} />
-          </Route>
+              {/* App autenticada (bajo /app, solo en local/preview sin subdominio) */}
+              <Route path="/app" element={<AppShell />}>
+                {appChildren()}
+              </Route>
 
-          <Route path="*" element={<Navigate to="/" replace />} />
+              <Route path="*" element={<Navigate to="/" replace />} />
+            </>
+          )}
         </Routes>
       </BrowserRouter>
       <Toaster />

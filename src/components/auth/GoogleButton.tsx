@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { supabase } from '@/lib/supabase'
 import { BRAND } from '@/components/landing/brand'
+import { getAppUrl } from '@/lib/appUrl'
 
 /** Logo "G" oficial de Google (4 colores). */
 function GoogleIcon() {
@@ -32,9 +33,10 @@ export function OrDivider() {
 /**
  * Botón "Continuar con Google" (OAuth de Supabase).
  *
- * Provoca un redirect de página completa a Google y vuelta a `/app`; al volver,
- * supabase-js crea la sesión sola y `AppShell` decide (incluido el onboarding).
- * Requiere tener el proveedor Google activado en Supabase.
+ * Provoca un redirect de página completa a Google y vuelta a la app (`getAppUrl()`);
+ * al volver, supabase-js crea la sesión sola y `AppShell` decide (incluido el onboarding).
+ * Requiere tener el proveedor Google activado en Supabase, y la URL de `getAppUrl()`
+ * añadida a la allowlist de Redirect URLs en Supabase.
  */
 export function GoogleButton({ onError }: { onError?: (message: string) => void }) {
   const { t } = useTranslation('auth')
@@ -44,7 +46,7 @@ export function GoogleButton({ onError }: { onError?: (message: string) => void 
     setBusy(true)
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
-      options: { redirectTo: `${window.location.origin}/app` },
+      options: { redirectTo: getAppUrl() },
     })
     // En caso de éxito el navegador ya está navegando a Google; solo importa el error.
     if (error) {

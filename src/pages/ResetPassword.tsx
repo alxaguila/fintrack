@@ -11,6 +11,7 @@ import { PasswordStrengthBar } from '@/components/PasswordStrengthBar'
 import { PasswordInput } from '@/components/auth/PasswordInput'
 import { toast } from '@/hooks/useToast'
 import { BRAND, BrandMark } from '@/components/landing/brand'
+import { getAppUrl } from '@/lib/appUrl'
 
 const RESEND_COOLDOWN = 60
 const OTP_MIN = 6
@@ -98,7 +99,7 @@ export default function ResetPassword() {
       return
     }
     toast({ title: 'zafyros', description: t('reset.success'), variant: 'success' })
-    navigate('/app', { replace: true })
+    window.location.assign(getAppUrl())
   }
 
   async function onResend() {

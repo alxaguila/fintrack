@@ -2,6 +2,12 @@
 
 Lista de cambios por versión (`APP_VERSION` en `src/lib/version.ts`). Solo se añade una entrada cuando el código de la app cambia.
 
+## v1.638
+- Corrige `getAppUrl()`: en local/preview devolvía una ruta relativa (`/app`) en vez de una URL absoluta; `signInWithOAuth({ redirectTo })` necesita una URL absoluta y con la ruta relativa el login con Google fallaba con `"requested path is invalid"`. Ahora siempre devuelve `origin + /app` en esos entornos.
+
+## v1.628
+- Preparada la app para servirse en `app.zafyros.com` (SEO: el contenido indexable queda en `zafyros.com`). Mismo build, ramificado por hostname: en `app.zafyros.com` la app autenticada se monta en "/" en vez de "/app"; el login (email/OTP y Google) y el restablecimiento de contraseña ahora aterrizan en el subdominio de la app; cabecera `X-Robots-Tag: noindex` para que ese subdominio no se indexe. En local/preview el comportamiento con `/app` no cambia.
+
 ## v1.624
 - El icono zafyros pierde el disco navy de fondo en la cabecera de la landing, los diálogos de login/registro/upgrade y el sidebar de la app: esos sitios ya tienen su propio fondo navy con foco de luz decorativo, y el disco plano lo tapaba en vez de fundirse. Nuevo prop `filled` en `BrandMark` (por defecto `true`, se desactiva en cabeceras con foco de luz); en `Logo.tsx` (sidebar) se quita directamente. El footer y el resto de usos sobre fondo claro mantienen el disco.
 

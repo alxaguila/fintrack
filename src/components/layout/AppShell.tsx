@@ -59,8 +59,15 @@ export function AppShell() {
     )
   }
 
-  // No autenticado → landing pública
-  if (!session) return <Navigate to="/" replace />
+  // No autenticado → landing pública. En app.zafyros.com "/" ya es la propia app,
+  // así que un Navigate relativo haría bucle: hace falta salir al dominio de marketing.
+  if (!session) {
+    if (window.location.hostname === 'app.zafyros.com') {
+      window.location.href = 'https://zafyros.com/'
+      return null
+    }
+    return <Navigate to="/" replace />
+  }
 
   // Esperar a los ajustes del usuario para decidir el onboarding
   if (settingsLoading || !settings) {
