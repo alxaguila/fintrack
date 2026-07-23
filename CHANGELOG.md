@@ -2,6 +2,12 @@
 
 Lista de cambios por versión (`APP_VERSION` en `src/lib/version.ts`). Solo se añade una entrada cuando el código de la app cambia.
 
+## v1.606
+- Admin > Categorías: el árbol de "Jerarquía actual" ya no usa pastillas de color — iconos y texto planos directamente sobre el fondo, para que se note que es una vista de referencia, no editable.
+
+## v1.604
+- Admin > Categorías: debajo de Grupos/Subcategorías se añade "Jerarquía actual" — el árbol completo de grupos con sus subcategorías, con los mismos iconos y colores, de solo lectura, para ver de un vistazo la estructura antes de decidir si reorganizar algo.
+
 ## v1.601
 - Admin > Comercios: cabecera ordenable (Nombre / Usos), por defecto de más a menos usado.
 - Admin > Reglas: en Diccionario y Comunidad, el orden por defecto pasa a ser por usos (de mayor a menor) en vez de por nombre/votos.

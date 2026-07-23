@@ -95,6 +95,60 @@ export default function Categorias() {
           <CategoriesPanel groups={groups} categories={categories.filter(matchesCategory)} searching={!!q} />
         </TabsContent>
       </Tabs>
+
+      <HierarchyTree groups={groups} categories={categories} />
+    </div>
+  )
+}
+
+// ============================================================
+// ÁRBOL DE JERARQUÍA (solo lectura, para ver de un vistazo grupo→subcategorías
+// antes de decidir si reorganizar algo desde las pestañas de arriba)
+// ============================================================
+function HierarchyTree({ groups, categories }: { groups: CategoryGroup[]; categories: Category[] }) {
+  const { t } = useTranslation('admin')
+  const { t: tc } = useTranslation('common')
+  const lang = i18n.language?.slice(0, 2) || 'es'
+
+  return (
+    <div className="space-y-3">
+      <div>
+        <h2 className="text-[15px] font-bold">{t('categories.hierarchy_title')}</h2>
+        <p className="text-xs text-slate-500">{t('categories.hierarchy_hint')}</p>
+      </div>
+
+      <div className="space-y-4">
+        {groups.map((g) => {
+          const Icon = categoryIcon(g.icon)
+          const color = g.color ?? '#64748b'
+          const subcats = categories.filter((c) => c.group_id === g.id)
+          return (
+            <div key={g.id}>
+              <div className="flex items-center gap-2">
+                <Icon className="h-4 w-4 shrink-0" style={{ color }} />
+                <span className="font-medium text-slate-700">{currentLabel('group', g.slug, lang) || g.slug}</span>
+                <span className="text-xs text-slate-400">· {tc(`transaction_type.${g.type}`)}</span>
+              </div>
+
+              {subcats.length === 0 ? (
+                <p className="py-1 pl-6 text-xs text-slate-400">{t('categories.hierarchy_no_subcats')}</p>
+              ) : (
+                <div className="mt-1 space-y-1 pl-6">
+                  {subcats.map((c) => {
+                    const CatIcon = categoryIcon(c.icon)
+                    return (
+                      <div key={c.id} className="flex items-center gap-2 text-sm text-slate-500">
+                        <CatIcon className="h-3.5 w-3.5 shrink-0" style={{ color }} />
+                        <span className="truncate">{currentLabel('category', c.slug, lang) || c.slug}</span>
+                      </div>
+                    )
+                  })}
+                </div>
+              )}
+            </div>
+          )
+        })}
+      </div>
     </div>
   )
 }
