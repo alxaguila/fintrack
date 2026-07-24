@@ -95,8 +95,8 @@
     "semantic_hash": ""
   },
   "src/components/layout/MobileNav.tsx": {
-    "mtime": 1784895346.448171,
-    "ast_hash": "fbb962df9d41f09e860cf1b5261e19da",
+    "mtime": 1784909065.4774597,
+    "ast_hash": "f75fc29fb906d8cfea3e1236ba9d6ef1",
     "semantic_hash": ""
   },
   "src/components/layout/ProfileSwitcher.tsx": {
@@ -335,8 +335,8 @@
     "semantic_hash": ""
   },
   "src/i18n/locales/en/common.json": {
-    "mtime": 1784895353.049616,
-    "ast_hash": "8d6050ad92086ca831dfe2083e5e3a95",
+    "mtime": 1784909908.639147,
+    "ast_hash": "e4b7d52b67a54cc74581873fe9d8522f",
     "semantic_hash": ""
   },
   "src/i18n/locales/en/dashboard.json": {
@@ -385,8 +385,8 @@
     "semantic_hash": ""
   },
   "src/i18n/locales/es/common.json": {
-    "mtime": 1784895351.80825,
-    "ast_hash": "fd6dc05dba13fb1dc83bcc4e9d46a8d8",
+    "mtime": 1784909903.1327436,
+    "ast_hash": "e015f21bcd1a3fb857123e86c48c4a64",
     "semantic_hash": ""
   },
   "src/i18n/locales/es/dashboard.json": {
@@ -525,8 +525,8 @@
     "semantic_hash": ""
   },
   "src/lib/version.ts": {
-    "mtime": 1784908563.291547,
-    "ast_hash": "5db2b2324f315058bc25ff1afea377d7",
+    "mtime": 1784911699.6344464,
+    "ast_hash": "df993cb8c0f4fd2c5d2e87bc88d6c4e1",
     "semantic_hash": ""
   },
   "src/main.tsx": {
@@ -875,8 +875,8 @@
     "semantic_hash": ""
   },
   "src/components/Logo.tsx": {
-    "mtime": 1784835761.1053972,
-    "ast_hash": "54dd7ca18a421f0cd895ccdba0f5364d",
+    "mtime": 1784909062.544559,
+    "ast_hash": "ec3ee799ac7c6512da523c760df3c58a",
     "semantic_hash": ""
   },
   "src/lib/openingBalance.ts": {
@@ -900,8 +900,8 @@
     "semantic_hash": ""
   },
   "src/components/landing/brand.tsx": {
-    "mtime": 1784835650.2414598,
-    "ast_hash": "e8fad55ac0da0232ce3eb0fc7f1c3d93",
+    "mtime": 1784909063.9928002,
+    "ast_hash": "5b28bc3be3ca8bbee459eb1fa81ab9f3",
     "semantic_hash": ""
   },
   "src/i18n/locales/en/landing.json": {
@@ -1515,8 +1515,8 @@
     "semantic_hash": ""
   },
   "public/favicon.svg": {
-    "mtime": 1784834133.9471796,
-    "ast_hash": "1e69b2f7da592c28b21ed6194291edba",
+    "mtime": 1784909099.2506313,
+    "ast_hash": "0c1cbe9a3c1c3f17956758d70ab54ee8",
     "semantic_hash": ""
   },
   "public/logo-512.png": {
@@ -1530,8 +1530,8 @@
     "semantic_hash": ""
   },
   "public/logo.svg": {
-    "mtime": 1784834134.0570068,
-    "ast_hash": "e1ae62f83eda2ce0eb5e337a1e3482a3",
+    "mtime": 1784909100.4705782,
+    "ast_hash": "0cc31563c3efb8172d400f3eb57e69b6",
     "semantic_hash": ""
   },
   "src/components/plan/LimitReachedDialog.tsx": {
@@ -1765,8 +1765,8 @@
     "semantic_hash": ""
   },
   "CHANGELOG.md": {
-    "mtime": 1784908571.4874845,
-    "ast_hash": "ddac2d2f2b2f275bc05d53e746590c34",
+    "mtime": 1784911711.7827153,
+    "ast_hash": "b907502e2e2ca866ccbd0027362245d9",
     "semantic_hash": ""
   },
   "scripts/backfill-merchant-usage.mjs": {
@@ -1945,8 +1945,8 @@
     "semantic_hash": ""
   },
   "src/lib/swipeHint.ts": {
-    "mtime": 1784890162.7949893,
-    "ast_hash": "a2a2c8ab33652eb41ce192be7d14bae7",
+    "mtime": 1784910030.2047126,
+    "ast_hash": "902e9192640fb3397ac5eabb63fee030",
     "semantic_hash": ""
   }
 }

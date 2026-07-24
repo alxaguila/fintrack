@@ -26,7 +26,7 @@ export function BrandMark({ size = 32, filled = true }: { size?: number; filled?
     <svg width={size} height={size} viewBox="0 0 100 100" aria-hidden="true">
       {filled && <circle cx="50" cy="50" r="48" fill={BRAND.ink} />}
       <path
-        d="M30,28 L66,28 L80,44 L50,80 L20,44 Z M20,44 L80,44 M30,44 L50,80 M66,44 L50,80"
+        d="M34,28 L66,28 L80,44 L50,80 L20,44 Z M20,44 L80,44 M34,44 L50,80 M66,44 L50,80"
         fill="none"
         stroke="#FFFFFF"
         strokeWidth="5"

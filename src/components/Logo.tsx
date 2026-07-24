@@ -18,7 +18,7 @@ export function Logo({ size = 30, iconOnly = false, version, className }: LogoPr
     <div className={className} style={{ display: 'flex', alignItems: 'center', gap: 11 }}>
       <svg width={size} height={size} viewBox="0 0 100 100" aria-hidden="true">
         <path
-          d="M30,28 L66,28 L80,44 L50,80 L20,44 Z M20,44 L80,44 M30,44 L50,80 M66,44 L50,80"
+          d="M34,28 L66,28 L80,44 L50,80 L20,44 Z M20,44 L80,44 M34,44 L50,80 M66,44 L50,80"
           fill="none"
           stroke="#FFFFFF"
           strokeWidth="5"

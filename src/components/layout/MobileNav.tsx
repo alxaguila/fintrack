@@ -166,7 +166,7 @@ export function MobileBottomNav() {
               lucide, que sí llenan su caja) — mismo h-5 w-5 que el resto de iconos. */}
           <svg viewBox="17 25 66 58" aria-hidden="true" className="h-5 w-5 shrink-0">
             <path
-              d="M30,28 L66,28 L80,44 L50,80 L20,44 Z M20,44 L80,44 M30,44 L50,80 M66,44 L50,80"
+              d="M34,28 L66,28 L80,44 L50,80 L20,44 Z M20,44 L80,44 M34,44 L50,80 M66,44 L50,80"
               fill="none"
               stroke="currentColor"
               strokeWidth="7"

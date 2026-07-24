@@ -2,6 +2,15 @@
 
 Lista de cambios por versión (`APP_VERSION` en `src/lib/version.ts`). Solo se añade una entrada cuando el código de la app cambia.
 
+## v1.667
+- La animación de ejemplo del swipe en Movimientos (móvil) pasa de mostrarse siempre a mostrarse solo una vez por semana: si hace más de 7 días desde la última vez que este navegador la vio, se repite; si no, no vuelve a aparecer.
+
+## v1.664
+- Barra inferior móvil: la etiqueta "Posición Global" se partía en dos líneas y subía el icono, desalineándolo respecto a los demás botones. Pasa a "Pos. Global" (y "Global Pos." en inglés) para que quepa en una sola línea.
+
+## v1.662
+- Corrige la asimetría del isotipo zafyros (diamante de líneas): la esquina superior izquierda estaba más separada del centro que la derecha, dejando menos aire en el facet izquierdo. Se ajusta para que quede simétrico, tomando el lado derecho como referencia. Se corrige en los 3 sitios que usan el path (Logo.tsx, brand.tsx, MobileNav.tsx) y en los SVG públicos (favicon.svg, logo.svg).
+
 ## v1.660
 - Corrige el toggle Todos/No leídos/Sin categoría de la pasada anterior: el reparto a partes iguales hacía que "Sin categoría" se partiera en dos líneas. Ahora "Sin categoría" y "No leídos" llevan más peso que "Todos" y el texto nunca se parte en dos líneas, para que quepan en una sola línea incluso con contadores de 4 cifras.
 
