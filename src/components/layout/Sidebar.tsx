@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { NavLink, useLocation } from 'react-router-dom'
-import { Home, BarChart3, ArrowLeftRight, Upload, Wallet, Tags, FileClock, Shield, ShieldCheck, Sparkles, PiggyBank } from 'lucide-react'
+import { Home, BarChart3, ArrowLeftRight, Upload, Wallet, Tags, FileClock, Shield, ShieldCheck, Sparkles, Calculator } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { cn } from '@/lib/utils'
 import { appPath } from '@/lib/appUrl'
@@ -81,7 +81,7 @@ function BudgetsNavItem() {
         {({ isActive }) => (
           <span className={itemClass(isActive)}>
             {isActive && <ActiveBar />}
-            <PiggyBank className="h-[18px] w-[18px] shrink-0" strokeWidth={1.7} />
+            <Calculator className="h-[18px] w-[18px] shrink-0" strokeWidth={1.7} />
             {t('nav.budgets')}
           </span>
         )}
@@ -94,7 +94,7 @@ function BudgetsNavItem() {
       <button type="button" onClick={() => setHintOpen(true)} className="block w-full text-left">
         <span className={itemClass(isActive)}>
           {isActive && <ActiveBar />}
-          <PiggyBank className="h-[18px] w-[18px] shrink-0" strokeWidth={1.7} />
+          <Calculator className="h-[18px] w-[18px] shrink-0" strokeWidth={1.7} />
           {t('nav.budgets')}
         </span>
       </button>

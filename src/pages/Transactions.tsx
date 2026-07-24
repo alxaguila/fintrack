@@ -1,6 +1,6 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Search, FilterX, Check, CheckCheck, Euro } from 'lucide-react'
+import { Search, FilterX, Filter, Check, CheckCheck, Euro } from 'lucide-react'
 import { useSearchParams } from 'react-router-dom'
 import { useQueryClient } from '@tanstack/react-query'
 import { supabase } from '@/lib/supabase'
@@ -11,6 +11,7 @@ import { useCategories, useCategoryGroups } from '@/hooks/useCategories'
 import { useMerchants } from '@/hooks/useMerchants'
 import { useBankEntities } from '@/hooks/useBankEntities'
 import { useUpdateTransaction, invalidateTransactionData } from '@/hooks/useTransactions'
+import { useIsMobile } from '@/hooks/useIsMobile'
 import { useCreateKeywordRule } from '@/hooks/useKeywordRules'
 import { useLimitGate } from '@/hooks/usePlan'
 import { upsertCommunityVote, ruleCommunityKey } from '@/hooks/useCommunityRules'
@@ -78,6 +79,21 @@ export default function Transactions() {
     if (searchParams.get('uncategorized') === 'true') f.uncategorized = true
     return f
   })
+  const isMobile = useIsMobile()
+  const [showFilters, setShowFilters] = useState(false)
+  // Bloque superior fijo en móvil: se mide su alto real (cambia con los
+  // filtros desplegados) para reservarle el hueco exacto con un spacer, ya que
+  // pasa a position:fixed (ver más abajo, por qué no basta con sticky).
+  const topBlockRef = useRef<HTMLDivElement>(null)
+  const [topBlockH, setTopBlockH] = useState(0)
+  useEffect(() => {
+    if (!isMobile) return
+    const el = topBlockRef.current
+    if (!el) return
+    const ro = new ResizeObserver(([entry]) => setTopBlockH(entry.target.getBoundingClientRect().height))
+    ro.observe(el)
+    return () => ro.disconnect()
+  }, [isMobile])
   const [page, setPage] = useState(0)
   const [search, setSearch] = useState('')
   const [categoryTx, setCategoryTx] = useState<Transaction | null>(null)
@@ -153,12 +169,17 @@ export default function Transactions() {
   const transactions = result?.transactions ?? []
   const total = result?.total ?? 0
 
-  // 3-way reviewed filter state derived from filters.isReviewed
-  const reviewedMode: 'all' | 'reviewed' | 'unreviewed' =
-    filters.isReviewed === true ? 'reviewed' : filters.isReviewed === false ? 'unreviewed' : 'all'
+  // Estado de filtro excluyente: Todos / No leídos / Sin categoría (isReviewed +
+  // uncategorized ya no son combinables, seleccionar uno limpia el otro).
+  const statusFilter: 'all' | 'unreviewed' | 'uncategorized' =
+    filters.uncategorized ? 'uncategorized' : filters.isReviewed === false ? 'unreviewed' : 'all'
 
-  function setReviewedMode(mode: 'all' | 'reviewed' | 'unreviewed') {
-    setFilters(f => ({ ...f, isReviewed: mode === 'all' ? undefined : mode === 'reviewed' }))
+  function setStatusFilter(mode: 'all' | 'unreviewed' | 'uncategorized') {
+    setFilters(f => ({
+      ...f,
+      isReviewed: mode === 'unreviewed' ? false : undefined,
+      uncategorized: mode === 'uncategorized' ? true : undefined,
+    }))
     setPage(0)
   }
 
@@ -398,8 +419,8 @@ export default function Transactions() {
     }
   }
 
-  async function toggleReviewed(tx: Transaction, e: React.MouseEvent) {
-    e.stopPropagation()
+  async function toggleReviewed(tx: Transaction, e?: React.MouseEvent) {
+    e?.stopPropagation()
     try {
       await updateTx.mutateAsync({ id: tx.id, is_reviewed: !tx.is_reviewed })
     } catch {
@@ -407,23 +428,52 @@ export default function Transactions() {
     }
   }
 
+  // En móvil los campos de filtro empiezan ocultos (dejan más alto para
+  // movimientos); en escritorio siempre visibles, sin cambios.
+  const filtersVisible = !isMobile || showFilters
+
   return (
-    <div className="flex h-full flex-col gap-4 p-6">
+    <div className={isMobile ? 'flex flex-col gap-4 p-4' : 'flex h-full flex-col gap-4 p-6'}>
+      {/* Bloque superior (título, filtros, estado + marcar todo) fijo en móvil
+          mientras se hace scroll de la lista; en escritorio "contents" hace que
+          el wrapper sea invisible para el layout (mismos hijos, mismo gap-4 de
+          arriba, cero cambio visual).
+          "fixed" en vez de "sticky": position:sticky dentro de un contenedor
+          con scroll que no es el <body> (aquí <main overflow-y-auto> de
+          AppShell) tiene un jitter conocido en Safari/Chrome móvil durante el
+          scroll con inercia — "fixed" queda anclado de verdad al viewport, sin
+          ese salto. Como sale del flujo, necesita su propio padding (ya no lo
+          hereda del contenedor) y un spacer que reserve su alto real. */}
+      {isMobile && <div style={{ height: topBlockH }} />}
+      <div ref={topBlockRef} className={isMobile ? 'fixed inset-x-0 top-0 z-30 flex flex-col gap-4 bg-background p-4 pb-2' : 'contents'}>
       <div className="flex items-end justify-between gap-3">
         <div>
           <h1 className="font-serif text-[28px] leading-tight text-foreground">{t('title')}</h1>
           <p className="mt-1 text-[13.5px] text-muted-foreground">
             <span className="font-semibold text-foreground">{total}</span> {t('summary.movements_label')}
-            {' · '}
-            <span className="font-semibold text-[var(--brand-accent)]">{counts?.unread ?? 0}</span> {t('summary.unread_label')}
+            {!!counts?.unread && (
+              <>
+                {' · '}
+                <span className="font-semibold text-[var(--brand-accent)]">{counts.unread}</span> {t('summary.unread_label')}
+              </>
+            )}
           </p>
         </div>
-        <Button variant="ghost" size="sm" onClick={clearFilters} disabled={!hasActiveFilters}>
-          <FilterX className="h-4 w-4" />
-          {t('filters.clear_filters')}
-        </Button>
+        {isMobile ? (
+          <Button variant="ghost" size="sm" onClick={() => setShowFilters(v => !v)}>
+            <Filter className="h-4 w-4" />
+            {t(showFilters ? 'filters.hide_filters' : 'filters.show_filters')}
+          </Button>
+        ) : (
+          <Button variant="ghost" size="sm" onClick={clearFilters} disabled={!hasActiveFilters}>
+            <FilterX className="h-4 w-4" />
+            {t('filters.clear_filters')}
+          </Button>
+        )}
       </div>
 
+      {filtersVisible && (
+      <>
       {/* Filas 1 y 2 juntas (buscador/selección arriba, rangos debajo) */}
       <div className="space-y-2">
         {/* Fila 1: búsqueda + cuenta + tipo (campos en blanco) */}
@@ -485,43 +535,52 @@ export default function Transactions() {
         </div>
       </div>
 
-      {/* Fila 3 (justo encima de la lista): estado + sin categoría (mismo grupo
-          visual) + marcar todo. La lógica sigue siendo 2 filtros independientes
-          y combinables (isReviewed + uncategorized), solo se unifica el envoltorio. */}
-      <div className="flex flex-wrap items-center gap-2">
-        <div className="inline-flex flex-wrap items-center gap-1 rounded-xl bg-[var(--bg-app-alt)] p-1 text-sm">
-          {(['all', 'unreviewed', 'reviewed'] as const).map(mode => (
+      {/* En móvil, "Limpiar filtros" va justo debajo de los campos (en vez de
+          arriba a la derecha, donde ahora está el toggle mostrar/ocultar). */}
+      {isMobile && (
+        <Button variant="ghost" size="sm" className="self-start" onClick={clearFilters} disabled={!hasActiveFilters}>
+          <FilterX className="h-4 w-4" />
+          {t('filters.clear_filters')}
+        </Button>
+      )}
+      </>
+      )}
+
+      {/* Fila 3 (justo encima de la lista): estado excluyente (Todos/No leídos/Sin
+          categoría, seleccionar uno limpia el otro) + marcar todo.
+          Los 3 botones reparten el ancho, pero no a partes iguales: "Sin categoría"
+          y "No leídos" llevan más peso (flex-grow) que "Todos" para que quepan en
+          una sola línea incluso con contadores de 4 cifras (whitespace-nowrap como
+          red de seguridad: el texto nunca se parte en dos líneas). */}
+      <div className={isMobile ? 'flex flex-col gap-2' : 'flex flex-wrap items-center gap-2'}>
+        <div className={isMobile ? 'flex w-full items-stretch gap-1 rounded-xl bg-[var(--bg-app-alt)] p-1 text-sm' : 'inline-flex flex-wrap items-center gap-1 rounded-xl bg-[var(--bg-app-alt)] p-1 text-sm'}>
+          {(['all', 'unreviewed', 'uncategorized'] as const).map(mode => (
             <button
               key={mode}
-              onClick={() => setReviewedMode(mode)}
-              className={`rounded-lg px-2.5 py-1 transition-colors ${reviewedMode === mode ? 'bg-card font-medium text-foreground shadow-[var(--shadow-card)]' : 'text-muted-foreground hover:text-foreground'}`}
+              onClick={() => setStatusFilter(mode)}
+              className={`flex items-center justify-center whitespace-nowrap rounded-lg px-2.5 py-1 text-center transition-colors ${mode === 'all' ? 'flex-[1]' : mode === 'unreviewed' ? 'flex-[1.5]' : 'flex-[2]'} ${statusFilter === mode ? 'bg-card font-medium text-foreground shadow-[var(--shadow-card)]' : 'text-muted-foreground hover:text-foreground'}`}
             >
-              {t(`reviewed_filter.${mode}`)}
+              {mode === 'uncategorized' ? t('filters.uncategorized') : t(`reviewed_filter.${mode}`)}
               {mode === 'unreviewed' && !!counts?.unread && (
                 <span className="ml-1 font-semibold text-[var(--brand-accent)]">({counts.unread})</span>
               )}
+              {mode === 'uncategorized' && !!counts?.uncategorized && (
+                <span className="ml-1 font-semibold text-[var(--brand-accent)]">({counts.uncategorized})</span>
+              )}
             </button>
           ))}
-          <button
-            onClick={() => { setFilters(f => ({ ...f, uncategorized: f.uncategorized ? undefined : true })); setPage(0) }}
-            className={`rounded-lg px-2.5 py-1 transition-colors ${filters.uncategorized ? 'bg-card font-medium text-foreground shadow-[var(--shadow-card)]' : 'text-muted-foreground hover:text-foreground'}`}
-          >
-            {t('filters.uncategorized')}
-            {!!counts?.uncategorized && (
-              <span className="ml-1 font-semibold text-[var(--brand-accent)]">({counts.uncategorized})</span>
-            )}
-          </button>
         </div>
         <Button
           variant="outline"
           size="sm"
-          className="ml-auto hover:border-income/50 hover:text-income"
+          className={isMobile ? 'self-end hover:border-income/50 hover:text-income' : 'ml-auto hover:border-income/50 hover:text-income'}
           onClick={handleMarkAllRead}
           disabled={!counts?.unread || markAllRead.isPending}
         >
           <CheckCheck className="h-4 w-4" />
           {t('mark_all_read.button')}
         </Button>
+      </div>
       </div>
 
       <TransactionsList
@@ -534,6 +593,7 @@ export default function Transactions() {
         isLoading={isLoading}
         onRowClick={openCategoryDialog}
         onToggleReviewed={toggleReviewed}
+        scrollable={!isMobile}
       />
 
       {/* Total (siempre visible bajo la lista) + paginación cuando procede */}

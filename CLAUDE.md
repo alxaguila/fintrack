@@ -26,7 +26,7 @@ React 18 + TypeScript + Vite · Supabase (PostgreSQL + Auth, con RLS) · Tailwin
 - **Pastillas de categoría**: `rounded-full px-2 py-0.5 text-xs font-medium`, icono de grupo (`groupIcon()` en `src/lib/categoryIcons.ts`) + color del grupo, fondo tintado ~12% (`${color}1f`).
 - **Redondeos**: tarjetas, tablas, paneles y diálogos en `rounded-2xl` (no `rounded-lg`).
 - **Tipografías**: títulos de página `text-3xl font-extrabold tracking-tight`; títulos de sección `text-[15px] font-bold`; conceptos de movimiento en `font-mono uppercase`.
-- **Diálogos**: separadores a sangre `-mx-6 w-auto bg-slate-300`, `sm:rounded-2xl`, `max-h-[90dvh] overflow-y-auto`.
+- **Diálogos**: separadores a sangre `-mx-6 w-auto bg-slate-300`, siempre redondeados (`rounded-2xl`, con margen respecto al borde de pantalla incluso en móvil — desde v1.65x ya no van a pantalla completa por debajo de `sm`), `max-h-[90dvh] overflow-y-auto`.
 
 ## Reglas de trabajo obligatorias (aunque no se pidan explícitamente)
 

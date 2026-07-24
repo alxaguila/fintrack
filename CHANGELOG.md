@@ -2,6 +2,36 @@
 
 Lista de cambios por versión (`APP_VERSION` en `src/lib/version.ts`). Solo se añade una entrada cuando el código de la app cambia.
 
+## v1.660
+- Corrige el toggle Todos/No leídos/Sin categoría de la pasada anterior: el reparto a partes iguales hacía que "Sin categoría" se partiera en dos líneas. Ahora "Sin categoría" y "No leídos" llevan más peso que "Todos" y el texto nunca se parte en dos líneas, para que quepan en una sola línea incluso con contadores de 4 cifras.
+
+## v1.657
+- Toggle Todos/No leídos/Sin categoría (Movimientos, móvil y escritorio): los 3 botones ahora se reparten el ancho a partes iguales en vez de ajustarse cada uno a su propio texto, con el contenido centrado.
+- Nuevo estándar de diálogo en toda la app: en móvil dejan de ir a pantalla completa — ahora tienen margen respecto al borde y quedan redondeados (`rounded-2xl`) igual que en escritorio, un aspecto más de "popup" y menos de pantalla completa. Los diálogos con contenido más rico (mejora de plan, límite alcanzado, aviso de presupuestos) mantienen su ancho completo a propósito.
+
+## v1.655
+- Movimientos en móvil, séptima pasada: el fondo blanco de la fila sin leer ahora llega de extremo a extremo de la pantalla (antes se quedaba dentro del margen de la página); el texto no cambia de posición, solo el fondo se extiende. La animación de ejemplo del swipe pasa de saltos con pausas a un recorrido continuo y suavizado, y revela el panel de acción al completo (antes se cortaba antes de llegar y no se leían las palabras).
+- Barra inferior: el icono de zafyros del botón "Menú" se veía pequeño frente a los demás — se recorta su encuadre para que tenga la misma altura visual que el icono de Inicio. La etiqueta de "Inicio" pasa a "Posición Global" (como ya se llama esa pantalla en el resto de la app), en dos líneas si hace falta.
+
+## v1.653
+- Movimientos en móvil, sexta pasada: fila sin leer con fondo blanco y comercio/concepto en negrita (antes solo el concepto sin comercio se ponía en negrita). El toggle de estado pasa a ser excluyente en móvil y escritorio: se quita "Leídos" (no aportaba) y ahora Todos/No leídos/Sin categoría son mutuamente excluyentes en vez de combinables. Se corrige la animación de ejemplo del swipe: ahora sí se ven los colores de fondo (usa el mismo mecanismo que un swipe real en vez de una animación CSS aparte).
+- Barra inferior (toda la app, móvil): el botón "Menú" pasa a usar el isotipo de zafyros en vez del icono de hamburguesa; se corrige el reparto de los 5 botones (antes el último podía quedar fuera de la pantalla y requerir scroll horizontal). El icono de "Presupuestos" cambia de hucha a calculadora, en móvil y escritorio.
+
+## v1.651
+- Movimientos en móvil, quinta pasada: si el movimiento tiene comercio se oculta la línea de concepto (solo comercio + subcategoría, menos texto); el nombre del comercio deja de ir en negrita y comparte tamaño y tipografía con el concepto (excepción solo de esta pantalla en móvil, el resto de la app sigue con font-mono uppercase); icono/logo un poco más a la izquierda. En el swipe: los paneles ahora muestran también el texto de la acción ("Cambiar categoría" / "Marcar como leído" / "Marcar como no leído", con el icono correcto según lo que va a pasar, no el estado actual); tanto el color como la distancia de arrastre pasan de la mitad a un cuarto del ancho de la fila; el contenido se transparenta un poco mientras se arrastra para que se note el color de debajo. Escritorio no cambia.
+
+## v1.649
+- Movimientos en móvil, cuarta pasada: el bloque superior pasa de `sticky` a `fixed` para eliminar el pequeño salto/jitter que hacía al hacer scroll (comportamiento conocido del scroll con inercia en móvil); menos margen izquierdo/derecho por fila para ver más texto; se añade la subcategoría como texto bajo el concepto/comercio. Se sustituye el botón de leído/no leído por swipe: deslizar a la izquierda marca leído/no leído, deslizar a la derecha abre reclasificar (el toque normal se mantiene igual); al entrar a la pantalla se anima brevemente la primera fila para enseñar el gesto. Escritorio no cambia.
+
+## v1.647
+- Movimientos en móvil, tercera pasada: los separadores de grupo pasan de relativos (Esta semana/Este mes) a un día exacto por línea ("Sábado, 18 de julio de 2026", sin contador ni importe acumulado); al vivir la fecha en el separador, se quita la columna de fecha de cada fila. El icono de leído/no leído es aún más pequeño y "Marcar todo leído" queda alineado a la derecha. Se quita la cabecera de columnas (Concepto/Fecha/Entidad...). El bloque superior (título, filtros, estado y marcar todo) queda fijo (sticky) mientras se hace scroll de la lista, incluidos los campos de filtro si están desplegados. Escritorio no cambia.
+
+## v1.645
+- Movimientos en móvil, segunda pasada tras feedback: se oculta el "sin leer" del resumen cuando es 0; el botón "Marcar todo leído" baja a su propia línea (ya no se solapa con el toggle Todos/No leídos/Leídos/Sin categoría); se quita la tarjeta (borde/sombra) que envolvía cada grupo de movimientos para aprovechar todo el ancho; la columna de fecha se comprime a dd/mm y el botón "Leído/No leído" pasa a ser un icono compacto (con tooltip), liberando espacio para ver mejor el comercio y el concepto de cada movimiento. Escritorio no cambia.
+
+## v1.643
+- Movimientos en móvil: los filtros (búsqueda, cuenta, tipo, fechas, importe) quedan ocultos por defecto para dejar ver más movimientos en pantalla; nuevo botón "Mostrar filtros"/"Ocultar filtros" donde antes estaba "Limpiar filtros", que ahora se coloca justo debajo de los campos cuando están visibles. El toggle Todos/No leídos/Leídos + Sin categoría se fuerza a una sola línea (con scroll horizontal si no cabe). El aviso "Mostrando 1-50" deja de quedar fijo en pantalla y solo aparece al llegar al final del listado. En escritorio no cambia nada.
+
 ## v1.640
 - Corrige los menús y enlaces internos de la app (Sidebar, MobileNav, hubs de Admin/Ajustes, OnboardingGate, AdminRoute, y navegaciones internas de Home/Dashboard/Import) que tenían la ruta `/app/...` hardcodeada: en `app.zafyros.com` esas rutas cuelgan de `/` (no de `/app`), así que cualquier clic caía en el catch-all y volvía siempre a Home. Nuevo `appPath()` en `src/lib/appUrl.ts` centraliza el prefijo correcto según el host.
 

@@ -10,6 +10,8 @@
     "amount_min": "Importe mín.",
     "amount_max": "Importe máx.",
     "clear_filters": "Limpiar filtros",
+    "show_filters": "Mostrar filtros",
+    "hide_filters": "Ocultar filtros",
     "uncategorized": "Sin categoría"
   },
   "columns": {
@@ -25,8 +27,7 @@
   },
   "reviewed_filter": {
     "all": "Todos",
-    "unreviewed": "No leídos",
-    "reviewed": "Leídos"
+    "unreviewed": "No leídos"
   },
   "mark_all_read": {
     "button": "Marcar todo como leído",
@@ -54,6 +55,7 @@
     "edit_category": "Cambiar categoría",
     "add_note": "Añadir nota",
     "mark_reviewed": "Marcar como leído",
+    "mark_unread": "Marcar como no leído",
     "reviewed": "Leído",
     "pending": "No leído"
   },

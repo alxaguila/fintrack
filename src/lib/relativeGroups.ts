@@ -4,8 +4,9 @@
 // con la fecha actual del usuario.
 import {
   isToday, isYesterday, isSameWeek, isSameMonth, isSameYear,
-  subWeeks, subMonths, subYears, parseISO,
+  subWeeks, subMonths, subYears, parseISO, format,
 } from 'date-fns'
+import { es, enUS } from 'date-fns/locale'
 
 export type RelativeGroupKey =
   | 'today' | 'yesterday' | 'this_week' | 'last_week'
@@ -55,4 +56,38 @@ export function groupByRelativeDate<T extends { date: string }>(
     else buckets.set(key, [item])
   }
   return ORDER.filter(k => buckets.has(k)).map(key => ({ key, items: buckets.get(key)! }))
+}
+
+export interface DayGroup<T> {
+  dateStr: string
+  items: T[]
+}
+
+/**
+ * Agrupa `items` (ya ordenados date desc) por día exacto, preservando el orden
+ * de entrada. Usado en móvil (Movimientos), donde el separador de grupo ya
+ * lleva la fecha completa y por tanto no hace falta repetirla en cada fila.
+ */
+export function groupByDay<T extends { date: string }>(items: T[]): DayGroup<T>[] {
+  const order: string[] = []
+  const buckets = new Map<string, T[]>()
+  for (const item of items) {
+    if (!buckets.has(item.date)) { buckets.set(item.date, []); order.push(item.date) }
+    buckets.get(item.date)!.push(item)
+  }
+  return order.map(dateStr => ({ dateStr, items: buckets.get(dateStr)! }))
+}
+
+/**
+ * "Sábado, 18 de julio de 2026" (es) / "Saturday, July 18, 2026" (en). date-fns
+ * devuelve día/mes en minúscula en es-ES (ortografía correcta); aquí solo se
+ * capitaliza la primera letra de toda la frase, igual que el resto de etiquetas
+ * de la app ("Esta semana", "El mes pasado"), no cada palabra.
+ */
+export function formatDayLabel(dateStr: string, language: string): string {
+  const isEs = language.startsWith('es')
+  const locale = isEs ? es : enUS
+  const pattern = isEs ? "EEEE, d 'de' MMMM 'de' yyyy" : 'EEEE, MMMM d, yyyy'
+  const raw = format(parseISO(dateStr), pattern, { locale })
+  return raw.charAt(0).toUpperCase() + raw.slice(1)
 }

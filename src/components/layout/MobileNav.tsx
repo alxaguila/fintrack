@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { NavLink, useLocation, useSearchParams } from 'react-router-dom'
-import { Home, BarChart3, ArrowLeftRight, Wallet, Tags, FileClock, Upload, Shield, Menu, X, PiggyBank, ChevronDown } from 'lucide-react'
+import { Home, BarChart3, ArrowLeftRight, Wallet, Tags, FileClock, Upload, Shield, X, Calculator, ChevronDown } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { cn } from '@/lib/utils'
@@ -35,7 +35,7 @@ function DrawerBudgetsItem() {
 
   const content = (
     <>
-      <PiggyBank className="h-[18px] w-[18px] shrink-0" strokeWidth={1.7} />
+      <Calculator className="h-[18px] w-[18px] shrink-0" strokeWidth={1.7} />
       {t('nav.budgets')}
     </>
   )
@@ -69,7 +69,7 @@ const bottomItems = [
 
 const bottomItemClass = (isActive: boolean) =>
   cn(
-    'relative flex min-w-[76px] shrink-0 flex-col items-center justify-center gap-1 rounded-xl px-2 py-1.5 text-[11px] font-medium transition-colors',
+    'relative flex flex-1 min-w-0 flex-col items-center justify-center gap-1 rounded-xl px-2 py-1.5 text-[11px] font-medium transition-colors',
     isActive
       ? 'bg-[var(--brand-ink-2)] text-white'
       : 'text-[var(--side-text-muted)] hover:bg-[var(--side-hover-bg)] hover:text-[#E7F0F5]',
@@ -83,7 +83,7 @@ function BottomNavLink({ to, icon: Icon, label }: { to: string; icon: LucideIcon
         <>
           {isActive && <span className="absolute left-3 right-3 top-0 h-[3px] rounded-b-[3px] bg-[var(--brand-accent)]" />}
           <Icon className="h-5 w-5 shrink-0" strokeWidth={1.7} />
-          <span className="max-w-full truncate">{t(label)}</span>
+          <span className="max-w-full text-center leading-tight">{t(label)}</span>
         </>
       )}
     </NavLink>
@@ -102,8 +102,8 @@ function BudgetsBottomNavItem() {
   const content = (
     <>
       {isActive && <span className="absolute left-3 right-3 top-0 h-[3px] rounded-b-[3px] bg-[var(--brand-accent)]" />}
-      <PiggyBank className="h-5 w-5 shrink-0" strokeWidth={1.7} />
-      <span className="max-w-full truncate">{t('nav.short.budgets')}</span>
+      <Calculator className="h-5 w-5 shrink-0" strokeWidth={1.7} />
+      <span className="max-w-full text-center leading-tight">{t('nav.short.budgets')}</span>
     </>
   )
 
@@ -155,14 +155,26 @@ export function MobileBottomNav() {
 
   return (
     <>
-      <nav className="flex shrink-0 items-stretch gap-1 overflow-x-auto bg-[var(--brand-ink)] px-2 py-1.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:hidden">
+      <nav className="flex shrink-0 items-stretch gap-1 bg-[var(--brand-ink)] px-2 py-1.5 md:hidden">
         {bottomItems.slice(0, 2).map(({ to, icon, label }) => <BottomNavLink key={to} to={to} icon={icon} label={label} />)}
         <BudgetsBottomNavItem />
         {bottomItems.slice(2).map(({ to, icon, label }) => <BottomNavLink key={to} to={to} icon={icon} label={label} />)}
         <button type="button" onClick={() => setOpen(true)} aria-label={t('nav.menu')} aria-expanded={open} className={bottomItemClass(open)}>
           {open && <span className="absolute left-3 right-3 top-0 h-[3px] rounded-b-[3px] bg-[var(--brand-accent)]" />}
-          <Menu className="h-5 w-5 shrink-0" strokeWidth={1.7} />
-          <span className="max-w-full truncate">{t('nav.short.menu')}</span>
+          {/* Isotipo recortado al bounding box real del diamante (viewBox 0 0 100 100
+              original deja mucho aire alrededor y se ve pequeño junto a los iconos
+              lucide, que sí llenan su caja) — mismo h-5 w-5 que el resto de iconos. */}
+          <svg viewBox="17 25 66 58" aria-hidden="true" className="h-5 w-5 shrink-0">
+            <path
+              d="M30,28 L66,28 L80,44 L50,80 L20,44 Z M20,44 L80,44 M30,44 L50,80 M66,44 L50,80"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="7"
+              strokeLinejoin="round"
+              strokeLinecap="round"
+            />
+          </svg>
+          <span className="max-w-full text-center leading-tight">{t('nav.short.menu')}</span>
         </button>
       </nav>
 

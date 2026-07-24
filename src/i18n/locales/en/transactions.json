@@ -10,6 +10,8 @@
     "amount_min": "Min amount",
     "amount_max": "Max amount",
     "clear_filters": "Clear filters",
+    "show_filters": "Show filters",
+    "hide_filters": "Hide filters",
     "uncategorized": "Uncategorized"
   },
   "columns": {
@@ -25,8 +27,7 @@
   },
   "reviewed_filter": {
     "all": "All",
-    "unreviewed": "Unreviewed",
-    "reviewed": "Reviewed"
+    "unreviewed": "Unreviewed"
   },
   "mark_all_read": {
     "button": "Mark all as read",
@@ -54,6 +55,7 @@
     "edit_category": "Change category",
     "add_note": "Add note",
     "mark_reviewed": "Mark as reviewed",
+    "mark_unread": "Mark as unread",
     "reviewed": "Reviewed",
     "pending": "Pending"
   },
