@@ -219,7 +219,8 @@
               ["Producing internal aggregated statistics about the demographic profile of the user base (for example, distribution by country or employment status), visible only in the internal admin panel, to better understand our users and improve the product", "Legitimate interest of the Owner (Art. 6(1)(f) GDPR)"],
               ["Responding to queries, suggestions or issues submitted through the feedback form", "Performance of the contract and legitimate interest in assisting the User (Art. 6(1)(b) and 6(1)(f) GDPR)"],
               ["Ensuring the security of the application and preventing fraudulent use", "Legitimate interest of the Owner (Art. 6(1)(f) GDPR)"],
-              ["Complying with tax and accounting obligations where paid features exist", "Compliance with a legal obligation (Art. 6(1)(c) GDPR)"]
+              ["Complying with tax and accounting obligations where paid features exist", "Compliance with a legal obligation (Art. 6(1)(c) GDPR)"],
+              ["Sending the User email communications related to the use of the application and account (for example, welcome messages, usage reminders or confirmations associated with the subscription). These communications do not include marketing campaigns or third-party advertising", "Performance of the contract and legitimate interest of the Owner in the proper use of the service (Art. 6(1)(b) and 6(1)(f) GDPR)"]
             ]
           },
           { "p": "zafyros does not use onboarding data to automatically personalise the content or features shown to each User within the application: today that information is only used in aggregate form, as indicated in the table above. If any additional processing were introduced in the future — such as producing statistical studies or reports for third parties —, this Policy will be updated before it is activated, and the User's specific consent will be requested where required by law." }
@@ -240,7 +241,8 @@
             "table": [
               ["Supabase", "Database hosting and authentication. Stores account data and all of the User's financial data."],
               ["Vercel", "Hosting of the application's frontend. Serves the web application to the User's browser."],
-              ["Google LLC", "Sign-in via Google account, only if the User chooses to register with Google."]
+              ["Google LLC", "Sign-in via Google account, only if the User chooses to register with Google."],
+              ["Resend", "Sending transactional and service-usage emails (non-advertising). Receives the User's email address and the content of the message sent. Data hosted in the European Union (Ireland)."]
             ]
           },
           { "p": "None of these providers is authorised to use the User's data for its own purposes." }

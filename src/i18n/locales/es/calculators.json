@@ -1,0 +1,51 @@
+{
+  "compoundInterest": {
+    "meta": {
+      "title": "Calculadora de interés compuesto | zafyros",
+      "description": "Simula cuánto puede crecer tu dinero con aportaciones periódicas e interés compuesto, año a año."
+    },
+    "hero": {
+      "eyebrow": "Calculadoras financieras",
+      "title": "Calculadora de interés compuesto",
+      "subtitle": "Ajusta tu capital inicial, tus aportaciones mensuales y el horizonte temporal para ver cuánto puede crecer tu patrimonio."
+    },
+    "inputs": {
+      "title": "Tus datos",
+      "initialCapital": { "label": "Capital inicial" },
+      "monthlyContribution": { "label": "Aportación mensual" },
+      "years": { "label": "Horizonte temporal" },
+      "annualRate": { "label": "Interés anual estimado" },
+      "contributionIncrease": { "label": "Incremento anual de aportación" },
+      "frequency": { "label": "Frecuencia de capitalización", "monthly": "Mensual", "annual": "Anual" },
+      "yearsSuffix": "años"
+    },
+    "results": {
+      "title": "Resultado",
+      "finalBalance": "Patrimonio final estimado",
+      "totalContributed": "Total capital aportado",
+      "totalInterest": "Intereses generados",
+      "totalReturn": "Rentabilidad total",
+      "chartTitle": "Evolución del patrimonio",
+      "chart": {
+        "contributedSeries": "Capital aportado",
+        "interestSeries": "Intereses ganados",
+        "yearAxis": "Año"
+      },
+      "table": {
+        "title": "Desglose año a año",
+        "toggleShow": "Ver desglose año a año",
+        "toggleHide": "Ocultar desglose año a año",
+        "year": "Año",
+        "cumulativeContributed": "Aportación acumulada",
+        "yearInterest": "Intereses del año",
+        "balance": "Total saldo"
+      }
+    },
+    "share": {
+      "button": "Compartir resultado",
+      "shareText": "Con estas aportaciones podría llegar a {{amount}} en {{years}} años con zafyros",
+      "toastTitle": "Enlace copiado",
+      "toastDescription": "Se ha copiado al portapapeles la URL con esta configuración."
+    }
+  }
+}

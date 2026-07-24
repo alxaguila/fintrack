@@ -1,0 +1,51 @@
+{
+  "compoundInterest": {
+    "meta": {
+      "title": "Compound Interest Calculator | zafyros",
+      "description": "Simulate how much your money could grow with periodic contributions and compound interest, year by year."
+    },
+    "hero": {
+      "eyebrow": "Financial calculators",
+      "title": "Compound interest calculator",
+      "subtitle": "Adjust your initial capital, your monthly contributions and the time horizon to see how much your wealth could grow."
+    },
+    "inputs": {
+      "title": "Your numbers",
+      "initialCapital": { "label": "Initial capital" },
+      "monthlyContribution": { "label": "Monthly contribution" },
+      "years": { "label": "Time horizon" },
+      "annualRate": { "label": "Estimated annual return" },
+      "contributionIncrease": { "label": "Annual contribution increase" },
+      "frequency": { "label": "Compounding frequency", "monthly": "Monthly", "annual": "Annual" },
+      "yearsSuffix": "years"
+    },
+    "results": {
+      "title": "Result",
+      "finalBalance": "Estimated final wealth",
+      "totalContributed": "Total capital contributed",
+      "totalInterest": "Interest earned",
+      "totalReturn": "Total return",
+      "chartTitle": "Wealth growth",
+      "chart": {
+        "contributedSeries": "Capital contributed",
+        "interestSeries": "Interest earned",
+        "yearAxis": "Year"
+      },
+      "table": {
+        "title": "Year-by-year breakdown",
+        "toggleShow": "Show year-by-year breakdown",
+        "toggleHide": "Hide year-by-year breakdown",
+        "year": "Year",
+        "cumulativeContributed": "Cumulative contribution",
+        "yearInterest": "Interest this year",
+        "balance": "Total balance"
+      }
+    },
+    "share": {
+      "button": "Share result",
+      "shareText": "With these contributions I could reach {{amount}} in {{years}} years with zafyros",
+      "toastTitle": "Link copied",
+      "toastDescription": "The URL with this configuration has been copied to your clipboard."
+    }
+  }
+}

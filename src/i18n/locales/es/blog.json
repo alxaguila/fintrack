@@ -1,0 +1,155 @@
+{
+  "index": {
+    "metaTitle": "Blog — zafyros",
+    "eyebrow": "Blog",
+    "title": "Ideas claras para gestionar tu dinero",
+    "subtitle": "Artículos sobre ahorro, inversión y hábitos financieros, sin jerga innecesaria.",
+    "backToBlog": "Blog",
+    "readMore": "Leer artículo",
+    "minRead": "{{count}} min de lectura",
+    "disclaimer": "Este artículo tiene fines exclusivamente informativos y educativos. No constituye asesoramiento financiero, fiscal ni de inversión personalizado. Antes de tomar cualquier decisión, consulta nuestro **Aviso Legal** y valora acudir a un profesional cualificado.",
+    "disclaimerLinkLabel": "Aviso Legal"
+  },
+  "posts": {
+    "how-much-to-invest-by-age": {
+      "metaTitle": "Cuánto deberías invertir cada mes según la edad — Blog zafyros",
+      "title": "Cuánto deberías invertir cada mes según la edad (y qué hacer si vas tarde)",
+      "excerpt": "El interés compuesto convierte cada año de retraso en mucho más esfuerzo mensual. Estas son las cifras orientativas según tu edad, dónde colocar ese dinero y qué hacer si empiezas tarde.",
+      "readingMinutes": 8,
+      "imageAlt": {
+        "snowball": "Tres personas empujando una bola de nieve cuesta abajo: a los 20-25 años con poco esfuerzo, a los 35 con más esfuerzo y a los 45-50 con mucho más esfuerzo, hacia una bandera de \"libertad financiera\".",
+        "startToday": "Una persona sentada dudando si ahorrar 50 € es suficiente, y otra persona subiendo una escalera de botes de ahorro crecientes (50 €, 100 €, 200 €+) hacia una bandera que dice \"tu yo del futuro te lo agradecerá\"."
+      },
+      "sections": [
+        {
+          "blocks": [
+            { "p": "Muchas personas intentan llevar una gestión responsable de su dinero: evitan deudas innecesarias, guardan algo de margen a fin de mes y tienen la intención de empezar a invertir «más adelante». El problema es que en finanzas el tiempo tiene un valor muy concreto." },
+            { "p": "Esperar cinco o diez años no solo cambia la fecha en la que alcanzas tu tranquilidad financiera; cambia de forma radical la cantidad que necesitas poner de tu bolsillo cada mes." },
+            { "image": { "key": "snowball" } }
+          ]
+        },
+        {
+          "heading": "El efecto del tiempo en tu dinero",
+          "blocks": [
+            { "p": "El interés compuesto es el motor que hace que una inversión crezca a largo plazo. Funciona de forma muy sencilla: los rendimientos que genera tu dinero se reinvierten y empiezan a generar rendimientos por sí mismos." },
+            { "p": "Para entender la diferencia que marca el tiempo, piensa en dos casos hipotéticos con una rentabilidad media estimada del 8% anual:" },
+            {
+              "list": [
+                "**Empezar a los 25 años:** si inviertes 200 € al mes desde los 25 hasta los 65 años, habrás aportado 96.000 € de tu bolsillo. Al final del periodo, el interés compuesto habrá convertido ese dinero en unos 580.000 €.",
+                "**Empezar a los 35 años:** si esperas diez años y decides compensarlo invirtiendo el doble (400 € al mes) hasta los 65 años, habrás aportado 144.000 € de tu bolsillo. Sin embargo, el resultado final ronda los 450.000 €."
+              ]
+            },
+            { "p": "A pesar de haber aportado más dinero cada mes, el resultado es menor porque el dinero ha tenido diez años menos para multiplicarse." },
+            {
+              "callout": {
+                "icon": "💡",
+                "text": "¿Quieres simular tus propias cifras de crecimiento a largo plazo? Comprueba cómo el tiempo y la constancia multiplican tus ahorros introduciendo tus datos en nuestra Calculadora de Interés Compuesto.",
+                "linkLabel": "Abrir la Calculadora de Interés Compuesto",
+                "href": "/calculators/compound-interest"
+              }
+            }
+          ]
+        },
+        {
+          "heading": "Las cifras de referencia según tu edad",
+          "blocks": [
+            { "p": "Tomando como base una rentabilidad media del 8% anualizada (histórica en índices globales y en el S&P 500) para un objetivo de jubilación a los 65 años, estas son las estimaciones de aportación mensual necesarias según el punto de partida:" },
+            {
+              "ageBrackets": {
+                "labels": {
+                  "contribution": "Aportación aproximada",
+                  "contributed": "Aportado de tu bolsillo",
+                  "capital": "Capital estimado a los 65",
+                  "multiplier": "Factor de multiplicación"
+                },
+                "items": [
+                  { "range": "Entre 20 y 25 años", "contribution": "250 € a 300 € al mes", "contributed": "~144.000 € en 40 años", "capital": "~1,2 millones de euros", "multiplier": "El capital final equivale a multiplicar por más de 8 el dinero aportado." },
+                  { "range": "Entre 30 y 35 años", "contribution": "550 € a 650 € al mes", "contributed": "~273.000 € en 35 años", "capital": "~1 millón de euros", "multiplier": "El capital se multiplica aproximadamente por 3,7." },
+                  { "range": "Entre 35 y 40 años", "contribution": "900 € a 1.100 € al mes", "contributed": "~360.000 € en 30 años", "capital": "~1 millón de euros", "multiplier": "Se multiplica por 2,8." },
+                  { "range": "Entre 40 y 45 años", "contribution": "1.700 € a 2.000 € al mes", "contributed": "~540.000 € en 25 años", "capital": "~1 millón de euros", "multiplier": "Se multiplica por menos de 2." },
+                  { "range": "Entre 45 y 50 años", "contribution": "3.000 € a 3.500 € al mes", "contributed": "~768.000 € en 20 años", "capital": "~1 millón de euros", "multiplier": "Se multiplica por 1,3." }
+                ]
+              }
+            },
+            {
+              "callout": {
+                "icon": "🎯",
+                "text": "¿Quieres afinar tu propio número? Prueba distintos importes de aportación mensual, plazos y rentabilidad en nuestra Calculadora de Interés Compuesto y compara escenarios.",
+                "linkLabel": "Simular mi aportación mensual",
+                "href": "/calculators/compound-interest"
+              }
+            }
+          ]
+        },
+        {
+          "heading": "Dónde colocar este dinero de forma sencilla",
+          "blocks": [
+            { "p": "No hace falta analizar gráficos a diario ni buscar la empresa de moda. Para la mayoría de personas con un trabajo a jornada completa, la opción más eficiente y diversificada son los fondos de inversión indexados." },
+            { "p": "Un fondo indexado es una cesta que replica un índice completo (como el S&P 500 o el MSCI World). Sus principales ventajas son:" },
+            {
+              "orderedList": [
+                "**Diversificación automática:** tu dinero se reparte entre cientos o miles de empresas en lugar de depender de una sola.",
+                "**Bajos costes:** las comisiones suelen ser muy reducidas (en torno al 0,20% anual).",
+                "**Eficiencia fiscal (en España):** puedes traspasar dinero de un fondo a otro sin tributar hasta que decidas retirarlo definitivamente."
+              ]
+            },
+            { "p": "Para ponerlo en marcha basta con abrir cuenta en un comercializador o bróker especializado (como MyInvestor, Trade Republic o Interactive Brokers) y programar una transferencia automática cada mes." }
+          ]
+        },
+        {
+          "heading": "Qué hacer si empiezas tarde o tus ingresos son menores",
+          "blocks": [
+            { "p": "Si ves los números de tu franja de edad y no puedes llegar a esas cifras, no significa que debas descartar la inversión. Tener un capital acumulado de 100.000 € o 300.000 € al jubilarte siempre te dará más margen y tranquilidad que no tener nada." },
+            { "p": "Existen cinco vías para ajustar el plan a tu situación:" },
+            {
+              "orderedList": [
+                "**Aumentar tus ingresos:** es más efectivo buscar vías para ingresar más (cambio de trabajo, negociación salarial, desarrollo de habilidades) que intentar recortar continuamente gastos básicos.",
+                "**Empieza con lo que tengas hoy:** si solo puedes asignar 50 € o 100 € al mes, empieza ahí. Crear el hábito facilita aumentar la cifra cuando tus ingresos crezcan.",
+                "**Ajustar expectativas:** enfócate en complementar tu futura pensión en lugar de obsesionarte con una cifra fija.",
+                "**Asignar una pequeña parte a activos con mayor potencial:** con la formación adecuada, un porcentaje muy reducido de la cartera (5% - 10%) puede destinarse a activos alternativos, asumiendo un riesgo mayor.",
+                "**Extender el horizonte temporal:** trabajar o mantener tus inversiones hasta los 68 o 70 años añade años de crecimiento por interés compuesto y reduce los años de retiro a financiar."
+              ]
+            },
+            { "image": { "key": "startToday" } },
+            {
+              "callout": {
+                "icon": "🔄",
+                "text": "¿Y si retrasas tu edad de retiro o cambias tu aportación mensual? Juega con los parámetros en nuestra Calculadora de Interés Compuesto para encontrar un escenario realista que se adapte a tu estilo de vida actual.",
+                "linkLabel": "Probar distintos escenarios",
+                "href": "/calculators/compound-interest"
+              }
+            }
+          ]
+        },
+        {
+          "heading": "5 errores frecuentes al empezar",
+          "blocks": [
+            {
+              "list": [
+                "**Esperar al «momento perfecto»:** el mejor momento para empezar fue hace diez años; el segundo mejor momento es hoy.",
+                "**Intentar adivinar el mercado:** nadie sabe si la bolsa subirá o bajará el mes que viene. Invertir de forma fija y periódica (Dollar Cost Averaging) promedia las compras en momentos altos y bajos.",
+                "**Vender durante una caída:** las caídas temporales del 10% o 20% son habituales en los mercados. Vender en pánico convierte una pérdida temporal en una pérdida definitiva.",
+                "**Invertir en productos que no entiendes:** si no comprendes cómo funciona un producto financiero o qué costes implica, no pongas tu dinero en él.",
+                "**No automatizar:** depender de acordarte cada mes hace que cualquier gasto imprevisto aplace la inversión. Programa la transferencia el día después de recibir tus ingresos."
+              ]
+            }
+          ]
+        },
+        {
+          "heading": "Resumen práctico",
+          "blocks": [
+            {
+              "orderedList": [
+                "Mira tus ingresos y tus gastos del mes.",
+                "Define un importe fijo que te puedas permitir sin ahogar tu día a día.",
+                "Abre una cuenta de inversión y elige un fondo global o diversificado.",
+                "Configura una transferencia automática mensual para que el proceso ocurra de forma autónoma."
+              ]
+            },
+            { "p": "Con zafyros puedes importar los extractos de tu banco en formato CSV o Excel para ver cómo evoluciona tu patrimonio mes a mes, sin necesidad de dar tus claves bancarias a nadie." }
+          ]
+        }
+      ]
+    }
+  }
+}

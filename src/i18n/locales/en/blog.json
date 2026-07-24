@@ -1,0 +1,155 @@
+{
+  "index": {
+    "metaTitle": "Blog — zafyros",
+    "eyebrow": "Blog",
+    "title": "Clear ideas for managing your money",
+    "subtitle": "Articles about saving, investing and money habits, without unnecessary jargon.",
+    "backToBlog": "Blog",
+    "readMore": "Read article",
+    "minRead": "{{count}} min read",
+    "disclaimer": "This article is for informational and educational purposes only. It does not constitute personalized financial, tax or investment advice. Before making any decision, check our **Legal Notice** and consider talking to a qualified professional.",
+    "disclaimerLinkLabel": "Legal Notice"
+  },
+  "posts": {
+    "how-much-to-invest-by-age": {
+      "metaTitle": "How much you should invest each month by age — zafyros Blog",
+      "title": "How much you should invest each month by age (and what to do if you're starting late)",
+      "excerpt": "Compound interest turns every year of delay into a lot more monthly effort. Here are rough figures by age, where to put that money, and what to do if you're starting late.",
+      "readingMinutes": 8,
+      "imageAlt": {
+        "snowball": "Three people pushing a snowball downhill: at 20-25 with little effort, at 35 with more effort, and at 45-50 with much more effort, heading towards a \"financial freedom\" flag.",
+        "startToday": "One person sitting and wondering if saving €50 is enough, and another person climbing a staircase of growing savings jars (€50, €100, €200+) towards a flag that reads \"future you will thank you\"."
+      },
+      "sections": [
+        {
+          "blocks": [
+            { "p": "Many people try to manage their money responsibly: they avoid unnecessary debt, keep some margin at the end of the month, and intend to start investing \"later on\". The problem is that in finance, time has a very concrete value." },
+            { "p": "Waiting five or ten years doesn't just push back the date you reach financial peace of mind; it radically changes how much you need to put in from your own pocket every month." },
+            { "image": { "key": "snowball" } }
+          ]
+        },
+        {
+          "heading": "The effect of time on your money",
+          "blocks": [
+            { "p": "Compound interest is the engine that makes an investment grow over the long term. It works in a very simple way: the returns your money generates get reinvested and start generating returns of their own." },
+            { "p": "To understand the difference time makes, consider two hypothetical cases with an estimated average return of 8% a year:" },
+            {
+              "list": [
+                "**Starting at 25:** if you invest €200 a month from age 25 to 65, you'll have contributed €96,000 out of your own pocket. By the end of the period, compound interest will have turned that money into roughly €580,000.",
+                "**Starting at 35:** if you wait ten years and decide to make up for it by investing double (€400 a month) until 65, you'll have contributed €144,000 out of your own pocket. Yet the final result is only around €450,000."
+              ]
+            },
+            { "p": "Even though you contributed more money each month, the result is lower because the money had ten fewer years to multiply." },
+            {
+              "callout": {
+                "icon": "💡",
+                "text": "Want to simulate your own long-term growth figures? See how time and consistency multiply your savings by entering your numbers in our Compound Interest Calculator.",
+                "linkLabel": "Open the Compound Interest Calculator",
+                "href": "/calculators/compound-interest"
+              }
+            }
+          ]
+        },
+        {
+          "heading": "Reference figures by age",
+          "blocks": [
+            { "p": "Based on an average annualized return of 8% (historical for global indices and the S&P 500) and a retirement goal at age 65, here are the estimated monthly contributions needed depending on your starting point:" },
+            {
+              "ageBrackets": {
+                "labels": {
+                  "contribution": "Approximate contribution",
+                  "contributed": "Contributed out of pocket",
+                  "capital": "Estimated capital at 65",
+                  "multiplier": "Multiplier factor"
+                },
+                "items": [
+                  { "range": "Between 20 and 25 years old", "contribution": "€250 to €300 a month", "contributed": "~€144,000 over 40 years", "capital": "~€1.2 million", "multiplier": "The final capital is equivalent to multiplying the contributed money by more than 8." },
+                  { "range": "Between 30 and 35 years old", "contribution": "€550 to €650 a month", "contributed": "~€273,000 over 35 years", "capital": "~€1 million", "multiplier": "The capital is multiplied by roughly 3.7." },
+                  { "range": "Between 35 and 40 years old", "contribution": "€900 to €1,100 a month", "contributed": "~€360,000 over 30 years", "capital": "~€1 million", "multiplier": "It's multiplied by 2.8." },
+                  { "range": "Between 40 and 45 years old", "contribution": "€1,700 to €2,000 a month", "contributed": "~€540,000 over 25 years", "capital": "~€1 million", "multiplier": "It's multiplied by less than 2." },
+                  { "range": "Between 45 and 50 years old", "contribution": "€3,000 to €3,500 a month", "contributed": "~€768,000 over 20 years", "capital": "~€1 million", "multiplier": "It's multiplied by 1.3." }
+                ]
+              }
+            },
+            {
+              "callout": {
+                "icon": "🎯",
+                "text": "Want to fine-tune your own number? Try different monthly contributions, timeframes and returns in our Compound Interest Calculator and compare scenarios.",
+                "linkLabel": "Simulate my monthly contribution",
+                "href": "/calculators/compound-interest"
+              }
+            }
+          ]
+        },
+        {
+          "heading": "Where to put this money in a simple way",
+          "blocks": [
+            { "p": "You don't need to analyze charts every day or chase the trendiest company. For most people with a full-time job, the most efficient and diversified option is index funds." },
+            { "p": "An index fund is a basket that tracks a whole index (like the S&P 500 or the MSCI World). Its main advantages are:" },
+            {
+              "orderedList": [
+                "**Automatic diversification:** your money is spread across hundreds or thousands of companies instead of depending on just one.",
+                "**Low costs:** fees tend to be very low (around 0.20% a year).",
+                "**Tax efficiency (in Spain):** you can move money from one fund to another without being taxed until you actually withdraw it."
+              ]
+            },
+            { "p": "Getting started just takes opening an account with a specialized broker (such as MyInvestor, Trade Republic or Interactive Brokers) and setting up an automatic monthly transfer." }
+          ]
+        },
+        {
+          "heading": "What to do if you're starting late or earning less",
+          "blocks": [
+            { "p": "If you look at the figures for your age bracket and can't reach those numbers, that doesn't mean you should give up on investing. Having €100,000 or €300,000 saved by retirement will always give you more room and peace of mind than having nothing." },
+            { "p": "There are five ways to adjust the plan to your situation:" },
+            {
+              "orderedList": [
+                "**Increase your income:** finding ways to earn more (changing jobs, negotiating a raise, developing skills) is usually more effective than constantly cutting basic expenses.",
+                "**Start with what you have today:** if you can only set aside €50 or €100 a month, start there. Building the habit makes it easier to increase the amount as your income grows.",
+                "**Adjust your expectations:** focus on supplementing your future pension rather than fixating on one exact figure.",
+                "**Allocate a small part to higher-potential assets:** with the right knowledge, a very small share of the portfolio (5%-10%) can go to alternative assets, accepting a higher level of risk.",
+                "**Extend your time horizon:** working or keeping your investments until age 68 or 70 adds years of compound growth and reduces the number of retirement years to fund."
+              ]
+            },
+            { "image": { "key": "startToday" } },
+            {
+              "callout": {
+                "icon": "🔄",
+                "text": "What if you push back your retirement age or change your monthly contribution? Play with the parameters in our Compound Interest Calculator to find a realistic scenario that fits your current lifestyle.",
+                "linkLabel": "Try different scenarios",
+                "href": "/calculators/compound-interest"
+              }
+            }
+          ]
+        },
+        {
+          "heading": "5 common mistakes when starting out",
+          "blocks": [
+            {
+              "list": [
+                "**Waiting for the \"perfect moment\":** the best time to start was ten years ago; the second best time is today.",
+                "**Trying to time the market:** nobody knows if the market will go up or down next month. Investing a fixed amount on a regular basis (dollar-cost averaging) averages out purchases across highs and lows.",
+                "**Selling during a downturn:** temporary drops of 10% or 20% are common in the markets. Selling out of panic turns a temporary loss into a permanent one.",
+                "**Investing in products you don't understand:** if you don't understand how a financial product works or what it costs, don't put your money into it.",
+                "**Not automating it:** relying on remembering every month means any unexpected expense can push the investment back. Set up the transfer for the day after you get paid."
+              ]
+            }
+          ]
+        },
+        {
+          "heading": "Practical summary",
+          "blocks": [
+            {
+              "orderedList": [
+                "Look at your income and expenses for the month.",
+                "Set a fixed amount you can afford without straining your day-to-day budget.",
+                "Open an investment account and choose a global or diversified fund.",
+                "Set up an automatic monthly transfer so the process runs on its own."
+              ]
+            },
+            { "p": "With zafyros you can import your bank statements in CSV or Excel format to see how your net worth evolves month by month, without ever handing over your banking credentials to anyone." }
+          ]
+        }
+      ]
+    }
+  }
+}

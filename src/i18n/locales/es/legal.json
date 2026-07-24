@@ -219,7 +219,8 @@
               ["Elaborar estadísticas internas agregadas sobre el perfil demográfico de la base de usuarios (por ejemplo, distribución por país o situación laboral), visibles únicamente en el panel interno de administración, para conocer mejor a nuestros usuarios y mejorar el producto", "Interés legítimo del Titular (art. 6.1.f RGPD)"],
               ["Responder a las consultas, sugerencias o incidencias enviadas a través del formulario de feedback", "Ejecución del contrato e interés legítimo en atender al Usuario (art. 6.1.b y 6.1.f RGPD)"],
               ["Garantizar la seguridad de la aplicación y prevenir usos fraudulentos", "Interés legítimo del Titular (art. 6.1.f RGPD)"],
-              ["Cumplir obligaciones fiscales y contables cuando existan funcionalidades de pago", "Cumplimiento de una obligación legal (art. 6.1.c RGPD)"]
+              ["Cumplir obligaciones fiscales y contables cuando existan funcionalidades de pago", "Cumplimiento de una obligación legal (art. 6.1.c RGPD)"],
+              ["Enviar al Usuario comunicaciones por correo electrónico relacionadas con el uso de la aplicación y de la cuenta (por ejemplo, mensajes de bienvenida, recordatorios de uso o confirmaciones asociadas a la suscripción). Estas comunicaciones no incluyen campañas de marketing ni publicidad de terceros", "Ejecución del contrato e interés legítimo del Titular en el correcto uso del servicio (art. 6.1.b y 6.1.f RGPD)"]
             ]
           },
           { "p": "zafyros no utiliza los datos del onboarding para personalizar automáticamente el contenido o las funcionalidades que se muestran a cada Usuario dentro de la aplicación: hoy esa información solo se emplea de forma agregada, como se indica en la tabla anterior. Si en el futuro se incorporase algún tratamiento adicional —como la elaboración de estudios o informes estadísticos destinados a terceros—, esta Política se actualizará antes de activarlo y se solicitará el consentimiento específico del Usuario cuando la normativa lo exija." }
@@ -240,7 +241,8 @@
             "table": [
               ["Supabase", "Alojamiento de la base de datos y autenticación. Almacena los datos de cuenta y todos los datos financieros del Usuario."],
               ["Vercel", "Alojamiento del frontend de la aplicación. Sirve la aplicación web al navegador del Usuario."],
-              ["Google LLC", "Inicio de sesión mediante cuenta de Google, solo si el Usuario elige registrarse con Google."]
+              ["Google LLC", "Inicio de sesión mediante cuenta de Google, solo si el Usuario elige registrarse con Google."],
+              ["Resend", "Envío de correos electrónicos transaccionales y de uso del servicio (no publicitarios). Recibe la dirección de correo electrónico del Usuario y el contenido del mensaje enviado. Datos alojados en la Unión Europea (Irlanda)."]
             ]
           },
           { "p": "Ninguno de estos proveedores está autorizado a utilizar los datos del Usuario para fines propios." }

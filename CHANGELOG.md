@@ -2,6 +2,39 @@
 
 Lista de cambios por versión (`APP_VERSION` en `src/lib/version.ts`). Solo se añade una entrada cuando el código de la app cambia.
 
+## v1.742
+- SEO: añadida `meta description` en `index.html` (no existía ninguna), y nuevos `public/robots.txt` (bloquea `/app`, la app autenticada; permite el resto y enlaza al sitemap) y `public/sitemap.xml` con las páginas públicas (home, registro, calculadora, blog e índice, y las 4 páginas legales). Motivado por que Google mostraba en el snippet de búsqueda contenido genérico de una plantilla antigua de aparcamiento del dominio en vez del sitio real — este cambio da señales frescas para que Google recrawlee y muestre la descripción correcta.
+
+## v1.737
+- Nuevo blog público (`/blog`), con índice de entradas y primera entrada "Cuánto deberías invertir cada mes según la edad (y qué hacer si vas tarde)" (ES+EN), enlazada ya desde el footer. Incluye enlaces a la Calculadora de Interés Compuesto, dos ilustraciones y un aviso de que el contenido es informativo, no asesoramiento financiero personalizado (con enlace al Aviso Legal). Las entradas nuevas se añaden por código (`src/i18n/locales/{es,en}/blog.json` + `src/lib/blog/posts.ts`), sin necesidad de un componente propio por artículo — no hay todavía una pantalla de administración para publicar sin tocar código.
+
+## v1.731
+- La URL de la Calculadora de Interés Compuesto pasa de `/calculadoras/interes-compuesto` a `/calculators/compound-interest`, en inglés como el resto de rutas de la webapp (queda como norma para las páginas públicas nuevas; las páginas legales ya publicadas en español no se tocan). Los parámetros de la URL para compartir/enlazar una configuración también pasan a nombres en inglés (`initial`, `contribution`, `years`, `rate`, `increase`, `frequency`).
+
+## v1.728
+- Calculadora de Interés Compuesto: corrige que los importes de las pastillas se envolvían a dos líneas (se quita el `word-break` que los partía y se ajusta el tamaño de fuente para que quepan en una sola línea); la cuarta pastilla, antes con dos datos apilados, pasa a mostrar un único valor — la rentabilidad total sobre lo aportado en porcentaje; los títulos de las pastillas adoptan el mismo estilo tipográfico que "Tus datos" en el panel de inputs.
+
+## v1.726
+- Calculadora de Interés Compuesto: todo el texto de las 4 pastillas de resultado queda centrado, las etiquetas pasan a negrita y los números ganan tamaño; en la pastilla "Interés" el segundo dato deja de ser el importe absoluto (que se desbordaba fuera de la tarjeta) y pasa a ser la rentabilidad relativa sobre lo aportado (intereses ÷ capital aportado × 100, p. ej. "196,8%"); de paso se corrige que el % anual se mostraba con punto decimal en vez de coma.
+
+## v1.724
+- Calculadora de Interés Compuesto: reordenadas las 4 pastillas de resultado (Capital aportado, Patrimonio acumulado, Intereses generados e Interés, esta última con el % anual y el total acumulado apilados dentro de la misma pastilla); los valores de las 4 pastillas quedan siempre a la misma altura aunque su etiqueta ocupe una o dos líneas; los decimales de los importes en € se muestran más pequeños y atenuados frente a la parte entera; el desglose año a año pasa a ser una fila propia a todo lo ancho, debajo del bloque de inputs y resultado, en vez de ir dentro de la columna derecha.
+
+## v1.722
+- Ajustes de la Calculadora de Interés Compuesto (`/calculadoras/interes-compuesto`): el slider de aportación mensual topa en 1.000 € (el campo numérico sigue admitiendo hasta 10.000 € a mano); el desglose año a año queda oculto por defecto tras un texto "Ver desglose año a año"; el KPI de intereses se separa en "Interés anual" (el % configurado) e "Intereses generados" (importe total); la gráfica gana protagonismo y las tarjetas de resumen se hacen más compactas, con las dos columnas alineadas a la misma altura; el botón "Compartir resultado" abre ahora el panel nativo de compartir del móvil (WhatsApp, email...) cuando está disponible, con el enlace de la configuración exacta y un resumen del resultado, y sigue cayendo a copiar el enlace al portapapeles en escritorio.
+
+## v1.719
+- Nueva Calculadora de Interés Compuesto en la landing pública (`/calculadoras/interes-compuesto`), enlazada ya desde el footer: simula la evolución del patrimonio con capital inicial, aportación mensual (con incremento anual opcional), horizonte temporal e interés estimado (capitalización mensual o anual), con gráfico de capital aportado vs. intereses, tabla de desglose año a año y botón para compartir la configuración por URL. Cálculo 100% en el navegador, sin guardar ni enviar ningún dato a ningún sitio.
+
+## v1.713
+- Política de Privacidad (ES+EN): añadido Resend como nuevo encargado del tratamiento (envío de correos transaccionales y de uso del servicio, datos alojados en la UE, Irlanda) y una nueva finalidad en la tabla del §3 cubriendo las comunicaciones de uso de la cuenta (bienvenida, recordatorios, confirmaciones de suscripción), sin incluir marketing.
+
+## v1.703
+- Emails de código (registro y recuperación de contraseña) de `send-auth-email`: corrige el ligero desajuste de centrado entre la etiqueta "Tu código" y el número (efecto del `letter-spacing`) y pasa la marca a "Zafyros" con mayúscula en el texto (asunto, título, cuerpo, pie de página), manteniendo el logotipo de la cabecera y el dominio `zafyros.com` en minúscula.
+
+## v1.691
+- Nueva Edge Function `send-auth-email`: los correos de verificación de registro y de recuperación de contraseña pasan a enviarse vía Resend con plantilla de marca zafyros, en vez del correo genérico por defecto de Supabase. El idioma del correo es el real del usuario (no bilingüe). Pendiente de activar en producción: cuenta y dominio verificado en Resend + Auth Hook "Send Email" en el dashboard de Supabase (ver guía aparte).
+
 ## v1.684
 - La pantalla de "Completar registro" (onboarding tras verificar el email) usaba el wordmark viejo "FinTrack"; ahora muestra la marca zafyros.
 - Móvil: mientras un usuario nuevo no tiene ningún extracto importado, cada pantalla (Posición Global, Análisis, Presupuestos, Movimientos, Cuentas, Historial) mostraba solo el aviso genérico de "sube tu primer extracto" sin indicar en qué sección estás; ahora cada una muestra su propio título y subtítulo por encima del aviso.

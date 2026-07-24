@@ -38,8 +38,8 @@ export function SiteFooter() {
             <a href="/#precios">{t('nav.pricing')}</a>
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 12, font: `400 14px ${BRAND.sans}`, color: '#586470' }}>
-            <span>{t('footer.blog')}</span>
-            <span>{t('footer.calculators')}</span>
+            <a href="/blog">{t('footer.blog')}</a>
+            <a href="/calculators/compound-interest">{t('footer.calculators')}</a>
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 12, font: `400 14px ${BRAND.sans}`, color: '#586470' }}>
             <a href="/aviso-legal">{t('footer.legalNotice')}</a>
