@@ -2,6 +2,23 @@
 
 Lista de cambios por versión (`APP_VERSION` en `src/lib/version.ts`). Solo se añade una entrada cuando el código de la app cambia.
 
+## v1.684
+- La pantalla de "Completar registro" (onboarding tras verificar el email) usaba el wordmark viejo "FinTrack"; ahora muestra la marca zafyros.
+- Móvil: mientras un usuario nuevo no tiene ningún extracto importado, cada pantalla (Posición Global, Análisis, Presupuestos, Movimientos, Cuentas, Historial) mostraba solo el aviso genérico de "sube tu primer extracto" sin indicar en qué sección estás; ahora cada una muestra su propio título y subtítulo por encima del aviso.
+- En Análisis (móvil), el selector de periodo (mes/trimestre/año) ya no aparece si todavía no hay ningún extracto importado.
+- Aclarado el mensaje de "sube tu primer extracto": ahora explica que cuanto más largo sea el periodo que cubre el extracto (p. ej. desde junio de 2023), más completo será el análisis, en vez del ambiguo "cuanto más antiguo".
+
+## v1.681
+- Corrige un bug por el que iniciar sesión con email y contraseña (o registrarse, o restablecer la contraseña) dejaba la pantalla parpadeando entre `zafyros.com` y `app.zafyros.com` sin llegar a entrar a la app — la sesión no viajaba entre esos dos subdominios. Ahora se pasa junto con el redirect, igual que ya funcionaba con "Continuar con Google".
+- El error de Supabase "email rate limit exceeded" al registrarse ya no se muestra en crudo: se traduce a un mensaje claro de "demasiados intentos, esperá unos minutos".
+
+## v1.676
+- Textos legales (Aviso Legal, Privacidad, Cookies y Términos): dominio y email reales (`www.zafyros.com` / `app.zafyros.com` para la aplicación, `zafyros@gmail.com` como contacto provisional), en sustitución de los placeholders de borrador.
+- Privacidad y Términos aclaran que, además del autoborrado desde Ajustes, un administrador del servicio puede eliminar la cuenta de un usuario en supuestos excepcionales (incumplimiento grave, fraude o requerimiento legal), con el mismo alcance irreversible.
+
+## v1.670
+- El admin ya puede eliminar usuarios desde `/admin/usuarios` (ficha de usuario → zona de peligro), con la misma doble confirmación que el autoborrado de cuenta ("Eliminar" → escribir la palabra `delete`). Es un borrado total e irreversible, pero se conservan las reglas de comunidad que ese usuario había aportado para que el resto de usuarios las sigan aprovechando.
+
 ## v1.667
 - La animación de ejemplo del swipe en Movimientos (móvil) pasa de mostrarse siempre a mostrarse solo una vez por semana: si hace más de 7 días desde la última vez que este navegador la vio, se repite; si no, no vuelve a aparecer.
 

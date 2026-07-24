@@ -1,5 +1,6 @@
 {
   "title": "Historial de subidas",
+  "subtitle": "Registro de los extractos que has importado.",
   "processing_note": "Aplicando los cambios y recalculando los saldos. Esto puede tardar un momento; no cierres esta ventana.",
   "filters": {
     "all_entities": "Todas las entidades",

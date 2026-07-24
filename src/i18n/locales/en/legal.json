@@ -2,7 +2,7 @@
   "avisoLegal": {
     "metaTitle": "Legal Notice — zafyros",
     "pageTitle": "Legal Notice",
-    "lastUpdated": "Last updated: 20 July 2026",
+    "lastUpdated": "Last updated: 24 July 2026",
     "back": "Back to zafyros",
     "sections": [
       {
@@ -14,8 +14,9 @@
               ["Owner", "ALEX DEL AGUILA ARCOS"],
               ["Spanish Tax ID (NIF)", "46718103C"],
               ["Registered address", "C. Alfons XII 5, 5º-2ª, 08006 Barcelona"],
-              ["Email", "dolfinapp@gmail.com"],
-              ["Website", "alxfintrack.vercel.app"],
+              ["Email", "zafyros@gmail.com"],
+              ["Website", "www.zafyros.com"],
+              ["Web application", "app.zafyros.com"],
               ["Activity", "Development and operation of a personal finance management web application."]
             ]
           },
@@ -28,6 +29,7 @@
         "heading": "2. Purpose and scope",
         "blocks": [
           { "p": "This Legal Notice governs access to, browsing of and use of the zafyros website and web application (hereinafter, interchangeably, the \"Website\" or \"zafyros\"), owned by the Owner identified above." },
+          { "p": "The informational content and these legal documents are served at www.zafyros.com; once a User has created an account, access to the authenticated application takes place through the app.zafyros.com subdomain." },
           { "p": "zafyros is a personal-use tool that allows Users to import their own bank statements, classify them into categories, organise them across separate financial profiles, and view aggregated information about their income and expenses." },
           { "p": "Access to the Website is free of charge, without prejudice to the cost of the User's own telecommunications connection, and notwithstanding that certain features may require a paid subscription, in which case the applicable financial terms will be disclosed clearly and expressly prior to contracting." }
         ]
@@ -83,7 +85,7 @@
           { "p": "The reproduction, distribution, public communication, transformation or any other form of exploitation, in whole or in part, of such contents without the Owner's prior express written authorisation is expressly prohibited. Access to the Website grants Users no right or title over such contents." },
           { "p": "The contents and data that the User uploads to zafyros **are and shall remain the User's exclusive property**. The Owner processes them solely as set out in the Privacy Policy and for the purpose of providing the service." },
           { "p": "The Website may incorporate third-party software components subject to their own licences, whose terms are respected in all cases." },
-          { "p": "If a User believes that any content on the Website infringes their intellectual or industrial property rights, they may report this to dolfinapp@gmail.com." }
+          { "p": "If a User believes that any content on the Website infringes their intellectual or industrial property rights, they may report this to zafyros@gmail.com." }
         ]
       },
       {
@@ -114,14 +116,14 @@
       {
         "heading": "9. Personal data protection",
         "blocks": [
-          { "p": "The processing of Users' personal data is governed by the **Privacy Policy**, available at alxfintrack.vercel.app/privacidad, drafted in accordance with Regulation (EU) 2016/679 (GDPR) and Spanish Organic Act 3/2018, of 5 December, on the Protection of Personal Data and the Guarantee of Digital Rights (LOPDGDD)." },
+          { "p": "The processing of Users' personal data is governed by the **Privacy Policy**, available at www.zafyros.com/privacidad, drafted in accordance with Regulation (EU) 2016/679 (GDPR) and Spanish Organic Act 3/2018, of 5 December, on the Protection of Personal Data and the Guarantee of Digital Rights (LOPDGDD)." },
           { "p": "Users are advised to read it carefully before providing their data, paying particular attention to the purposes of processing and the legal bases relied upon." }
         ]
       },
       {
         "heading": "10. Cookies",
         "blocks": [
-          { "p": "The use of cookies and other technologies for storing and retrieving data on Users' devices is governed by the **Cookie Policy**, available at alxfintrack.vercel.app/cookies, in accordance with Article 22.2 LSSI-CE." }
+          { "p": "The use of cookies and other technologies for storing and retrieving data on Users' devices is governed by the **Cookie Policy**, available at www.zafyros.com/cookies, in accordance with Article 22.2 LSSI-CE." }
         ]
       },
       {
@@ -160,7 +162,7 @@
       {
         "heading": "15. Complaints and contact",
         "blocks": [
-          { "p": "Users may direct any query, suggestion or complaint relating to the Website to dolfinapp@gmail.com. The Owner will acknowledge receipt and respond as promptly as possible." },
+          { "p": "Users may direct any query, suggestion or complaint relating to the Website to zafyros@gmail.com. The Owner will acknowledge receipt and respond as promptly as possible." },
           { "p": "Additionally, Users who qualify as consumers may address their complaints to the competent consumer authorities of their Autonomous Community or to the Municipal Consumer Information Offices (OMIC)." },
           { "p": "In matters of personal data protection, Users may lodge a complaint with the **Spanish Data Protection Agency** (www.aepd.es), without prejudice to their right to contact the Owner first as set out in the Privacy Policy." }
         ]
@@ -170,7 +172,7 @@
   "privacidad": {
     "metaTitle": "Privacy Policy — zafyros",
     "pageTitle": "Privacy Policy",
-    "lastUpdated": "Last updated: 21 July 2026",
+    "lastUpdated": "Last updated: 24 July 2026",
     "sections": [
       {
         "heading": "1. Data controller",
@@ -181,8 +183,9 @@
               ["Owner", "ALEX DEL AGUILA ARCOS"],
               ["Spanish Tax ID (NIF)", "46718103C"],
               ["Registered address", "C. Alfons XII 5, 5º-2ª, 08006 Barcelona"],
-              ["Email", "dolfinapp@gmail.com"],
-              ["Website", "alxfintrack.vercel.app"]
+              ["Email", "zafyros@gmail.com"],
+              ["Website", "www.zafyros.com"],
+              ["Web application", "app.zafyros.com"]
             ]
           },
           { "p": "For any question regarding this Privacy Policy, or to exercise your rights, Users may contact the Owner at the email address indicated above." }
@@ -255,6 +258,7 @@
         "blocks": [
           { "p": "User data is retained for as long as the account remains active." },
           { "p": "When the User requests deletion of their account from Settings, zafyros **immediately and irreversibly deletes** all of their personal and financial data (accounts, transactions, profiles, classification rules, budgets and onboarding data). No copy is retained after deletion, except for information strictly necessary to comply with legal obligations (for example, tax obligations) where applicable." },
+          { "p": "Additionally, a service administrator may delete a User's account in exceptional cases — at the User's own request through a channel other than Settings, due to a serious breach of the Terms and Conditions, fraudulent or abusive use of the service, or where required by law. This deletion has the same scope as described in the previous paragraph: it is equally immediate and irreversible." },
           { "p": "Contributions to the community's classification rules (for example, which category is typically applied to a given merchant) are retained in aggregated, anonymous form after account deletion, as they do not allow the User who originated them to be identified." }
         ]
       },
@@ -273,7 +277,7 @@
               "**Withdraw consent** given at any time, without affecting the lawfulness of processing carried out before its withdrawal."
             ]
           },
-          { "p": "These rights may be exercised by writing to dolfinapp@gmail.com, indicating the right to be exercised and attaching a copy of an identity document. The Owner will respond within a maximum of one month." },
+          { "p": "These rights may be exercised by writing to zafyros@gmail.com, indicating the right to be exercised and attaching a copy of an identity document. The Owner will respond within a maximum of one month." },
           { "p": "If the User believes their rights have not been properly addressed, they may lodge a complaint with the **Spanish Data Protection Agency** (www.aepd.es)." }
         ]
       },
@@ -292,7 +296,7 @@
       {
         "heading": "11. Cookies and local storage",
         "blocks": [
-          { "p": "zafyros uses only technical and functional browser storage (localStorage), not HTTP cookies, to keep the User signed in and remember their usage preferences. This processing does not require prior consent, in accordance with Article 22.2 LSSI-CE. For full details, see the Cookie Policy, available at alxfintrack.vercel.app/cookies." }
+          { "p": "zafyros uses only technical and functional browser storage (localStorage), not HTTP cookies, to keep the User signed in and remember their usage preferences. This processing does not require prior consent, in accordance with Article 22.2 LSSI-CE. For full details, see the Cookie Policy, available at www.zafyros.com/cookies." }
         ]
       },
       {
@@ -304,7 +308,7 @@
       {
         "heading": "13. Contact",
         "blocks": [
-          { "p": "For any question about this Privacy Policy, Users may write to dolfinapp@gmail.com." }
+          { "p": "For any question about this Privacy Policy, Users may write to zafyros@gmail.com." }
         ]
       }
     ]
@@ -312,7 +316,7 @@
   "cookies": {
     "metaTitle": "Cookie Policy — zafyros",
     "pageTitle": "Cookie Policy",
-    "lastUpdated": "Last updated: 21 July 2026",
+    "lastUpdated": "Last updated: 24 July 2026",
     "sections": [
       {
         "heading": "1. What cookies are, and why this page also covers localStorage",
@@ -371,7 +375,7 @@
       {
         "heading": "7. Contact",
         "blocks": [
-          { "p": "For any question about this Cookie Policy, Users may write to dolfinapp@gmail.com." }
+          { "p": "For any question about this Cookie Policy, Users may write to zafyros@gmail.com." }
         ]
       }
     ]
@@ -379,12 +383,12 @@
   "terminos": {
     "metaTitle": "Terms and Conditions — zafyros",
     "pageTitle": "Terms and Conditions",
-    "lastUpdated": "Last updated: 21 July 2026",
+    "lastUpdated": "Last updated: 24 July 2026",
     "sections": [
       {
         "heading": "1. Purpose and acceptance",
         "blocks": [
-          { "p": "These Terms and Conditions (hereinafter, the \"Terms\") govern access to and use of zafyros by the User, and apply together with the Legal Notice and the Privacy Policy, available at alxfintrack.vercel.app/aviso-legal and alxfintrack.vercel.app/privacidad respectively." },
+          { "p": "These Terms and Conditions (hereinafter, the \"Terms\") govern access to and use of zafyros by the User, and apply together with the Legal Notice and the Privacy Policy, available at www.zafyros.com/aviso-legal and www.zafyros.com/privacidad respectively." },
           { "p": "By registering and creating an account, the User expressly accepts these Terms in the version in force at that time. If the User does not agree, they must refrain from registering or continuing to use the service." }
         ]
       },
@@ -453,7 +457,7 @@
       {
         "heading": "9. Suspension and cancellation",
         "blocks": [
-          { "p": "The Owner may suspend or cancel a User's account, with prior notice where reasonably possible, in the event of a serious breach of these Terms, fraudulent or abusive use of the service, or where required by law." },
+          { "p": "The Owner may suspend or cancel a User's account, with prior notice where reasonably possible, in the event of a serious breach of these Terms, fraudulent or abusive use of the service, or where required by law. Cancellation by the Owner entails the same immediate and irreversible deletion of the User's personal and financial data described in the Privacy Policy." },
           { "p": "Users may cancel their account at any time from Settings → delete account. Deletion is **immediate and irreversible** and removes all of the User's personal and financial data, as described in the Privacy Policy." }
         ]
       },
@@ -484,7 +488,7 @@
       {
         "heading": "13. Contact",
         "blocks": [
-          { "p": "For any question about these Terms and Conditions, Users may write to dolfinapp@gmail.com." }
+          { "p": "For any question about these Terms and Conditions, Users may write to zafyros@gmail.com." }
         ]
       }
     ]

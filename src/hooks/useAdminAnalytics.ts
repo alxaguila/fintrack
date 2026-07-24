@@ -96,3 +96,18 @@ export function useAdminSetPlan() {
     },
   })
 }
+
+/** Borra por completo a OTRO usuario (Edge Function delete-account con target_user_id; admin-only). */
+export function useAdminDeleteUser() {
+  const qc = useQueryClient()
+  return useMutation({
+    mutationFn: async (userId: string) => {
+      const { error } = await supabase.functions.invoke('delete-account', {
+        method: 'POST',
+        body: { target_user_id: userId },
+      })
+      if (error) throw error
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ['admin', 'users'] }),
+  })
+}

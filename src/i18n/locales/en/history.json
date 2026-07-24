@@ -1,5 +1,6 @@
 {
   "title": "Upload history",
+  "subtitle": "A record of the statements you've imported.",
   "processing_note": "Applying the changes and recalculating balances. This may take a moment; please don't close this window.",
   "filters": {
     "all_entities": "All entities",

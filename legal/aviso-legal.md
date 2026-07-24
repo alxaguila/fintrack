@@ -2,8 +2,9 @@
 
 > **⚠️ Este bloque no forma parte del texto legal. Bórralo antes de publicar.**
 >
-> **Datos ya rellenados con lo que me diste el 2026-07-20.** Dos de ellos son provisionales por tu propia indicación:
-> - `dolfinapp@gmail.com` y `alxfintrack.vercel.app` — **provisionales**. Antes de publicar de verdad, sustitúyelos por el email y el dominio definitivos (búscalos con Ctrl+F, aparecen varias veces en cada idioma: en la tabla, en el cuerpo y en los enlaces a `/privacidad` y `/cookies`).
+> **Datos actualizados el 2026-07-24** con el dominio y el email reales:
+> - Dominio: `www.zafyros.com` (contenido público/legal) + `app.zafyros.com` (aplicación autenticada).
+> - Email: `zafyros@gmail.com` — **sigue siendo provisional**, es la dirección prevista pero aún no está creada. Sustitúyela en cuanto exista de verdad.
 > - Nombre, NIF y domicilio: ya son los definitivos, tal y como los diste.
 > - La fecha (20 de julio de 2026) es la de este borrador; actualízala a la fecha real de publicación.
 >
@@ -22,7 +23,7 @@
 
 # AVISO LEGAL (ES)
 
-**Última actualización: 20 de julio de 2026**
+**Última actualización: 24 de julio de 2026**
 
 ## 1. Datos identificativos del titular
 
@@ -33,8 +34,9 @@ En cumplimiento del deber de información recogido en el artículo 10 de la Ley 
 | **Titular** | ALEX DEL AGUILA ARCOS |
 | **NIF** | 46718103C |
 | **Domicilio** | C. Alfons XII 5, 5º-2ª, 08006 Barcelona |
-| **Correo electrónico** | dolfinapp@gmail.com |
-| **Sitio web** | alxfintrack.vercel.app |
+| **Correo electrónico** | zafyros@gmail.com |
+| **Sitio web** | www.zafyros.com |
+| **Aplicación web** | app.zafyros.com |
 | **Actividad** | Desarrollo y explotación de una aplicación web de gestión de finanzas personales. |
 
 El Titular es una persona física que actúa en calidad de empresario individual. No constan datos de inscripción en el Registro Mercantil, al no resultar obligatoria dicha inscripción para las personas físicas conforme al artículo 81 del Reglamento del Registro Mercantil.
@@ -46,6 +48,8 @@ En particular, y a los efectos del Real Decreto-ley 19/2018, de 23 de noviembre,
 ## 2. Objeto y ámbito de aplicación
 
 El presente Aviso Legal regula el acceso, la navegación y el uso del sitio web y de la aplicación web zafyros (en adelante, indistintamente, el «Sitio Web» o «zafyros»), titularidad del Titular identificado en el apartado anterior.
+
+El contenido informativo y estos documentos legales se sirven en www.zafyros.com; el acceso a la aplicación autenticada, una vez el Usuario ha creado una cuenta, se realiza a través del subdominio app.zafyros.com.
 
 zafyros es una herramienta de uso personal que permite al Usuario importar sus propios extractos bancarios, clasificarlos por categorías, organizarlos en distintos perfiles financieros y visualizar información agregada sobre sus ingresos y gastos.
 
@@ -97,7 +101,7 @@ Los contenidos y datos que el Usuario incorpora a zafyros **son y seguirán sien
 
 El Sitio Web puede incorporar componentes de software de terceros sujetos a sus propias licencias, cuyas condiciones se respetan en todo caso.
 
-Si el Usuario considera que algún contenido del Sitio Web vulnera sus derechos de propiedad intelectual o industrial, puede comunicarlo a dolfinapp@gmail.com.
+Si el Usuario considera que algún contenido del Sitio Web vulnera sus derechos de propiedad intelectual o industrial, puede comunicarlo a zafyros@gmail.com.
 
 ## 7. Enlaces a sitios de terceros
 
@@ -123,13 +127,13 @@ Ninguna de las exclusiones anteriores limita la responsabilidad del Titular en l
 
 ## 9. Protección de datos personales
 
-El tratamiento de los datos personales de los Usuarios se rige por la **Política de Privacidad**, disponible en alxfintrack.vercel.app/privacidad, redactada conforme al Reglamento (UE) 2016/679 (RGPD) y a la Ley Orgánica 3/2018, de 5 de diciembre, de Protección de Datos Personales y garantía de los derechos digitales (LOPDGDD).
+El tratamiento de los datos personales de los Usuarios se rige por la **Política de Privacidad**, disponible en www.zafyros.com/privacidad, redactada conforme al Reglamento (UE) 2016/679 (RGPD) y a la Ley Orgánica 3/2018, de 5 de diciembre, de Protección de Datos Personales y garantía de los derechos digitales (LOPDGDD).
 
 Se recomienda al Usuario su lectura atenta antes de facilitar sus datos, con especial atención a las finalidades del tratamiento y a las bases jurídicas que lo legitiman.
 
 ## 10. Cookies
 
-El uso de cookies y de otras tecnologías de almacenamiento y recuperación de datos en los equipos de los Usuarios se rige por la **Política de Cookies**, disponible en alxfintrack.vercel.app/cookies, conforme al artículo 22.2 de la LSSI-CE.
+El uso de cookies y de otras tecnologías de almacenamiento y recuperación de datos en los equipos de los Usuarios se rige por la **Política de Cookies**, disponible en www.zafyros.com/cookies, conforme al artículo 22.2 de la LSSI-CE.
 
 ## 11. Disponibilidad y modificación del servicio
 
@@ -158,7 +162,7 @@ Para la resolución de cualquier controversia derivada del acceso o uso del Siti
 
 ## 15. Reclamaciones y contacto
 
-El Usuario puede dirigir cualquier consulta, sugerencia o reclamación relacionada con el Sitio Web a la dirección dolfinapp@gmail.com. El Titular acusará recibo y dará respuesta en el plazo más breve posible.
+El Usuario puede dirigir cualquier consulta, sugerencia o reclamación relacionada con el Sitio Web a la dirección zafyros@gmail.com. El Titular acusará recibo y dará respuesta en el plazo más breve posible.
 
 Adicionalmente, los Usuarios con la condición de consumidores pueden dirigir sus reclamaciones a las autoridades de consumo competentes de su Comunidad Autónoma o a las Oficinas Municipales de Información al Consumidor (OMIC).
 
@@ -169,7 +173,7 @@ En materia de protección de datos personales, el Usuario puede presentar una re
 
 # LEGAL NOTICE (EN)
 
-**Last updated: 20 July 2026**
+**Last updated: 24 July 2026**
 
 > **Courtesy translation.** This document is an English translation provided for convenience only. zafyros is operated from Spain and this legal notice is governed by Spanish law. **In the event of any discrepancy or conflict between this translation and the Spanish version, the Spanish version shall prevail.**
 
@@ -182,8 +186,9 @@ In compliance with the information duty set out in Article 10 of Spanish Act 34/
 | **Owner** | ALEX DEL AGUILA ARCOS |
 | **Spanish Tax ID (NIF)** | 46718103C |
 | **Registered address** | C. Alfons XII 5, 5º-2ª, 08006 Barcelona |
-| **Email** | dolfinapp@gmail.com |
-| **Website** | alxfintrack.vercel.app |
+| **Email** | zafyros@gmail.com |
+| **Website** | www.zafyros.com |
+| **Web application** | app.zafyros.com |
 | **Activity** | Development and operation of a personal finance management web application. |
 
 The Owner is a natural person acting as a sole trader. No Commercial Registry details are provided, as such registration is not mandatory for natural persons under Article 81 of the Spanish Commercial Registry Regulations.
@@ -195,6 +200,8 @@ In particular, and for the purposes of Spanish Royal Decree-Law 19/2018, of 23 N
 ## 2. Purpose and scope
 
 This Legal Notice governs access to, browsing of and use of the zafyros website and web application (hereinafter, interchangeably, the "Website" or "zafyros"), owned by the Owner identified above.
+
+The informational content and these legal documents are served at www.zafyros.com; once a User has created an account, access to the authenticated application takes place through the app.zafyros.com subdomain.
 
 zafyros is a personal-use tool that allows Users to import their own bank statements, classify them into categories, organise them across separate financial profiles, and view aggregated information about their income and expenses.
 
@@ -246,7 +253,7 @@ The contents and data that the User uploads to zafyros **are and shall remain th
 
 The Website may incorporate third-party software components subject to their own licences, whose terms are respected in all cases.
 
-If a User believes that any content on the Website infringes their intellectual or industrial property rights, they may report this to dolfinapp@gmail.com.
+If a User believes that any content on the Website infringes their intellectual or industrial property rights, they may report this to zafyros@gmail.com.
 
 ## 7. Links to third-party sites
 
@@ -272,13 +279,13 @@ None of the foregoing exclusions limits the Owner's liability where applicable l
 
 ## 9. Personal data protection
 
-The processing of Users' personal data is governed by the **Privacy Policy**, available at alxfintrack.vercel.app/privacidad, drafted in accordance with Regulation (EU) 2016/679 (GDPR) and Spanish Organic Act 3/2018, of 5 December, on the Protection of Personal Data and the Guarantee of Digital Rights (LOPDGDD).
+The processing of Users' personal data is governed by the **Privacy Policy**, available at www.zafyros.com/privacidad, drafted in accordance with Regulation (EU) 2016/679 (GDPR) and Spanish Organic Act 3/2018, of 5 December, on the Protection of Personal Data and the Guarantee of Digital Rights (LOPDGDD).
 
 Users are advised to read it carefully before providing their data, paying particular attention to the purposes of processing and the legal bases relied upon.
 
 ## 10. Cookies
 
-The use of cookies and other technologies for storing and retrieving data on Users' devices is governed by the **Cookie Policy**, available at alxfintrack.vercel.app/cookies, in accordance with Article 22.2 LSSI-CE.
+The use of cookies and other technologies for storing and retrieving data on Users' devices is governed by the **Cookie Policy**, available at www.zafyros.com/cookies, in accordance with Article 22.2 LSSI-CE.
 
 ## 11. Availability and modification of the service
 
@@ -307,7 +314,7 @@ For the resolution of any dispute arising from access to or use of the Website:
 
 ## 15. Complaints and contact
 
-Users may direct any query, suggestion or complaint relating to the Website to dolfinapp@gmail.com. The Owner will acknowledge receipt and respond as promptly as possible.
+Users may direct any query, suggestion or complaint relating to the Website to zafyros@gmail.com. The Owner will acknowledge receipt and respond as promptly as possible.
 
 Additionally, Users who qualify as consumers may address their complaints to the competent consumer authorities of their Autonomous Community or to the Municipal Consumer Information Offices (OMIC).
 

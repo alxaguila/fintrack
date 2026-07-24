@@ -11,7 +11,7 @@ import { PasswordStrengthBar } from '@/components/PasswordStrengthBar'
 import { PasswordInput } from '@/components/auth/PasswordInput'
 import { toast } from '@/hooks/useToast'
 import { BRAND, BrandMark } from '@/components/landing/brand'
-import { getAppUrl } from '@/lib/appUrl'
+import { redirectToAppWithSession } from '@/lib/sessionHandoff'
 
 const RESEND_COOLDOWN = 60
 const OTP_MIN = 6
@@ -99,7 +99,8 @@ export default function ResetPassword() {
       return
     }
     toast({ title: 'zafyros', description: t('reset.success'), variant: 'success' })
-    window.location.assign(getAppUrl())
+    const { data: { session } } = await supabase.auth.getSession()
+    if (session) redirectToAppWithSession(session)
   }
 
   async function onResend() {

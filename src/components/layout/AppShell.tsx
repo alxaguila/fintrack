@@ -1,6 +1,7 @@
 import { Navigate } from 'react-router-dom'
 import { useEffect, useRef, useState } from 'react'
 import { supabase } from '@/lib/supabase'
+import { consumeSessionHandoff } from '@/lib/sessionHandoff'
 import i18n from '@/i18n'
 import { useProfiles, useCreateProfile } from '@/hooks/useProfiles'
 import { useUserSettings } from '@/hooks/useUserSettings'
@@ -33,7 +34,11 @@ export function AppShell() {
   }, [settings?.preferred_language])
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => setSession(session))
+    // El hand-off de zafyros.com trae la sesión en el hash de la URL (localStorage
+    // no se comparte entre subdominios) — se consume antes de mirar la sesión local.
+    consumeSessionHandoff().finally(() => {
+      supabase.auth.getSession().then(({ data: { session } }) => setSession(session))
+    })
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_e, s) => setSession(s))
     return () => subscription.unsubscribe()
   }, [])

@@ -1,5 +1,6 @@
 {
   "title": "Movimientos",
+  "subtitle": "Todos tus movimientos, clasificados automáticamente.",
   "filters": {
     "all_accounts": "Todas las cuentas",
     "all_categories": "Todas las categorías",

@@ -1,12 +1,13 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Shield, Search, Users as UsersIcon } from 'lucide-react'
-import { useAdminUsers, useAdminUserActivity, useAdminSetPlan } from '@/hooks/useAdminAnalytics'
+import { Shield, Search, Users as UsersIcon, Trash2, AlertTriangle } from 'lucide-react'
+import { useAdminUsers, useAdminUserActivity, useAdminSetPlan, useAdminDeleteUser } from '@/hooks/useAdminAnalytics'
 import type { AdminUserRow, PlanType } from '@/lib/database.types'
 import { PLAN_COLORS } from '@/lib/plan'
 import { categoryLabel } from '@/lib/categoryIcons'
 import { formatCurrency, formatDate } from '@/lib/utils'
 import { cn } from '@/lib/utils'
+import { supabase } from '@/lib/supabase'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select'
@@ -18,6 +19,8 @@ import { AdminHeader } from './AdminHeader'
 
 const typeColor = (t: string | null) => (t === 'ingreso' ? '#14B8A6' : t === 'gasto' ? '#CB6391' : '#64748b')
 const PLAN_ORDER: PlanType[] = ['free', 'pro', 'premium']
+// Palabra que hay que teclear para confirmar el borrado (igual en ES/EN, ver Settings.tsx).
+const DELETE_WORD = 'delete'
 
 function PlanBadge({ plan }: { plan: PlanType }) {
   const { t } = useTranslation('common')
@@ -35,6 +38,11 @@ export default function Usuarios() {
   const { data: users = [], isLoading } = useAdminUsers()
   const [q, setQ] = useState('')
   const [selected, setSelected] = useState<AdminUserRow | null>(null)
+  const [myUserId, setMyUserId] = useState<string | null>(null)
+
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data: { user } }) => setMyUserId(user?.id ?? null))
+  }, [])
 
   const filtered = useMemo(() => {
     const needle = q.trim().toLowerCase()
@@ -89,19 +97,30 @@ export default function Usuarios() {
         </div>
       )}
 
-      <UserDetailDialog user={selected} onClose={() => setSelected(null)} />
+      <UserDetailDialog user={selected} myUserId={myUserId} onClose={() => setSelected(null)} />
     </div>
   )
 }
 
-function UserDetailDialog({ user, onClose }: { user: AdminUserRow | null; onClose: () => void }) {
+function UserDetailDialog({
+  user, myUserId, onClose,
+}: {
+  user: AdminUserRow | null
+  myUserId: string | null
+  onClose: () => void
+}) {
   const { t } = useTranslation('admin')
   const { t: tc } = useTranslation('common')
   const { data, isLoading } = useAdminUserActivity(user?.user_id ?? null)
   const setPlan = useAdminSetPlan()
+  const deleteUser = useAdminDeleteUser()
   const [pendingPlan, setPendingPlan] = useState<PlanType | null>(null)
+  // 0 = cerrado, 1 = primer aviso, 2 = confirmación escribiendo "delete".
+  const [deleteStep, setDeleteStep] = useState(0)
+  const [deleteWord, setDeleteWord] = useState('')
 
   const monthMax = useMemo(() => Math.max(1, ...(data?.byMonth ?? []).map((m) => Number(m.total_abs))), [data])
+  const canConfirmDelete = deleteWord.trim().toLowerCase() === DELETE_WORD
 
   async function confirmPlanChange() {
     if (!user || !pendingPlan) return
@@ -112,6 +131,24 @@ function UserDetailDialog({ user, onClose }: { user: AdminUserRow | null; onClos
       toast({ variant: 'destructive', title: tc('errors.save_failed'), description: err?.message })
     }
     setPendingPlan(null)
+  }
+
+  function closeDelete() {
+    if (deleteUser.isPending) return
+    setDeleteStep(0)
+    setDeleteWord('')
+  }
+
+  async function confirmDelete() {
+    if (!user || !canConfirmDelete) return
+    try {
+      await deleteUser.mutateAsync(user.user_id)
+      setDeleteStep(0)
+      setDeleteWord('')
+      onClose()
+    } catch (err: any) {
+      toast({ variant: 'destructive', title: t('users.delete.error'), description: err?.message })
+    }
   }
 
   return (
@@ -194,8 +231,74 @@ function UserDetailDialog({ user, onClose }: { user: AdminUserRow | null; onClos
                 )}
               </>
             )}
+
+            {/* Zona de peligro */}
+            {user.user_id !== myUserId && (
+              <button
+                onClick={() => setDeleteStep(1)}
+                className="flex w-full items-center gap-3 rounded-xl border border-rose-200 bg-white px-3 py-2.5 text-left transition-colors hover:bg-rose-50"
+              >
+                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-rose-50 text-rose-600">
+                  <Trash2 className="h-4 w-4" />
+                </span>
+                <span className="flex-1 text-sm font-medium text-rose-600">{t('users.delete.title')}</span>
+              </button>
+            )}
           </div>
         )}
+      </DialogContent>
+    </Dialog>
+
+    {/* Confirmación del borrado de usuario (aviso 1: irreversibilidad) */}
+    <Dialog open={deleteStep === 1} onOpenChange={(o) => !o && closeDelete()}>
+      <DialogContent className="rounded-2xl sm:rounded-2xl">
+        <DialogHeader>
+          <DialogTitle className="flex items-center gap-2 text-rose-600">
+            <AlertTriangle className="h-5 w-5" />
+            {t('users.delete.warn1.title')}
+          </DialogTitle>
+          <DialogDescription>
+            {t('users.delete.warn1.body', { name: user?.full_name || user?.email })}
+          </DialogDescription>
+        </DialogHeader>
+        <DialogFooter className="gap-2">
+          <Button variant="outline" onClick={closeDelete}>{t('users.delete.cancel')}</Button>
+          <Button variant="destructive" onClick={() => setDeleteStep(2)}>{t('users.delete.continue')}</Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+
+    {/* Confirmación del borrado de usuario (aviso 2: escribir "delete") */}
+    <Dialog open={deleteStep === 2} onOpenChange={(o) => !o && closeDelete()}>
+      <DialogContent className="rounded-2xl sm:rounded-2xl">
+        <DialogHeader>
+          <DialogTitle className="flex items-center gap-2 text-rose-600">
+            <AlertTriangle className="h-5 w-5" />
+            {t('users.delete.warn2.title')}
+          </DialogTitle>
+          <DialogDescription>
+            {t('users.delete.warn2.body', { name: user?.full_name || user?.email })}
+          </DialogDescription>
+        </DialogHeader>
+        <div className="space-y-1.5">
+          <p className="text-sm text-slate-600">
+            {t('users.delete.warn2.prompt')}{' '}
+            <span className="font-mono font-bold text-rose-600">{DELETE_WORD}</span>
+          </p>
+          <Input
+            value={deleteWord}
+            onChange={(e) => setDeleteWord(e.target.value)}
+            placeholder={DELETE_WORD}
+            autoComplete="off"
+            className={cn('font-mono', canConfirmDelete && 'border-rose-400')}
+          />
+        </div>
+        <DialogFooter className="gap-2">
+          <Button variant="outline" onClick={closeDelete} disabled={deleteUser.isPending}>{t('users.delete.cancel')}</Button>
+          <Button variant="destructive" onClick={confirmDelete} disabled={!canConfirmDelete || deleteUser.isPending}>
+            {deleteUser.isPending ? t('users.delete.deleting') : t('users.delete.confirm')}
+          </Button>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
 

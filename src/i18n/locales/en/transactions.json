@@ -1,5 +1,6 @@
 {
   "title": "Transactions",
+  "subtitle": "All your transactions, classified automatically.",
   "filters": {
     "all_accounts": "All accounts",
     "all_categories": "All categories",

@@ -2,7 +2,7 @@
   "avisoLegal": {
     "metaTitle": "Aviso Legal — zafyros",
     "pageTitle": "Aviso Legal",
-    "lastUpdated": "Última actualización: 20 de julio de 2026",
+    "lastUpdated": "Última actualización: 24 de julio de 2026",
     "back": "Volver a zafyros",
     "sections": [
       {
@@ -14,8 +14,9 @@
               ["Titular", "ALEX DEL AGUILA ARCOS"],
               ["NIF", "46718103C"],
               ["Domicilio", "C. Alfons XII 5, 5º-2ª, 08006 Barcelona"],
-              ["Correo electrónico", "dolfinapp@gmail.com"],
-              ["Sitio web", "alxfintrack.vercel.app"],
+              ["Correo electrónico", "zafyros@gmail.com"],
+              ["Sitio web", "www.zafyros.com"],
+              ["Aplicación web", "app.zafyros.com"],
               ["Actividad", "Desarrollo y explotación de una aplicación web de gestión de finanzas personales."]
             ]
           },
@@ -28,6 +29,7 @@
         "heading": "2. Objeto y ámbito de aplicación",
         "blocks": [
           { "p": "El presente Aviso Legal regula el acceso, la navegación y el uso del sitio web y de la aplicación web zafyros (en adelante, indistintamente, el «Sitio Web» o «zafyros»), titularidad del Titular identificado en el apartado anterior." },
+          { "p": "El contenido informativo y estos documentos legales se sirven en www.zafyros.com; el acceso a la aplicación autenticada, una vez el Usuario ha creado una cuenta, se realiza a través del subdominio app.zafyros.com." },
           { "p": "zafyros es una herramienta de uso personal que permite al Usuario importar sus propios extractos bancarios, clasificarlos por categorías, organizarlos en distintos perfiles financieros y visualizar información agregada sobre sus ingresos y gastos." },
           { "p": "El acceso al Sitio Web es gratuito, sin perjuicio del coste de la conexión a través de la red de telecomunicaciones contratada por el Usuario, y de que determinadas funcionalidades puedan estar sujetas a una suscripción de pago, en cuyo caso sus condiciones económicas se informarán de forma previa, clara y expresa antes de la contratación." }
         ]
@@ -83,7 +85,7 @@
           { "p": "Queda expresamente prohibida la reproducción, distribución, comunicación pública, transformación o cualquier otra forma de explotación, total o parcial, de dichos contenidos sin la autorización previa, expresa y por escrito del Titular. El acceso al Sitio Web no otorga al Usuario derecho ni titularidad alguna sobre los mismos." },
           { "p": "Los contenidos y datos que el Usuario incorpora a zafyros **son y seguirán siendo de su exclusiva titularidad**. El Titular únicamente los trata en los términos previstos en la Política de Privacidad y con la finalidad de prestar el servicio." },
           { "p": "El Sitio Web puede incorporar componentes de software de terceros sujetos a sus propias licencias, cuyas condiciones se respetan en todo caso." },
-          { "p": "Si el Usuario considera que algún contenido del Sitio Web vulnera sus derechos de propiedad intelectual o industrial, puede comunicarlo a dolfinapp@gmail.com." }
+          { "p": "Si el Usuario considera que algún contenido del Sitio Web vulnera sus derechos de propiedad intelectual o industrial, puede comunicarlo a zafyros@gmail.com." }
         ]
       },
       {
@@ -114,14 +116,14 @@
       {
         "heading": "9. Protección de datos personales",
         "blocks": [
-          { "p": "El tratamiento de los datos personales de los Usuarios se rige por la **Política de Privacidad**, disponible en alxfintrack.vercel.app/privacidad, redactada conforme al Reglamento (UE) 2016/679 (RGPD) y a la Ley Orgánica 3/2018, de 5 de diciembre, de Protección de Datos Personales y garantía de los derechos digitales (LOPDGDD)." },
+          { "p": "El tratamiento de los datos personales de los Usuarios se rige por la **Política de Privacidad**, disponible en www.zafyros.com/privacidad, redactada conforme al Reglamento (UE) 2016/679 (RGPD) y a la Ley Orgánica 3/2018, de 5 de diciembre, de Protección de Datos Personales y garantía de los derechos digitales (LOPDGDD)." },
           { "p": "Se recomienda al Usuario su lectura atenta antes de facilitar sus datos, con especial atención a las finalidades del tratamiento y a las bases jurídicas que lo legitiman." }
         ]
       },
       {
         "heading": "10. Cookies",
         "blocks": [
-          { "p": "El uso de cookies y de otras tecnologías de almacenamiento y recuperación de datos en los equipos de los Usuarios se rige por la **Política de Cookies**, disponible en alxfintrack.vercel.app/cookies, conforme al artículo 22.2 de la LSSI-CE." }
+          { "p": "El uso de cookies y de otras tecnologías de almacenamiento y recuperación de datos en los equipos de los Usuarios se rige por la **Política de Cookies**, disponible en www.zafyros.com/cookies, conforme al artículo 22.2 de la LSSI-CE." }
         ]
       },
       {
@@ -160,7 +162,7 @@
       {
         "heading": "15. Reclamaciones y contacto",
         "blocks": [
-          { "p": "El Usuario puede dirigir cualquier consulta, sugerencia o reclamación relacionada con el Sitio Web a la dirección dolfinapp@gmail.com. El Titular acusará recibo y dará respuesta en el plazo más breve posible." },
+          { "p": "El Usuario puede dirigir cualquier consulta, sugerencia o reclamación relacionada con el Sitio Web a la dirección zafyros@gmail.com. El Titular acusará recibo y dará respuesta en el plazo más breve posible." },
           { "p": "Adicionalmente, los Usuarios con la condición de consumidores pueden dirigir sus reclamaciones a las autoridades de consumo competentes de su Comunidad Autónoma o a las Oficinas Municipales de Información al Consumidor (OMIC)." },
           { "p": "En materia de protección de datos personales, el Usuario puede presentar una reclamación ante la **Agencia Española de Protección de Datos** (www.aepd.es), sin perjuicio de su derecho a dirigirse previamente al Titular en los términos previstos en la Política de Privacidad." }
         ]
@@ -170,7 +172,7 @@
   "privacidad": {
     "metaTitle": "Política de Privacidad — zafyros",
     "pageTitle": "Política de Privacidad",
-    "lastUpdated": "Última actualización: 21 de julio de 2026",
+    "lastUpdated": "Última actualización: 24 de julio de 2026",
     "sections": [
       {
         "heading": "1. Responsable del tratamiento",
@@ -181,8 +183,9 @@
               ["Titular", "ALEX DEL AGUILA ARCOS"],
               ["NIF", "46718103C"],
               ["Domicilio", "C. Alfons XII 5, 5º-2ª, 08006 Barcelona"],
-              ["Correo electrónico", "dolfinapp@gmail.com"],
-              ["Sitio web", "alxfintrack.vercel.app"]
+              ["Correo electrónico", "zafyros@gmail.com"],
+              ["Sitio web", "www.zafyros.com"],
+              ["Aplicación web", "app.zafyros.com"]
             ]
           },
           { "p": "Para cualquier cuestión relativa a esta Política de Privacidad, o para ejercer sus derechos, el Usuario puede dirigirse al Titular en la dirección de correo electrónico indicada." }
@@ -255,6 +258,7 @@
         "blocks": [
           { "p": "Los datos del Usuario se conservan mientras la cuenta permanezca activa." },
           { "p": "Cuando el Usuario solicita la eliminación de su cuenta desde Ajustes, zafyros **borra de forma inmediata e irreversible** todos sus datos personales y financieros (cuentas, movimientos, perfiles, reglas de clasificación, presupuestos y datos de onboarding). No se conserva copia alguna tras el borrado, salvo la información estrictamente necesaria para el cumplimiento de obligaciones legales (por ejemplo, fiscales) cuando resulte de aplicación." },
+          { "p": "Adicionalmente, un administrador del servicio puede eliminar la cuenta de un Usuario en supuestos excepcionales — a petición del propio Usuario por un canal distinto a Ajustes, por incumplimiento grave de los Términos y Condiciones, por uso fraudulento o abusivo del servicio, o por requerimiento legal. Este borrado tiene el mismo alcance que el descrito en el párrafo anterior: es igualmente inmediato e irreversible." },
           { "p": "Las aportaciones a las reglas de clasificación de la comunidad (por ejemplo, qué categoría suele aplicarse a un determinado comercio) se conservan de forma agregada y anónima tras el borrado de la cuenta, ya que no permiten identificar al Usuario que las originó." }
         ]
       },
@@ -273,7 +277,7 @@
               "**Retirar el consentimiento** prestado en cualquier momento, sin que ello afecte a la licitud del tratamiento previo."
             ]
           },
-          { "p": "Estos derechos pueden ejercerse escribiendo a dolfinapp@gmail.com, indicando el derecho que se desea ejercer y adjuntando copia de un documento que acredite la identidad. El Titular responderá en el plazo máximo de un mes." },
+          { "p": "Estos derechos pueden ejercerse escribiendo a zafyros@gmail.com, indicando el derecho que se desea ejercer y adjuntando copia de un documento que acredite la identidad. El Titular responderá en el plazo máximo de un mes." },
           { "p": "Si el Usuario considera que sus derechos no han sido debidamente atendidos, puede presentar una reclamación ante la **Agencia Española de Protección de Datos** (www.aepd.es)." }
         ]
       },
@@ -292,7 +296,7 @@
       {
         "heading": "11. Cookies y almacenamiento local",
         "blocks": [
-          { "p": "zafyros utiliza únicamente almacenamiento técnico y funcional en el navegador (localStorage), no cookies HTTP, para mantener al Usuario identificado tras iniciar sesión y recordar sus preferencias de uso. Este tratamiento no requiere consentimiento previo, conforme al artículo 22.2 de la LSSI-CE. Para el detalle completo, consulte la Política de Cookies, disponible en alxfintrack.vercel.app/cookies." }
+          { "p": "zafyros utiliza únicamente almacenamiento técnico y funcional en el navegador (localStorage), no cookies HTTP, para mantener al Usuario identificado tras iniciar sesión y recordar sus preferencias de uso. Este tratamiento no requiere consentimiento previo, conforme al artículo 22.2 de la LSSI-CE. Para el detalle completo, consulte la Política de Cookies, disponible en www.zafyros.com/cookies." }
         ]
       },
       {
@@ -304,7 +308,7 @@
       {
         "heading": "13. Contacto",
         "blocks": [
-          { "p": "Para cualquier duda sobre esta Política de Privacidad, el Usuario puede escribir a dolfinapp@gmail.com." }
+          { "p": "Para cualquier duda sobre esta Política de Privacidad, el Usuario puede escribir a zafyros@gmail.com." }
         ]
       }
     ]
@@ -312,7 +316,7 @@
   "cookies": {
     "metaTitle": "Política de Cookies — zafyros",
     "pageTitle": "Política de Cookies",
-    "lastUpdated": "Última actualización: 21 de julio de 2026",
+    "lastUpdated": "Última actualización: 24 de julio de 2026",
     "sections": [
       {
         "heading": "1. Qué son las cookies y por qué esta página también habla de localStorage",
@@ -371,7 +375,7 @@
       {
         "heading": "7. Contacto",
         "blocks": [
-          { "p": "Para cualquier duda sobre esta Política de Cookies, el Usuario puede escribir a dolfinapp@gmail.com." }
+          { "p": "Para cualquier duda sobre esta Política de Cookies, el Usuario puede escribir a zafyros@gmail.com." }
         ]
       }
     ]
@@ -379,12 +383,12 @@
   "terminos": {
     "metaTitle": "Términos y Condiciones — zafyros",
     "pageTitle": "Términos y Condiciones",
-    "lastUpdated": "Última actualización: 21 de julio de 2026",
+    "lastUpdated": "Última actualización: 24 de julio de 2026",
     "sections": [
       {
         "heading": "1. Objeto y aceptación",
         "blocks": [
-          { "p": "Estos Términos y Condiciones (en adelante, los «Términos») regulan el acceso y uso de zafyros por parte del Usuario, y se aplican junto con el Aviso Legal y la Política de Privacidad, disponibles respectivamente en alxfintrack.vercel.app/aviso-legal y alxfintrack.vercel.app/privacidad." },
+          { "p": "Estos Términos y Condiciones (en adelante, los «Términos») regulan el acceso y uso de zafyros por parte del Usuario, y se aplican junto con el Aviso Legal y la Política de Privacidad, disponibles respectivamente en www.zafyros.com/aviso-legal y www.zafyros.com/privacidad." },
           { "p": "Al registrarse y crear una cuenta, el Usuario acepta expresamente estos Términos en su versión vigente en ese momento. Si no está de acuerdo, debe abstenerse de registrarse o de continuar utilizando el servicio." }
         ]
       },
@@ -453,7 +457,7 @@
       {
         "heading": "9. Suspensión y cancelación",
         "blocks": [
-          { "p": "El Titular podrá suspender o cancelar la cuenta de un Usuario, con aviso previo cuando sea razonablemente posible, en caso de incumplimiento grave de estos Términos, uso fraudulento o abusivo del servicio, o por requerimiento legal." },
+          { "p": "El Titular podrá suspender o cancelar la cuenta de un Usuario, con aviso previo cuando sea razonablemente posible, en caso de incumplimiento grave de estos Términos, uso fraudulento o abusivo del servicio, o por requerimiento legal. La cancelación por el Titular conlleva el mismo borrado inmediato e irreversible de los datos personales y financieros del Usuario descrito en la Política de Privacidad." },
           { "p": "El Usuario puede darse de baja en cualquier momento desde Ajustes → eliminar cuenta. El borrado es **inmediato e irreversible** y elimina todos sus datos personales y financieros, conforme a lo descrito en la Política de Privacidad." }
         ]
       },
@@ -484,7 +488,7 @@
       {
         "heading": "13. Contacto",
         "blocks": [
-          { "p": "Para cualquier duda sobre estos Términos y Condiciones, el Usuario puede escribir a dolfinapp@gmail.com." }
+          { "p": "Para cualquier duda sobre estos Términos y Condiciones, el Usuario puede escribir a zafyros@gmail.com." }
         ]
       }
     ]

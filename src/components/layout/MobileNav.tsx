@@ -11,6 +11,8 @@ import { useIsAdmin } from '@/hooks/useIsAdmin'
 import { useUnreviewedBankCount } from '@/hooks/useAdminBankEntities'
 import { useUserSettings } from '@/hooks/useUserSettings'
 import { useBudgetsGate } from '@/hooks/useBudgetsGate'
+import { useHasStatements } from '@/hooks/useImportBatches'
+import { useProfile } from '@/contexts/ProfileContext'
 import { UpgradeHintDialog } from '@/components/plan/UpgradeHintDialog'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { Logo } from '@/components/Logo'
@@ -287,8 +289,13 @@ export function MobileTopBar() {
   const { t } = useTranslation('dashboard')
   const location = useLocation()
   const [searchParams, setSearchParams] = useSearchParams()
+  const { activeProfile } = useProfile()
+  const { data: hasStatements } = useHasStatements(activeProfile?.id)
 
   if (!location.pathname.startsWith(appPath('/analysis'))) return null
+  // Sin extractos, Análisis muestra la pastilla de onboarding en vez del
+  // dashboard real: el selector de periodo no pinta nada ahí (OnboardingGate.tsx).
+  if (hasStatements === false) return null
 
   const granularity = (searchParams.get('granularity') as Granularity) || 'month'
   function setGranularity(g: string) {

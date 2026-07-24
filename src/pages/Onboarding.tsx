@@ -8,6 +8,7 @@ import { PersonalDataFields, emptyPersonalForm, type PersonalFormValue } from '@
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { toast } from '@/hooks/useToast'
+import { BRAND, BrandMark } from '@/components/landing/brand'
 
 export default function Onboarding() {
   const { t } = useTranslation('settings')
@@ -67,10 +68,9 @@ export default function Onboarding() {
             {t('onboarding.back')}
           </button>
         </div>
-        <div className="text-center">
-          <h1 className="text-3xl font-extrabold tracking-tight text-slate-900">
-            Fin<span className="text-indigo-600">Track</span>
-          </h1>
+        <div className="flex items-center justify-center gap-2">
+          <BrandMark size={32} />
+          <span style={{ font: `600 26px ${BRAND.wordmark}`, letterSpacing: '-.02em', color: BRAND.ink }}>zafyros</span>
         </div>
 
         <Card className="rounded-2xl">

@@ -12,7 +12,7 @@ import { PasswordInput } from '@/components/auth/PasswordInput'
 import { GoogleButton, OrDivider } from '@/components/auth/GoogleButton'
 import { toast } from '@/hooks/useToast'
 import { BRAND, BrandMark } from '@/components/landing/brand'
-import { getAppUrl } from '@/lib/appUrl'
+import { redirectToAppWithSession } from '@/lib/sessionHandoff'
 
 const RESEND_COOLDOWN = 60
 const OTP_MIN = 6
@@ -26,7 +26,8 @@ type SignupData = z.infer<typeof signupSchema>
 /**
  * Página de registro con la estética de la landing (fondo navy + tarjeta). Reutiliza
  * el flujo signup → verificación por código OTP de Supabase (idéntico a Auth). Al
- * verificar, `onAuthStateChange` crea la sesión y redirige a la app (`getAppUrl()`).
+ * verificar, `onAuthStateChange` crea la sesión y redirige a la app llevando los
+ * tokens en el redirect (`redirectToAppWithSession`, ver `sessionHandoff.ts`).
  */
 export default function Register() {
   const { t, i18n } = useTranslation('auth')
@@ -50,10 +51,10 @@ export default function Register() {
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session) window.location.assign(getAppUrl())
+      if (session) redirectToAppWithSession(session)
     })
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_e, session) => {
-      if (session) window.location.assign(getAppUrl())
+      if (session) redirectToAppWithSession(session)
     })
     return () => subscription.unsubscribe()
   }, [navigate])
@@ -73,6 +74,7 @@ export default function Register() {
     })
     if (error) {
       if (error.message.includes('already registered')) setServerError(t('errors.email_taken'))
+      else if (error.message.toLowerCase().includes('rate limit')) setServerError(t('errors.rate_limited'))
       else setServerError(error.message)
       return
     }

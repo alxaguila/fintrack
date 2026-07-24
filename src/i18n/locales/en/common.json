@@ -85,7 +85,7 @@
   },
   "onboarding_upload": {
     "title": "Upload your first statement",
-    "body": "zafyros analyzes your finances from your bank statements. Upload them in Excel or CSV; the older it is, the more complete your analysis.",
+    "body": "zafyros analyzes your finances from your bank statements. Upload them in Excel or CSV: the longer the period they cover — for example, starting from June 2023 — the more complete your analysis will be.",
     "cta": "Upload statement"
   },
   "language": {

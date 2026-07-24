@@ -147,7 +147,24 @@
     "monthly": "Actividad por mes",
     "by_category": "Desglose por categoría",
     "uncategorized": "Sin categoría",
-    "no_activity": "Sin actividad registrada."
+    "no_activity": "Sin actividad registrada.",
+    "delete": {
+      "title": "Eliminar usuario",
+      "cancel": "Cancelar",
+      "continue": "Continuar",
+      "confirm": "Eliminar usuario",
+      "deleting": "Eliminando...",
+      "error": "No se pudo eliminar al usuario. Inténtalo de nuevo",
+      "warn1": {
+        "title": "Eliminar usuario",
+        "body": "Esta acción es permanente y NO se puede deshacer. Se eliminará la cuenta de {{name}} y todos sus datos: movimientos, cuentas, perfiles, reglas y formatos."
+      },
+      "warn2": {
+        "title": "Confirmación final",
+        "body": "Estás a punto de eliminar para siempre la cuenta de {{name}}. No podrás recuperar ninguna información.",
+        "prompt": "Para confirmar, escribe"
+      }
+    }
   },
   "stats": {
     "title": "Estadísticas",
