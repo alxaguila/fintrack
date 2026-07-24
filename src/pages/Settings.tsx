@@ -11,6 +11,7 @@ import {
   Dialog, DialogContent, DialogHeader, DialogFooter, DialogTitle, DialogDescription,
 } from '@/components/ui/dialog'
 import { toast } from '@/hooks/useToast'
+import { appPath } from '@/lib/appUrl'
 
 // Palabra que el usuario debe teclear para confirmar el borrado (igual en ES/EN).
 const DELETE_WORD = 'delete'
@@ -24,10 +25,10 @@ export default function Settings() {
 
       {/* Grupo principal: navegación */}
       <nav className="overflow-hidden rounded-2xl border border-slate-200 bg-white">
-        <MenuLink to="/app/settings/profile" icon={User} label={t('menu.profile')} />
-        <MenuLink to="/app/settings/security" icon={Lock} label={t('menu.security')} />
-        <MenuLink to="/app/settings/plan" icon={CreditCard} label={t('menu.plan')} />
-        <MenuLink to="/app/settings/feedback" icon={MessageSquare} label={t('menu.feedback')} />
+        <MenuLink to={appPath('/settings/profile')} icon={User} label={t('menu.profile')} />
+        <MenuLink to={appPath('/settings/security')} icon={Lock} label={t('menu.security')} />
+        <MenuLink to={appPath('/settings/plan')} icon={CreditCard} label={t('menu.plan')} />
+        <MenuLink to={appPath('/settings/feedback')} icon={MessageSquare} label={t('menu.feedback')} />
         <LanguageRow />
       </nav>
 

@@ -2,6 +2,7 @@ import { Navigate } from 'react-router-dom'
 import type { ReactNode } from 'react'
 import { useIsAdmin } from '@/hooks/useIsAdmin'
 import { Skeleton } from '@/components/ui/skeleton'
+import { appPath } from '@/lib/appUrl'
 
 /**
  * Guard de rutas de administración. Redirige a no-admins a la home.
@@ -24,7 +25,7 @@ export function AdminRoute({ children }: { children: ReactNode }) {
     )
   }
 
-  if (!isAdmin) return <Navigate to="/app" replace />
+  if (!isAdmin) return <Navigate to={appPath()} replace />
 
   return <>{children}</>
 }

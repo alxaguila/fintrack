@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { ArrowLeft } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
+import { appPath } from '@/lib/appUrl'
 
 /** Cabecera de subpantalla de /admin: flecha de vuelta al hub + título. */
 export function AdminHeader({ title }: { title: string }) {
@@ -8,7 +9,7 @@ export function AdminHeader({ title }: { title: string }) {
   return (
     <div className="flex items-center gap-3">
       <Link
-        to="/app/admin"
+        to={appPath('/admin')}
         aria-label={t('back')}
         className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-slate-600 transition-colors hover:bg-slate-100"
       >

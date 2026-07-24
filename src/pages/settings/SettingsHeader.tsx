@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { ArrowLeft } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
+import { appPath } from '@/lib/appUrl'
 
 /** Cabecera de subpantalla de Ajustes: flecha de vuelta al menú + título. */
 export function SettingsHeader({ title }: { title: string }) {
@@ -8,7 +9,7 @@ export function SettingsHeader({ title }: { title: string }) {
   return (
     <div className="flex items-center gap-3">
       <Link
-        to="/app/settings"
+        to={appPath('/settings')}
         aria-label={t('menu.back')}
         className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-slate-600 transition-colors hover:bg-slate-100"
       >

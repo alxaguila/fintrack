@@ -2,6 +2,9 @@
 
 Lista de cambios por versión (`APP_VERSION` en `src/lib/version.ts`). Solo se añade una entrada cuando el código de la app cambia.
 
+## v1.640
+- Corrige los menús y enlaces internos de la app (Sidebar, MobileNav, hubs de Admin/Ajustes, OnboardingGate, AdminRoute, y navegaciones internas de Home/Dashboard/Import) que tenían la ruta `/app/...` hardcodeada: en `app.zafyros.com` esas rutas cuelgan de `/` (no de `/app`), así que cualquier clic caía en el catch-all y volvía siempre a Home. Nuevo `appPath()` en `src/lib/appUrl.ts` centraliza el prefijo correcto según el host.
+
 ## v1.638
 - Corrige `getAppUrl()`: en local/preview devolvía una ruta relativa (`/app`) en vez de una URL absoluta; `signInWithOAuth({ redirectTo })` necesita una URL absoluta y con la ruta relativa el login con Google fallaba con `"requested path is invalid"`. Ahora siempre devuelve `origin + /app` en esos entornos.
 

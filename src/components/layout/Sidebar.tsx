@@ -3,6 +3,7 @@ import { NavLink, useLocation } from 'react-router-dom'
 import { Home, BarChart3, ArrowLeftRight, Upload, Wallet, Tags, FileClock, Shield, ShieldCheck, Sparkles, PiggyBank } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { cn } from '@/lib/utils'
+import { appPath } from '@/lib/appUrl'
 import { APP_VERSION } from '@/lib/version'
 import { useIsAdmin } from '@/hooks/useIsAdmin'
 import { useUnreviewedBankCount } from '@/hooks/useAdminBankEntities'
@@ -13,13 +14,13 @@ import { UpgradePlanDialog } from '@/components/plan/UpgradePlanDialog'
 import { UpgradeHintDialog } from '@/components/plan/UpgradeHintDialog'
 
 const navItemsTop = [
-  { to: '/app',              icon: Home,           label: 'nav.home' },
-  { to: '/app/analysis',     icon: BarChart3,      label: 'nav.analysis' },
+  { to: appPath(),             icon: Home,           label: 'nav.home' },
+  { to: appPath('/analysis'),  icon: BarChart3,      label: 'nav.analysis' },
 ]
 const navItemsBottom = [
-  { to: '/app/transactions', icon: ArrowLeftRight, label: 'nav.transactions' },
-  { to: '/app/accounts',     icon: Wallet,         label: 'nav.accounts' },
-  { to: '/app/history',      icon: FileClock,      label: 'nav.history' },
+  { to: appPath('/transactions'), icon: ArrowLeftRight, label: 'nav.transactions' },
+  { to: appPath('/accounts'),     icon: Wallet,         label: 'nav.accounts' },
+  { to: appPath('/history'),      icon: FileClock,      label: 'nav.history' },
 ]
 
 // Estilo compartido de item de nav (dolfin): activo = navy elevado + barra coral.
@@ -46,7 +47,7 @@ function UserPlanNavItem() {
   const planKey = settings?.plan ?? 'free'
 
   return (
-    <NavLink to="/app/settings" className="block">
+    <NavLink to={appPath('/settings')} className="block">
       {({ isActive }) => (
         <span className={itemClass(isActive)}>
           {isActive && <ActiveBar />}
@@ -72,11 +73,11 @@ function BudgetsNavItem() {
   const location = useLocation()
   const hasBudget = useBudgetsGate()
   const [hintOpen, setHintOpen] = useState(false)
-  const isActive = location.pathname.startsWith('/app/budgets')
+  const isActive = location.pathname.startsWith(appPath('/budgets'))
 
   if (hasBudget) {
     return (
-      <NavLink to="/app/budgets" className="block">
+      <NavLink to={appPath('/budgets')} className="block">
         {({ isActive }) => (
           <span className={itemClass(isActive)}>
             {isActive && <ActiveBar />}
@@ -134,7 +135,7 @@ function UpgradePlanNavItem() {
 export function Sidebar() {
   const { t } = useTranslation('common')
   const location = useLocation()
-  const onTransactions = location.pathname.startsWith('/app/transactions')
+  const onTransactions = location.pathname.startsWith(appPath('/transactions'))
   const { isAdmin } = useIsAdmin()
   const { data: pendingEntities = 0 } = useUnreviewedBankCount(isAdmin)
 
@@ -155,7 +156,7 @@ export function Sidebar() {
       {/* Navegación principal */}
       <nav className="mt-7 flex flex-col gap-[3px]">
         {navItemsTop.map(({ to, icon: Icon, label }) => (
-          <NavLink key={to} to={to} end={to === '/app'} className="block">
+          <NavLink key={to} to={to} end={to === appPath()} className="block">
             {({ isActive }) => (
               <span className={itemClass(isActive)}>
                 {isActive && <ActiveBar />}
@@ -170,7 +171,7 @@ export function Sidebar() {
 
         {navItemsBottom.map(({ to, icon: Icon, label }) => (
           <div key={to}>
-            <NavLink to={to} end={to === '/app'} className="block">
+            <NavLink to={to} end={to === appPath()} className="block">
               {({ isActive }) => (
                 <span className={itemClass(isActive)}>
                   {isActive && <ActiveBar />}
@@ -181,9 +182,9 @@ export function Sidebar() {
             </NavLink>
 
             {/* Submenú: Reglas de clasificación (visible al estar en Movimientos) */}
-            {to === '/app/transactions' && onTransactions && (
+            {to === appPath('/transactions') && onTransactions && (
               <NavLink
-                to="/app/transactions/rules"
+                to={appPath('/transactions/rules')}
                 className={({ isActive }) =>
                   cn(
                     'ml-4 mt-1 flex items-center gap-3 rounded-[11px] border-l border-[var(--brand-ink-2)] px-3 py-2 text-sm transition-colors',
@@ -214,7 +215,7 @@ export function Sidebar() {
         <div className="flex flex-col gap-[3px]">
           {/* CTA: Importar extractos — acción primaria de la app */}
           <NavLink
-            to="/app/import"
+            to={appPath('/import')}
             className={({ isActive }) =>
               cn(
                 'flex items-center gap-3 rounded-[11px] bg-[var(--brand-accent)] px-3 py-[11px] text-sm font-semibold text-white transition-colors hover:bg-[#F55E3E]',
@@ -232,7 +233,7 @@ export function Sidebar() {
 
           {/* Panel de administración — solo visible para admins. */}
           {isAdmin && (
-            <NavLink to="/app/admin" className="block">
+            <NavLink to={appPath('/admin')} className="block">
               {({ isActive }) => (
                 <span className={itemClass(isActive)}>
                   {isActive && <ActiveBar />}

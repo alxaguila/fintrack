@@ -4,6 +4,7 @@ import { Landmark, Tags, Users, BarChart3, MessageSquare, ChevronRight, Vote, St
 import type { LucideIcon } from 'lucide-react'
 import { useUnreviewedBankCount } from '@/hooks/useAdminBankEntities'
 import { useUnreadFeedbackCount } from '@/hooks/useAdminFeedback'
+import { appPath } from '@/lib/appUrl'
 
 /**
  * Hub de administración. Solo accesible para admins vía <AdminRoute>. Enlaza a
@@ -19,13 +20,13 @@ export default function Admin() {
       <h1 className="text-3xl font-extrabold tracking-tight">{t('title')}</h1>
 
       <nav className="overflow-hidden rounded-2xl border border-slate-200 bg-white">
-        <MenuLink to="/app/admin/bancos" icon={Landmark} label={t('hub.banks')} desc={t('hub.banks_desc')} dot={pendingEntities > 0} />
-        <MenuLink to="/app/admin/categorias" icon={Tags} label={t('hub.categories')} desc={t('hub.categories_desc')} />
-        <MenuLink to="/app/admin/usuarios" icon={Users} label={t('hub.users')} desc={t('hub.users_desc')} />
-        <MenuLink to="/app/admin/estadisticas" icon={BarChart3} label={t('hub.stats')} desc={t('hub.stats_desc')} />
-        <MenuLink to="/app/admin/reglas" icon={Vote} label={t('hub.rules')} desc={t('hub.rules_desc')} />
-        <MenuLink to="/app/admin/comercios" icon={Store} label={t('hub.merchants')} desc={t('hub.merchants_desc')} />
-        <MenuLink to="/app/admin/feedback" icon={MessageSquare} label={t('hub.feedback')} desc={t('hub.feedback_desc')} dot={unreadFeedback > 0} />
+        <MenuLink to={appPath('/admin/bancos')} icon={Landmark} label={t('hub.banks')} desc={t('hub.banks_desc')} dot={pendingEntities > 0} />
+        <MenuLink to={appPath('/admin/categorias')} icon={Tags} label={t('hub.categories')} desc={t('hub.categories_desc')} />
+        <MenuLink to={appPath('/admin/usuarios')} icon={Users} label={t('hub.users')} desc={t('hub.users_desc')} />
+        <MenuLink to={appPath('/admin/estadisticas')} icon={BarChart3} label={t('hub.stats')} desc={t('hub.stats_desc')} />
+        <MenuLink to={appPath('/admin/reglas')} icon={Vote} label={t('hub.rules')} desc={t('hub.rules_desc')} />
+        <MenuLink to={appPath('/admin/comercios')} icon={Store} label={t('hub.merchants')} desc={t('hub.merchants_desc')} />
+        <MenuLink to={appPath('/admin/feedback')} icon={MessageSquare} label={t('hub.feedback')} desc={t('hub.feedback_desc')} dot={unreadFeedback > 0} />
       </nav>
     </div>
   )

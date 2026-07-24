@@ -4,6 +4,7 @@ import { FileUp, Upload } from 'lucide-react'
 import { useProfile } from '@/contexts/ProfileContext'
 import { useHasStatements } from '@/hooks/useImportBatches'
 import { Button } from '@/components/ui/button'
+import { appPath } from '@/lib/appUrl'
 
 /**
  * Onboarding "sube tu primer extracto".
@@ -21,7 +22,7 @@ export function OnboardingGate() {
   //  - /app/import: es donde se sube (y se puede crear la cuenta) → redundante y bloquearía.
   //  - /app/settings: el usuario necesita poder entrar (cerrar sesión, idioma, cuenta…).
   const path = location.pathname
-  const exempt = path.startsWith('/app/import') || path.startsWith('/app/settings')
+  const exempt = path.startsWith(appPath('/import')) || path.startsWith(appPath('/settings'))
 
   // Solo sustituimos el contenido cuando SABEMOS que no hay extractos (===false),
   // nunca durante la carga (undefined) para no parpadear.
@@ -44,7 +45,7 @@ function UploadFirstStatement() {
         <p className="mx-auto mt-2 max-w-sm text-sm text-teal-800">{t('onboarding_upload.body')}</p>
         <Button
           className="mt-5 bg-teal-600 text-white hover:bg-teal-500"
-          onClick={() => navigate('/app/import')}
+          onClick={() => navigate(appPath('/import'))}
         >
           <Upload className="h-4 w-4" /> {t('onboarding_upload.cta')}
         </Button>

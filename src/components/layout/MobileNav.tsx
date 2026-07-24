@@ -4,6 +4,7 @@ import { Home, BarChart3, ArrowLeftRight, Wallet, Tags, FileClock, Upload, Shiel
 import type { LucideIcon } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { cn } from '@/lib/utils'
+import { appPath } from '@/lib/appUrl'
 import { APP_VERSION } from '@/lib/version'
 import type { Granularity } from '@/lib/periods'
 import { useIsAdmin } from '@/hooks/useIsAdmin'
@@ -30,7 +31,7 @@ function DrawerBudgetsItem() {
   const location = useLocation()
   const hasBudget = useBudgetsGate()
   const [hintOpen, setHintOpen] = useState(false)
-  const isActive = location.pathname.startsWith('/app/budgets')
+  const isActive = location.pathname.startsWith(appPath('/budgets'))
 
   const content = (
     <>
@@ -40,7 +41,7 @@ function DrawerBudgetsItem() {
   )
 
   if (hasBudget) {
-    return <NavLink to="/app/budgets" className={drawerItemClass(isActive)}>{content}</NavLink>
+    return <NavLink to={appPath('/budgets')} className={drawerItemClass(isActive)}>{content}</NavLink>
   }
 
   return (
@@ -61,9 +62,9 @@ function DrawerBudgetsItem() {
 // Destinos principales: van en la barra inferior con scroll horizontal.
 // "Presupuestos" se intercala aparte (BudgetsBottomNavItem) por su gate de plan.
 const bottomItems = [
-  { to: '/app',              icon: Home,           label: 'nav.short.home' },
-  { to: '/app/analysis',     icon: BarChart3,      label: 'nav.short.analysis' },
-  { to: '/app/transactions', icon: ArrowLeftRight, label: 'nav.short.transactions' },
+  { to: appPath(),                 icon: Home,           label: 'nav.short.home' },
+  { to: appPath('/analysis'),      icon: BarChart3,      label: 'nav.short.analysis' },
+  { to: appPath('/transactions'),  icon: ArrowLeftRight, label: 'nav.short.transactions' },
 ]
 
 const bottomItemClass = (isActive: boolean) =>
@@ -77,7 +78,7 @@ const bottomItemClass = (isActive: boolean) =>
 function BottomNavLink({ to, icon: Icon, label }: { to: string; icon: LucideIcon; label: string }) {
   const { t } = useTranslation('common')
   return (
-    <NavLink to={to} end={to === '/app'} className={({ isActive }) => bottomItemClass(isActive)}>
+    <NavLink to={to} end={to === appPath()} className={({ isActive }) => bottomItemClass(isActive)}>
       {({ isActive }) => (
         <>
           {isActive && <span className="absolute left-3 right-3 top-0 h-[3px] rounded-b-[3px] bg-[var(--brand-accent)]" />}
@@ -96,7 +97,7 @@ function BudgetsBottomNavItem() {
   const location = useLocation()
   const hasBudget = useBudgetsGate()
   const [hintOpen, setHintOpen] = useState(false)
-  const isActive = location.pathname.startsWith('/app/budgets')
+  const isActive = location.pathname.startsWith(appPath('/budgets'))
 
   const content = (
     <>
@@ -107,7 +108,7 @@ function BudgetsBottomNavItem() {
   )
 
   if (hasBudget) {
-    return <NavLink to="/app/budgets" className={bottomItemClass(isActive)}>{content}</NavLink>
+    return <NavLink to={appPath('/budgets')} className={bottomItemClass(isActive)}>{content}</NavLink>
   }
 
   return (
@@ -139,7 +140,7 @@ export function MobileBottomNav() {
   const userName = settings?.first_name?.trim() || ''
   const userInitial = (userName.charAt(0) || 'U').toUpperCase()
   const planKey = settings?.plan ?? 'free'
-  const onTransactions = location.pathname.startsWith('/app/transactions')
+  const onTransactions = location.pathname.startsWith(appPath('/transactions'))
 
   // Cerrar el drawer al navegar.
   useEffect(() => { setOpen(false) }, [location.pathname])
@@ -185,36 +186,36 @@ export function MobileBottomNav() {
             </div>
 
             <div className="flex-1 space-y-1 overflow-y-auto px-3 py-2">
-              <NavLink to="/app" end className={({ isActive }) => drawerItemClass(isActive)}>
+              <NavLink to={appPath()} end className={({ isActive }) => drawerItemClass(isActive)}>
                 <Home className="h-[18px] w-[18px] shrink-0" strokeWidth={1.7} />
                 {t('nav.home')}
               </NavLink>
 
-              <NavLink to="/app/analysis" className={({ isActive }) => drawerItemClass(isActive)}>
+              <NavLink to={appPath('/analysis')} className={({ isActive }) => drawerItemClass(isActive)}>
                 <BarChart3 className="h-[18px] w-[18px] shrink-0" strokeWidth={1.7} />
                 {t('nav.analysis')}
               </NavLink>
 
               <DrawerBudgetsItem />
 
-              <NavLink to="/app/transactions" className={({ isActive }) => drawerItemClass(isActive)}>
+              <NavLink to={appPath('/transactions')} className={({ isActive }) => drawerItemClass(isActive)}>
                 <ArrowLeftRight className="h-[18px] w-[18px] shrink-0" strokeWidth={1.7} />
                 {t('nav.transactions')}
               </NavLink>
 
               {onTransactions && (
-                <NavLink to="/app/transactions/rules" className={({ isActive }) => cn(drawerItemClass(isActive), 'ml-4 border-l border-[var(--brand-ink-2)]')}>
+                <NavLink to={appPath('/transactions/rules')} className={({ isActive }) => cn(drawerItemClass(isActive), 'ml-4 border-l border-[var(--brand-ink-2)]')}>
                   <Tags className="h-[18px] w-[18px] shrink-0" strokeWidth={1.7} />
                   {t('nav.rules')}
                 </NavLink>
               )}
 
-              <NavLink to="/app/accounts" className={({ isActive }) => drawerItemClass(isActive)}>
+              <NavLink to={appPath('/accounts')} className={({ isActive }) => drawerItemClass(isActive)}>
                 <Wallet className="h-[18px] w-[18px] shrink-0" strokeWidth={1.7} />
                 {t('nav.accounts')}
               </NavLink>
 
-              <NavLink to="/app/history" className={({ isActive }) => drawerItemClass(isActive)}>
+              <NavLink to={appPath('/history')} className={({ isActive }) => drawerItemClass(isActive)}>
                 <FileClock className="h-[18px] w-[18px] shrink-0" strokeWidth={1.7} />
                 {t('nav.history')}
               </NavLink>
@@ -222,7 +223,7 @@ export function MobileBottomNav() {
 
             <div className="space-y-1 border-t border-[#16344E] px-3 py-2">
               <NavLink
-                to="/app/import"
+                to={appPath('/import')}
                 className={({ isActive }) =>
                   cn(
                     'flex items-center gap-3 rounded-[11px] bg-[var(--brand-accent)] px-3 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#F55E3E]',
@@ -235,7 +236,7 @@ export function MobileBottomNav() {
                 {t('nav.import')}
               </NavLink>
 
-              <NavLink to="/app/settings" className={({ isActive }) => drawerItemClass(isActive)}>
+              <NavLink to={appPath('/settings')} className={({ isActive }) => drawerItemClass(isActive)}>
                 <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[var(--brand-primary-3)]/15 text-[13px] font-semibold text-[var(--brand-primary-3)]">
                   {userInitial}
                 </span>
@@ -248,7 +249,7 @@ export function MobileBottomNav() {
               </NavLink>
 
               {isAdmin && (
-                <NavLink to="/app/admin" className={({ isActive }) => drawerItemClass(isActive)}>
+                <NavLink to={appPath('/admin')} className={({ isActive }) => drawerItemClass(isActive)}>
                   <Shield className="h-[18px] w-[18px] shrink-0" strokeWidth={1.7} />
                   {t('nav.admin')}
                   {pendingEntities > 0 && (
@@ -275,7 +276,7 @@ export function MobileTopBar() {
   const location = useLocation()
   const [searchParams, setSearchParams] = useSearchParams()
 
-  if (!location.pathname.startsWith('/app/analysis')) return null
+  if (!location.pathname.startsWith(appPath('/analysis'))) return null
 
   const granularity = (searchParams.get('granularity') as Granularity) || 'month'
   function setGranularity(g: string) {

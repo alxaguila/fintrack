@@ -28,6 +28,7 @@ import { PlanLimitError, type LimitDimension } from '@/lib/plan'
 import { LimitReachedDialog } from '@/components/plan/LimitReachedDialog'
 import { useNavigate } from 'react-router-dom'
 import { parse, isValid } from 'date-fns'
+import { appPath } from '@/lib/appUrl'
 
 // ── Error boundary so a render crash shows a useful message ──────────────────
 class ImportErrorBoundary extends Component<{ children: ReactNode }, { error: Error | null }> {
@@ -412,7 +413,7 @@ function ImportInner() {
           }),
         })
       }
-      navigate('/app/transactions')
+      navigate(appPath('/transactions'))
     } catch (err: any) {
       if (err instanceof PlanLimitError) {
         setLimitDialog({ dimension: err.dimension, limit: err.limit, plan: err.plan })
