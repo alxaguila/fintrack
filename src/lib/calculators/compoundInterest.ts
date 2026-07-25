@@ -1,15 +1,12 @@
 // Cálculo puro (sin React) de la calculadora de interés compuesto de la landing.
 // 100% client-side: no persiste ni envía a ningún sitio los valores introducidos.
 
-export type CapitalizationFrequency = 'monthly' | 'annual'
-
 export interface CompoundInterestInput {
   initialCapital: number
   monthlyContribution: number
   years: number
   annualRatePct: number
   annualContributionIncreasePct: number
-  frequency: CapitalizationFrequency
 }
 
 export interface YearBreakdown {
@@ -31,10 +28,10 @@ export interface CompoundInterestResult {
 }
 
 export const COMPOUND_INTEREST_LIMITS = {
-  initialCapital: { min: 0, max: 500_000 },
-  monthlyContribution: { min: 0, max: 10_000 },
-  years: { min: 1, max: 50 },
-  annualRatePct: { min: 1, max: 15 },
+  initialCapital: { min: 0, max: 100_000 },
+  monthlyContribution: { min: 0, max: 1_000 },
+  years: { min: 1, max: 40 },
+  annualRatePct: { min: 0, max: 15 },
   annualContributionIncreasePct: { min: 0, max: 10 },
 } as const
 
@@ -44,7 +41,6 @@ export const COMPOUND_INTEREST_DEFAULTS: CompoundInterestInput = {
   years: 25,
   annualRatePct: 8,
   annualContributionIncreasePct: 2,
-  frequency: 'monthly',
 }
 
 function clampNumber(value: unknown, fallback: number, min: number, max: number): number {
@@ -69,12 +65,11 @@ export function clampCompoundInterestInput(raw: Partial<Record<keyof CompoundInt
       l.annualContributionIncreasePct.min,
       l.annualContributionIncreasePct.max,
     ),
-    frequency: raw.frequency === 'annual' ? 'annual' : raw.frequency === 'monthly' ? 'monthly' : d.frequency,
   }
 }
 
 export function calculateCompoundInterest(input: CompoundInterestInput): CompoundInterestResult {
-  const { initialCapital, monthlyContribution, years, annualRatePct, annualContributionIncreasePct, frequency } = input
+  const { initialCapital, monthlyContribution, years, annualRatePct, annualContributionIncreasePct } = input
 
   const yearlyBreakdown: YearBreakdown[] = [
     {
@@ -92,27 +87,18 @@ export function calculateCompoundInterest(input: CompoundInterestInput): Compoun
   let cumulativeInterest = 0
   let currentMonthlyContribution = monthlyContribution
 
+  // r = interés anual / (100 × 12); Saldo_m = Saldo_(m-1) × (1+r) + aportación del mes.
+  const r = annualRatePct / (100 * 12)
+
   for (let year = 1; year <= years; year++) {
     let contributedThisYear = 0
     let interestThisYear = 0
 
-    if (frequency === 'monthly') {
-      // r = interés anual / (100 × 12); Saldo_m = Saldo_(m-1) × (1+r) + aportación del mes.
-      const r = annualRatePct / (100 * 12)
-      for (let m = 0; m < 12; m++) {
-        const interest = balance * r
-        balance += interest + currentMonthlyContribution
-        interestThisYear += interest
-        contributedThisYear += currentMonthlyContribution
-      }
-    } else {
-      // Capitalización anual: las aportaciones del año no generan interés hasta el
-      // cierre, donde se aplica una única vez sobre saldo + aportaciones del año.
-      const r = annualRatePct / 100
-      contributedThisYear = currentMonthlyContribution * 12
-      const balanceBeforeInterest = balance + contributedThisYear
-      interestThisYear = balanceBeforeInterest * r
-      balance = balanceBeforeInterest + interestThisYear
+    for (let m = 0; m < 12; m++) {
+      const interest = balance * r
+      balance += interest + currentMonthlyContribution
+      interestThisYear += interest
+      contributedThisYear += currentMonthlyContribution
     }
 
     cumulativeContributed += contributedThisYear

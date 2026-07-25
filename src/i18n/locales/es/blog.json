@@ -7,8 +7,10 @@
     "backToBlog": "Blog",
     "readMore": "Leer artículo",
     "minRead": "{{count}} min de lectura",
-    "disclaimer": "Este artículo tiene fines exclusivamente informativos y educativos. No constituye asesoramiento financiero, fiscal ni de inversión personalizado. Antes de tomar cualquier decisión, consulta nuestro **Aviso Legal** y valora acudir a un profesional cualificado.",
-    "disclaimerLinkLabel": "Aviso Legal"
+    "viewFullSize": "Ver imagen a tamaño completo",
+    "close": "Cerrar",
+    "signedBy": "El Equipo de Zafyros",
+    "disclaimer": "Este artículo tiene fines exclusivamente informativos y educativos. No constituye asesoramiento financiero, fiscal ni de inversión personalizado. Antes de tomar cualquier decisión, consulta nuestro **Aviso Legal** y valora acudir a un profesional cualificado."
   },
   "posts": {
     "how-much-to-invest-by-age": {
@@ -24,8 +26,7 @@
         {
           "blocks": [
             { "p": "Muchas personas intentan llevar una gestión responsable de su dinero: evitan deudas innecesarias, guardan algo de margen a fin de mes y tienen la intención de empezar a invertir «más adelante». El problema es que en finanzas el tiempo tiene un valor muy concreto." },
-            { "p": "Esperar cinco o diez años no solo cambia la fecha en la que alcanzas tu tranquilidad financiera; cambia de forma radical la cantidad que necesitas poner de tu bolsillo cada mes." },
-            { "image": { "key": "snowball" } }
+            { "p": "Esperar cinco o diez años no solo cambia la fecha en la que alcanzas tu tranquilidad financiera; cambia de forma radical la cantidad que necesitas poner de tu bolsillo cada mes." }
           ]
         },
         {
@@ -40,6 +41,7 @@
               ]
             },
             { "p": "A pesar de haber aportado más dinero cada mes, el resultado es menor porque el dinero ha tenido diez años menos para multiplicarse." },
+            { "image": { "key": "snowball" } },
             {
               "callout": {
                 "icon": "💡",
@@ -53,24 +55,25 @@
         {
           "heading": "Las cifras de referencia según tu edad",
           "blocks": [
-            { "p": "Tomando como base una rentabilidad media del 8% anualizada (histórica en índices globales y en el S&P 500) para un objetivo de jubilación a los 65 años, estas son las estimaciones de aportación mensual necesarias según el punto de partida:" },
+            { "p": "Para hacerlo concreto, imaginemos un objetivo común: llegar a los 65 años con 1.000.000 € ahorrados. Con una rentabilidad media anualizada del 8% (histórica en índices globales y en el S&P 500), esto es lo que necesitarías aportar cada mes según la edad a la que empieces:" },
             {
               "ageBrackets": {
                 "labels": {
                   "contribution": "Aportación aproximada",
                   "contributed": "Aportado de tu bolsillo",
-                  "capital": "Capital estimado a los 65",
+                  "capital": "Objetivo a los 65",
                   "multiplier": "Factor de multiplicación"
                 },
                 "items": [
-                  { "range": "Entre 20 y 25 años", "contribution": "250 € a 300 € al mes", "contributed": "~144.000 € en 40 años", "capital": "~1,2 millones de euros", "multiplier": "El capital final equivale a multiplicar por más de 8 el dinero aportado." },
-                  { "range": "Entre 30 y 35 años", "contribution": "550 € a 650 € al mes", "contributed": "~273.000 € en 35 años", "capital": "~1 millón de euros", "multiplier": "El capital se multiplica aproximadamente por 3,7." },
-                  { "range": "Entre 35 y 40 años", "contribution": "900 € a 1.100 € al mes", "contributed": "~360.000 € en 30 años", "capital": "~1 millón de euros", "multiplier": "Se multiplica por 2,8." },
-                  { "range": "Entre 40 y 45 años", "contribution": "1.700 € a 2.000 € al mes", "contributed": "~540.000 € en 25 años", "capital": "~1 millón de euros", "multiplier": "Se multiplica por menos de 2." },
-                  { "range": "Entre 45 y 50 años", "contribution": "3.000 € a 3.500 € al mes", "contributed": "~768.000 € en 20 años", "capital": "~1 millón de euros", "multiplier": "Se multiplica por 1,3." }
+                  { "range": "Entre 20 y 25 años", "contribution": "190 € a 285 € al mes", "contributed": "~119.000 € en unos 42 años", "capital": "1.000.000 €", "multiplier": "El objetivo final equivale a multiplicar por más de 8 el dinero aportado." },
+                  { "range": "Entre 30 y 35 años", "contribution": "435 € a 670 € al mes", "contributed": "~211.000 € en unos 32 años", "capital": "1.000.000 €", "multiplier": "El objetivo se multiplica aproximadamente por 4,7 respecto a lo aportado." },
+                  { "range": "Entre 35 y 40 años", "contribution": "670 € a 1.050 € al mes", "contributed": "~276.000 € en unos 27 años", "capital": "1.000.000 €", "multiplier": "Se multiplica por 3,6." },
+                  { "range": "Entre 40 y 45 años", "contribution": "1.050 € a 1.700 € al mes", "contributed": "~359.000 € en unos 22 años", "capital": "1.000.000 €", "multiplier": "Se multiplica por 2,8." },
+                  { "range": "Entre 45 y 50 años", "contribution": "1.700 € a 2.890 € al mes", "contributed": "~461.000 € en unos 17 años", "capital": "1.000.000 €", "multiplier": "Se multiplica por 2,2." }
                 ]
               }
             },
+            { "p": "Los importes se calculan como un ahorro fijo mensual, sin capital inicial ni incrementos anuales de aportación, y el rango de cada franja recoge tanto empezar al principio como al final de esos años." },
             {
               "callout": {
                 "icon": "🎯",
@@ -146,7 +149,15 @@
                 "Configura una transferencia automática mensual para que el proceso ocurra de forma autónoma."
               ]
             },
-            { "p": "Con zafyros puedes importar los extractos de tu banco en formato CSV o Excel para ver cómo evoluciona tu patrimonio mes a mes, sin necesidad de dar tus claves bancarias a nadie." }
+            { "p": "Antes de automatizar la inversión, merece la pena tener claro cuánto te sobra realmente cada mes: entender en qué se te va el dinero y ponerte un presupuesto por categoría es lo que hace que ese importe fijo sea sostenible en el tiempo, en vez de un propósito de enero que dura tres meses." },
+            {
+              "callout": {
+                "icon": "📊",
+                "text": "Con Zafyros puedes importar los extractos de tu banco (CSV o Excel), ver en qué se va tu dinero cada mes con categorías automáticas y ponerte presupuestos, sin dar tus claves bancarias a nadie.",
+                "linkLabel": "Empieza gratis con Zafyros",
+                "href": "/register"
+              }
+            }
           ]
         }
       ]

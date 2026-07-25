@@ -2,6 +2,31 @@
 
 Lista de cambios por versión (`APP_VERSION` en `src/lib/version.ts`). Solo se añade una entrada cuando el código de la app cambia.
 
+## v1.763
+- Calculadora de Interés Compuesto: al ganar altura el panel de "Tus datos" en escritorio, quedaba un hueco en blanco al final de la tarjeta; los dos bloques de sliders ("Tus datos" y "Supuestos de crecimiento") ahora se reparten ese espacio extra entre ellos en vez de acumularse todo debajo del último campo.
+
+## v1.762
+- Calculadora de Interés Compuesto: la barra de "desglose por año" pasa a una sola línea (se quita el subtítulo con el recuento de filas y se reduce el padding); sus columnas cambian a Aportación acumulada / Intereses acumulados / Patrimonio acumulado (antes mostraba el interés solo del año en curso); en escritorio, el bloque del panel de inputs y la gráfica gana altura para aprovechar todo el alto de la pantalla, de forma que desde el título hasta la barra de desglose quepa sin scroll en la mayoría de resoluciones de escritorio.
+
+## v1.757
+- Rediseño completo de la Calculadora de Interés Compuesto (desktop y móvil): el patrimonio final pasa a una tarjeta destacada oscura con un badge de rentabilidad y una frase de contexto ("con X años de horizonte y un Y% de interés anual estimado"), acompañada de 2 tarjetas secundarias (capital aportado, intereses generados); los sliders se agrupan en "Tus datos" y "Supuestos de crecimiento" con un separador; se eliminan el selector de frecuencia de capitalización (el cálculo pasa a ser siempre mensual) y el botón "Compartir resultado"; nuevos rangos: capital inicial 0-100.000 €, aportación mensual 0-1.000 €, horizonte 1-40 años, interés anual 0-15 %; el bloque de desglose año a año añade una descripción de lo que contiene la tabla.
+
+## v1.755
+- Blog: la firma "El Equipo de Zafyros" pasa a ir dentro de la tarjeta de contenido, alineada a la derecha (antes quedaba fuera, a la izquierda).
+- Blog: el aviso legal al final de cada entrada enlazaba "Aviso Legal" dos veces (una vez en negrita dentro del texto y otra como enlace suelto al final); ahora la propia mención dentro del texto es el enlace, sin duplicar.
+
+## v1.753
+- Blog: corrige el orden dentro de "El efecto del tiempo en tu dinero" — la ilustración vuelve a ir antes del enlace a la Calculadora de Interés Compuesto (no después).
+- Blog: recalculadas las cifras de "Las cifras de referencia según tu edad" para que las 5 franjas de edad apunten a un mismo objetivo compartido (1.000.000 € a los 65 años, 8% de rentabilidad anual), en vez de a capitales finales dispares (antes la franja de 20-25 años daba ~1,2M€ frente a ~1M€ del resto); se explica también el método de cálculo (aportación fija mensual, rango según empezar al principio o al final de la franja).
+- Blog: el cierre de "Resumen práctico" añade un enlace explícito a lo que ofrece Zafyros para dar el paso (importar extractos, categorías automáticas, presupuestos), con botón "Empieza gratis con Zafyros" hacia el registro.
+- Blog: todas las entradas quedan firmadas al final por "El Equipo de Zafyros" (firma genérica en el componente del blog, no hace falta añadirla en cada entrada nueva).
+- Blog: se corrige la capitalización de la marca a "Zafyros" (mayúscula inicial) en el texto de las entradas.
+
+## v1.751
+- Blog: las imágenes de las entradas ahora se pueden hacer clic para verlas a tamaño completo (lightbox con fondo oscuro, cierre con la X, clic fuera o tecla Escape).
+- Blog: la tarjeta de contenido de una entrada ganó ancho (de 760px a 900px) para reducir el aire vacío a los lados en pantallas anchas.
+- Entrada "Cuánto deberías invertir cada mes según la edad": la ilustración de las bolas de nieve pasa de ir justo antes del apartado "El efecto del tiempo en tu dinero" a ir al final de ese mismo apartado.
+
 ## v1.742
 - SEO: añadida `meta description` en `index.html` (no existía ninguna), y nuevos `public/robots.txt` (bloquea `/app`, la app autenticada; permite el resto y enlaza al sitemap) y `public/sitemap.xml` con las páginas públicas (home, registro, calculadora, blog e índice, y las 4 páginas legales). Motivado por que Google mostraba en el snippet de búsqueda contenido genérico de una plantilla antigua de aparcamiento del dominio en vez del sitio real — este cambio da señales frescas para que Google recrawlee y muestre la descripción correcta.
 

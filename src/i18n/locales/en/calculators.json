@@ -11,20 +11,25 @@
     },
     "inputs": {
       "title": "Your numbers",
+      "sectionGrowth": "Growth assumptions",
       "initialCapital": { "label": "Initial capital" },
       "monthlyContribution": { "label": "Monthly contribution" },
       "years": { "label": "Time horizon" },
       "annualRate": { "label": "Estimated annual return" },
       "contributionIncrease": { "label": "Annual contribution increase" },
-      "frequency": { "label": "Compounding frequency", "monthly": "Monthly", "annual": "Annual" },
       "yearsSuffix": "years"
     },
     "results": {
       "title": "Result",
       "finalBalance": "Estimated final wealth",
       "totalContributed": "Total capital contributed",
+      "totalContributedShort": "Contributed",
       "totalInterest": "Interest earned",
-      "totalReturn": "Total return",
+      "totalInterestShort": "Interest",
+      "hero": {
+        "subtitle": "With a {{years}}-year horizon and an estimated {{rate}}% annual return.",
+        "subtitleShort": "{{years}} years · {{rate}}% annual interest"
+      },
       "chartTitle": "Wealth growth",
       "chart": {
         "contributedSeries": "Capital contributed",
@@ -32,20 +37,14 @@
         "yearAxis": "Year"
       },
       "table": {
-        "title": "Year-by-year breakdown",
-        "toggleShow": "Show year-by-year breakdown",
-        "toggleHide": "Hide year-by-year breakdown",
+        "title": "Breakdown by year",
+        "toggleShow": "Show breakdown by year",
+        "toggleHide": "Hide breakdown by year",
         "year": "Year",
         "cumulativeContributed": "Cumulative contribution",
-        "yearInterest": "Interest this year",
-        "balance": "Total balance"
+        "cumulativeInterest": "Cumulative interest",
+        "balance": "Accumulated wealth"
       }
-    },
-    "share": {
-      "button": "Share result",
-      "shareText": "With these contributions I could reach {{amount}} in {{years}} years with zafyros",
-      "toastTitle": "Link copied",
-      "toastDescription": "The URL with this configuration has been copied to your clipboard."
     }
   }
 }

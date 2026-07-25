@@ -7,8 +7,10 @@
     "backToBlog": "Blog",
     "readMore": "Read article",
     "minRead": "{{count}} min read",
-    "disclaimer": "This article is for informational and educational purposes only. It does not constitute personalized financial, tax or investment advice. Before making any decision, check our **Legal Notice** and consider talking to a qualified professional.",
-    "disclaimerLinkLabel": "Legal Notice"
+    "viewFullSize": "View full-size image",
+    "close": "Close",
+    "signedBy": "The Zafyros Team",
+    "disclaimer": "This article is for informational and educational purposes only. It does not constitute personalized financial, tax or investment advice. Before making any decision, check our **Legal Notice** and consider talking to a qualified professional."
   },
   "posts": {
     "how-much-to-invest-by-age": {
@@ -24,8 +26,7 @@
         {
           "blocks": [
             { "p": "Many people try to manage their money responsibly: they avoid unnecessary debt, keep some margin at the end of the month, and intend to start investing \"later on\". The problem is that in finance, time has a very concrete value." },
-            { "p": "Waiting five or ten years doesn't just push back the date you reach financial peace of mind; it radically changes how much you need to put in from your own pocket every month." },
-            { "image": { "key": "snowball" } }
+            { "p": "Waiting five or ten years doesn't just push back the date you reach financial peace of mind; it radically changes how much you need to put in from your own pocket every month." }
           ]
         },
         {
@@ -40,6 +41,7 @@
               ]
             },
             { "p": "Even though you contributed more money each month, the result is lower because the money had ten fewer years to multiply." },
+            { "image": { "key": "snowball" } },
             {
               "callout": {
                 "icon": "💡",
@@ -53,24 +55,25 @@
         {
           "heading": "Reference figures by age",
           "blocks": [
-            { "p": "Based on an average annualized return of 8% (historical for global indices and the S&P 500) and a retirement goal at age 65, here are the estimated monthly contributions needed depending on your starting point:" },
+            { "p": "To make this concrete, let's imagine a common goal: reaching age 65 with €1,000,000 saved. With an average annualized return of 8% (historical for global indices and the S&P 500), here's what you'd need to contribute each month depending on the age you start:" },
             {
               "ageBrackets": {
                 "labels": {
                   "contribution": "Approximate contribution",
                   "contributed": "Contributed out of pocket",
-                  "capital": "Estimated capital at 65",
+                  "capital": "Goal at 65",
                   "multiplier": "Multiplier factor"
                 },
                 "items": [
-                  { "range": "Between 20 and 25 years old", "contribution": "€250 to €300 a month", "contributed": "~€144,000 over 40 years", "capital": "~€1.2 million", "multiplier": "The final capital is equivalent to multiplying the contributed money by more than 8." },
-                  { "range": "Between 30 and 35 years old", "contribution": "€550 to €650 a month", "contributed": "~€273,000 over 35 years", "capital": "~€1 million", "multiplier": "The capital is multiplied by roughly 3.7." },
-                  { "range": "Between 35 and 40 years old", "contribution": "€900 to €1,100 a month", "contributed": "~€360,000 over 30 years", "capital": "~€1 million", "multiplier": "It's multiplied by 2.8." },
-                  { "range": "Between 40 and 45 years old", "contribution": "€1,700 to €2,000 a month", "contributed": "~€540,000 over 25 years", "capital": "~€1 million", "multiplier": "It's multiplied by less than 2." },
-                  { "range": "Between 45 and 50 years old", "contribution": "€3,000 to €3,500 a month", "contributed": "~€768,000 over 20 years", "capital": "~€1 million", "multiplier": "It's multiplied by 1.3." }
+                  { "range": "Between 20 and 25 years old", "contribution": "€190 to €285 a month", "contributed": "~€119,000 over about 42 years", "capital": "€1,000,000", "multiplier": "The final goal is equivalent to multiplying the contributed money by more than 8." },
+                  { "range": "Between 30 and 35 years old", "contribution": "€435 to €670 a month", "contributed": "~€211,000 over about 32 years", "capital": "€1,000,000", "multiplier": "The goal is roughly 4.7 times what you contributed." },
+                  { "range": "Between 35 and 40 years old", "contribution": "€670 to €1,050 a month", "contributed": "~€276,000 over about 27 years", "capital": "€1,000,000", "multiplier": "It's 3.6 times what you contributed." },
+                  { "range": "Between 40 and 45 years old", "contribution": "€1,050 to €1,700 a month", "contributed": "~€359,000 over about 22 years", "capital": "€1,000,000", "multiplier": "It's 2.8 times what you contributed." },
+                  { "range": "Between 45 and 50 years old", "contribution": "€1,700 to €2,890 a month", "contributed": "~€461,000 over about 17 years", "capital": "€1,000,000", "multiplier": "It's 2.2 times what you contributed." }
                 ]
               }
             },
+            { "p": "These figures assume a fixed monthly contribution, with no initial capital and no annual increase, and each bracket's range covers both starting at the beginning and at the end of that age span." },
             {
               "callout": {
                 "icon": "🎯",
@@ -146,7 +149,15 @@
                 "Set up an automatic monthly transfer so the process runs on its own."
               ]
             },
-            { "p": "With zafyros you can import your bank statements in CSV or Excel format to see how your net worth evolves month by month, without ever handing over your banking credentials to anyone." }
+            { "p": "Before automating your investment, it's worth knowing exactly how much you can genuinely spare each month: understanding where your money goes and setting a budget by category is what makes that fixed amount sustainable over time, instead of a New Year's resolution that lasts three months." },
+            {
+              "callout": {
+                "icon": "📊",
+                "text": "With Zafyros you can import your bank statements (CSV or Excel), see where your money goes each month with automatic categories, and set budgets — without ever handing over your banking credentials to anyone.",
+                "linkLabel": "Start free with Zafyros",
+                "href": "/register"
+              }
+            }
           ]
         }
       ]

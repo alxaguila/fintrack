@@ -1,5 +1,6 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { X } from 'lucide-react'
 import { BRAND } from './brand'
 import { SiteHeader, SITE_HEADER_SPACE } from './SiteHeader'
 import { SiteFooter } from './SiteFooter'
@@ -26,6 +27,16 @@ function renderInline(text: string) {
   )
 }
 
+// Igual que renderInline, pero el tramo **marcado** se convierte en el enlace
+// al Aviso Legal en vez de negrita — evita repetir el enlace dos veces.
+function renderDisclaimer(text: string, href: string) {
+  return text.split(/(\*\*[^*]+\*\*)/g).map((part, i) =>
+    part.startsWith('**') && part.endsWith('**')
+      ? <a key={i} href={href} style={{ color: BRAND.blue, textDecoration: 'none', fontWeight: 600 }}>{part.slice(2, -2)}</a>
+      : <span key={i}>{part}</span>
+  )
+}
+
 function formatPublishedAt(iso: string, lang: 'es' | 'en') {
   return new Intl.DateTimeFormat(lang === 'es' ? 'es-ES' : 'en-US', { day: 'numeric', month: 'long', year: 'numeric' }).format(new Date(`${iso}T00:00:00`))
 }
@@ -45,10 +56,20 @@ export function BlogDocument({ meta }: Props) {
   const { t, i18n } = useTranslation('blog')
   const lang: 'es' | 'en' = i18n.language.startsWith('en') ? 'en' : 'es'
   const base = `posts.${meta.slug}`
+  const [lightbox, setLightbox] = useState<{ src: string; alt: string } | null>(null)
 
   useEffect(() => {
     document.title = t(`${base}.metaTitle`)
   }, [t, lang, base])
+
+  useEffect(() => {
+    if (!lightbox) return
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setLightbox(null)
+    }
+    window.addEventListener('keydown', onKeyDown)
+    return () => window.removeEventListener('keydown', onKeyDown)
+  }, [lightbox])
 
   const title = t(`${base}.title`)
   const excerpt = t(`${base}.excerpt`)
@@ -60,7 +81,7 @@ export function BlogDocument({ meta }: Props) {
     <div style={{ minHeight: '100dvh', background: BRAND.cream }}>
       <SiteHeader />
 
-      <div style={{ maxWidth: 760, margin: '0 auto', padding: `${SITE_HEADER_SPACE + 40}px 16px 80px`, boxSizing: 'border-box' }}>
+      <div style={{ maxWidth: 900, margin: '0 auto', padding: `${SITE_HEADER_SPACE + 40}px 16px 80px`, boxSizing: 'border-box' }}>
         <a href="/blog" style={{ display: 'inline-block', marginBottom: 18, font: `600 13px ${BRAND.sans}`, color: BRAND.blue, textDecoration: 'none' }}>
           ← {t('index.backToBlog')}
         </a>
@@ -117,13 +138,21 @@ export function BlogDocument({ meta }: Props) {
                   if ('image' in block) {
                     const src = meta.images[block.image.key]
                     if (!src) return null
+                    const alt = imageAlts[block.image.key] ?? ''
                     return (
-                      <img
+                      <button
                         key={bi}
-                        src={src}
-                        alt={imageAlts[block.image.key] ?? ''}
-                        style={{ width: '100%', borderRadius: 16, border: '1px solid #ECE7DD', display: 'block' }}
-                      />
+                        type="button"
+                        onClick={() => setLightbox({ src, alt })}
+                        style={{ padding: 0, border: 'none', background: 'none', cursor: 'zoom-in', display: 'block' }}
+                        aria-label={t('index.viewFullSize')}
+                      >
+                        <img
+                          src={src}
+                          alt={alt}
+                          style={{ width: '100%', borderRadius: 16, border: '1px solid #ECE7DD', display: 'block' }}
+                        />
+                      </button>
                     )
                   }
                   if ('ageBrackets' in block) {
@@ -168,14 +197,49 @@ export function BlogDocument({ meta }: Props) {
               </div>
             </div>
           ))}
+
+          <p style={{ margin: '10px 0 16px', textAlign: 'right', font: `500 14px ${BRAND.display}`, fontStyle: 'italic', color: '#8A96A3' }}>
+            — {t('index.signedBy')}
+          </p>
         </div>
 
-        <div style={{ margin: '24px 0 0', padding: '14px 18px', borderRadius: 14, background: '#F0ECE2', font: `400 12.5px/1.6 ${BRAND.sans}`, color: '#75828E' }}>
-          {renderInline(t('index.disclaimer'))} <a href="/aviso-legal" style={{ color: BRAND.blue, textDecoration: 'none', fontWeight: 600 }}>{t('index.disclaimerLinkLabel')}</a>
+        <div style={{ margin: '20px 0 0', padding: '14px 18px', borderRadius: 14, background: '#F0ECE2', font: `400 12.5px/1.6 ${BRAND.sans}`, color: '#75828E' }}>
+          {renderDisclaimer(t('index.disclaimer'), '/aviso-legal')}
         </div>
       </div>
 
       <SiteFooter />
+
+      {lightbox && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          onClick={() => setLightbox(null)}
+          style={{
+            position: 'fixed', inset: 0, zIndex: 100, background: 'rgba(10,37,64,.88)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24, cursor: 'zoom-out',
+          }}
+        >
+          <button
+            type="button"
+            onClick={() => setLightbox(null)}
+            aria-label={t('index.close')}
+            style={{
+              position: 'fixed', top: 20, right: 20, width: 40, height: 40, borderRadius: '50%',
+              background: 'rgba(255,255,255,.12)', border: 'none', color: '#fff',
+              display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer',
+            }}
+          >
+            <X size={20} />
+          </button>
+          <img
+            src={lightbox.src}
+            alt={lightbox.alt}
+            onClick={(e) => e.stopPropagation()}
+            style={{ maxWidth: '92vw', maxHeight: '88vh', borderRadius: 12, cursor: 'default', boxShadow: '0 20px 60px rgba(0,0,0,.4)' }}
+          />
+        </div>
+      )}
     </div>
   )
 }

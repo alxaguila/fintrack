@@ -11,20 +11,25 @@
     },
     "inputs": {
       "title": "Tus datos",
+      "sectionGrowth": "Supuestos de crecimiento",
       "initialCapital": { "label": "Capital inicial" },
       "monthlyContribution": { "label": "Aportación mensual" },
       "years": { "label": "Horizonte temporal" },
       "annualRate": { "label": "Interés anual estimado" },
       "contributionIncrease": { "label": "Incremento anual de aportación" },
-      "frequency": { "label": "Frecuencia de capitalización", "monthly": "Mensual", "annual": "Anual" },
       "yearsSuffix": "años"
     },
     "results": {
       "title": "Resultado",
       "finalBalance": "Patrimonio final estimado",
       "totalContributed": "Total capital aportado",
+      "totalContributedShort": "Aportado",
       "totalInterest": "Intereses generados",
-      "totalReturn": "Rentabilidad total",
+      "totalInterestShort": "Intereses",
+      "hero": {
+        "subtitle": "Con {{years}} años de horizonte y un {{rate}}% de interés anual estimado.",
+        "subtitleShort": "{{years}} años · {{rate}}% de interés anual"
+      },
       "chartTitle": "Evolución del patrimonio",
       "chart": {
         "contributedSeries": "Capital aportado",
@@ -32,20 +37,14 @@
         "yearAxis": "Año"
       },
       "table": {
-        "title": "Desglose año a año",
-        "toggleShow": "Ver desglose año a año",
-        "toggleHide": "Ocultar desglose año a año",
+        "title": "Desglose por año",
+        "toggleShow": "Ver desglose por año",
+        "toggleHide": "Ocultar desglose por año",
         "year": "Año",
         "cumulativeContributed": "Aportación acumulada",
-        "yearInterest": "Intereses del año",
-        "balance": "Total saldo"
+        "cumulativeInterest": "Intereses acumulados",
+        "balance": "Patrimonio acumulado"
       }
-    },
-    "share": {
-      "button": "Compartir resultado",
-      "shareText": "Con estas aportaciones podría llegar a {{amount}} en {{years}} años con zafyros",
-      "toastTitle": "Enlace copiado",
-      "toastDescription": "Se ha copiado al portapapeles la URL con esta configuración."
     }
   }
 }
