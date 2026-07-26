@@ -77,6 +77,7 @@ export default function Transactions() {
     const ty = searchParams.get('transactionType'); if (ty) f.transactionType = ty as TransactionType
     const acc = searchParams.get('accountId'); if (acc) f.accountId = acc
     if (searchParams.get('uncategorized') === 'true') f.uncategorized = true
+    if (searchParams.get('unread') === 'true') f.isReviewed = false
     return f
   })
   const isMobile = useIsMobile()
@@ -460,12 +461,12 @@ export default function Transactions() {
           </p>
         </div>
         {isMobile ? (
-          <Button variant="ghost" size="sm" onClick={() => setShowFilters(v => !v)}>
+          <Button className="mr-14" variant="ghost" size="sm" onClick={() => setShowFilters(v => !v)}>
             <Filter className="h-4 w-4" />
             {t(showFilters ? 'filters.hide_filters' : 'filters.show_filters')}
           </Button>
         ) : (
-          <Button variant="ghost" size="sm" onClick={clearFilters} disabled={!hasActiveFilters}>
+          <Button className="mr-14" variant="ghost" size="sm" onClick={clearFilters} disabled={!hasActiveFilters}>
             <FilterX className="h-4 w-4" />
             {t('filters.clear_filters')}
           </Button>

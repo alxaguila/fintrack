@@ -11,6 +11,8 @@ export interface ImportBatchRow extends ImportBatch {
     entity: string
     type: AccountType
     is_active: boolean
+    logo_url: string | null
+    color: string
   } | null
   // Rango de fechas de los movimientos del lote (agregado en BD). NULL si el lote
   // ya no tiene movimientos (p.ej. reasignados/borrados).
@@ -29,7 +31,7 @@ export function useImportBatches(profileId?: string) {
     queryFn: async (): Promise<ImportBatchRow[]> => {
       const { data, error } = await supabase
         .from('import_batches')
-        .select('*, account:accounts(id, name, entity, type, is_active)')
+        .select('*, account:accounts(id, name, entity, type, is_active, logo_url, color)')
         .eq('profile_id', profileId!)
         .order('imported_at', { ascending: false })
       if (error) throw error

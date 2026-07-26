@@ -77,9 +77,9 @@
             {
               "callout": {
                 "icon": "🎯",
-                "text": "Want to fine-tune your own number? Try different monthly contributions, timeframes and returns in our Compound Interest Calculator and compare scenarios.",
-                "linkLabel": "Simulate my monthly contribution",
-                "href": "/calculators/compound-interest"
+                "text": "Want your exact number instead of a generic bracket? Enter your age, your target wealth and your current capital in our Required Monthly Investment Calculator, and we'll tell you how much to save each month.",
+                "linkLabel": "Calculate my exact contribution",
+                "href": "/calculators/retirement-savings"
               }
             }
           ]
@@ -117,9 +117,9 @@
             {
               "callout": {
                 "icon": "🔄",
-                "text": "What if you push back your retirement age or change your monthly contribution? Play with the parameters in our Compound Interest Calculator to find a realistic scenario that fits your current lifestyle.",
+                "text": "What if you push back your retirement age or change your monthly contribution? Play with the parameters in our Required Monthly Investment Calculator to find a realistic scenario that fits your current lifestyle.",
                 "linkLabel": "Try different scenarios",
-                "href": "/calculators/compound-interest"
+                "href": "/calculators/retirement-savings"
               }
             }
           ]

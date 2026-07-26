@@ -546,7 +546,7 @@ export default function Dashboard() {
             <p className="mt-1 text-sm text-muted-foreground">{t('subtitle')}</p>
           </div>
           {!isMobile && hasData && (
-            <div className="inline-flex shrink-0 rounded-lg border p-0.5 text-sm">
+            <div className="mr-14 inline-flex shrink-0 rounded-lg border p-0.5 text-sm">
               {(['month', 'quarter', 'year'] as const).map(g => (
                 <button key={g} onClick={() => setGranularity(g)}
                   className={`px-3 py-1 rounded-md transition-colors ${granularity === g ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:text-foreground'}`}>

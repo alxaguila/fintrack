@@ -10,6 +10,8 @@ import { ProfileProvider } from '@/contexts/ProfileContext'
 import { OnboardingGate } from '@/components/OnboardingGate'
 import { Sidebar } from './Sidebar'
 import { MobileTopBar, MobileBottomNav } from './MobileNav'
+import { NotificationBell } from '@/components/notifications/NotificationBell'
+import { NotificationTicker } from '@/components/notifications/NotificationTicker'
 import { Skeleton } from '@/components/ui/skeleton'
 import Onboarding from '@/pages/Onboarding'
 import type { Session } from '@supabase/supabase-js'
@@ -92,6 +94,8 @@ export function AppShell() {
   return (
     <ProfileProvider profiles={profiles}>
       <div className="flex h-[100dvh] overflow-hidden bg-background">
+        <NotificationBell />
+        <NotificationTicker />
         <Sidebar />
         <div className="flex flex-1 flex-col overflow-hidden">
           <MobileTopBar />

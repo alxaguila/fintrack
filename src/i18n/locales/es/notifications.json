@@ -1,0 +1,31 @@
+{
+  "bell_label": "Notificaciones",
+  "empty": "No tienes notificaciones",
+  "severity": {
+    "warning": "Aviso",
+    "critical": "Importante"
+  },
+  "account_stale": {
+    "title": "{{account_name}} lleva sin actualizarse",
+    "list_item": "{{account_name}} ({{profile_name}}) lleva {{days_since}} días sin actualizarse",
+    "list_item_no_profile": "{{account_name}} lleva {{days_since}} días sin actualizarse",
+    "body": "La cuenta {{account_name}} del perfil {{profile_name}} lleva {{days_since}} días sin importar movimientos nuevos. Puede que se te haya pasado subir el último extracto.",
+    "body_no_profile": "La cuenta {{account_name}} lleva {{days_since}} días sin importar movimientos nuevos. Puede que se te haya pasado subir el último extracto.",
+    "cta": "Ir a Importar"
+  },
+  "unread_transactions": {
+    "list_item_one": "{{count}} movimiento sin leer en {{profile_name}}",
+    "list_item_other": "{{count}} movimientos sin leer en {{profile_name}}",
+    "list_item_no_profile_one": "{{count}} movimiento sin leer",
+    "list_item_no_profile_other": "{{count}} movimientos sin leer",
+    "body_one": "Tienes {{count}} movimiento sin revisar en el perfil {{profile_name}}.",
+    "body_other": "Tienes {{count}} movimientos sin revisar en el perfil {{profile_name}}.",
+    "body_no_profile_one": "Tienes {{count}} movimiento sin revisar.",
+    "body_no_profile_other": "Tienes {{count}} movimientos sin revisar.",
+    "cta": "Ir a Movimientos"
+  },
+  "ticker": {
+    "aria_summary": "Tienes {{count}} notificaciones nuevas"
+  },
+  "dialog_title": "Detalle de la notificación"
+}

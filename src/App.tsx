@@ -11,7 +11,9 @@ import AvisoLegal from '@/pages/AvisoLegal'
 import Privacidad from '@/pages/Privacidad'
 import Cookies from '@/pages/Cookies'
 import Terminos from '@/pages/Terminos'
+import CalculatorsIndex from '@/pages/calculators/Index'
 import CompoundInterest from '@/pages/calculators/CompoundInterest'
+import RetirementSavings from '@/pages/calculators/RetirementSavings'
 import Blog from '@/pages/Blog'
 import BlogPost from '@/pages/blog/Post'
 import Home from '@/pages/Home'
@@ -105,7 +107,9 @@ export default function App() {
               <Route path="/privacidad" element={<Privacidad />} />
               <Route path="/cookies" element={<Cookies />} />
               <Route path="/terminos" element={<Terminos />} />
+              <Route path="/calculators" element={<CalculatorsIndex />} />
               <Route path="/calculators/compound-interest" element={<CompoundInterest />} />
+              <Route path="/calculators/retirement-savings" element={<RetirementSavings />} />
               <Route path="/blog" element={<Blog />} />
               <Route path="/blog/:slug" element={<BlogPost />} />
               {/* Compatibilidad con enlaces antiguos a /auth */}

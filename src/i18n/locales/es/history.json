@@ -8,7 +8,9 @@
     "all_aliases": "Todos los alias",
     "date_from": "Desde",
     "date_to": "Hasta",
-    "clear": "Limpiar filtros"
+    "clear": "Limpiar filtros",
+    "show_filters": "Mostrar filtros",
+    "hide_filters": "Ocultar filtros"
   },
   "columns": {
     "date": "Fecha",
@@ -18,6 +20,7 @@
     "period_from": "Desde",
     "period_to": "Hasta",
     "movements": "Nº movimientos",
+    "movements_group": "Movimientos",
     "actions": "Acciones"
   },
   "empty": {

@@ -2,6 +2,67 @@
 
 Lista de cambios por versión (`APP_VERSION` en `src/lib/version.ts`). Solo se añade una entrada cuando el código de la app cambia.
 
+## v1.808
+- El ticker de notificaciones ahora se desplaza a una velocidad constante y rápida (px/s fijo, no una duración fija) — antes, con un texto corto, apenas se movía en 18 segundos y era ilegible; ahora una línea cruza la caja en 1-2 segundos sea cual sea su longitud, y se mantiene visible el tiempo justo para leerla entera al menos una vez.
+
+## v1.806
+- Corrección: el ticker de notificaciones nunca llegaba a mostrarse — el temporizador de 5 segundos se cancelaba a sí mismo casi al instante por un efecto de React mal encadenado. Ahora sí anuncia las notificaciones nuevas.
+
+## v1.802
+- Nueva notificación: movimientos sin leer por perfil (cualquier cantidad > 0), con acceso directo a Movimientos filtrado por "no leídos".
+- Nuevo "ticker" tipo noticia de última hora junto a la campana: cuando hay notificaciones nuevas sin anunciar, aparece a los 5 segundos un banner deslizante (transparente, junto a la campana) con el texto de cada notificación, una detrás de otra si hay varias; cada notificación se anuncia así una sola vez en su vida, tanto al entrar a la app como justo después de confirmar una importación.
+
+## v1.800
+- Corrección: "Entidad - Tipo de cuenta" en las notificaciones de cuenta sin alias ahora funciona de verdad — se lee en vivo de la cuenta enlazada en vez de depender de una migración adicional que no hacía falta.
+
+## v1.797
+- El punto rojo de la campanita de notificaciones ahora va dentro del círculo (sin borde), en vez de asomar por el borde.
+- Las notificaciones de "cuenta sin actualizar" dejan de mostrar el perfil entre paréntesis cuando el usuario solo tiene un perfil; con varios perfiles, se sigue indicando a cuál pertenece.
+- Cuando la cuenta no tiene alias propio, la notificación muestra "Entidad - Tipo de cuenta" en vez de repetir solo la entidad.
+
+## v1.794
+- Ajuste de varias pantallas para que sus botones/controles de la esquina superior derecha dejen de quedar tapados por la nueva campanita de notificaciones: "+ Nueva cuenta" (Cuentas), "+ Nueva regla" (Reglas de clasificación), filtros de Movimientos e Historial, y el selector de periodo de Análisis y Presupuestos en escritorio.
+
+## v1.790
+- Nueva campanita de notificaciones dentro de la app: icono flotante en la esquina superior derecha, visible en todas las pantallas (escritorio y móvil), con un punto rojo cuando hay avisos sin leer.
+- Primer tipo de notificación: cuentas que llevan varios días sin importar movimientos nuevos (aviso a los 15 días, importante a los 30), agregadas de todos tus perfiles. Al abrir una notificación se marca como leída y se ve el detalle completo en un popup, con acceso directo a Importar.
+
+## v1.786
+- Historial de subidas en móvil: las tarjetas de cada subida ya no van dentro de un contenedor grande con su propio fondo y borde — se muestran directamente sobre el fondo de la pantalla, con más ancho al no perder espacio en el padding del contenedor.
+- El fondo de cada tarjeta pasa a ser el mismo que el de la pantalla (antes era blanco), quedando definidas solo por el borde.
+- Al hacer scroll vertical en la lista de subidas en móvil ya no se ve la barra de scroll.
+
+## v1.784
+- Historial de subidas: la columna y el desplegable de Entidad muestran ahora el logo real del banco (mismo catálogo que Movimientos/Cuentas), y el desplegable de Tipo muestra el icono y color de cada tipo de cuenta.
+- Los tres primeros desplegables de filtro (Entidad, Tipo, Alias) se acotan entre sí: elegir uno oculta en los otros dos las combinaciones que ya no pueden darse (p. ej. elegir una entidad ya no deja elegir un alias de otra entidad), y si un filtro deja de ser compatible se limpia solo.
+- En la tabla, la columna Entidad deja de acaparar todo el ancho libre y las columnas Desde/Hasta/Nº de movimientos quedan mejor repartidas y centradas; además llevan encima el rótulo "Movimientos" para dejar claro que ese rango de fechas es el de los movimientos importados, no el de la subida.
+- En móvil: los filtros pasan a estar colapsados por defecto (con botón "Mostrar/Ocultar filtros", igual que en Movimientos) y el título "Historial de subidas" ya no se parte en dos líneas; la tabla se sustituye por una lista de tarjetas por subida, mucho más legible en pantalla estrecha.
+
+## v1.781
+- La calculadora de "Aportación para tu objetivo de patrimonio" pasa a llamarse "Inversión mensual necesaria" en todos los sitios donde aparece (título, pestaña del navegador, tarjeta del índice `/calculators`).
+- Sus rangos se ajustan: capital inicial actual hasta 150.000 € (antes 500.000) y patrimonio objetivo hasta 2.000.000 € (antes 5.000.000).
+- Se corrige un enlace del blog que apuntaba a la Calculadora de Interés Compuesto pese a que el texto hablaba explícitamente de "retrasar la edad de retiro o cambiar la aportación mensual" — ahora enlaza a Inversión Mensual Necesaria, que es la que calcula justo eso.
+- El campo "Edad de jubilación objetivo" se partía en dos líneas (etiqueta y campo) por el ancho del recuadro numérico; los campos de edad/años/porcentaje vuelven a un ancho compacto, y solo los campos en € (con separador de miles) mantienen el recuadro más ancho.
+- El campo de rentabilidad de esta calculadora pasa a llamarse "Interés anual estimado", igual que en Interés Compuesto (antes decía "Rentabilidad estimada").
+
+## v1.779
+- Calculadoras financieras: el aviso legal (`CalculatorDisclaimer`) pasa de ir justo debajo del bloque de resultados (por encima de la gráfica) a ir debajo de todos los elementos de la calculadora, justo encima del footer de la página — así queda claramente separado del contenido interactivo, tanto en Interés Compuesto como en Aportación para tu Objetivo.
+
+## v1.777
+- Calculadoras financieras: se añade un aviso legal breve debajo del bloque de resultados (Interés Compuesto y Aportación para tu Objetivo), con enlace directo al Aviso Legal, igual que ya tenía el blog; se implementa como componente reutilizable (`CalculatorDisclaimer`) para que cualquier calculadora futura lo incluya sin esfuerzo extra.
+
+## v1.773
+- Calculadoras: los campos de importe en € (capital inicial, aportación mensual, patrimonio objetivo...) ahora muestran separador de miles en el input numérico (antes se veía "1000000" en vez de "1.000.000"), tanto en Interés Compuesto como en Aportación para tu Objetivo; se corrige también el parseo al editar el campo a mano para que entienda ese separador.
+- Calculadora de Aportación para tu Objetivo: el indicador comparativo del resultado principal se corrige de raíz — antes calculaba "cuánto necesitarías si hubieras empezado 5 años antes" asumiendo (de forma poco realista) que ya tendrías hoy el mismo capital en el pasado; ahora calcula el "coste de esperar 3 años para empezar a aportar" a partir de tu situación actual (tu capital sigue creciendo igual esos 3 años, pero tendrías 3 años menos de aportación por delante), un planteamiento correcto y con una ventana de tiempo más cercana.
+
+## v1.769
+- Nueva Calculadora de "Aportación para tu Objetivo de Patrimonio" (`/calculators/retirement-savings`): dado el patrimonio objetivo, la edad actual y de jubilación, el capital ya ahorrado y una rentabilidad estimada, calcula la aportación mensual necesaria (fórmula PMT), con gráfico de evolución hasta la edad de jubilación marcando el objetivo, y un indicador de cuánto se reduciría la aportación empezando 5 años antes.
+- Nuevo índice `/calculators` con las dos calculadoras (Interés Compuesto y Aportación para tu Objetivo); el enlace "Calculadoras financieras" del footer de la landing pasa a apuntar ahí en vez de ir directo a Interés Compuesto.
+- El blog enlaza ahora la nueva calculadora desde la sección "Las cifras de referencia según tu edad" (antes enlazaba ahí a Interés Compuesto, que sigue enlazada en las otras dos secciones del post donde encaja mejor).
+
+## v1.766
+- Calculadora de Interés Compuesto: el slider "Horizonte temporal" pasa del grupo "Supuestos de crecimiento" al grupo "Tus datos" (junto a capital inicial y aportación mensual).
+
 ## v1.763
 - Calculadora de Interés Compuesto: al ganar altura el panel de "Tus datos" en escritorio, quedaba un hueco en blanco al final de la tarjeta; los dos bloques de sliders ("Tus datos" y "Supuestos de crecimiento") ahora se reparten ese espacio extra entre ellos en vez de acumularse todo debajo del último campo.
 

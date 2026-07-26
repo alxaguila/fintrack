@@ -1,0 +1,31 @@
+{
+  "bell_label": "Notifications",
+  "empty": "You have no notifications",
+  "severity": {
+    "warning": "Warning",
+    "critical": "Important"
+  },
+  "account_stale": {
+    "title": "{{account_name}} hasn't been updated in a while",
+    "list_item": "{{account_name}} ({{profile_name}}) hasn't been updated in {{days_since}} days",
+    "list_item_no_profile": "{{account_name}} hasn't been updated in {{days_since}} days",
+    "body": "The account {{account_name}} in the {{profile_name}} profile hasn't had any new imported movements in {{days_since}} days. You may have missed uploading the latest statement.",
+    "body_no_profile": "The account {{account_name}} hasn't had any new imported movements in {{days_since}} days. You may have missed uploading the latest statement.",
+    "cta": "Go to Import"
+  },
+  "unread_transactions": {
+    "list_item_one": "{{count}} unread movement in {{profile_name}}",
+    "list_item_other": "{{count}} unread movements in {{profile_name}}",
+    "list_item_no_profile_one": "{{count}} unread movement",
+    "list_item_no_profile_other": "{{count}} unread movements",
+    "body_one": "You have {{count}} movement to review in the {{profile_name}} profile.",
+    "body_other": "You have {{count}} movements to review in the {{profile_name}} profile.",
+    "body_no_profile_one": "You have {{count}} movement to review.",
+    "body_no_profile_other": "You have {{count}} movements to review.",
+    "cta": "Go to Transactions"
+  },
+  "ticker": {
+    "aria_summary": "You have {{count}} new notifications"
+  },
+  "dialog_title": "Notification detail"
+}

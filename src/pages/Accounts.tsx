@@ -115,7 +115,7 @@ export default function Accounts() {
       <div className="shrink-0 space-y-4">
         <div className="flex items-center justify-between gap-3">
           <h1 className="text-3xl font-extrabold tracking-tight">{t('title')}</h1>
-          <Button onClick={() => openCreate()} disabled={!activeProfile}>
+          <Button className="mr-14" onClick={() => openCreate()} disabled={!activeProfile}>
             <Plus className="h-4 w-4" /> {t('new_account')}
           </Button>
         </div>

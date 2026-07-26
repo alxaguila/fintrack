@@ -46,5 +46,68 @@
         "balance": "Accumulated wealth"
       }
     }
+  },
+  "retirementSavings": {
+    "meta": {
+      "title": "Required Monthly Investment Calculator | zafyros",
+      "description": "Calculate how much you need to save each month to reach the wealth you want to have by the time you retire."
+    },
+    "hero": {
+      "eyebrow": "Financial calculators",
+      "title": "Required monthly investment",
+      "subtitle": "Enter your age, your target wealth and the expected return, and we calculate how much you need to contribute each month to get there."
+    },
+    "inputs": {
+      "title": "Your numbers",
+      "sectionGrowth": "Growth assumptions",
+      "currentAge": { "label": "Current age" },
+      "retirementAge": { "label": "Target retirement age" },
+      "currentCapital": { "label": "Current initial capital" },
+      "targetWealth": { "label": "Target wealth" },
+      "annualRate": { "label": "Estimated annual return" },
+      "ageSuffix": "years"
+    },
+    "results": {
+      "requiredContribution": "Required monthly investment",
+      "currentCapital": "Current initial capital",
+      "currentCapitalShort": "Initial capital",
+      "targetWealth": "Target wealth",
+      "targetWealthShort": "Target",
+      "hero": {
+        "badge": "{{years}} years",
+        "subtitle": "Doing nothing today and waiting {{years}} years to start building your wealth would raise your required contribution to {{amount}} a month.",
+        "subtitleShort": "Wait {{years}} years: {{amount}}/mo instead of today.",
+        "subtitleFallback": "With an estimated {{rate}}% annual return.",
+        "subtitleFallbackShort": "{{rate}}% annual return"
+      },
+      "chartTitle": "Wealth growth",
+      "chart": {
+        "balanceSeries": "Projected wealth",
+        "targetSeries": "Target",
+        "ageAxis": "Age"
+      }
+    }
+  },
+  "index": {
+    "meta": {
+      "title": "Financial calculators | zafyros",
+      "description": "Free tools to plan your money for the long term: compound interest and a retirement savings goal calculator."
+    },
+    "eyebrow": "Financial calculators",
+    "title": "Financial calculators",
+    "subtitle": "Free tools, computed 100% in your browser, to plan your money for the long term.",
+    "compoundInterestCard": {
+      "title": "Compound interest",
+      "teaser": "Simulate how much your wealth could grow with periodic contributions.",
+      "cta": "Open calculator"
+    },
+    "retirementSavingsCard": {
+      "title": "Required monthly investment",
+      "teaser": "Calculate how much you need to save each month to reach your goal.",
+      "cta": "Open calculator"
+    }
+  },
+  "common": {
+    "disclaimer": "This simulation is for guidance only and does not constitute financial, tax or investment advice. See our **Legal Notice** before making any decision."
   }
 }

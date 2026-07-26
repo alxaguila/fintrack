@@ -710,6 +710,13 @@ export function useConfirmImport() {
       qc.invalidateQueries({ queryKey: ['import_batches'] })
       // Consumo del plan (movimientos/importaciones de este mes).
       qc.invalidateQueries({ queryKey: ['plan_usage'] })
+      // Los movimientos recién importados nacen sin leer — recalcula la
+      // notificación de "sin leer" ahora, sin esperar a la próxima carga de la app.
+      supabase.rpc('generate_unread_transaction_notifications')
+        .then(({ error }) => {
+          if (error) { console.warn('[notifications] generate unread failed:', error); return }
+          qc.invalidateQueries({ queryKey: ['notifications'] })
+        })
     },
   })
 }

@@ -218,7 +218,7 @@ export default function ClassificationRules() {
               onChange={e => setSearch(e.target.value)}
             />
           </div>
-          <Button size="sm" onClick={openCreate}><Plus className="h-4 w-4" /> {t('rules.new_rule')}</Button>
+          <Button className="mr-14" size="sm" onClick={openCreate}><Plus className="h-4 w-4" /> {t('rules.new_rule')}</Button>
         </div>
 
         {!isLoading && rules.length > 0 && (

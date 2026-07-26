@@ -17,18 +17,22 @@ interface SliderNumberInputProps {
   step?: number
   onChange: (value: number) => void
   suffix?: string
-  /** Por defecto número plano; los campos de dinero pasan formatCurrency. */
+  /** Por defecto número plano; los campos de dinero pasan formatThousands. */
   formatValue?: (v: number) => string
+  /** Inverso de formatValue — por defecto un parseo genérico; los campos con separador de miles pasan parseThousands. */
+  parseValue?: (raw: string) => number
   className?: string
   /** Tope del slider si es más bajo que `max` (el input numérico sigue validando contra `max`) — útil cuando el rango "realista" con arrastre es menor que el máximo técnico permitido a mano. */
   sliderMax?: number
+  /** Ancho del input numérico en px — por defecto un valor compacto (para edades/años/%); los campos con separador de miles pasan un valor mayor. */
+  inputWidth?: number
 }
 
 /**
  * Slider + input numérico sincronizados, genérico (dinero, %, años...), pensado
  * para reutilizarse tal cual en cualquier otra calculadora de la landing.
  */
-export function SliderNumberInput({ label, value, min, max, step = 1, onChange, suffix, formatValue, className, sliderMax }: SliderNumberInputProps) {
+export function SliderNumberInput({ label, value, min, max, step = 1, onChange, suffix, formatValue, parseValue, className, sliderMax, inputWidth = 92 }: SliderNumberInputProps) {
   const display = (v: number) => (formatValue ? formatValue(v) : String(v))
   const [text, setText] = useState(display(value))
 
@@ -38,7 +42,7 @@ export function SliderNumberInput({ label, value, min, max, step = 1, onChange, 
   }, [value])
 
   const commit = (raw: string) => {
-    const n = Number(raw.replace(/[^\d.,-]/g, '').replace(',', '.'))
+    const n = parseValue ? parseValue(raw) : Number(raw.replace(/[^\d.,-]/g, '').replace(',', '.'))
     if (!Number.isFinite(n)) {
       setText(display(value))
       return
@@ -63,7 +67,7 @@ export function SliderNumberInput({ label, value, min, max, step = 1, onChange, 
               if (e.key === 'Enter') (e.target as HTMLInputElement).blur()
             }}
             style={{
-              width: 104, maxWidth: '40vw', textAlign: 'right', font: `600 14px ${BRAND.mono}`, color: BRAND.ink,
+              width: inputWidth, maxWidth: '40vw', textAlign: 'right', font: `600 14px ${BRAND.mono}`, color: BRAND.ink,
               border: '1px solid #DCD5C8', borderRadius: 8, padding: '6px 8px', outline: 'none', boxSizing: 'border-box',
             }}
           />

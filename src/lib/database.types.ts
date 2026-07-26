@@ -385,6 +385,52 @@ export type Feedback = {
   read_at: string | null
 }
 
+// Notificaciones in-app (migración 041/042). Tipos: 'account_stale' (cuenta
+// sin importar movimientos nuevos, aviso a los 15 días y crítico a los 30) y
+// 'unread_transactions' (movimientos is_reviewed=false, cualquier cantidad > 0,
+// una notificación por perfil).
+export type NotificationType = 'account_stale' | 'unread_transactions'
+export type NotificationSeverity = 'warning' | 'critical'
+
+export type NotificationPayload = {
+  days_since: number
+  account_name: string
+  profile_name: string
+}
+
+export type UnreadTransactionsPayload = {
+  count: number
+  profile_name: string
+}
+
+// Cuenta enlazada (join en vivo por account_id, no un snapshot del payload) —
+// entity/type se leen así en tiempo real para poder mostrar "Entidad - Tipo"
+// cuando la cuenta no tiene alias, sin depender de qué guardó la RPC.
+export type NotificationAccount = {
+  name: string
+  entity: string
+  type: AccountType
+}
+
+type NotificationBase = {
+  id: string
+  user_id: string
+  profile_id: string
+  account_id: string | null
+  severity: NotificationSeverity
+  dedup_key: string
+  created_at: string
+  read_at: string | null
+  resolved_at: string | null
+  announced_at: string | null
+  // joined (select con `account:accounts(name, entity, type)`)
+  account?: NotificationAccount | null
+}
+
+export type Notification =
+  | (NotificationBase & { type: 'account_stale'; payload: NotificationPayload | null })
+  | (NotificationBase & { type: 'unread_transactions'; payload: UnreadTransactionsPayload | null })
+
 // Tipo genérico para la DB (compatible con supabase-js)
 export type Database = {
   public: {
@@ -411,6 +457,7 @@ export type Database = {
       plan_history: { Row: PlanHistory; Insert: Omit<PlanHistory, 'id' | 'changed_at'>; Update: never; Relationships: [] }
       budget_rules: { Row: BudgetRule; Insert: Omit<BudgetRule, 'id' | 'created_at' | 'updated_at'>; Update: Partial<BudgetRule>; Relationships: [] }
       budget_category_order: { Row: BudgetCategoryOrder; Insert: Omit<BudgetCategoryOrder, 'id' | 'updated_at'>; Update: Partial<BudgetCategoryOrder>; Relationships: [] }
+      notifications: { Row: Notification; Insert: Omit<Notification, 'id' | 'created_at' | 'read_at' | 'resolved_at'>; Update: Partial<Notification>; Relationships: [] }
     }
     Views: Record<string, never>
     Functions: {
@@ -429,6 +476,8 @@ export type Database = {
       admin_demographics: { Args: Record<string, never>; Returns: AdminDemographicRow[] }
       admin_plan_evolution: { Args: { p_granularity: string }; Returns: AdminPlanEvolutionRow[] }
       get_plan_usage: { Args: Record<string, never>; Returns: PlanUsage[] }
+      generate_stale_account_notifications: { Args: Record<string, never>; Returns: undefined }
+      generate_unread_transaction_notifications: { Args: Record<string, never>; Returns: undefined }
     }
     Enums: Record<string, never>
   }

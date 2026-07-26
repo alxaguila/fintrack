@@ -8,7 +8,9 @@
     "all_aliases": "All aliases",
     "date_from": "From",
     "date_to": "To",
-    "clear": "Clear filters"
+    "clear": "Clear filters",
+    "show_filters": "Show filters",
+    "hide_filters": "Hide filters"
   },
   "columns": {
     "date": "Date",
@@ -18,6 +20,7 @@
     "period_from": "From",
     "period_to": "To",
     "movements": "Movements",
+    "movements_group": "Movements",
     "actions": "Actions"
   },
   "empty": {

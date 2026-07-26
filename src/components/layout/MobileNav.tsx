@@ -307,7 +307,7 @@ export function MobileTopBar() {
   }
 
   return (
-    <div className="fixed right-4 z-40 md:hidden" style={{ top: 'calc(env(safe-area-inset-top, 0px) + 12px)' }}>
+    <div className="fixed right-16 z-40 md:hidden" style={{ top: 'calc(env(safe-area-inset-top, 0px) + 12px)' }}>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <button className="flex items-center gap-1 rounded-full bg-[var(--brand-ink)] px-3 py-2 text-xs font-semibold text-white shadow-lg">

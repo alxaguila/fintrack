@@ -15,7 +15,7 @@ export interface EntityAvatar {
  * (override propio de la cuenta) gana sobre el logo del catálogo.
  */
 export function resolveEntityAvatar(
-  account: Account | undefined,
+  account: Pick<Account, 'entity' | 'logo_url' | 'color'> | undefined,
   entityLogoByName: Map<string, string | null>,
 ): EntityAvatar {
   const entity = account?.entity ?? ''

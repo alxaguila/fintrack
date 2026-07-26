@@ -46,5 +46,68 @@
         "balance": "Patrimonio acumulado"
       }
     }
+  },
+  "retirementSavings": {
+    "meta": {
+      "title": "Calculadora de Inversión Mensual Necesaria | zafyros",
+      "description": "Calcula cuánto tienes que ahorrar cada mes para alcanzar el patrimonio que quieres tener en el momento de jubilarte."
+    },
+    "hero": {
+      "eyebrow": "Calculadoras financieras",
+      "title": "Inversión mensual necesaria",
+      "subtitle": "Indica tu edad, tu objetivo de patrimonio y la rentabilidad esperada, y calculamos cuánto tienes que aportar cada mes para conseguirlo."
+    },
+    "inputs": {
+      "title": "Tus datos",
+      "sectionGrowth": "Supuestos de crecimiento",
+      "currentAge": { "label": "Edad actual" },
+      "retirementAge": { "label": "Edad de jubilación objetivo" },
+      "currentCapital": { "label": "Capital inicial actual" },
+      "targetWealth": { "label": "Patrimonio objetivo" },
+      "annualRate": { "label": "Interés anual estimado" },
+      "ageSuffix": "años"
+    },
+    "results": {
+      "requiredContribution": "Inversión mensual necesaria",
+      "currentCapital": "Capital inicial actual",
+      "currentCapitalShort": "Capital inicial",
+      "targetWealth": "Patrimonio objetivo",
+      "targetWealthShort": "Objetivo",
+      "hero": {
+        "badge": "{{years}} años",
+        "subtitle": "No hacer nada hoy y esperar {{years}} años para empezar a construir tu patrimonio elevaría tu aportación necesaria a {{amount}} al mes.",
+        "subtitleShort": "Esperar {{years}} años: {{amount}}/mes en vez de ahora.",
+        "subtitleFallback": "Con una rentabilidad estimada del {{rate}}% anual.",
+        "subtitleFallbackShort": "{{rate}}% de rentabilidad anual"
+      },
+      "chartTitle": "Evolución del patrimonio",
+      "chart": {
+        "balanceSeries": "Patrimonio proyectado",
+        "targetSeries": "Objetivo",
+        "ageAxis": "Edad"
+      }
+    }
+  },
+  "index": {
+    "meta": {
+      "title": "Calculadoras financieras | zafyros",
+      "description": "Herramientas gratuitas para planificar tu dinero a largo plazo: interés compuesto y objetivo de patrimonio para la jubilación."
+    },
+    "eyebrow": "Calculadoras financieras",
+    "title": "Calculadoras financieras",
+    "subtitle": "Herramientas gratuitas, calculadas al 100% en tu navegador, para planificar tu dinero a largo plazo.",
+    "compoundInterestCard": {
+      "title": "Interés compuesto",
+      "teaser": "Simula cuánto puede crecer tu patrimonio con aportaciones periódicas.",
+      "cta": "Ver calculadora"
+    },
+    "retirementSavingsCard": {
+      "title": "Inversión mensual necesaria",
+      "teaser": "Calcula cuánto tienes que ahorrar cada mes para llegar a tu objetivo.",
+      "cta": "Ver calculadora"
+    }
+  },
+  "common": {
+    "disclaimer": "Esta simulación es orientativa y no constituye asesoramiento financiero, fiscal ni de inversión. Consulta nuestro **Aviso Legal** antes de tomar cualquier decisión."
   }
 }
