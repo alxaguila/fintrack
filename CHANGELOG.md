@@ -2,6 +2,9 @@
 
 Lista de cambios por versión (`APP_VERSION` en `src/lib/version.ts`). Solo se añade una entrada cuando el código de la app cambia.
 
+## v1.884
+- Corregido bucle infinito de redirects entre zafyros.com y app.zafyros.com al cerrar sesión: la sesión creada en zafyros.com durante el login (Google o email) se quedaba sin limpiar tras el traspaso a app.zafyros.com, y al hacer logout esa copia obsoleta se reenviaba una y otra vez.
+
 ## v1.876
 - Login con Google: el nuevo flujo de Identity Services (v1.867) cae automáticamente al redirect OAuth clásico si el navegador tiene desactivado FedCM (usado por Chrome para el prompt de Google) — evita que esos usuarios se queden sin poder loguearse con Google.
 

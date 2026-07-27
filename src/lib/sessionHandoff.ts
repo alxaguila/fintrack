@@ -9,11 +9,18 @@ import { getAppUrl } from './appUrl'
 // tokens en la URL de app.zafyros.com; aquí replicamos ese mismo mecanismo a mano.
 const HANDOFF_KEY = 'zf_session'
 
-export function redirectToAppWithSession(session: Session) {
+export async function redirectToAppWithSession(session: Session) {
   const payload = encodeURIComponent(JSON.stringify({
     at: session.access_token,
     rt: session.refresh_token,
   }))
+  // Sin esto, zafyros.com se queda con su propia copia de la sesión en localStorage
+  // (login de Google/email la crean aquí antes del hand-off). Al cerrar sesión en
+  // app.zafyros.com esa copia sobrevivía sin invalidar, y este mismo mecanismo la
+  // volvía a mandar para allá -> bucle infinito de redirects entre dominios tras
+  // logout. scope 'local' borra solo la copia de AQUÍ, sin invalidar los tokens que
+  // ya vamos a mandar a app.zafyros.com.
+  await supabase.auth.signOut({ scope: 'local' })
   window.location.assign(`${getAppUrl()}#${HANDOFF_KEY}=${payload}`)
 }
 
