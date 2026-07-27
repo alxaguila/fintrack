@@ -2,7 +2,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { supabase } from '@/lib/supabase'
 import type { FinancialProfile } from '@/lib/database.types'
 
-export function useProfiles() {
+export function useProfiles(options?: { enabled?: boolean }) {
   return useQuery({
     queryKey: ['profiles'],
     queryFn: async () => {
@@ -13,6 +13,7 @@ export function useProfiles() {
       if (error) throw error
       return data as FinancialProfile[]
     },
+    enabled: options?.enabled ?? true,
   })
 }
 

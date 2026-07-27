@@ -18,8 +18,12 @@ import type { Session } from '@supabase/supabase-js'
 
 export function AppShell() {
   const [session, setSession] = useState<Session | null | undefined>(undefined)
-  const { data: profiles = [], isLoading: profilesLoading } = useProfiles()
-  const { data: settings, isLoading: settingsLoading } = useUserSettings()
+  // enabled: !!session -> evita que estas consultas se disparen antes de que el
+  // hand-off de sesión (zafyros.com -> app.zafyros.com) haya terminado; si no,
+  // arrancan sin autenticación, fallan, y quedan reintentando con backoff
+  // exponencial durante ~1 minuto hasta coincidir con una sesión ya válida.
+  const { data: profiles = [], isLoading: profilesLoading } = useProfiles({ enabled: !!session })
+  const { data: settings, isLoading: settingsLoading } = useUserSettings({ enabled: !!session })
   const createProfile = useCreateProfile()
   const creatingRef = useRef(false)
 

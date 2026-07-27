@@ -3,9 +3,10 @@ import { supabase } from '@/lib/supabase'
 import type { UserSettings } from '@/lib/database.types'
 import i18n from '@/i18n'
 
-export function useUserSettings() {
+export function useUserSettings(options?: { enabled?: boolean }) {
   return useQuery({
     queryKey: ['user_settings'],
+    enabled: options?.enabled ?? true,
     queryFn: async () => {
       const { data: { user } } = await supabase.auth.getUser()
       if (!user) return null

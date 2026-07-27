@@ -2,6 +2,9 @@
 
 Lista de cambios por versión (`APP_VERSION` en `src/lib/version.ts`). Solo se añade una entrada cuando el código de la app cambia.
 
+## v1.890
+- Corregido que, tras loguear (Google o email), la app se quedaba en blanco hasta un minuto antes de entrar: las consultas de perfiles y ajustes de usuario se disparaban antes de que la sesión del hand-off terminara de resolverse, fallaban sin autenticación y quedaban reintentando con backoff exponencial. Ahora esperan a que la sesión esté confirmada.
+
 ## v1.887
 - Corregido que el login (Google o email) volvía a la landing sin entrar a la app: el fix del deadlock de v1.886 seguía usando `signOut()` para limpiar la sesión local, que revoca el refresh token en el servidor aunque se llame con scope 'local' — invalidaba los tokens que se mandaban al hand-off. Ahora se borra solo la entrada de localStorage, sin llamada de red.
 
