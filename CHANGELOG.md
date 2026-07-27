@@ -2,6 +2,12 @@
 
 Lista de cambios por versión (`APP_VERSION` en `src/lib/version.ts`). Solo se añade una entrada cuando el código de la app cambia.
 
+## v1.876
+- Login con Google: el nuevo flujo de Identity Services (v1.867) cae automáticamente al redirect OAuth clásico si el navegador tiene desactivado FedCM (usado por Chrome para el prompt de Google) — evita que esos usuarios se queden sin poder loguearse con Google.
+
+## v1.867
+- Login con Google: se sustituye el redirect OAuth vía Supabase por Google Identity Services (ID token) + `signInWithIdToken`, para que la pantalla de consentimiento de Google ya no muestre el dominio interno de Supabase. Requiere configurar `VITE_GOOGLE_CLIENT_ID` (nuevo) y dar de alta ese Client ID en Supabase → Authentication → Providers → Google → Authorized Client IDs.
+
 ## v1.857
 - Precios: Pro pasa a 5,99€/mes o 49€/año (antes 7,99€/9,99€ efectivos); Premium pasa a 12,99€/mes o 99€/año (antes 19,99€/14,99€ efectivos). Free se mantiene en 0€.
 - Landing y popup de "Mejorar plan": en la vista anual, el precio grande ahora es el importe TOTAL del año (p. ej. "49€/año") en vez de un equivalente mensual, con el coste de 12 meses al precio mensual tachado al lado para visualizar el ahorro en euros. El toggle mensual/anual empieza siempre en "Mensual".

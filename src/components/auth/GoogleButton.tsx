@@ -2,7 +2,53 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { supabase } from '@/lib/supabase'
 import { BRAND } from '@/components/landing/brand'
+import { createIdTokenNonce } from '@/lib/oauthNonce'
 import { getAppUrl } from '@/lib/appUrl'
+
+declare global {
+  interface Window {
+    google?: {
+      accounts: {
+        id: {
+          initialize: (config: {
+            client_id: string
+            callback: (response: { credential: string }) => void
+            nonce?: string
+            use_fedcm_for_prompt?: boolean
+          }) => void
+          prompt: (momentListener?: (notification: {
+            isNotDisplayed: () => boolean
+            isSkippedMoment: () => boolean
+            isDismissedMoment: () => boolean
+          }) => void) => void
+        }
+      }
+    }
+  }
+}
+
+const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID as string | undefined
+const GIS_SRC = 'https://accounts.google.com/gsi/client'
+
+let gisLoadPromise: Promise<void> | null = null
+function loadGoogleIdentityServices(): Promise<void> {
+  if (!gisLoadPromise) {
+    gisLoadPromise = new Promise((resolve, reject) => {
+      if (window.google?.accounts?.id) {
+        resolve()
+        return
+      }
+      const script = document.createElement('script')
+      script.src = GIS_SRC
+      script.async = true
+      script.defer = true
+      script.onload = () => resolve()
+      script.onerror = () => reject(new Error('gis_load_error'))
+      document.head.appendChild(script)
+    })
+  }
+  return gisLoadPromise
+}
 
 /** Logo "G" oficial de Google (4 colores). */
 function GoogleIcon() {
@@ -31,27 +77,72 @@ export function OrDivider() {
 }
 
 /**
- * Botón "Continuar con Google" (OAuth de Supabase).
+ * Botón "Continuar con Google" (Google Identity Services + `signInWithIdToken`,
+ * con fallback al `signInWithOAuth` clásico).
  *
- * Provoca un redirect de página completa a Google y vuelta a la app (`getAppUrl()`);
- * al volver, supabase-js crea la sesión sola y `AppShell` decide (incluido el onboarding).
- * Requiere tener el proveedor Google activado en Supabase, y la URL de `getAppUrl()`
- * añadida a la allowlist de Redirect URLs en Supabase.
+ * El intercambio con Google intenta ocurrir en el cliente (sin pasar por el dominio
+ * de Supabase): se pide un ID token a Google y se canjea por sesión de Supabase. Pero
+ * ese camino depende de FedCM (Chrome), que algunos usuarios tienen desactivado
+ * (ajuste de privacidad, extensiones, navegadores sin soporte) — cuando el prompt no
+ * se puede mostrar, se cae automáticamente al redirect de `signInWithOAuth` de toda
+ * la vida, para que nadie se quede sin poder loguearse con Google (a costa de volver
+ * a ver el dominio de Supabase solo en ese caso). La sesión resultante, por cualquiera
+ * de los dos caminos, la recoge el `onAuthStateChange` ya existente en Landing.tsx /
+ * Register.tsx, que hace el hand-off a app.zafyros.com (ver `sessionHandoff.ts`).
+ * Requiere `VITE_GOOGLE_CLIENT_ID` en el entorno y ese mismo Client ID dado de alta
+ * en Supabase → Authentication → Providers → Google → Authorized Client IDs.
  */
 export function GoogleButton({ onError }: { onError?: (message: string) => void }) {
   const { t } = useTranslation('auth')
   const [busy, setBusy] = useState(false)
 
-  async function handleClick() {
-    setBusy(true)
+  async function redirectFallback() {
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: { redirectTo: getAppUrl() },
     })
-    // En caso de éxito el navegador ya está navegando a Google; solo importa el error.
+    // Éxito: el navegador ya está navegando a Google; solo importa el error.
     if (error) {
       setBusy(false)
       onError?.(error.message)
+    }
+  }
+
+  async function handleClick() {
+    setBusy(true)
+    if (!GOOGLE_CLIENT_ID) {
+      await redirectFallback()
+      return
+    }
+    try {
+      await loadGoogleIdentityServices()
+      const { nonce, hashedNonce } = await createIdTokenNonce()
+
+      window.google!.accounts.id.initialize({
+        client_id: GOOGLE_CLIENT_ID,
+        use_fedcm_for_prompt: true,
+        nonce: hashedNonce,
+        callback: async (response) => {
+          const { error } = await supabase.auth.signInWithIdToken({
+            provider: 'google',
+            token: response.credential,
+            nonce,
+          })
+          setBusy(false)
+          if (error) onError?.(error.message)
+          // Éxito: el onAuthStateChange de la pantalla que monta este botón se encarga del resto.
+        },
+      })
+
+      window.google!.accounts.id.prompt(async (notification) => {
+        if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
+          await redirectFallback()
+        } else if (notification.isDismissedMoment()) {
+          setBusy(false)
+        }
+      })
+    } catch {
+      await redirectFallback()
     }
   }
 
