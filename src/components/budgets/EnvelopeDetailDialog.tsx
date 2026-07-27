@@ -1,7 +1,8 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ChevronDown, GripVertical } from 'lucide-react'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import { Separator } from '@/components/ui/separator'
 import { fmtAmount } from '@/components/ui/amount-split'
 import { categoryIcon, categoryLabel } from '@/lib/categoryIcons'
 import { BudgetAmountSlider } from './BudgetAmountSlider'
@@ -28,19 +29,29 @@ function fmtCompact(n: number): string {
   return `${Math.round(n)}€`
 }
 
-// Franja limpia de 12 meses en 2 filas (mes / importe), a todo el ancho
-// disponible. El color de cada importe compara ese mes contra `referenceAmount`
-// (el presupuesto ACTUAL, que puede ser el valor que se está arrastrando en vivo).
+// Franja limpia de 12 meses (mes / importe). En escritorio se reparte a todo el
+// ancho disponible; en móvil no caben los 12 sin apretarlos demasiado, así que
+// se vuelve un carrusel horizontal con scroll que arranca mostrando los últimos
+// 6 meses (con un poco del 7º asomando) y se puede deslizar hacia atrás para
+// ver los meses anteriores. El color de cada importe compara ese mes contra
+// `referenceAmount` (el presupuesto ACTUAL, que puede ser el valor que se está
+// arrastrando en vivo).
 function MonthAmountStrip({ history, referenceAmount, lang }: { history: { month: string; spent: number }[]; referenceAmount: number | null; lang: string }) {
+  const scrollRef = useRef<HTMLDivElement>(null)
+
+  useLayoutEffect(() => {
+    if (scrollRef.current) scrollRef.current.scrollLeft = scrollRef.current.scrollWidth
+  }, [history])
+
   return (
-    <div className="mt-2 flex gap-1">
+    <div ref={scrollRef} className="no-scrollbar mt-2 flex gap-1 overflow-x-auto sm:overflow-visible">
       {history.map(h => {
         const [y, m] = h.month.split('-').map(Number)
         const label = new Date(y, m - 1, 1).toLocaleDateString(lang === 'en' ? 'en-US' : 'es-ES', { month: 'short' }).replace('.', '')
         return (
-          <div key={h.month} className="flex min-w-0 flex-1 flex-col items-center gap-0.5">
+          <div key={h.month} className="flex w-[16%] shrink-0 flex-col items-center gap-0.5 overflow-hidden sm:w-auto sm:min-w-0 sm:flex-1 sm:shrink">
             <span className="text-[10px] capitalize text-slate-400">{label}</span>
-            <span className="text-[11px] font-semibold tabular-nums" style={{ color: budgetStatusColor(h.spent, referenceAmount) }}>
+            <span className="w-full truncate text-center text-[11px] font-semibold tabular-nums" style={{ color: budgetStatusColor(h.spent, referenceAmount) }}>
               {fmtCompact(h.spent)}
             </span>
           </div>
@@ -61,6 +72,7 @@ function useDragReorder<T>(items: T[], keyOf: (item: T) => string, rowHeight: nu
   const [draggingKey, setDraggingKey] = useState<string | null>(null)
 
   function startDrag(e: React.PointerEvent<HTMLElement>, key: string) {
+    e.preventDefault()
     draggingKeyRef.current = key
     startYRef.current = e.clientY
     setDraggingKey(key)
@@ -68,6 +80,7 @@ function useDragReorder<T>(items: T[], keyOf: (item: T) => string, rowHeight: nu
   }
   function moveDrag(e: React.PointerEvent<HTMLElement>) {
     if (!draggingKeyRef.current) return
+    e.preventDefault()
     const delta = e.clientY - startYRef.current
     if (Math.abs(delta) < rowHeight / 2) return
     const shift = delta > 0 ? 1 : -1
@@ -196,38 +209,46 @@ export function EnvelopeDetailDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-3xl sm:rounded-2xl max-h-[90dvh] overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle>{groupLabel}</DialogTitle>
-          {editingMonthLabel && <p className="text-xs font-medium text-slate-500">{t('detail.editing_month', { month: editingMonthLabel })}</p>}
-        </DialogHeader>
+      <DialogContent className="flex max-h-[90dvh] flex-col gap-0 overflow-hidden p-0 sm:max-w-3xl sm:rounded-2xl">
+        {/* Cabecera fija (título + 12 meses de la CATEGORÍA madre): no hace scroll con la lista,
+            para no perder de vista de qué categoría es la franja de arriba. */}
+        <div className="shrink-0 p-6 pb-0">
+          <DialogHeader>
+            <DialogTitle>{groupLabel}</DialogTitle>
+            {editingMonthLabel && <p className="text-xs font-medium text-slate-500">{t('detail.editing_month', { month: editingMonthLabel })}</p>}
+          </DialogHeader>
 
-        {groupHistory.length > 0 && (
-          <div>
-            <p className="text-xs font-medium text-slate-500">{t('detail.history_toggle')}</p>
-            <MonthAmountStrip history={groupHistory} referenceAmount={groupBudgetedNow} lang={i18n.language} />
+          {groupHistory.length > 0 && (
+            <div className="mt-4">
+              <p className="text-xs font-medium text-slate-500">{t('detail.history_toggle')}</p>
+              <MonthAmountStrip history={groupHistory} referenceAmount={groupBudgetedNow} lang={i18n.language} />
+            </div>
+          )}
+
+          <Separator className="-mx-6 mt-4 w-auto bg-slate-300" />
+        </div>
+
+        <div className="no-scrollbar flex-1 overflow-y-auto p-6 pt-4">
+          <div className={cn('flex flex-col gap-2.5', draggingKey && 'select-none')}>
+            {order.map(periodSub => {
+              const editSub = editByCategory.get(periodSub.category.id)
+              if (!editSub) return null
+              return (
+                <SubcategoryEditor
+                  key={periodSub.category.id}
+                  periodSub={periodSub}
+                  editSub={editSub}
+                  color={groupColor}
+                  profileId={profileId}
+                  isDragging={draggingKey === periodSub.category.id}
+                  onDragStart={e => startDrag(e, periodSub.category.id)}
+                  onDragMove={moveDrag}
+                  onDragEnd={endDrag}
+                  lang={i18n.language}
+                />
+              )
+            })}
           </div>
-        )}
-
-        <div className="flex flex-col gap-2.5">
-          {order.map(periodSub => {
-            const editSub = editByCategory.get(periodSub.category.id)
-            if (!editSub) return null
-            return (
-              <SubcategoryEditor
-                key={periodSub.category.id}
-                periodSub={periodSub}
-                editSub={editSub}
-                color={groupColor}
-                profileId={profileId}
-                isDragging={draggingKey === periodSub.category.id}
-                onDragStart={e => startDrag(e, periodSub.category.id)}
-                onDragMove={moveDrag}
-                onDragEnd={endDrag}
-                lang={i18n.language}
-              />
-            )
-          })}
         </div>
       </DialogContent>
     </Dialog>

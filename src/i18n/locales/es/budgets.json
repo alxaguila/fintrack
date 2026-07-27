@@ -40,7 +40,9 @@
   "add_envelope": {
     "button": "Añadir categoría",
     "title": "Elegir categoría a presupuestar",
-    "empty": "Ya tienes todas las categorías de gasto activas."
+    "empty": "Ya tienes todas las categorías de gasto activas.",
+    "upgrade_title": "Más categorías con PRO o PREMIUM",
+    "upgrade_description": "El plan FREE incluye presupuestos para Compras, Restauración y Ocio, y Hogar. Mejora a PRO o PREMIUM para presupuestar el resto de categorías sin límite."
   },
   "detail": {
     "subtitle_spent": "{{spent}} gastado de {{budgeted}}",

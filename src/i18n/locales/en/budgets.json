@@ -40,7 +40,9 @@
   "add_envelope": {
     "button": "Add category",
     "title": "Choose a category to budget",
-    "empty": "All expense categories are already active."
+    "empty": "All expense categories are already active.",
+    "upgrade_title": "More categories with PRO or PREMIUM",
+    "upgrade_description": "The FREE plan includes budgets for Shopping, Dining & Leisure, and Home. Upgrade to PRO or PREMIUM to budget every other category with no limit."
   },
   "detail": {
     "subtitle_spent": "{{spent}} spent of {{budgeted}}",

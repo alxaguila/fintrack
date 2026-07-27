@@ -16,7 +16,7 @@ interface UpgradePlanDialogProps {
  */
 export function UpgradePlanDialog({ open, onOpenChange }: UpgradePlanDialogProps) {
   const { t } = useTranslation('common')
-  const [annual, setAnnual] = useState(true)
+  const [annual, setAnnual] = useState(false)
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>

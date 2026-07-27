@@ -104,7 +104,7 @@ export default function Landing() {
   const { t, i18n } = useTranslation('landing')
   const navigate = useNavigate()
   const [searchParams, setSearchParams] = useSearchParams()
-  const [annual, setAnnual] = useState(true)
+  const [annual, setAnnual] = useState(false)
   const [loginOpen, setLoginOpen] = useState(false)
   const [showStickyNav, setShowStickyNav] = useState(false)
   const rootRef = useRef<HTMLDivElement>(null)

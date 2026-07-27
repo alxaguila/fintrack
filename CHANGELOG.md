@@ -2,6 +2,27 @@
 
 Lista de cambios por versión (`APP_VERSION` en `src/lib/version.ts`). Solo se añade una entrada cuando el código de la app cambia.
 
+## v1.857
+- Precios: Pro pasa a 5,99€/mes o 49€/año (antes 7,99€/9,99€ efectivos); Premium pasa a 12,99€/mes o 99€/año (antes 19,99€/14,99€ efectivos). Free se mantiene en 0€.
+- Landing y popup de "Mejorar plan": en la vista anual, el precio grande ahora es el importe TOTAL del año (p. ej. "49€/año") en vez de un equivalente mensual, con el coste de 12 meses al precio mensual tachado al lado para visualizar el ahorro en euros. El toggle mensual/anual empieza siempre en "Mensual".
+
+## v1.856
+- Planes: el plan FREE baja de 50 a 25 reglas de clasificación; el plan PRO baja de 3.000 a 2.000 movimientos al mes.
+- Presupuestos pasa a ser una función oficial (ya no "temporal/feedback") también en el plan FREE, limitada a 3 categorías fijas: Compras, Restauración y Ocio, y Hogar. El plan PRO/PREMIUM sigue con presupuestos ilimitados. Al intentar añadir otra categoría en FREE, sale un aviso de que hay más categorías disponibles en PRO/PREMIUM.
+- Landing y popup de "Mejorar plan": actualizadas las cifras y el nuevo beneficio de presupuestos en FREE.
+
+## v1.853
+- Presupuestos, detalle de categoría: en móvil, la franja de 12 meses (de la categoría y de cada subcategoría) pasa a ser un carrusel horizontal deslizable en vez de texto encogido — arranca mostrando los últimos 6 meses con un poco del 7º asomando, y se puede deslizar hacia atrás para ver los meses anteriores.
+- Presupuestos, pantalla principal: las pastillas de categoría son más bajas en móvil — el icono ahora va en la misma fila que el título en vez de ocupar su propia fila.
+
+## v1.852
+- Presupuestos, detalle de categoría: el título y la franja de 12 meses de la categoría madre quedan fijos arriba mientras se hace scroll por las subcategorías (antes se confundía con la franja de la primera subcategoría); se añade una línea separadora entre ambos y se oculta la barra de scroll visible.
+- Se corrige que la franja de 12 meses (tanto la de la categoría como la de cada subcategoría) desbordara la pantalla en móvil y obligara a hacer scroll lateral.
+- Se corrige que arrastrar una subcategoría para reordenarla seleccionara texto de la pantalla como efecto secundario.
+
+## v1.846
+- Categorías: se fusionan las subcategorías "Comida a domicilio" y "Copas y vida nocturna" dentro de "Restaurantes y bares", que pasa a llamarse "Restaurantes, bares y discotecas" — el límite entre las tres era difuso al clasificar movimientos.
+
 ## v1.836
 - Título de pantalla homogeneizado: Análisis, Presupuestos, Reglas de clasificación, Cuentas, Historial y Ajustes (incluidas sus subpáginas Datos personales, Login y contraseña, Mi plan y Feedback y soporte) usan ahora el mismo estilo de título que Movimientos.
 - En el menú de Ajustes, la entrada "Perfil" pasa a llamarse "Datos personales" (ya era el nombre del título dentro de esa pantalla).

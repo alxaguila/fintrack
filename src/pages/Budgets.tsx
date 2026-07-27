@@ -5,16 +5,18 @@ import { useProfile } from '@/contexts/ProfileContext'
 import { useCategoryGroups, useCategories } from '@/hooks/useCategories'
 import { useBudgetRules, useBudgetCategoryOrder } from '@/hooks/useBudgets'
 import { useDashboardBreakdown } from '@/hooks/useTransactions'
+import { usePlan } from '@/hooks/usePlan'
 import { bucketKey, bucketRange, prevPeriodKey, nextPeriodKey, type Granularity } from '@/lib/periods'
 import {
   addMonths, buildEnvelopeSummaries, buildSingleEnvelopeSummary, daysInMonth,
-  daysRemainingInPeriod, inactiveEnvelopeGroups, isCurrentPeriod, monthKey, monthsBetween,
-  pickReferenceMonth, totalsFromSummaries,
+  daysRemainingInPeriod, DEFAULT_BUDGET_GROUP_SLUGS, FREE_BUDGET_GROUP_SLUGS, inactiveEnvelopeGroups,
+  isCurrentPeriod, monthKey, monthsBetween, pickReferenceMonth, totalsFromSummaries,
 } from '@/lib/budgets'
 import { categoryIcon } from '@/lib/categoryIcons'
 import { BudgetSummaryCard } from '@/components/budgets/BudgetSummaryCard'
 import { EnvelopeRow } from '@/components/budgets/EnvelopeRow'
 import { EnvelopeDetailDialog } from '@/components/budgets/EnvelopeDetailDialog'
+import { UpgradeHintDialog } from '@/components/plan/UpgradeHintDialog'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -49,6 +51,9 @@ export default function Budgets() {
   const { t: tc } = useTranslation('categories')
   const { activeProfile } = useProfile()
   const profileId = activeProfile?.id
+  const { plan } = usePlan()
+  const isFreePlan = plan === 'free'
+  const defaultGroupSlugs = isFreePlan ? FREE_BUDGET_GROUP_SLUGS : DEFAULT_BUDGET_GROUP_SLUGS
 
   const todayMonth = useMemo(() => monthKey(), [])
   const [granularity, setGranularity] = useState<Granularity>('month')
@@ -56,6 +61,7 @@ export default function Budgets() {
   const [openGroupId, setOpenGroupId] = useState<string | null>(null)
   const [pendingGroup, setPendingGroup] = useState<CategoryGroup | null>(null)
   const [addOpen, setAddOpen] = useState(false)
+  const [upgradeHintOpen, setUpgradeHintOpen] = useState(false)
 
   function handleGranularityChange(g: Granularity) {
     setGranularity(g)
@@ -89,7 +95,7 @@ export default function Budgets() {
   }, [periodMonths, todayMonth, referenceMonth])
   const { data: breakdown = [], isLoading: breakdownLoading } = useDashboardBreakdown(profileId, breakdownRange)
 
-  const buildParams = { groups, categories, rules, breakdown, todayMonth, categoryOrder }
+  const buildParams = { groups, categories, rules, breakdown, todayMonth, categoryOrder, defaultGroupSlugs }
 
   const summaries = useMemo(
     () => buildEnvelopeSummaries({ ...buildParams, periodMonths, referenceMonth, range }),
@@ -179,7 +185,12 @@ export default function Budgets() {
       <div className="mt-8">
         <div className="flex items-center justify-between">
           <h2 className="text-[15px] font-bold text-slate-800">{t('envelopes.title')}</h2>
-          <Button variant="outline" size="sm" onClick={() => setAddOpen(true)} className="gap-1.5 rounded-full">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => (isFreePlan ? setUpgradeHintOpen(true) : setAddOpen(true))}
+            className="gap-1.5 rounded-full"
+          >
             <Plus className="h-3.5 w-3.5" />
             {t('add_envelope.button')}
           </Button>
@@ -210,6 +221,13 @@ export default function Budgets() {
           editingMonthLabel={granularity !== 'month' ? monthLabel(referenceMonth, i18n.language) : undefined}
         />
       )}
+
+      <UpgradeHintDialog
+        open={upgradeHintOpen}
+        onOpenChange={setUpgradeHintOpen}
+        title={t('add_envelope.upgrade_title')}
+        description={t('add_envelope.upgrade_description')}
+      />
 
       <Dialog open={addOpen} onOpenChange={setAddOpen}>
         <DialogContent className="sm:rounded-2xl max-h-[90dvh] overflow-y-auto">

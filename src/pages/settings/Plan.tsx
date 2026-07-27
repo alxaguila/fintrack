@@ -14,7 +14,7 @@ export default function SettingsPlan() {
   const { t } = useTranslation('settings')
   const { t: tc } = useTranslation('common')
   const { plan, limits, usage, isLoading } = usePlan()
-  const [annual, setAnnual] = useState(true)
+  const [annual, setAnnual] = useState(false)
 
   return (
     <div className="mx-auto max-w-6xl space-y-6 p-6">

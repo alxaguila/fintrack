@@ -72,11 +72,12 @@
     "sub": "Tres modalidades. El plan Free es gratis para siempre y no pide tarjeta.",
     "monthly": "Mensual",
     "annual": "Anual",
-    "save": "-25%",
+    "save": "-33%",
     "swipeHint": "Desliza para comparar los planes →",
     "unit": "/mes",
+    "unit_annual": "/año",
     "forever": "para siempre",
-    "billNote": "Facturado anualmente",
+    "billNote": "Facturado una vez al año",
     "recommended": "Recomendado",
     "comingSoon": "Próximamente",
     "currentPlanCta": "Tu plan actual",
@@ -90,7 +91,8 @@
         "3 cuentas bancarias / tarjetas",
         "5 importaciones al mes",
         "200 movimientos al mes",
-        "50 reglas de clasificación",
+        "25 reglas de clasificación",
+        "Presupuestos (3 categorías)",
         "Dashboard con histórico de 12 meses"
       ]
     },
@@ -103,9 +105,9 @@
         "3 perfiles financieros",
         "10 cuentas bancarias / tarjetas",
         "Importaciones ilimitadas",
-        "3.000 movimientos al mes",
+        "2.000 movimientos al mes",
         "100 reglas",
-        "Presupuestos",
+        "Presupuestos ilimitados",
         "Dashboard histórico ilimitado",
         "Exportación a Excel / CSV"
       ]

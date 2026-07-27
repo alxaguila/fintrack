@@ -72,8 +72,6 @@ INSERT INTO categories (group_id, slug, icon, sort_order)
 SELECT id, v.slug, v.icon, v.ord FROM category_groups,
   (VALUES
     ('restaurant',       'utensils', 10),
-    ('home_delivery',    'bike',     20),
-    ('nightlife_drinks', 'beer',     40),
     ('entertainment',    'ticket',   50),
     ('vacations',        'compass',  60),
     ('hotel',            'bed',      70),

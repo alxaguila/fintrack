@@ -72,11 +72,12 @@
     "sub": "Three tiers. The Free plan is free forever and asks for no card.",
     "monthly": "Monthly",
     "annual": "Annual",
-    "save": "-25%",
+    "save": "-33%",
     "swipeHint": "Swipe to compare plans →",
     "unit": "/mo",
+    "unit_annual": "/yr",
     "forever": "forever",
-    "billNote": "Billed annually",
+    "billNote": "Billed once a year",
     "recommended": "Recommended",
     "comingSoon": "Coming soon",
     "currentPlanCta": "Your current plan",
@@ -90,7 +91,8 @@
         "3 bank accounts / cards",
         "5 imports per month",
         "200 transactions per month",
-        "50 classification rules",
+        "25 classification rules",
+        "Budgets (3 categories)",
         "Dashboard with 12-month history"
       ]
     },
@@ -103,9 +105,9 @@
         "3 financial profiles",
         "10 bank accounts / cards",
         "Unlimited imports",
-        "3,000 transactions per month",
+        "2,000 transactions per month",
         "100 rules",
-        "Budgets",
+        "Unlimited budgets",
         "Unlimited dashboard history",
         "Export to Excel / CSV"
       ]

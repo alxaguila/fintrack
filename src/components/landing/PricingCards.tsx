@@ -98,8 +98,23 @@ export function PricingCards({ annual, onAnnualChange, variant = 'marketing', cu
 
   const lang: 'es' | 'en' = i18n.language.startsWith('en') ? 'en' : 'es'
   const money = (v: number) => (lang === 'en' ? v.toFixed(2) : v.toFixed(2).replace('.', ','))
-  const proPrice = money(annual ? 5.99 : 7.99)
-  const premPrice = money(annual ? 14.99 : 19.99)
+
+  // Pro/Premium: precio mensual si se paga mes a mes, o importe TOTAL anual si
+  // se paga de una vez (no un equivalente mensual) — el tachado de al lado es
+  // lo que costarían 12 meses al precio mensual, para mostrar el ahorro en
+  // euros totales en vez de en porcentaje.
+  const PRO_MONTHLY = 5.99
+  const PRO_ANNUAL_TOTAL = 49
+  const PREM_MONTHLY = 12.99
+  const PREM_ANNUAL_TOTAL = 99
+
+  // Los totales anuales son importes redondos (49€, 99€): sin decimales ",00"
+  // que no aportan nada. El mensual sí lleva decimales (5,99€, 12,99€).
+  const proPrice = annual ? String(PRO_ANNUAL_TOTAL) : money(PRO_MONTHLY)
+  const premPrice = annual ? String(PREM_ANNUAL_TOTAL) : money(PREM_MONTHLY)
+  const proFullYearPrice = money(PRO_MONTHLY * 12)
+  const premFullYearPrice = money(PREM_MONTHLY * 12)
+  const priceUnit = t(annual ? 'pricing.unit_annual' : 'pricing.unit')
 
   const freeFeatures = t('pricing.free.features', { returnObjects: true }) as string[]
   const proFeatures = t('pricing.pro.features', { returnObjects: true }) as string[]
@@ -173,8 +188,8 @@ export function PricingCards({ annual, onAnnualChange, variant = 'marketing', cu
           <div style={{ marginTop: 6, font: `400 14px ${BRAND.sans}`, color: '#8FA9B8' }}>{t('pricing.pro.desc')}</div>
           <div style={{ marginTop: 22, display: 'flex', alignItems: 'flex-end', gap: 8 }}>
             <span style={{ font: `600 46px/1 ${BRAND.mono}`, color: '#fff' }}>€{proPrice}</span>
-            <span style={{ font: `400 14px ${BRAND.sans}`, color: '#8FA9B8', paddingBottom: 8 }}>{t('pricing.unit')}</span>
-            {annual && <span style={{ font: `400 15px ${BRAND.mono}`, color: '#5F7E92', textDecoration: 'line-through', paddingBottom: 9 }}>€{money(7.99)}</span>}
+            <span style={{ font: `400 14px ${BRAND.sans}`, color: '#8FA9B8', paddingBottom: 8 }}>{priceUnit}</span>
+            {annual && <span style={{ font: `500 19px ${BRAND.mono}`, color: '#5F7E92', textDecoration: 'line-through', paddingBottom: 8 }}>€{proFullYearPrice}</span>}
           </div>
           <div style={{ marginTop: 6, font: `400 12px ${BRAND.sans}`, color: '#6E8FA2', minHeight: 16 }}>{annual ? t('pricing.billNote') : ''}</div>
           {isUpgrade ? (
@@ -203,8 +218,8 @@ export function PricingCards({ annual, onAnnualChange, variant = 'marketing', cu
           <div style={{ marginTop: 6, font: `400 14px ${BRAND.sans}`, color: '#8B98A2' }}>{t('pricing.premium.desc')}</div>
           <div style={{ marginTop: 22, display: 'flex', alignItems: 'flex-end', gap: 8 }}>
             <span style={{ font: `600 46px/1 ${BRAND.mono}`, color: BRAND.ink }}>€{premPrice}</span>
-            <span style={{ font: `400 14px ${BRAND.sans}`, color: '#94A3B8', paddingBottom: 8 }}>{t('pricing.unit')}</span>
-            {annual && <span style={{ font: `400 15px ${BRAND.mono}`, color: '#B4BEC9', textDecoration: 'line-through', paddingBottom: 9 }}>€{money(19.99)}</span>}
+            <span style={{ font: `400 14px ${BRAND.sans}`, color: '#94A3B8', paddingBottom: 8 }}>{priceUnit}</span>
+            {annual && <span style={{ font: `500 19px ${BRAND.mono}`, color: '#B4BEC9', textDecoration: 'line-through', paddingBottom: 8 }}>€{premFullYearPrice}</span>}
           </div>
           <div style={{ marginTop: 6, font: `400 12px ${BRAND.sans}`, color: '#94A3B8', minHeight: 16 }}>{annual ? t('pricing.billNote') : ''}</div>
           {currentPlan === 'premium' ? (

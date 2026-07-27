@@ -18,6 +18,13 @@ export const DEFAULT_BUDGET_GROUP_SLUGS: readonly string[] = [
   'food_grocery', 'housing', 'mobility', 'food_leisure', 'shopping',
 ]
 
+/** Plan FREE: sobres fijos para todos (compras, restauración y hogar), sin
+ *  posibilidad de añadir otros — ver `useBudgetsGate`/`UpgradeHintDialog` en
+ *  `Budgets.tsx`. PRO/PREMIUM siguen usando `DEFAULT_BUDGET_GROUP_SLUGS`. */
+export const FREE_BUDGET_GROUP_SLUGS: readonly string[] = [
+  'shopping', 'food_leisure', 'housing',
+]
+
 /** 'YYYY-MM-01' del mes de `date` (por defecto hoy). */
 export function monthKey(date: Date = new Date()): string {
   return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-01`
@@ -230,15 +237,17 @@ export function summarizeGroup(
   }
 }
 
-export function buildEnvelopeSummaries(params: BuildContext & { range: { from: string; to: string } }): EnvelopeSummary[] {
-  const { groups, categories, periodMonths, range, today, categoryOrder } = params
+export function buildEnvelopeSummaries(
+  params: BuildContext & { range: { from: string; to: string }; defaultGroupSlugs?: readonly string[] },
+): EnvelopeSummary[] {
+  const { groups, categories, periodMonths, range, today, categoryOrder, defaultGroupSlugs = DEFAULT_BUDGET_GROUP_SLUGS } = params
   const subByCategory = subcategoryBudgetsByCategory(params)
   const expenseGroups = groups.filter(g => g.type === 'gasto')
 
   const summaries: EnvelopeSummary[] = []
   for (const group of expenseGroups) {
     const summary = summarizeGroup(group, subByCategory, categories, { periodMonths, range, today, categoryOrder })
-    const isDefault = DEFAULT_BUDGET_GROUP_SLUGS.includes(group.slug)
+    const isDefault = defaultGroupSlugs.includes(group.slug)
     if (!isDefault && !summary.hasActualBudget) continue
     summaries.push(summary)
   }

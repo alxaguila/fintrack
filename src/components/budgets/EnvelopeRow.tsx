@@ -27,25 +27,29 @@ export function EnvelopeRow({ summary, onClick }: EnvelopeRowProps) {
       type="button"
       onClick={onClick}
       className={cn(
-        'flex w-full flex-col gap-3 rounded-2xl border bg-white p-4 text-left transition-colors sm:flex-row sm:items-center sm:gap-4',
+        'flex w-full flex-col gap-2 rounded-2xl border bg-white p-3.5 text-left transition-colors sm:flex-row sm:items-center sm:gap-4 sm:p-4',
         over ? 'border-2 border-[#DC2626] hover:border-[#DC2626]' : 'border-slate-200 hover:border-slate-300',
       )}
     >
-      <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full" style={{ backgroundColor: `${color}1f` }}>
-        <Icon className="h-5 w-5" style={{ color }} strokeWidth={1.8} />
-      </span>
+      {/* En móvil, icono + título/barra van siempre en la misma fila (display:contents
+          los "suelta" como hermanos directos en sm+, donde ya se comportan como antes). */}
+      <div className="flex items-center gap-3 sm:contents">
+        <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full" style={{ backgroundColor: `${color}1f` }}>
+          <Icon className="h-5 w-5" style={{ color }} strokeWidth={1.8} />
+        </span>
 
-      <div className="min-w-0 flex-1">
-        <p className="truncate text-[15px] font-bold text-slate-800">{tc(`category_group.${group.slug}`)}</p>
-        <div className="mt-2">
-          <BudgetAmountSlider spent={spent} amount={budgeted} color={color} disabled />
+        <div className="min-w-0 flex-1">
+          <p className="truncate text-[15px] font-bold text-slate-800">{tc(`category_group.${group.slug}`)}</p>
+          <div className="mt-1.5">
+            <BudgetAmountSlider spent={spent} amount={budgeted} color={color} disabled />
+          </div>
+          <p className="mt-1 text-xs text-slate-500">
+            {budgeted > 0
+              ? t('envelopes.spent_of', { spent: fmtAmount(spent), budgeted: fmtAmount(budgeted) })
+              : `${fmtAmount(spent)} · ${t('envelopes.no_budget')}`}
+            {budgeted > 0 && !hasActualBudget && <span className="text-slate-400"> · {t('detail.proposed_badge').toLowerCase()}</span>}
+          </p>
         </div>
-        <p className="mt-1.5 text-xs text-slate-500">
-          {budgeted > 0
-            ? t('envelopes.spent_of', { spent: fmtAmount(spent), budgeted: fmtAmount(budgeted) })
-            : `${fmtAmount(spent)} · ${t('envelopes.no_budget')}`}
-          {budgeted > 0 && !hasActualBudget && <span className="text-slate-400"> · {t('detail.proposed_badge').toLowerCase()}</span>}
-        </p>
       </div>
 
       <div className="flex shrink-0 items-center justify-between gap-4 sm:flex-col sm:items-end sm:justify-center sm:gap-1">
