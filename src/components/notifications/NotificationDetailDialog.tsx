@@ -19,8 +19,6 @@ export function NotificationDetailDialog({ notification, onOpenChange }: Notific
   const { data: profiles = [] } = useProfiles()
   const hasMultipleProfiles = profiles.length > 1
 
-  const payload = notification?.payload
-
   return (
     <Dialog open={!!notification} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md sm:rounded-2xl max-h-[90dvh] overflow-y-auto">
@@ -28,12 +26,12 @@ export function NotificationDetailDialog({ notification, onOpenChange }: Notific
           <DialogTitle>{t('dialog_title')}</DialogTitle>
         </DialogHeader>
 
-        {notification && payload && notification.type === 'account_stale' && (
+        {notification && notification.payload && notification.type === 'account_stale' && (
           <div className="flex flex-col gap-4">
             <p className="text-sm text-slate-600">
               {t(hasMultipleProfiles ? 'account_stale.body' : 'account_stale.body_no_profile', {
-                ...payload,
-                account_name: accountDisplayLabel(payload.account_name, notification.account, (type) => tc(`account_type.${type}`)),
+                ...notification.payload,
+                account_name: accountDisplayLabel(notification.payload.account_name, notification.account, (type) => tc(`account_type.${type}`)),
               })}
             </p>
             <Button
@@ -48,10 +46,10 @@ export function NotificationDetailDialog({ notification, onOpenChange }: Notific
           </div>
         )}
 
-        {notification && payload && notification.type === 'unread_transactions' && (
+        {notification && notification.payload && notification.type === 'unread_transactions' && (
           <div className="flex flex-col gap-4">
             <p className="text-sm text-slate-600">
-              {t(hasMultipleProfiles ? 'unread_transactions.body' : 'unread_transactions.body_no_profile', payload)}
+              {t(hasMultipleProfiles ? 'unread_transactions.body' : 'unread_transactions.body_no_profile', notification.payload)}
             </p>
             <Button
               className="w-full"

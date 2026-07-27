@@ -2,6 +2,9 @@
 
 Lista de cambios por versión (`APP_VERSION` en `src/lib/version.ts`). Solo se añade una entrada cuando el código de la app cambia.
 
+## v1.815
+- Corrección: el build de producción fallaba en Vercel (error de TypeScript en `NotificationDetailDialog.tsx` que la caché local no había detectado). Sin cambios visibles para el usuario.
+
 ## v1.808
 - El ticker de notificaciones ahora se desplaza a una velocidad constante y rápida (px/s fijo, no una duración fija) — antes, con un texto corto, apenas se movía en 18 segundos y era ilegible; ahora una línea cruza la caja en 1-2 segundos sea cual sea su longitud, y se mantiene visible el tiempo justo para leerla entera al menos una vez.
 
