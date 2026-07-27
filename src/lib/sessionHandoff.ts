@@ -18,16 +18,18 @@ export function redirectToAppWithSession(session: Session) {
   // (login de Google/email la crean aquí antes del hand-off). Al cerrar sesión en
   // app.zafyros.com esa copia sobrevivía sin invalidar, y este mismo mecanismo la
   // volvía a mandar para allá -> bucle infinito de redirects entre dominios tras
-  // logout. scope 'local' borra solo la copia de AQUÍ, sin invalidar los tokens que
-  // ya vamos a mandar a app.zafyros.com.
-  // setTimeout es obligatorio aquí: este helper se llama desde dentro del callback
-  // de onAuthStateChange (tras el login), y supabase-js entra en deadlock si se
-  // invoca otro método de auth (como signOut) de forma síncrona en esa misma pila.
-  setTimeout(() => {
-    supabase.auth.signOut({ scope: 'local' }).finally(() => {
-      window.location.assign(`${getAppUrl()}#${HANDOFF_KEY}=${payload}`)
-    })
-  }, 0)
+  // logout.
+  // OJO: NO usar supabase.auth.signOut() para limpiarla (aunque sea con
+  // scope:'local') -> el código fuente de supabase-js muestra que revoca el refresh
+  // token en el SERVIDOR igualmente (ese scope solo decide si afecta a otras
+  // sesiones, no si hace la llamada de red), lo que invalida los tokens que estamos
+  // a punto de mandar en este mismo hand-off -> el login dejaba de funcionar del
+  // todo. Se borra solo la entrada de localStorage directamente (sin red), lo que de
+  // paso evita también el deadlock de supabase-js por llamar a otro método de auth
+  // desde dentro del callback de onAuthStateChange.
+  const storageKey = (supabase.auth as unknown as { storageKey?: string }).storageKey
+  if (storageKey) localStorage.removeItem(storageKey)
+  window.location.assign(`${getAppUrl()}#${HANDOFF_KEY}=${payload}`)
 }
 
 export async function consumeSessionHandoff(): Promise<boolean> {
