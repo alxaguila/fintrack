@@ -9,7 +9,7 @@ import { getAppUrl } from './appUrl'
 // tokens en la URL de app.zafyros.com; aquí replicamos ese mismo mecanismo a mano.
 const HANDOFF_KEY = 'zf_session'
 
-export async function redirectToAppWithSession(session: Session) {
+export function redirectToAppWithSession(session: Session) {
   const payload = encodeURIComponent(JSON.stringify({
     at: session.access_token,
     rt: session.refresh_token,
@@ -20,8 +20,14 @@ export async function redirectToAppWithSession(session: Session) {
   // volvía a mandar para allá -> bucle infinito de redirects entre dominios tras
   // logout. scope 'local' borra solo la copia de AQUÍ, sin invalidar los tokens que
   // ya vamos a mandar a app.zafyros.com.
-  await supabase.auth.signOut({ scope: 'local' })
-  window.location.assign(`${getAppUrl()}#${HANDOFF_KEY}=${payload}`)
+  // setTimeout es obligatorio aquí: este helper se llama desde dentro del callback
+  // de onAuthStateChange (tras el login), y supabase-js entra en deadlock si se
+  // invoca otro método de auth (como signOut) de forma síncrona en esa misma pila.
+  setTimeout(() => {
+    supabase.auth.signOut({ scope: 'local' }).finally(() => {
+      window.location.assign(`${getAppUrl()}#${HANDOFF_KEY}=${payload}`)
+    })
+  }, 0)
 }
 
 export async function consumeSessionHandoff(): Promise<boolean> {

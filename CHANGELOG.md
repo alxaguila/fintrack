@@ -2,6 +2,9 @@
 
 Lista de cambios por versión (`APP_VERSION` en `src/lib/version.ts`). Solo se añade una entrada cuando el código de la app cambia.
 
+## v1.886
+- Corregido que el login (Google o email) se quedaba colgado sin entrar a la app tras el fix del bucle de logout (v1.884): la limpieza de sesión local se llamaba de forma síncrona dentro del callback de `onAuthStateChange`, lo que provoca un deadlock conocido de supabase-js. Se difiere con `setTimeout`.
+
 ## v1.884
 - Corregido bucle infinito de redirects entre zafyros.com y app.zafyros.com al cerrar sesión: la sesión creada en zafyros.com durante el login (Google o email) se quedaba sin limpiar tras el traspaso a app.zafyros.com, y al hacer logout esa copia obsoleta se reenviaba una y otra vez.
 
