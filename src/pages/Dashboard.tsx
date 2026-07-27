@@ -23,6 +23,8 @@ const BAR_PX_M = 54 // ancho por periodo en la tira compacta móvil
 const CHART_H = 232 // alto del cash flow en escritorio
 const CHART_H_M = 160 // alto de la tira compacta móvil (más espacio liberado al comprimir el resto)
 const VISIBLE_BARS = 12 // ventana visible por defecto (grupos de columnas)
+const BAR_OVERLAP = 7 // px que el ingreso se superpone al gasto, en escritorio
+const BAR_OVERLAP_M = 6 // ídem en la tira compacta móvil
 
 // Geometría del donut — escritorio y una variante más pequeña para móvil (sin
 // el toggle de tipo encima, que ahora vive en la propia pastilla, cabe más chico).
@@ -81,24 +83,21 @@ function tornTopPath(x: number, y: number, w: number, h: number) {
 }
 // Genera el `shape` de una serie de barras. `cap` = techo de escala; las que lo
 // superan se dibujan con el borde roto. Opacidad menor en periodos no activos.
-function makeBarShape(color: string, dataKey: string, cap: number, activeKey: string | null, inactiveOp: number) {
+// `xOffset` desplaza la barra (px) para crear el solape ingreso/gasto.
+// `inactiveColor`: si se da, la barra pinta siempre a opacidad plena y solo
+// cambia de color sólido (activo/inactivo) — evita que, al ir por delante en
+// el solape, se mezcle por transparencia con la barra de detrás.
+function makeBarShape(color: string, dataKey: string, cap: number, activeKey: string | null, inactiveOp: number, xOffset = 0, inactiveColor?: string) {
   return (props: any) => {
     let { x, y, width, height, payload } = props
+    x += xOffset
     if (y < 0) { height += y; y = 0 } // recorta al borde superior del área
     if (!(height > 0) || !(width > 0)) return <g />
     const over = (payload?.[dataKey] ?? 0) > cap * 1.001
-    const op = payload?.key === activeKey ? 1 : inactiveOp
+    const active = payload?.key === activeKey
     const d = over ? tornTopPath(x, y, width, height) : topRoundedPath(x, y, width, height, 5)
-    return <path d={d} fill={color} fillOpacity={op} />
-  }
-}
-
-// Fondo translúcido tras el periodo activo (como el de la fila seleccionada).
-function makeActiveBg(activeKey: string | null, dx: number, w: number) {
-  return (props: any) => {
-    const { x, y, height, payload } = props
-    if (!payload || payload.key !== activeKey) return <g />
-    return <rect x={x + dx} y={y} width={w} height={height} rx={6} fill="rgba(100,116,139,0.13)" />
+    if (inactiveColor) return <path d={d} fill={active ? color : inactiveColor} fillOpacity={1} />
+    return <path d={d} fill={color} fillOpacity={active ? 1 : inactiveOp} />
   }
 }
 
@@ -190,6 +189,10 @@ export default function Dashboard() {
     }, { replace: true })
   }
   const [selectedPeriod, setSelectedPeriod] = useState<string | null>(null)
+  // Mes bajo el ratón en el cash flow de escritorio (para el tooltip flotante
+  // propio, posicionado al lado del grupo de columnas — no el que trae Recharts).
+  const [hoverKey, setHoverKey] = useState<string | null>(null)
+  const [hoverX, setHoverX] = useState<number | null>(null)
   const [breakdownType, setBreakdownType] = useState<TransactionType>('gasto')
   const [donutActive, setDonutActive] = useState<number | null>(null)
   const [donutXY, setDonutXY] = useState<{ x: number; y: number } | null>(null)
@@ -245,6 +248,8 @@ export default function Dashboard() {
     if (prevGranularityRef.current !== granularity) {
       setSelectedPeriod(null)
       setSelectedCat(null)
+      setHoverKey(null)
+      setHoverX(null)
       prevGranularityRef.current = granularity
     }
   }, [granularity])
@@ -410,6 +415,11 @@ export default function Dashboard() {
   }))
   const chartWidth = Math.max(chartData.length * BAR_PX, 320)
   const chartWidthMobile = Math.max(chartData.length * BAR_PX_M, 240)
+  // Solape ingreso/gasto (ingreso delante y a la izquierda, gasto detrás a la
+  // derecha): barGap negativo acerca las dos barras, xOffset las desplaza para
+  // que el ingreso "robe" ~35% del ancho del gasto en vez de quedar contiguas.
+  const barOverlapShift = 20 - BAR_OVERLAP // escritorio: barSize 20
+  const barOverlapShiftM = 16 - BAR_OVERLAP_M // móvil: barSize 16
   // Botón "<": carga todo el histórico de golpe. Siempre es clicable — en FREE
   // muestra un aviso de mejora de plan en vez de quedar inerte; solo se
   // deshabilita quitando el brillo cuando de verdad no hay nada más que
@@ -537,12 +547,12 @@ export default function Dashboard() {
     <div className="flex flex-col gap-3 p-4 sm:p-6 lg:h-full lg:overflow-hidden">
       {/* Cabecera + aviso — en móvil quedan fijos al hacer scroll (junto con la
           tira mensual y la pastilla, ver más abajo); en escritorio es estático. */}
-      <div ref={topFixedRef} className={isMobile ? 'sticky top-0 z-30 flex flex-col gap-3 bg-background pb-1' : 'flex flex-col gap-3'}>
+      <div ref={topFixedRef} className={isMobile ? 'sticky top-0 z-30 flex flex-col gap-3 bg-background pb-1 [transform:translateZ(0)]' : 'flex flex-col gap-3'}>
         {/* El selector de periodo va arriba a la derecha (solo escritorio/tablet;
             en móvil vive en el desplegable del hueco superior derecho) */}
         <div className="flex shrink-0 items-start justify-between gap-3">
           <div>
-            <h1 className="text-2xl font-extrabold tracking-tight sm:text-3xl">{t('title')}</h1>
+            <h1 className="font-serif text-[28px] leading-tight text-foreground">{t('title')}</h1>
             <p className="mt-1 text-sm text-muted-foreground">{t('subtitle')}</p>
           </div>
           {!isMobile && hasData && (
@@ -579,7 +589,7 @@ export default function Dashboard() {
         <div className="flex flex-col gap-3">
           {/* Tira mensual + pastilla: quedan fijas al hacer scroll, justo debajo
               de la cabecera (el donut y el resto pasan por debajo y se ocultan). */}
-          <div ref={summaryStickyRef} className="sticky z-20 flex flex-col gap-3 bg-background pb-1" style={{ top: topFixedH }}>
+          <div ref={summaryStickyRef} className="sticky z-20 flex flex-col gap-3 bg-background pb-1 [transform:translateZ(0)]" style={{ top: topFixedH }}>
             {/* Tira mensual compacta */}
             <Card className="rounded-2xl">
               <CardContent className="p-3">
@@ -596,21 +606,21 @@ export default function Dashboard() {
                       <ChevronLeft className="h-3.5 w-3.5" />
                     </button>
                     <div ref={scrollRef} className="no-scrollbar min-w-0 cursor-pointer overflow-x-auto" style={{ maxWidth: VISIBLE_BARS * BAR_PX_M }}>
-                      <ComposedChart width={chartWidthMobile} height={CHART_H_M} data={chartData} barCategoryGap="24%" barGap={2}
+                      <ComposedChart width={chartWidthMobile} height={CHART_H_M} data={chartData} barCategoryGap="24%" barGap={-BAR_OVERLAP_M}
                         onClick={(e: any) => { if (e?.activeLabel) { const k = String(e.activeLabel); setSelectedPeriod(prev => prev === k ? null : k) } }}
                         margin={{ top: 0, right: 4, bottom: 0, left: 4 }}>
                         <YAxis hide domain={[0, cap]} allowDataOverflow />
                         <XAxis dataKey="key" tickFormatter={(k) => bucketLabel(k, granularity, monthNames)} tick={{ fontSize: 10, fill: '#94a3b8' }} axisLine={false} tickLine={false} interval={0} height={16} dy={2} padding={{ left: 8, right: 8 }} />
-                        {/* Sin leyenda flotante: al tocar un periodo el resto de la
-                            pantalla cambia al instante, así que solo dejamos el
-                            resalte de fondo (misma señal, sin burbuja redundante). */}
-                        <Tooltip cursor={{ fill: 'rgba(100,116,139,0.10)', radius: 6 }} content={() => null} />
+                        {/* Sin leyenda flotante ni cursor: el importe del mes tocado
+                            se lee en la pastilla de debajo (sustituye a Ingresos/
+                            Gastos/Balance cuando hay una subcategoría filtrada). */}
+                        <Tooltip cursor={false} content={() => null} />
                         {isFiltered ? (
-                          <Bar dataKey="value" fill={filterColor} barSize={22} isAnimationActive={false} background={makeActiveBg(selectedPeriod, -22, 60)} shape={makeBarShape(filterColor, 'value', cap, selectedPeriod, 0.35)} />
+                          <Bar dataKey="value" fill={filterColor} barSize={22} isAnimationActive={false} shape={makeBarShape(filterColor, 'value', cap, activeKey, 0.35)} />
                         ) : (
                           <>
-                            <Bar dataKey="ingreso" fill={C_INCOME} barSize={16} isAnimationActive={false} background={makeActiveBg(selectedPeriod, -14, 56)} shape={makeBarShape(C_INCOME, 'ingreso', cap, selectedPeriod, 0.3)} />
-                            <Bar dataKey="gasto" fill={C_EXPENSE} barSize={16} isAnimationActive={false} shape={makeBarShape(C_EXPENSE, 'gasto', cap, selectedPeriod, 0.24)} />
+                            <Bar dataKey="gasto" fill={C_EXPENSE} barSize={16} isAnimationActive={false} shape={makeBarShape(C_EXPENSE, 'gasto', cap, activeKey, 0.24, barOverlapShiftM)} />
+                            <Bar dataKey="ingreso" fill={C_INCOME} barSize={16} isAnimationActive={false} shape={makeBarShape(C_INCOME, 'ingreso', cap, activeKey, 1, -barOverlapShiftM, pastel(C_INCOME))} />
                           </>
                         )}
                       </ComposedChart>
@@ -619,34 +629,52 @@ export default function Dashboard() {
                 )}
               </CardContent>
             </Card>
-
-            {/* Ingresos / Gastos / Balance — una sola línea de 3 columnas. Ingresos
-                y Gastos son pulsables: hacen lo mismo que el antiguo toggle (fijan
-                el tipo del donut/desglose) y marcan cuál está activo con un
-                subrayado de color. Balance no filtra nada, solo informa; la tasa
-                de ahorro va debajo, entendida por contexto. */}
-            <Card className="rounded-2xl">
-              <CardContent className="grid grid-cols-3 divide-x p-3">
-                <button type="button" onClick={() => { setBreakdownType('ingreso'); setSelectedCat(null); setDonutActiveMobile(null) }}
-                  className={`flex flex-col items-center gap-0.5 rounded-lg px-1 py-1 text-center transition-colors ${breakdownType === 'ingreso' ? 'bg-slate-100' : 'hover:bg-slate-50'}`}>
-                  <span className="text-[11px] font-medium text-muted-foreground">{t('kpis.income_short')}</span>
-                  <span className="text-sm font-extrabold tabular-nums" style={{ color: C_INCOME }}>{fmtAmount(income)}</span>
-                  <span className="mt-0.5 h-0.5 w-6 rounded-full transition-colors" style={{ backgroundColor: breakdownType === 'ingreso' ? C_INCOME : 'transparent' }} />
-                </button>
-                <button type="button" onClick={() => { setBreakdownType('gasto'); setSelectedCat(null); setDonutActiveMobile(null) }}
-                  className={`flex flex-col items-center gap-0.5 rounded-lg px-1 py-1 text-center transition-colors ${breakdownType === 'gasto' ? 'bg-slate-100' : 'hover:bg-slate-50'}`}>
-                  <span className="text-[11px] font-medium text-muted-foreground">{t('kpis.expenses_short')}</span>
-                  <span className="text-sm font-extrabold tabular-nums" style={{ color: C_EXPENSE }}>{fmtAmount(expenses)}</span>
-                  <span className="mt-0.5 h-0.5 w-6 rounded-full transition-colors" style={{ backgroundColor: breakdownType === 'gasto' ? C_EXPENSE : 'transparent' }} />
-                </button>
-                <div className="flex flex-col items-center gap-0.5 px-1 py-1 text-center">
-                  <span className="text-[11px] font-medium text-muted-foreground">{t('kpis.balance_short')}</span>
-                  <span className="text-sm font-extrabold tabular-nums" style={{ color: C_NEUTRAL }}>{fmtAmount(balance)}</span>
-                  <span className="text-[10px] font-semibold" style={{ color: savingsRate >= 0 ? '#0F766E' : '#A03A66' }}>{t('kpis.savings_rate_short', { rate: savingsRate.toFixed(0) })}</span>
-                </div>
-              </CardContent>
-            </Card>
           </div>
+
+          {/* Ingresos / Gastos / Balance — una sola línea de 3 columnas. Ingresos
+              y Gastos son pulsables: hacen lo mismo que el antiguo toggle (fijan
+              el tipo del donut/desglose) y marcan cuál está activo con un
+              subrayado de color. Balance no filtra nada, solo informa; la tasa
+              de ahorro va debajo, entendida por contexto.
+              Si hay una subcategoría filtrada, esta pastilla pasa a mostrar su
+              importe en el mes tocado (antes no se veía en ningún sitio al tocar
+              una barra con el filtro activo).
+              Fuera del bloque sticky a propósito (punto 7): se desplaza con el
+              resto del contenido en vez de quedar fija junto a la tira. */}
+          <Card className="rounded-2xl">
+            <CardContent className="p-3">
+              {isFiltered ? (
+                <div className="flex items-center justify-between gap-2 px-1 py-1">
+                  <div className="flex min-w-0 items-center gap-1.5">
+                    <span className="h-2.5 w-2.5 shrink-0 rounded-sm" style={{ backgroundColor: filterColor }} />
+                    <span className="truncate text-sm font-medium">{selectedCat!.name}</span>
+                    <span className="shrink-0 text-xs capitalize text-muted-foreground">· {activeLabel}</span>
+                  </div>
+                  <span className="shrink-0 text-sm font-extrabold tabular-nums" style={{ color: filterColor }}>{fmtAmount(catByPeriod.get(activeKey ?? '') ?? 0)}</span>
+                </div>
+              ) : (
+                <div className="grid grid-cols-3 divide-x">
+                  <button type="button" onClick={() => { setBreakdownType('ingreso'); setSelectedCat(null); setDonutActiveMobile(null) }}
+                    className={`flex flex-col items-center gap-0.5 rounded-lg px-1 py-1 text-center transition-colors ${breakdownType === 'ingreso' ? 'bg-slate-100' : 'hover:bg-slate-50'}`}>
+                    <span className="text-[11px] font-medium text-muted-foreground">{t('kpis.income_short')}</span>
+                    <span className="text-sm font-extrabold tabular-nums" style={{ color: C_INCOME }}>{fmtAmount(income)}</span>
+                    <span className="mt-0.5 h-0.5 w-6 rounded-full transition-colors" style={{ backgroundColor: breakdownType === 'ingreso' ? C_INCOME : 'transparent' }} />
+                  </button>
+                  <button type="button" onClick={() => { setBreakdownType('gasto'); setSelectedCat(null); setDonutActiveMobile(null) }}
+                    className={`flex flex-col items-center gap-0.5 rounded-lg px-1 py-1 text-center transition-colors ${breakdownType === 'gasto' ? 'bg-slate-100' : 'hover:bg-slate-50'}`}>
+                    <span className="text-[11px] font-medium text-muted-foreground">{t('kpis.expenses_short')}</span>
+                    <span className="text-sm font-extrabold tabular-nums" style={{ color: C_EXPENSE }}>{fmtAmount(expenses)}</span>
+                    <span className="mt-0.5 h-0.5 w-6 rounded-full transition-colors" style={{ backgroundColor: breakdownType === 'gasto' ? C_EXPENSE : 'transparent' }} />
+                  </button>
+                  <div className="flex flex-col items-center gap-0.5 px-1 py-1 text-center">
+                    <span className="text-[11px] font-medium text-muted-foreground">{t('kpis.balance_short')}</span>
+                    <span className="text-sm font-extrabold tabular-nums" style={{ color: C_NEUTRAL }}>{fmtAmount(balance)}</span>
+                    <span className="text-[10px] font-semibold" style={{ color: savingsRate >= 0 ? '#0F766E' : '#A03A66' }}>{t('kpis.savings_rate_short', { rate: savingsRate.toFixed(0) })}</span>
+                  </div>
+                </div>
+              )}
+            </CardContent>
+          </Card>
 
           {/* Donut — sin toggle propio (se controla desde la pastilla de arriba);
               al hacer scroll queda por debajo de la tira+pastilla y se oculta. */}
@@ -687,7 +715,7 @@ export default function Dashboard() {
           {/* Desglose por subcategoría — el título queda fijo justo debajo de los
               dos grupos de arriba, y solo las categorías hacen scroll debajo. */}
           <Card className="rounded-2xl">
-            <CardHeader className="sticky z-10 rounded-t-2xl bg-card p-4 pb-2" style={{ top: topFixedH + summaryStickyH }}>
+            <CardHeader className="sticky z-10 rounded-t-2xl bg-card p-4 pb-2 [transform:translateZ(0)]" style={{ top: topFixedH + summaryStickyH }}>
               <CardTitle className="text-[15px] font-bold">{t('sections.by_subcategory')}</CardTitle>
             </CardHeader>
             <CardContent className="p-4 pt-0">
@@ -791,22 +819,39 @@ export default function Dashboard() {
                       >
                         <ChevronLeft className="h-4 w-4" />
                       </button>
-                      <div ref={scrollRef} className="no-scrollbar min-w-0 cursor-pointer overflow-x-auto" style={{ maxWidth: VISIBLE_BARS * BAR_PX }}>
-                      <ComposedChart width={chartWidth} height={CHART_H} data={chartData} barCategoryGap="26%" barGap={2}
+                      <div ref={scrollRef} className="no-scrollbar relative min-w-0 cursor-pointer overflow-x-auto" style={{ maxWidth: VISIBLE_BARS * BAR_PX }}>
+                      <ComposedChart width={chartWidth} height={CHART_H} data={chartData} barCategoryGap="26%" barGap={-BAR_OVERLAP}
                         onClick={(e: any) => { if (e?.activeLabel) { const k = String(e.activeLabel); setSelectedPeriod(prev => prev === k ? null : k) } }}
+                        onMouseMove={(state: any) => { if (state?.activeLabel) { setHoverKey(String(state.activeLabel)); setHoverX(state.activeCoordinate?.x ?? null) } }}
+                        onMouseLeave={() => { setHoverKey(null); setHoverX(null) }}
                         margin={{ top: 0, right: 6, bottom: 0, left: 6 }}>
                         <YAxis hide domain={[0, cap]} allowDataOverflow />
                         <XAxis dataKey="key" tickFormatter={(k) => bucketLabel(k, granularity, monthNames)} tick={{ fontSize: 11, fill: '#94a3b8' }} axisLine={false} tickLine={false} interval={0} height={20} dy={2} padding={{ left: 10, right: 10 }} />
-                        <Tooltip cursor={{ fill: 'rgba(100,116,139,0.10)', radius: 6 }} content={<CashTooltip granularity={granularity} monthNames={monthNames} tcommon={tcommon} selectedName={selectedCat?.name} />} />
+                        {/* Sin cursor ni tooltip nativo: el cuadro flotante propio
+                            (más abajo) se posiciona al lado del mes, no encima. */}
+                        <Tooltip cursor={false} content={() => null} />
                         {isFiltered ? (
-                          <Bar dataKey="value" fill={filterColor} barSize={24} isAnimationActive={false} background={makeActiveBg(selectedPeriod, -24, 66)} shape={makeBarShape(filterColor, 'value', cap, selectedPeriod, 0.5)} />
+                          <Bar dataKey="value" fill={filterColor} barSize={24} isAnimationActive={false} shape={makeBarShape(filterColor, 'value', cap, activeKey, 0.5)} />
                         ) : (
                           <>
-                            <Bar dataKey="ingreso" fill={C_INCOME} barSize={20} isAnimationActive={false} background={makeActiveBg(selectedPeriod, -16, 68)} shape={makeBarShape(C_INCOME, 'ingreso', cap, selectedPeriod, 0.55)} />
-                            <Bar dataKey="gasto" fill={C_EXPENSE} barSize={20} isAnimationActive={false} shape={makeBarShape(C_EXPENSE, 'gasto', cap, selectedPeriod, 0.5)} />
+                            <Bar dataKey="gasto" fill={C_EXPENSE} barSize={20} isAnimationActive={false} shape={makeBarShape(C_EXPENSE, 'gasto', cap, activeKey, 0.5, barOverlapShift)} />
+                            <Bar dataKey="ingreso" fill={C_INCOME} barSize={20} isAnimationActive={false} shape={makeBarShape(C_INCOME, 'ingreso', cap, activeKey, 1, -barOverlapShift, pastel(C_INCOME))} />
                           </>
                         )}
                       </ComposedChart>
+                      {hoverKey && hoverX != null && (() => {
+                        const d = chartData.find(c => c.key === hoverKey)
+                        if (!d) return null
+                        const payload = isFiltered
+                          ? [{ dataKey: 'value', value: d.value, color: filterColor }]
+                          : [{ dataKey: 'gasto', value: d.gasto, color: C_EXPENSE }, { dataKey: 'ingreso', value: d.ingreso, color: C_INCOME }]
+                        const flip = hoverX > chartWidth / 2
+                        return (
+                          <div className="pointer-events-none absolute top-0 z-30" style={{ left: hoverX, transform: flip ? 'translate(calc(-100% - 12px), 0)' : 'translate(12px, 0)' }}>
+                            <CashTooltip active payload={payload} label={hoverKey} granularity={granularity} monthNames={monthNames} tcommon={tcommon} selectedName={selectedCat?.name} />
+                          </div>
+                        )
+                      })()}
                       </div>
                     </div>
                   )}

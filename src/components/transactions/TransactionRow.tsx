@@ -68,6 +68,9 @@ export function TransactionRow({ tx, category, group, account, merchant, entityL
   const hintPlayedRef = useRef(false)
   const rowRef = useRef<HTMLDivElement | null>(null)
   const swipeMaxRef = useRef(SWIPE_MAX_FALLBACK)
+  // Bloqueo de dirección por gesto: hasta decidir que es claramente horizontal
+  // (no un scroll vertical con algo de deriva lateral), no se toca dx/dragging.
+  const gestureDirRef = useRef<'h' | 'v' | null>(null)
 
   const CatIcon = categoryIcon(category?.icon)
   const catColor = group?.color ?? '#94a3b8'
@@ -81,13 +84,24 @@ export function TransactionRow({ tx, category, group, account, merchant, entityL
   const { ref: swipeRef, ...swipeHandlers } = useSwipeable({
     onSwiping: e => {
       if (!isMobile) return
-      if (e.first) swipeMaxRef.current = (rowRef.current?.getBoundingClientRect().width ?? SWIPE_MAX_FALLBACK * 4) / 4
+      if (e.first) {
+        swipeMaxRef.current = (rowRef.current?.getBoundingClientRect().width ?? SWIPE_MAX_FALLBACK * 4) / 4
+        gestureDirRef.current = null
+      }
+      if (gestureDirRef.current === null) {
+        if (Math.max(Math.abs(e.deltaX), Math.abs(e.deltaY)) < 10) return // aún ambiguo, esperar más movimiento
+        gestureDirRef.current = Math.abs(e.deltaX) > Math.abs(e.deltaY) * 1.5 ? 'h' : 'v'
+      }
+      if (gestureDirRef.current !== 'h') return // scroll vertical: no tocar la fila
       setDragging(true)
       const max = swipeMaxRef.current
       setDx(Math.max(-max, Math.min(max, e.deltaX)))
     },
     onSwiped: e => {
       if (!isMobile) return
+      const wasHorizontal = gestureDirRef.current === 'h'
+      gestureDirRef.current = null
+      if (!wasHorizontal) return
       setDragging(false)
       const max = swipeMaxRef.current
       if (e.deltaX <= -max) onToggleReviewed()

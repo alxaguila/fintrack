@@ -203,7 +203,7 @@ export default function ClassificationRules() {
       {/* Encabezado fijo */}
       <div className="shrink-0 space-y-4 p-6 pb-3">
         <div>
-          <h1 className="text-3xl font-extrabold tracking-tight">{t('rules.title')}</h1>
+          <h1 className="font-serif text-[28px] leading-tight text-foreground">{t('rules.title')}</h1>
           <p className="text-sm text-muted-foreground">{t('rules.subtitle')}</p>
         </div>
 

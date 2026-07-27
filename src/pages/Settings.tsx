@@ -21,7 +21,7 @@ export default function Settings() {
 
   return (
     <div className="mx-auto max-w-2xl p-6 space-y-6">
-      <h1 className="text-3xl font-extrabold tracking-tight">{t('title')}</h1>
+      <h1 className="font-serif text-[28px] leading-tight text-foreground">{t('title')}</h1>
 
       {/* Grupo principal: navegación */}
       <nav className="overflow-hidden rounded-2xl border border-slate-200 bg-white">

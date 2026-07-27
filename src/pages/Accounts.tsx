@@ -114,7 +114,7 @@ export default function Accounts() {
       {/* Header inmóvil: título + botón + filtros */}
       <div className="shrink-0 space-y-4">
         <div className="flex items-center justify-between gap-3">
-          <h1 className="text-3xl font-extrabold tracking-tight">{t('title')}</h1>
+          <h1 className="font-serif text-[28px] leading-tight text-foreground">{t('title')}</h1>
           <Button className="mr-14" onClick={() => openCreate()} disabled={!activeProfile}>
             <Plus className="h-4 w-4" /> {t('new_account')}
           </Button>

@@ -320,7 +320,7 @@ export default function History() {
       <div className="shrink-0 space-y-4">
         {isMobile ? (
           <div className="space-y-2">
-            <h1 className="text-3xl font-extrabold tracking-tight">{t('title')}</h1>
+            <h1 className="font-serif text-[28px] leading-tight text-foreground">{t('title')}</h1>
             <Button variant="ghost" size="sm" onClick={() => setShowFilters(v => !v)}>
               <Filter className="h-4 w-4" />
               {t(showFilters ? 'filters.hide_filters' : 'filters.show_filters')}
@@ -328,7 +328,7 @@ export default function History() {
           </div>
         ) : (
           <div className="flex items-center justify-between gap-3">
-            <h1 className="text-3xl font-extrabold tracking-tight">{t('title')}</h1>
+            <h1 className="font-serif text-[28px] leading-tight text-foreground">{t('title')}</h1>
             <Button className="mr-14" variant="outline" size="sm" onClick={clearFilters} disabled={!hasActiveFilters}>
               <FilterX className="h-4 w-4" />
               {t('filters.clear')}

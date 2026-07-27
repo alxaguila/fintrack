@@ -15,7 +15,7 @@ export function SettingsHeader({ title }: { title: string }) {
       >
         <ArrowLeft className="h-5 w-5" />
       </Link>
-      <h1 className="text-3xl font-extrabold tracking-tight">{title}</h1>
+      <h1 className="font-serif text-[28px] leading-tight text-foreground">{title}</h1>
     </div>
   )
 }

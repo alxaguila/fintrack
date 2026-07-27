@@ -131,7 +131,7 @@ export default function Budgets() {
     <div className="p-4 sm:p-6">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         <div>
-          <h1 className="text-3xl font-extrabold tracking-tight">{t('title')}</h1>
+          <h1 className="font-serif text-[28px] leading-tight text-foreground">{t('title')}</h1>
           <p className="mt-1 text-sm text-slate-500">{t('subtitle')}</p>
         </div>
         <div className="flex flex-wrap items-center gap-2 self-start sm:mr-14">

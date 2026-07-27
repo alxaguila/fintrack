@@ -2,6 +2,28 @@
 
 Lista de cambios por versión (`APP_VERSION` en `src/lib/version.ts`). Solo se añade una entrada cuando el código de la app cambia.
 
+## v1.836
+- Título de pantalla homogeneizado: Análisis, Presupuestos, Reglas de clasificación, Cuentas, Historial y Ajustes (incluidas sus subpáginas Datos personales, Login y contraseña, Mi plan y Feedback y soporte) usan ahora el mismo estilo de título que Movimientos.
+- En el menú de Ajustes, la entrada "Perfil" pasa a llamarse "Datos personales" (ya era el nombre del título dentro de esa pantalla).
+
+## v1.834
+- Swipe de movimientos en móvil: se corrige que fuera demasiado sensible y reaccionara con scroll vertical normal. Ahora el gesto decide una sola vez, al arrancar, si es claramente horizontal o vertical (comparando cuánto se mueve en cada eje); si es vertical, la fila no se mueve nada y el scroll sigue su curso sin interferencia.
+
+## v1.821
+- Análisis, gráfica de evolución por mes: ajuste del solape ingreso/gasto — la columna de ingresos ya no se pinta semitransparente por delante del gasto (se veía "mezclada" con el rosa en la zona de solape); ahora usa un azul sólido más claro cuando el mes no está seleccionado y el azul intenso al seleccionarlo, sin transparencia en ningún caso.
+
+## v1.819
+- Análisis, gráfica de evolución por mes: la columna de ingresos ya no se transparenta en los meses no seleccionados (se quedaba apagada junto con la de gastos; ahora los ingresos se ven siempre a opacidad plena).
+
+## v1.818
+- Análisis, gráfica de evolución por mes: el mes mostrado por defecto (el último) ahora aparece coloreado en intenso igual que si se hubiera seleccionado a mano — antes ningún mes quedaba resaltado hasta hacer clic.
+- Al seleccionar un mes se mantiene solo el coloreado intenso; se ha quitado el contenedor gris que aparecía detrás.
+- Al pasar el ratón por encima ya no aparece la línea/rectángulo de cursor entre las columnas del mes.
+- El cuadro flotante que aparece al pasar el ratón ahora se coloca al lado del mes (con volteo automático cerca del borde derecho) en vez de tapar una de las columnas.
+- Las columnas de ingreso y gasto ahora se dibujan ligeramente superpuestas (el ingreso por delante y a la izquierda) en vez de completamente separadas.
+- Móvil: al tener una subcategoría filtrada y tocar una barra del mes, el importe ahora se muestra sustituyendo a la pastilla de Ingresos/Gastos/Balance (antes no se veía en ningún sitio).
+- Móvil: la pastilla de Ingresos/Gastos/Balance ya no forma parte del bloque fijo (sticky) al hacer scroll — ahora se desplaza con el resto del contenido, y se ha reforzado el bloque fijo superior para evitar el pequeño salto que se veía al iniciar el scroll.
+
 ## v1.815
 - Corrección: el build de producción fallaba en Vercel (error de TypeScript en `NotificationDetailDialog.tsx` que la caché local no había detectado). Sin cambios visibles para el usuario.
 
