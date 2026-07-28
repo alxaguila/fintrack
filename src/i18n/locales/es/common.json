@@ -1,6 +1,7 @@
 {
   "app_name": "zafyros",
   "app_title": "zafyros — finanzas personales",
+  "meta_description": "Zafyros organiza tus finanzas personales sin conectar tu banco: sube tus extractos en CSV o Excel y controla cuentas, gastos, presupuestos y patrimonio al instante.",
   "nav": {
     "home": "Posición Global",
     "analysis": "Análisis",
@@ -95,7 +96,15 @@
   "profile": {
     "switch": "Cambiar perfil",
     "new": "Nuevo perfil",
-    "select": "Selecciona un perfil"
+    "select": "Selecciona un perfil",
+    "title": "Perfiles financieros",
+    "explainer": "Un perfil es una persona o negocio dentro de tu cuenta de zafyros: tú, tu pareja, un hijo... o si eres autónomo o tienes una empresa, separa esas finanzas de las personales con un perfil propio. Cada perfil tiene sus propias cuentas y movimientos, pero comparte la misma suscripción.",
+    "rename": "Renombrar perfil",
+    "type": {
+      "particular": "Particular",
+      "autonomo": "Autónomo",
+      "empresa": "Empresa"
+    }
   },
   "budgets": {
     "hint_title": "Mantén tus gastos bajo control con presupuestos",

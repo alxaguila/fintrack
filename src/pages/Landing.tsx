@@ -10,6 +10,7 @@ import { PricingCards } from '@/components/landing/PricingCards'
 import { SiteHeader } from '@/components/landing/SiteHeader'
 import { SiteFooter } from '@/components/landing/SiteFooter'
 import { redirectToAppWithSession } from '@/lib/sessionHandoff'
+import { useSeoMeta } from '@/hooks/useSeoMeta'
 
 // Copia local de estilos de la landing (keyframes, hover y responsive). Se inyecta
 // una sola vez; el diseño va con estilos inline para ser fiel al mockup aprobado.
@@ -102,6 +103,7 @@ const accent = BRAND.accent
 
 export default function Landing() {
   const { t, i18n } = useTranslation('landing')
+  const { t: tCommon } = useTranslation()
   const navigate = useNavigate()
   const [searchParams, setSearchParams] = useSearchParams()
   const [annual, setAnnual] = useState(false)
@@ -109,6 +111,12 @@ export default function Landing() {
   const [showStickyNav, setShowStickyNav] = useState(false)
   const rootRef = useRef<HTMLDivElement>(null)
   const heroSentinelRef = useRef<HTMLDivElement>(null)
+
+  useSeoMeta({
+    title: tCommon('app_title'),
+    description: tCommon('meta_description'),
+    path: '/',
+  })
 
   // Reveal al hacer scroll. Se gatea con la clase `ftl-anim` puesta ANTES del primer
   // paint (useLayoutEffect) para que sin JS o con reduced-motion el contenido quede

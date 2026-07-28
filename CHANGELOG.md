@@ -2,6 +2,24 @@
 
 Lista de cambios por versión (`APP_VERSION` en `src/lib/version.ts`). Solo se añade una entrada cuando el código de la app cambia.
 
+## v1.908
+- SEO técnico: corrige un bug real por el que todas las páginas públicas salvo la home (blog, entradas del blog, las 2 calculadoras, las 4 legales) perdían su `<title>` al cargar la URL directamente (justo lo que hace Googlebot al rastrear) — un `useEffect` sin condicionar en `App.tsx` sobreescribía el título de la página con el genérico de la home al montar. Se sustituye por un hook reutilizable (`useSeoMeta`) que fija título, `meta description`, `<link rel="canonical">` y Open Graph por página, y que ya usan todas las páginas públicas afectadas.
+- Añadido JSON-LD `Organization` + `WebSite` en `index.html` (todas las páginas) y `BlogPosting` en cada entrada del blog.
+- `sitemap.xml` y `robots.txt` pasan de `zafyros.com` a `https://www.zafyros.com`, el dominio real al que redirige el apex (confirmado navegando las 4 variantes: http/https × con/sin www); además se añaden al sitemap `/calculators` y `/calculators/retirement-savings`, que faltaban.
+
+## v1.902
+- Botón de Perfil (sidebar y menú móvil): muestra solo el primer nombre en vez del nombre completo, y añade un icono de flechas a la derecha para indicar que se puede cambiar de perfil.
+- Corregido que Ajustes y Plan quedaban resaltados a la vez en el sidebar al estar en "Mi plan": ahora Ajustes solo se marca activo fuera de /settings/plan.
+
+## v1.897
+- Popup de perfiles: el texto explicativo ahora menciona explícitamente a autónomos y empresas, además de pareja/hijos/padres; cada perfil muestra una etiqueta de tipo (Particular / Autónomo / Empresa), elegible al crear el perfil y editable después junto con el nombre (nuevo botón de renombrar).
+- Corregido que el perfil por defecto se creaba con el prefijo del email como nombre (p. ej. "alex.delaguila83") en vez del nombre real: la creación automática esperaba ya no era necesaria porque se disparaba antes de que el onboarding rellenara el nombre. Se corrige también en base de datos para todas las cuentas ya afectadas.
+- Al pulsar "Nuevo perfil" estando ya en el máximo de perfiles del plan, se muestra directamente el aviso de límite con el botón para comparar planes, en vez de esperar a escribir un nombre.
+
+## v1.895
+- Sidebar y menú móvil: el bloque de usuario se separa en 3 botones — Perfil (abre un popup nuevo con qué es un perfil, el selector entre tus perfiles financieros y alta de uno nuevo), Ajustes (recupera la rueda dentada) y Plan (siempre visible, con el plan actual, enlaza al comparador de planes).
+- El botón de Administración en el sidebar de escritorio abre ahora un menú flotante con acceso directo a sus 7 secciones, en vez de navegar primero al hub. En el menú móvil se mantiene igual que antes.
+
 ## v1.890
 - Corregido que, tras loguear (Google o email), la app se quedaba en blanco hasta un minuto antes de entrar: las consultas de perfiles y ajustes de usuario se disparaban antes de que la sesión del hand-off terminara de resolverse, fallaban sin autenticación y quedaban reintentando con backoff exponencial. Ahora esperan a que la sesión esté confirmada.
 

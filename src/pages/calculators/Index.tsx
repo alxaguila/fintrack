@@ -1,10 +1,10 @@
-import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { ArrowRight } from 'lucide-react'
 import { BRAND } from '@/components/landing/brand'
 import { SiteHeader, SITE_HEADER_SPACE } from '@/components/landing/SiteHeader'
 import { SiteFooter } from '@/components/landing/SiteFooter'
+import { useSeoMeta } from '@/hooks/useSeoMeta'
 
 const CARD_CSS = `
 .calc-idx-card{transition:transform .2s ease,box-shadow .2s ease}
@@ -14,11 +14,13 @@ const CARD_CSS = `
 `
 
 export default function CalculatorsIndex() {
-  const { t, i18n } = useTranslation('calculators')
+  const { t } = useTranslation('calculators')
 
-  useEffect(() => {
-    document.title = t('index.meta.title')
-  }, [t, i18n.language])
+  useSeoMeta({
+    title: t('index.meta.title'),
+    description: t('index.meta.description'),
+    path: '/calculators',
+  })
 
   const cards = [
     {

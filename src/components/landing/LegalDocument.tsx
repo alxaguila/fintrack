@@ -1,8 +1,16 @@
-import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { BRAND } from './brand'
 import { SiteHeader, SITE_HEADER_SPACE } from './SiteHeader'
 import { SiteFooter } from './SiteFooter'
+import { useSeoMeta } from '@/hooks/useSeoMeta'
+
+// Ruta pública de cada docKey, para el canonical (mismo valor que la ruta en App.tsx).
+const LEGAL_DOC_PATHS: Record<string, string> = {
+  avisoLegal: '/aviso-legal',
+  privacidad: '/privacidad',
+  cookies: '/cookies',
+  terminos: '/terminos',
+}
 
 type Block =
   | { p: string }
@@ -33,12 +41,13 @@ type Props = {
  * de contenido (secciones con párrafos/listas/tablas) leído de i18n.
  */
 export function LegalDocument({ docKey }: Props) {
-  const { t, i18n } = useTranslation('legal')
-  const lang = i18n.language.startsWith('es') ? 'es' : 'en'
+  const { t } = useTranslation('legal')
 
-  useEffect(() => {
-    document.title = t(`${docKey}.metaTitle`)
-  }, [t, lang, docKey])
+  useSeoMeta({
+    title: t(`${docKey}.metaTitle`),
+    description: t(`${docKey}.metaDescription`),
+    path: LEGAL_DOC_PATHS[docKey],
+  })
 
   const sections = t(`${docKey}.sections`, { returnObjects: true }) as Section[]
   const courtesyNote = t(`${docKey}.courtesyNote`, { defaultValue: '' })

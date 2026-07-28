@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSearchParams } from 'react-router-dom'
 import {
@@ -11,6 +11,7 @@ import { SliderNumberInput } from '@/components/calculators/SliderNumberInput'
 import { KpiCard, HeroStatCard } from '@/components/calculators/KpiCard'
 import { CalculatorDisclaimer } from '@/components/calculators/CalculatorDisclaimer'
 import { CALCULATOR_CSS } from '@/components/calculators/calculatorStyles'
+import { useSeoMeta } from '@/hooks/useSeoMeta'
 import { formatCurrency } from '@/lib/utils'
 import { formatDecimal, formatThousands, parseThousands } from '@/lib/calculators/format'
 import {
@@ -28,7 +29,7 @@ const inputStep = {
 }
 
 export default function RetirementSavings() {
-  const { t, i18n } = useTranslation('calculators')
+  const { t } = useTranslation('calculators')
   const [searchParams] = useSearchParams()
 
   const [inputs, setInputs] = useState(() =>
@@ -41,9 +42,11 @@ export default function RetirementSavings() {
     }),
   )
 
-  useEffect(() => {
-    document.title = t('retirementSavings.meta.title')
-  }, [t, i18n.language])
+  useSeoMeta({
+    title: t('retirementSavings.meta.title'),
+    description: t('retirementSavings.meta.description'),
+    path: '/calculators/retirement-savings',
+  })
 
   const result = useMemo(() => calculateRetirementSavings(inputs), [inputs])
 

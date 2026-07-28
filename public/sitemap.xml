@@ -1,48 +1,58 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://zafyros.com/</loc>
+    <loc>https://www.zafyros.com/</loc>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://zafyros.com/register</loc>
+    <loc>https://www.zafyros.com/register</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://zafyros.com/calculators/compound-interest</loc>
+    <loc>https://www.zafyros.com/calculators</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://zafyros.com/blog</loc>
+    <loc>https://www.zafyros.com/calculators/compound-interest</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.zafyros.com/calculators/retirement-savings</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.zafyros.com/blog</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://zafyros.com/blog/how-much-to-invest-by-age</loc>
+    <loc>https://www.zafyros.com/blog/how-much-to-invest-by-age</loc>
     <lastmod>2026-07-25</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://zafyros.com/aviso-legal</loc>
+    <loc>https://www.zafyros.com/aviso-legal</loc>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
   <url>
-    <loc>https://zafyros.com/privacidad</loc>
+    <loc>https://www.zafyros.com/privacidad</loc>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
   <url>
-    <loc>https://zafyros.com/cookies</loc>
+    <loc>https://www.zafyros.com/cookies</loc>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
   <url>
-    <loc>https://zafyros.com/terminos</loc>
+    <loc>https://www.zafyros.com/terminos</loc>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>

@@ -1,9 +1,9 @@
-import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { BRAND } from '@/components/landing/brand'
 import { SiteHeader, SITE_HEADER_SPACE } from '@/components/landing/SiteHeader'
 import { SiteFooter } from '@/components/landing/SiteFooter'
 import { sortedBlogPosts } from '@/lib/blog/posts'
+import { useSeoMeta } from '@/hooks/useSeoMeta'
 
 function formatPublishedAt(iso: string, lang: 'es' | 'en') {
   return new Intl.DateTimeFormat(lang === 'es' ? 'es-ES' : 'en-US', { day: 'numeric', month: 'long', year: 'numeric' }).format(new Date(`${iso}T00:00:00`))
@@ -14,9 +14,11 @@ export default function Blog() {
   const lang: 'es' | 'en' = i18n.language.startsWith('en') ? 'en' : 'es'
   const posts = sortedBlogPosts()
 
-  useEffect(() => {
-    document.title = t('index.metaTitle')
-  }, [t, lang])
+  useSeoMeta({
+    title: t('index.metaTitle'),
+    description: t('index.subtitle'),
+    path: '/blog',
+  })
 
   return (
     <div style={{ minHeight: '100dvh', background: BRAND.cream }}>

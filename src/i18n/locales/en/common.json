@@ -1,6 +1,7 @@
 {
   "app_name": "zafyros",
   "app_title": "zafyros — personal finances",
+  "meta_description": "Zafyros organizes your personal finances without connecting to your bank: upload your CSV or Excel statements and track accounts, spending, budgets and net worth instantly.",
   "nav": {
     "home": "Global Position",
     "analysis": "Analysis",
@@ -95,7 +96,15 @@
   "profile": {
     "switch": "Switch profile",
     "new": "New profile",
-    "select": "Select a profile"
+    "select": "Select a profile",
+    "title": "Financial profiles",
+    "explainer": "A profile is a person or business within your zafyros account: you, your partner, a child... or if you're self-employed or run a business, keep those finances separate from your personal ones with their own profile. Each profile has its own accounts and transactions, but shares the same subscription.",
+    "rename": "Rename profile",
+    "type": {
+      "particular": "Personal",
+      "autonomo": "Self-employed",
+      "empresa": "Business"
+    }
   },
   "budgets": {
     "hint_title": "Keep your spending under control with budgets",

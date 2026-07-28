@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSearchParams } from 'react-router-dom'
 import {
@@ -12,6 +12,7 @@ import { SliderNumberInput } from '@/components/calculators/SliderNumberInput'
 import { KpiCard, HeroStatCard } from '@/components/calculators/KpiCard'
 import { CalculatorDisclaimer } from '@/components/calculators/CalculatorDisclaimer'
 import { CALCULATOR_CSS } from '@/components/calculators/calculatorStyles'
+import { useSeoMeta } from '@/hooks/useSeoMeta'
 import { formatCurrency } from '@/lib/utils'
 import { formatDecimal, formatPercent, formatThousands, parseThousands } from '@/lib/calculators/format'
 import {
@@ -29,7 +30,7 @@ const inputStep = {
 }
 
 export default function CompoundInterest() {
-  const { t, i18n } = useTranslation('calculators')
+  const { t } = useTranslation('calculators')
   const [searchParams] = useSearchParams()
 
   const [inputs, setInputs] = useState(() =>
@@ -43,9 +44,11 @@ export default function CompoundInterest() {
   )
   const [showTable, setShowTable] = useState(false)
 
-  useEffect(() => {
-    document.title = t('compoundInterest.meta.title')
-  }, [t, i18n.language])
+  useSeoMeta({
+    title: t('compoundInterest.meta.title'),
+    description: t('compoundInterest.meta.description'),
+    path: '/calculators/compound-interest',
+  })
 
   const result = useMemo(() => calculateCompoundInterest(inputs), [inputs])
   const rows = result.yearlyBreakdown.slice(1)

@@ -1,6 +1,7 @@
 {
   "avisoLegal": {
     "metaTitle": "Legal Notice — zafyros",
+    "metaDescription": "Legal notice for zafyros: owner identification, terms of service and intellectual property.",
     "pageTitle": "Legal Notice",
     "lastUpdated": "Last updated: 24 July 2026",
     "back": "Back to zafyros",
@@ -171,6 +172,7 @@
   },
   "privacidad": {
     "metaTitle": "Privacy Policy — zafyros",
+    "metaDescription": "How zafyros handles your personal and financial data: what we collect, why, and who we share it with.",
     "pageTitle": "Privacy Policy",
     "lastUpdated": "Last updated: 24 July 2026",
     "sections": [
@@ -317,6 +319,7 @@
   },
   "cookies": {
     "metaTitle": "Cookie Policy — zafyros",
+    "metaDescription": "Which cookies zafyros uses, what for, and how you can manage or disable them.",
     "pageTitle": "Cookie Policy",
     "lastUpdated": "Last updated: 24 July 2026",
     "sections": [
@@ -384,6 +387,7 @@
   },
   "terminos": {
     "metaTitle": "Terms and Conditions — zafyros",
+    "metaDescription": "Terms of use for zafyros: registration, subscription plans, user obligations and limitation of liability.",
     "pageTitle": "Terms and Conditions",
     "lastUpdated": "Last updated: 24 July 2026",
     "sections": [

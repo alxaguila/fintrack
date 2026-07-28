@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 Disallow: /app
 
-Sitemap: https://zafyros.com/sitemap.xml
+Sitemap: https://www.zafyros.com/sitemap.xml

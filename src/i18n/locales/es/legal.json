@@ -1,6 +1,7 @@
 {
   "avisoLegal": {
     "metaTitle": "Aviso Legal — zafyros",
+    "metaDescription": "Aviso legal de zafyros: identificación del titular, condiciones de uso del servicio y propiedad intelectual.",
     "pageTitle": "Aviso Legal",
     "lastUpdated": "Última actualización: 24 de julio de 2026",
     "back": "Volver a zafyros",
@@ -171,6 +172,7 @@
   },
   "privacidad": {
     "metaTitle": "Política de Privacidad — zafyros",
+    "metaDescription": "Cómo trata zafyros tus datos personales y financieros: qué recogemos, para qué y con quién lo compartimos.",
     "pageTitle": "Política de Privacidad",
     "lastUpdated": "Última actualización: 24 de julio de 2026",
     "sections": [
@@ -317,6 +319,7 @@
   },
   "cookies": {
     "metaTitle": "Política de Cookies — zafyros",
+    "metaDescription": "Qué cookies usa zafyros, con qué finalidad y cómo puedes gestionarlas o desactivarlas.",
     "pageTitle": "Política de Cookies",
     "lastUpdated": "Última actualización: 24 de julio de 2026",
     "sections": [
@@ -384,6 +387,7 @@
   },
   "terminos": {
     "metaTitle": "Términos y Condiciones — zafyros",
+    "metaDescription": "Condiciones de uso de zafyros: registro, planes de suscripción, obligaciones del usuario y limitación de responsabilidad.",
     "pageTitle": "Términos y Condiciones",
     "lastUpdated": "Última actualización: 24 de julio de 2026",
     "sections": [

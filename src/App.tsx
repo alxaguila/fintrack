@@ -79,11 +79,14 @@ export default function App() {
   const { t } = useTranslation()
   const isAppHost = window.location.hostname === 'app.zafyros.com'
 
-  // El <title> de index.html es estático (fallback para crawlers); aquí lo
-  // reescribimos con el idioma activo. `t` cambia de identidad al cambiar idioma.
+  // Solo para app.zafyros.com (app autenticada, sin SEO): título de pestaña fijo.
+  // En el host público cada página fija su propio título vía useSeoMeta — este
+  // efecto vivía aquí antes sin condición y, al montar la app entera de cero
+  // (carga directa de URL, que es justo lo que hace Googlebot), se ejecutaba
+  // después del efecto de la página hija y le pisaba el título correcto.
   useEffect(() => {
-    document.title = t('app_title')
-  }, [t])
+    if (isAppHost) document.title = t('app_title')
+  }, [t, isAppHost])
 
   return (
     <QueryClientProvider client={queryClient}>

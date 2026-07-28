@@ -1,9 +1,10 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { X } from 'lucide-react'
 import { BRAND } from './brand'
 import { SiteHeader, SITE_HEADER_SPACE } from './SiteHeader'
 import { SiteFooter } from './SiteFooter'
+import { useSeoMeta } from '@/hooks/useSeoMeta'
 import type { BlogPostMeta } from '@/lib/blog/posts'
 
 type AgeBracket = { range: string; contribution: string; contributed: string; capital: string; multiplier: string }
@@ -58,9 +59,31 @@ export function BlogDocument({ meta }: Props) {
   const base = `posts.${meta.slug}`
   const [lightbox, setLightbox] = useState<{ src: string; alt: string } | null>(null)
 
-  useEffect(() => {
-    document.title = t(`${base}.metaTitle`)
-  }, [t, lang, base])
+  const metaTitle = t(`${base}.metaTitle`)
+  const title = t(`${base}.title`)
+  const excerpt = t(`${base}.excerpt`)
+  const readingMinutes = Number(t(`${base}.readingMinutes`))
+  const sections = t(`${base}.sections`, { returnObjects: true }) as Section[]
+  const imageAlts = t(`${base}.imageAlt`, { returnObjects: true, defaultValue: {} }) as Record<string, string>
+
+  const jsonLd = useMemo(() => ({
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    headline: title,
+    description: excerpt,
+    datePublished: meta.publishedAt,
+    image: `https://www.zafyros.com${meta.heroImage}`,
+    author: { '@type': 'Organization', name: 'zafyros' },
+    publisher: { '@type': 'Organization', name: 'zafyros' },
+    mainEntityOfPage: `https://www.zafyros.com/blog/${meta.slug}`,
+  }), [title, excerpt, meta.publishedAt, meta.heroImage, meta.slug])
+
+  useSeoMeta({
+    title: metaTitle,
+    description: excerpt,
+    path: `/blog/${meta.slug}`,
+    jsonLd,
+  })
 
   useEffect(() => {
     if (!lightbox) return
@@ -70,12 +93,6 @@ export function BlogDocument({ meta }: Props) {
     window.addEventListener('keydown', onKeyDown)
     return () => window.removeEventListener('keydown', onKeyDown)
   }, [lightbox])
-
-  const title = t(`${base}.title`)
-  const excerpt = t(`${base}.excerpt`)
-  const readingMinutes = Number(t(`${base}.readingMinutes`))
-  const sections = t(`${base}.sections`, { returnObjects: true }) as Section[]
-  const imageAlts = t(`${base}.imageAlt`, { returnObjects: true, defaultValue: {} }) as Record<string, string>
 
   return (
     <div style={{ minHeight: '100dvh', background: BRAND.cream }}>
