@@ -113,8 +113,8 @@ export function SiteHeader({ visible = true, onLogoClick, onLogin, onRegister, p
           </button>
           <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
             <div className="fts-lang" style={{ display: 'flex', alignItems: 'center', background: 'rgba(255,255,255,.08)', border: '1px solid rgba(255,255,255,.14)', borderRadius: 9, padding: 3 }}>
-              <button onClick={() => setLang('es')} style={{ ...segBase, ...(lang === 'es' ? langOn : langOff) }}>ES</button>
-              <button onClick={() => setLang('en')} style={{ ...segBase, ...(lang === 'en' ? langOn : langOff) }}>EN</button>
+              <button onClick={() => setLang('es')} aria-pressed={lang === 'es'} style={{ ...segBase, ...(lang === 'es' ? langOn : langOff) }}>ES</button>
+              <button onClick={() => setLang('en')} aria-pressed={lang === 'en'} style={{ ...segBase, ...(lang === 'en' ? langOn : langOff) }}>EN</button>
             </div>
             <button onClick={onLogin ?? (() => navigate('/?login=1'))} className="fts-nlink" style={{ font: `500 14px ${BRAND.sans}`, color: '#B7CDDA', background: 'none', border: 'none', cursor: 'pointer' }}>
               {t('nav.login')}

@@ -172,6 +172,7 @@ function computeDonutIcons(data: { value: number; icon: string | null; colorSoli
 export default function Dashboard() {
   const { t } = useTranslation('dashboard')
   const { t: tcommon } = useTranslation('common')
+  const { t: tcat } = useTranslation('categories')
   const { activeProfile } = useProfile()
   const navigate = useNavigate()
   const isMobile = useIsMobile()
@@ -338,6 +339,26 @@ export default function Dashboard() {
   // (la mayor llena su carril y el resto va a proporción de ella).
   const maxRowTotal = breakdown.rows[0]?.total ?? 0
 
+  // Igual que `breakdown`, pero agregado por GRUPO en vez de por subcategoría —
+  // solo para el donut, que con un color por subcategoría heredado del grupo
+  // repetía tonos idénticos entre quesitos. La lista de debajo sigue usando
+  // `breakdown` (subcategoría) tal cual.
+  const groupBreakdown = useMemo(() => {
+    const map = new Map<string, { slug: string | null; icon: string | null; color: string; total: number }>()
+    let total = 0
+    for (const row of breakdownRows) {
+      if (row.transaction_type !== breakdownType) continue
+      const cat = row.category_id ? categoryById.get(row.category_id) : undefined
+      const grp = cat?.group
+      const k = grp?.id ?? '__uncat__'
+      const e = map.get(k) ?? { slug: grp?.slug ?? null, icon: grp?.icon ?? null, color: grp?.color ?? '#94a3b8', total: 0 }
+      e.total += row.total_abs
+      total += row.total_abs
+      map.set(k, e)
+    }
+    return { rows: [...map.values()].sort((a, b) => b.total - a.total), total }
+  }, [breakdownRows, breakdownType, categoryById])
+
   const prevByCat = useMemo(() => {
     const m = new Map<string, number>()
     for (const row of prevBreakdownRows) {
@@ -349,17 +370,17 @@ export default function Dashboard() {
   }, [prevBreakdownRows, breakdownType])
 
   const donutData = useMemo(() => {
-    const total = breakdown.total
+    const total = groupBreakdown.total
     const big: { value: number; color: string; colorSolid: string; name: string; icon: string | null; pct: number }[] = []
     let otros = 0
-    for (const r of breakdown.rows) {
+    for (const r of groupBreakdown.rows) {
       const pct = total > 0 ? (r.total / total) * 100 : 0
-      if (pct >= 5) big.push({ value: r.total, color: pastel(r.color), colorSolid: r.color, name: r.slug ? categoryLabel(r.slug) : t('no_category'), icon: r.icon, pct })
+      if (pct >= 5) big.push({ value: r.total, color: pastel(r.color), colorSolid: r.color, name: r.slug ? tcat(`category_group.${r.slug}`) : t('no_category'), icon: r.icon, pct })
       else otros += r.total
     }
     if (otros > 0) big.push({ value: otros, color: '#C2C8D0', colorSolid: '#94a3b8', name: t('donut_other'), icon: null, pct: total > 0 ? (otros / total) * 100 : 0 })
     return big
-  }, [breakdown, t])
+  }, [groupBreakdown, t, tcat])
 
   const donutIcons = useMemo(() => computeDonutIcons(donutData, DCX, DCY, D_ICON_R), [donutData])
   const donutIconsMobile = useMemo(() => computeDonutIcons(donutData, DCX_M, DCY_M, D_ICON_R_M), [donutData])

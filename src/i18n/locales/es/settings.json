@@ -165,6 +165,8 @@
     "no_results": "Sin resultados",
     "save": "Guardar cambios",
     "saved": "Datos guardados",
+    "edit": "Editar datos",
+    "not_set": "No indicado",
     "gender_options": {
       "male": "Hombre",
       "female": "Mujer",

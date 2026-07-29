@@ -1,17 +1,24 @@
 import { useState } from 'react'
-import { NavLink, useLocation } from 'react-router-dom'
-import { Home, BarChart3, ArrowLeftRight, Upload, Wallet, Tags, FileClock, Shield, ShieldCheck, Sparkles, Calculator } from 'lucide-react'
+import { NavLink, Link, useLocation } from 'react-router-dom'
+import {
+  Home, BarChart3, ArrowLeftRight, Upload, Wallet, Tags, FileClock, Shield, ShieldCheck, Calculator,
+  Settings, CreditCard, Landmark, Users, Vote, Store, MessageSquare, ChevronsUpDown,
+} from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { cn } from '@/lib/utils'
 import { appPath } from '@/lib/appUrl'
 import { APP_VERSION } from '@/lib/version'
 import { useIsAdmin } from '@/hooks/useIsAdmin'
 import { useUnreviewedBankCount } from '@/hooks/useAdminBankEntities'
+import { useUnreadFeedbackCount } from '@/hooks/useAdminFeedback'
 import { useUserSettings } from '@/hooks/useUserSettings'
 import { useBudgetsGate } from '@/hooks/useBudgetsGate'
 import { Logo } from '@/components/Logo'
-import { UpgradePlanDialog } from '@/components/plan/UpgradePlanDialog'
+import { ProfileDialog } from '@/components/layout/ProfileDialog'
 import { UpgradeHintDialog } from '@/components/plan/UpgradeHintDialog'
+import {
+  DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem,
+} from '@/components/ui/dropdown-menu'
 
 const navItemsTop = [
   { to: appPath(),             icon: Home,           label: 'nav.home' },
@@ -37,29 +44,61 @@ function ActiveBar() {
   return <span className="absolute bottom-[9px] left-0 top-[9px] w-[3px] rounded-[3px] bg-[var(--brand-accent)]" />
 }
 
-// Bloque de usuario (sustituye al botón "Ajustes"): avatar con inicial, nombre
-// y plan de suscripción. Mismo destino y comportamiento que Ajustes tenía.
-function UserPlanNavItem() {
+// Botón "Perfil": avatar + nombre de la cuenta (no del perfil financiero
+// activo — son cosas distintas y deben distinguirse). Abre el popup de
+// perfiles (ProfileDialog) en vez de navegar — ahí se explica qué es un
+// perfil, se listan los existentes y se puede crear uno nuevo.
+function ProfileNavItem({ onOpen }: { onOpen: () => void }) {
   const { t } = useTranslation('common')
   const { data: settings } = useUserSettings()
-  const name = settings?.first_name?.trim() || ''
-  const initial = (name.charAt(0) || 'U').toUpperCase()
-  const planKey = settings?.plan ?? 'free'
+  const fallbackName = settings?.first_name?.trim() || t('sidebar.user_fallback')
+  // Botón compacto: solo el primer nombre (el popup sí muestra el nombre completo).
+  const displayName = fallbackName.trim().split(/\s+/)[0]
 
   return (
-    <NavLink to={appPath('/settings')} className="block">
+    <button type="button" onClick={onOpen} className="block w-full text-left">
+      <span className={itemClass(false)}>
+        <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[var(--brand-primary-3)]/15 text-[13px] font-semibold text-[var(--brand-primary-3)]">
+          {(fallbackName.charAt(0) || 'U').toUpperCase()}
+        </span>
+        <span className="min-w-0 flex-1 truncate text-[#E7F0F5]">{displayName}</span>
+        <ChevronsUpDown className="h-3.5 w-3.5 shrink-0 text-[var(--side-text-muted)]" strokeWidth={1.7} />
+      </span>
+    </button>
+  )
+}
+
+// Botón "Ajustes": recupera la rueda dentada, va a /settings. Activo en
+// cualquier subruta de settings EXCEPTO /settings/plan, que tiene su propio
+// ítem de sidebar y no debe marcar Ajustes como activo a la vez.
+function SettingsNavItem() {
+  const { t } = useTranslation('common')
+  const location = useLocation()
+  const isActive = location.pathname.startsWith(appPath('/settings')) && !location.pathname.startsWith(appPath('/settings/plan'))
+  return (
+    <Link to={appPath('/settings')} className="block">
+      <span className={itemClass(isActive)}>
+        {isActive && <ActiveBar />}
+        <Settings className="h-[18px] w-[18px] shrink-0" strokeWidth={1.7} />
+        {t('nav.settings')}
+      </span>
+    </Link>
+  )
+}
+
+// Botón "Plan": muestra el plan actual (FREE/PRO/PREMIUM) para los 3 planes,
+// va a /settings/plan (que ya tiene el comparador y el upgrade).
+function PlanNavItem() {
+  const { t } = useTranslation('common')
+  const { data: settings } = useUserSettings()
+  const planKey = settings?.plan ?? 'free'
+  return (
+    <NavLink to={appPath('/settings/plan')} className="block">
       {({ isActive }) => (
         <span className={itemClass(isActive)}>
           {isActive && <ActiveBar />}
-          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[var(--brand-primary-3)]/15 text-[13px] font-semibold text-[var(--brand-primary-3)]">
-            {initial}
-          </span>
-          <span className="min-w-0 flex-1">
-            <span className="block truncate leading-tight text-[#E7F0F5]">{name || t('sidebar.user_fallback')}</span>
-            <span className="block truncate text-[11px] leading-tight text-[var(--side-text-muted)]">
-              {t('sidebar.plan_label', { plan: t(`plan.name.${planKey}`) })}
-            </span>
-          </span>
+          <CreditCard className="h-[18px] w-[18px] shrink-0" strokeWidth={1.7} />
+          {t('sidebar.plan_label', { plan: t(`plan.name.${planKey}`) })}
         </span>
       )}
     </NavLink>
@@ -108,27 +147,51 @@ function BudgetsNavItem() {
   )
 }
 
-// Botón "Mejorar plan": solo visible para FREE (PRO/PREMIUM ya tienen lo mejor
-// disponible o aún no hay pasarela de pago para ir más allá). Abre el popup con
-// las mismas tarjetas de la landing.
-function UpgradePlanNavItem() {
+// Menú de administración: en vez de navegar al hub /admin, el clic abre un
+// flotante con acceso directo a cada sección (menos clics para el admin).
+// Solo en escritorio — en el drawer móvil no aporta nada (ya es un flotante).
+function AdminMenu() {
   const { t } = useTranslation('common')
-  const { data: settings } = useUserSettings()
-  const [open, setOpen] = useState(false)
-  const isFree = (settings?.plan ?? 'free') === 'free'
+  const { t: tAdmin } = useTranslation('admin')
+  const location = useLocation()
+  const { data: pendingEntities = 0 } = useUnreviewedBankCount(true)
+  const { data: unreadFeedback = 0 } = useUnreadFeedbackCount(true)
+  const isActive = location.pathname.startsWith(appPath('/admin'))
 
-  if (!isFree) return null
+  const items = [
+    { to: appPath('/admin/bancos'), icon: Landmark, label: tAdmin('hub.banks'), dot: pendingEntities > 0 },
+    { to: appPath('/admin/categorias'), icon: Tags, label: tAdmin('hub.categories') },
+    { to: appPath('/admin/usuarios'), icon: Users, label: tAdmin('hub.users') },
+    { to: appPath('/admin/estadisticas'), icon: BarChart3, label: tAdmin('hub.stats') },
+    { to: appPath('/admin/reglas'), icon: Vote, label: tAdmin('hub.rules') },
+    { to: appPath('/admin/comercios'), icon: Store, label: tAdmin('hub.merchants') },
+    { to: appPath('/admin/feedback'), icon: MessageSquare, label: tAdmin('hub.feedback'), dot: unreadFeedback > 0 },
+  ]
 
   return (
-    <>
-      <button type="button" onClick={() => setOpen(true)} className="block w-full text-left">
-        <span className={cn(itemClass(false), 'text-[var(--brand-accent)] hover:text-[#FF9784]')}>
-          <Sparkles className="h-[18px] w-[18px] shrink-0" strokeWidth={1.7} />
-          {t('sidebar.upgrade_plan')}
-        </span>
-      </button>
-      <UpgradePlanDialog open={open} onOpenChange={setOpen} />
-    </>
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <button type="button" className={cn(itemClass(isActive), 'w-full')}>
+          {isActive && <ActiveBar />}
+          <Shield className="h-[18px] w-[18px] shrink-0" strokeWidth={1.7} />
+          {t('nav.admin')}
+          {(pendingEntities > 0 || unreadFeedback > 0) && (
+            <span className="ml-auto h-2 w-2 shrink-0 rounded-full bg-[var(--brand-accent)]" aria-label={t('nav.admin_pending')} />
+          )}
+        </button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent side="right" align="end" className="w-56">
+        {items.map(({ to, icon: Icon, label, dot }) => (
+          <DropdownMenuItem key={to} asChild>
+            <Link to={to} className="flex items-center gap-2.5">
+              <Icon className="h-4 w-4 shrink-0" />
+              <span className="flex-1 truncate">{label}</span>
+              {dot && <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--brand-accent)]" />}
+            </Link>
+          </DropdownMenuItem>
+        ))}
+      </DropdownMenuContent>
+    </DropdownMenu>
   )
 }
 
@@ -137,7 +200,7 @@ export function Sidebar() {
   const location = useLocation()
   const onTransactions = location.pathname.startsWith(appPath('/transactions'))
   const { isAdmin } = useIsAdmin()
-  const { data: pendingEntities = 0 } = useUnreviewedBankCount(isAdmin)
+  const [profileDialogOpen, setProfileDialogOpen] = useState(false)
 
   return (
     <aside className="relative hidden h-screen w-[242px] flex-col overflow-hidden bg-[var(--brand-ink)] px-[18px] pb-[22px] pt-[26px] text-[var(--side-text)] md:flex">
@@ -228,27 +291,17 @@ export function Sidebar() {
             {t('nav.import')}
           </NavLink>
 
-          <UserPlanNavItem />
-          <UpgradePlanNavItem />
+          <ProfileNavItem onOpen={() => setProfileDialogOpen(true)} />
+          <SettingsNavItem />
+          <PlanNavItem />
 
-          {/* Panel de administración — solo visible para admins. */}
-          {isAdmin && (
-            <NavLink to={appPath('/admin')} className="block">
-              {({ isActive }) => (
-                <span className={itemClass(isActive)}>
-                  {isActive && <ActiveBar />}
-                  <Shield className="h-[18px] w-[18px] shrink-0" strokeWidth={1.7} />
-                  {t('nav.admin')}
-                  {pendingEntities > 0 && (
-                    <span className="ml-auto h-2 w-2 shrink-0 rounded-full bg-[var(--brand-accent)]" aria-label={t('nav.admin_pending')} />
-                  )}
-                </span>
-              )}
-            </NavLink>
-          )}
+          {/* Menú de administración — solo visible para admins. */}
+          {isAdmin && <AdminMenu />}
         </div>
       </div>
       </div>
+
+      <ProfileDialog open={profileDialogOpen} onOpenChange={setProfileDialogOpen} />
     </aside>
   )
 }

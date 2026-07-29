@@ -2,7 +2,6 @@
   "nav": {
     "product": "Producto",
     "security": "Seguridad",
-    "pricing": "Precios",
     "login": "Entrar",
     "cta": "Empieza gratis",
     "ctaSticky": "Regístrate"
@@ -12,9 +11,9 @@
     "line1": "Todas tus cuentas,",
     "line2": "sin dar las claves",
     "emph": "de tu banco.",
-    "sub": "Importa el extracto CSV o Excel que ya te da tu banca online y zafyros organiza al instante todos tus movimientos, categorías, patrimonio y presupuestos — sin conectar tu banco ni ceder acceso a nadie.",
+    "sub": "Sube el CSV o Excel que ya te da tu banco y en segundos tienes tu dinero ordenado: cuentas, gastos y patrimonio en un mismo sitio — sin conectar tu banco ni dar tus claves a nadie.",
     "cta": "Empieza gratis",
-    "note": "Gratis para siempre en el plan Free · sin tarjeta",
+    "note": "Gratis para empezar · sin tarjeta",
     "trust1": "Sin claves bancarias",
     "trust2": "Cifrado de extremo a extremo",
     "trust3": "Bórralo todo en 1 clic"
@@ -33,17 +32,17 @@
     "newLabel": "Patrimonio total",
     "newStatus": "Actualizado hace 2 minutos"
   },
-  "features": {
-    "title": "Conoce zafyros.",
-    "sub": "Una cuenta clara de tu dinero que se pone al día sola cada vez que subes un extracto.",
-    "f1title": "Sube tu CSV y listo",
-    "f1body": "Arrastra el extracto que exportas de tu banca online. zafyros lo lee, ordena y clasifica al instante.",
-    "uploadCta": "Empieza gratis para subir tu extracto",
-    "uploadFormats": "CSV · XLSX · OFX — de cualquier banco",
-    "f2title": "Nunca pedimos tus claves",
-    "f2body": "Nosotros no conectamos con tu banco ni con terceros: sin credenciales que ceder, sin dudas de qué hacen con ellas.",
-    "f3title": "Clasificación automática",
-    "f3body": "Diccionario y reglas propias etiquetan cada movimiento por ti. Tú solo revisas."
+  "tour": {
+    "title": "Así es zafyros por dentro.",
+    "s1title": "Todo tu patrimonio, en un único sitio",
+    "s1body": "Sube los extractos de tus cuentas y tarjetas y zafyros los agrega en una Posición Global clara: cuánto tienes en total y cómo evoluciona mes a mes, sin conectar tu banco.",
+    "s1alt": "Captura de la pantalla Posición Global de zafyros: patrimonio total agregado de varias cuentas y su evolución en el tiempo.",
+    "s2title": "Entiende en qué se va tu dinero",
+    "s2body": "El Análisis te muestra ingresos, gastos y balance del mes de un vistazo, con la evolución y el desglose por categoría — para tomar mejores decisiones sin revisar movimiento a movimiento.",
+    "s2alt": "Captura de la pantalla Análisis de zafyros: ingresos y gastos del mes, evolución mensual y distribución del gasto por categoría.",
+    "s3title": "Cada movimiento, clasificado solo",
+    "s3body": "Tus reglas propias y un sistema que ya reconoce miles de comercios clasifican cada movimiento que importas. Tú corriges lo puntual, no clasificas a mano.",
+    "s3alt": "Captura de la pantalla Movimientos de zafyros, con las transacciones ya clasificadas por categoría de forma automática."
   },
   "steps": {
     "eyebrow": "Tres pasos",
@@ -84,7 +83,7 @@
     "free": {
       "name": "FREE",
       "desc": "Para empezar a ordenar tu dinero",
-      "cta": "Empezar gratis",
+      "cta": "Empieza gratis",
       "inherits": "Incluye:",
       "features": [
         "1 perfil financiero",
@@ -146,7 +145,7 @@
     "copy": "© 2026 zafyros · Tú subes, tú controlas."
   },
   "mock": {
-    "greeting": "Buenos días, Marta",
+    "greeting": "Buenos días, Toni",
     "subtitle": "Esto es lo que pasó con tu dinero en junio 2026.",
     "search": "Buscar movimientos",
     "month": "Junio 2026",

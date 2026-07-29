@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Pencil, Trash2, AlertTriangle, FilterX, Filter, Loader2 } from 'lucide-react'
+import { Pencil, AlertTriangle, FilterX, Filter, Loader2 } from 'lucide-react'
 import { useProfile } from '@/contexts/ProfileContext'
 import { useAccounts } from '@/hooks/useAccounts'
 import { useBankEntities } from '@/hooks/useBankEntities'
@@ -91,12 +91,10 @@ function BatchCard({
   batch,
   entityLogoByName,
   onEdit,
-  onDelete,
 }: {
   batch: ImportBatchRow
   entityLogoByName: Map<string, string | null>
   onEdit: () => void
-  onDelete: () => void
 }) {
   const { t } = useTranslation('history')
   const { t: tc } = useTranslation('common')
@@ -105,27 +103,17 @@ function BatchCard({
   const TypeIcon = meta?.icon
 
   return (
-    <div className="rounded-2xl border bg-background p-3">
+    <div className="py-3">
       <div className="flex items-start justify-between gap-2">
         <EntityCell account={batch.account} entityLogoByName={entityLogoByName} />
-        <div className="flex shrink-0 gap-1">
-          <button
-            type="button"
-            aria-label={tc('actions.edit')}
-            onClick={onEdit}
-            className="rounded-lg p-1.5 text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-700"
-          >
-            <Pencil className="h-4 w-4" />
-          </button>
-          <button
-            type="button"
-            aria-label={tc('actions.delete')}
-            onClick={onDelete}
-            className="rounded-lg p-1.5 text-[#CB6391] transition-colors hover:bg-rose-50 hover:text-[#b0466f]"
-          >
-            <Trash2 className="h-4 w-4" />
-          </button>
-        </div>
+        <button
+          type="button"
+          aria-label={tc('actions.edit')}
+          onClick={onEdit}
+          className="shrink-0 rounded-lg p-1.5 text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-700"
+        >
+          <Pencil className="h-4 w-4" />
+        </button>
       </div>
 
       <div className="mt-2 flex flex-wrap items-center gap-2">
@@ -290,6 +278,14 @@ export default function History() {
     setDeleting(batch)
     setDeleteStep('first')
   }
+  // Borrar desde dentro de "editar": cierra el diálogo de reasignar y abre el
+  // flujo de borrado (2 pasos) ya existente para el mismo lote.
+  function openDeleteFromEdit() {
+    if (!editing) return
+    const batch = editing
+    setEditing(null)
+    openDelete(batch)
+  }
   function closeDelete() {
     setDeleting(null)
     setDeleteStep('first')
@@ -430,10 +426,10 @@ export default function History() {
       {/* Contenido con scroll propio */}
       <div className={isMobile ? 'mt-6 flex-1 min-h-0 overflow-auto no-scrollbar' : 'mt-6 flex-1 min-h-0 overflow-auto rounded-2xl border bg-card'}>
         {isMobile ? (
-          <div className="space-y-3">
+          <div className="divide-y divide-border">
             {isLoading
               ? Array.from({ length: 5 }).map((_, i) => (
-                  <div key={i} className="space-y-2 rounded-2xl border bg-background p-3">
+                  <div key={i} className="space-y-2 py-3">
                     <div className="flex items-center gap-2">
                       <Skeleton className="h-6 w-6 rounded-full" />
                       <Skeleton className="h-4 w-32" />
@@ -448,7 +444,6 @@ export default function History() {
                     batch={b}
                     entityLogoByName={entityLogoByName}
                     onEdit={() => openEdit(b)}
-                    onDelete={() => openDelete(b)}
                   />
                 ))}
             {!isLoading && filtered.length === 0 && (
@@ -533,7 +528,7 @@ export default function History() {
                         </td>
                         <td className="px-4 py-3 text-center tabular-nums">{b.rows_imported}</td>
                         <td className="px-4 py-3">
-                          <div className="flex justify-end gap-1">
+                          <div className="flex justify-end">
                             <button
                               type="button"
                               aria-label={tc('actions.edit')}
@@ -541,14 +536,6 @@ export default function History() {
                               className="rounded-lg p-1.5 text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-700"
                             >
                               <Pencil className="h-4 w-4" />
-                            </button>
-                            <button
-                              type="button"
-                              aria-label={tc('actions.delete')}
-                              onClick={() => openDelete(b)}
-                              className="rounded-lg p-1.5 text-[#CB6391] transition-colors hover:bg-rose-50 hover:text-[#b0466f]"
-                            >
-                              <Trash2 className="h-4 w-4" />
                             </button>
                           </div>
                         </td>
@@ -604,14 +591,24 @@ export default function History() {
             )}
           </div>
 
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setEditing(null)} disabled={busy}>
-              {tc('actions.cancel')}
-            </Button>
-            <Button onClick={confirmReassign} disabled={busy || !targetAccountId}>
-              {reassign.isPending && <Loader2 className="h-4 w-4 animate-spin" />}
-              {reassign.isPending ? t('reassign_dialog.working') : t('reassign_dialog.confirm')}
-            </Button>
+          <DialogFooter className="sm:justify-between sm:items-center gap-2">
+            <button
+              type="button"
+              onClick={openDeleteFromEdit}
+              disabled={busy}
+              className="text-sm text-muted-foreground underline underline-offset-4 hover:text-[#CB6391] disabled:opacity-50 disabled:no-underline"
+            >
+              {t('reassign_dialog.delete_link')}
+            </button>
+            <div className="flex gap-2">
+              <Button variant="outline" onClick={() => setEditing(null)} disabled={busy}>
+                {tc('actions.cancel')}
+              </Button>
+              <Button onClick={confirmReassign} disabled={busy || !targetAccountId}>
+                {reassign.isPending && <Loader2 className="h-4 w-4 animate-spin" />}
+                {reassign.isPending ? t('reassign_dialog.working') : t('reassign_dialog.confirm')}
+              </Button>
+            </div>
           </DialogFooter>
         </DialogContent>
       </Dialog>

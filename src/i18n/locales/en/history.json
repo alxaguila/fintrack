@@ -36,7 +36,8 @@
     "confirm": "Reassign",
     "working": "Reassigning…",
     "done_toast": "Upload reassigned",
-    "duplicate_error": "The target account already contains these movements. Nothing was moved."
+    "duplicate_error": "The target account already contains these movements. Nothing was moved.",
+    "delete_link": "Delete upload"
   },
   "delete_dialog": {
     "title": "Delete upload",

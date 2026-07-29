@@ -20,7 +20,7 @@ export function useProfiles(options?: { enabled?: boolean }) {
 export function useCreateProfile() {
   const qc = useQueryClient()
   return useMutation({
-    mutationFn: async (values: Pick<FinancialProfile, 'name' | 'avatar_color' | 'is_default'>) => {
+    mutationFn: async (values: Pick<FinancialProfile, 'name' | 'avatar_color' | 'is_default'> & { type?: FinancialProfile['type'] }) => {
       const { data: { user } } = await supabase.auth.getUser()
       if (!user) throw new Error('Not authenticated')
       const { data, error } = await supabase

@@ -69,6 +69,8 @@ export type PlanUsage = {
   rules_count: number
 }
 
+export type FinancialProfileType = 'particular' | 'autonomo' | 'empresa'
+
 export type FinancialProfile = {
   id: string
   user_id: string
@@ -76,6 +78,7 @@ export type FinancialProfile = {
   avatar_color: string
   is_default: boolean
   sort_order: number
+  type: FinancialProfileType
   created_at: string
   updated_at: string
 }
@@ -238,7 +241,8 @@ export type AdminStatsOverview = {
   manual_transactions: number
 }
 
-export type AdminSignupRow = { month: string; cnt: number }
+// Forma compartida por admin_signups_by_granularity y admin_logins_by_granularity (migración 046).
+export type AdminBucketRow = { bucket: string; cnt: number }
 export type AdminDemographicRow = { dimension: string; bucket: string; cnt: number }
 // Evolución de usuarios por plan a lo largo del tiempo (migración 024, RPC admin_plan_evolution).
 export type AdminPlanEvolutionRow = { bucket: string; plan: PlanType; cnt: number }
@@ -436,7 +440,7 @@ export type Database = {
   public: {
     Tables: {
       user_settings: { Row: UserSettings; Insert: Partial<UserSettings>; Update: Partial<UserSettings>; Relationships: [] }
-      financial_profiles: { Row: FinancialProfile; Insert: Omit<FinancialProfile, 'id' | 'created_at' | 'updated_at' | 'sort_order'> & { sort_order?: number }; Update: Partial<FinancialProfile>; Relationships: [] }
+      financial_profiles: { Row: FinancialProfile; Insert: Omit<FinancialProfile, 'id' | 'created_at' | 'updated_at' | 'sort_order' | 'type'> & { sort_order?: number; type?: FinancialProfileType }; Update: Partial<FinancialProfile>; Relationships: [] }
       accounts: { Row: Account; Insert: Omit<Account, 'id' | 'created_at' | 'updated_at' | 'logo_url' | 'opening_balance'> & { logo_url?: string | null; opening_balance?: number | null }; Update: Partial<Account>; Relationships: [] }
       bank_entities: { Row: BankEntity; Insert: Omit<BankEntity, 'id' | 'created_at' | 'sort_order' | 'reviewed' | 'created_by'> & { sort_order?: number; reviewed?: boolean; created_by?: string | null }; Update: Partial<BankEntity>; Relationships: [] }
       merchants: { Row: Merchant; Insert: Omit<Merchant, 'id' | 'created_at' | 'patterns'>; Update: Partial<Omit<Merchant, 'patterns'>>; Relationships: [] }
@@ -472,7 +476,8 @@ export type Database = {
       admin_user_category_breakdown: { Args: { p_user_id: string }; Returns: AdminCategoryBreakdownRow[] }
       admin_user_monthly: { Args: { p_user_id: string }; Returns: AdminMonthlyRow[] }
       admin_stats_overview: { Args: Record<string, never>; Returns: AdminStatsOverview[] }
-      admin_signups_by_month: { Args: Record<string, never>; Returns: AdminSignupRow[] }
+      admin_signups_by_granularity: { Args: { p_granularity: string }; Returns: AdminBucketRow[] }
+      admin_logins_by_granularity: { Args: { p_granularity: string }; Returns: AdminBucketRow[] }
       admin_demographics: { Args: Record<string, never>; Returns: AdminDemographicRow[] }
       admin_plan_evolution: { Args: { p_granularity: string }; Returns: AdminPlanEvolutionRow[] }
       get_plan_usage: { Args: Record<string, never>; Returns: PlanUsage[] }

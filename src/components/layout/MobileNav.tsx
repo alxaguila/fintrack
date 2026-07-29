@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { NavLink, useLocation, useSearchParams } from 'react-router-dom'
-import { Home, BarChart3, ArrowLeftRight, Wallet, Tags, FileClock, Upload, Shield, X, Calculator, ChevronDown } from 'lucide-react'
+import { Home, BarChart3, ArrowLeftRight, Wallet, Tags, FileClock, Upload, Shield, X, Calculator, ChevronDown, ChevronsUpDown, Settings, CreditCard } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { cn } from '@/lib/utils'
@@ -13,6 +13,7 @@ import { useUserSettings } from '@/hooks/useUserSettings'
 import { useBudgetsGate } from '@/hooks/useBudgetsGate'
 import { useHasStatements } from '@/hooks/useImportBatches'
 import { useProfile } from '@/contexts/ProfileContext'
+import { ProfileDialog } from '@/components/layout/ProfileDialog'
 import { UpgradeHintDialog } from '@/components/plan/UpgradeHintDialog'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { Logo } from '@/components/Logo'
@@ -143,6 +144,7 @@ export function MobileBottomNav() {
   const userInitial = (userName.charAt(0) || 'U').toUpperCase()
   const planKey = settings?.plan ?? 'free'
   const onTransactions = location.pathname.startsWith(appPath('/transactions'))
+  const [profileDialogOpen, setProfileDialogOpen] = useState(false)
 
   // Cerrar el drawer al navegar.
   useEffect(() => { setOpen(false) }, [location.pathname])
@@ -250,16 +252,29 @@ export function MobileBottomNav() {
                 {t('nav.import')}
               </NavLink>
 
-              <NavLink to={appPath('/settings')} className={({ isActive }) => drawerItemClass(isActive)}>
+              <button type="button" onClick={() => { setOpen(false); setProfileDialogOpen(true) }} className={cn(drawerItemClass(false), 'w-full text-left')}>
                 <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[var(--brand-primary-3)]/15 text-[13px] font-semibold text-[var(--brand-primary-3)]">
                   {userInitial}
                 </span>
-                <span className="min-w-0 flex-1">
-                  <span className="block truncate leading-tight text-[#E7F0F5]">{userName || t('sidebar.user_fallback')}</span>
-                  <span className="block truncate text-[11px] leading-tight text-[var(--side-text-muted)]">
-                    {t('sidebar.plan_label', { plan: t(`plan.name.${planKey}`) })}
-                  </span>
+                <span className="min-w-0 flex-1 truncate text-[#E7F0F5]">
+                  {(userName || t('sidebar.user_fallback')).trim().split(/\s+/)[0]}
                 </span>
+                <ChevronsUpDown className="h-3.5 w-3.5 shrink-0 text-[var(--side-text-muted)]" strokeWidth={1.7} />
+              </button>
+
+              <NavLink
+                to={appPath('/settings')}
+                className={() =>
+                  drawerItemClass(location.pathname.startsWith(appPath('/settings')) && !location.pathname.startsWith(appPath('/settings/plan')))
+                }
+              >
+                <Settings className="h-[18px] w-[18px] shrink-0" strokeWidth={1.7} />
+                {t('nav.settings')}
+              </NavLink>
+
+              <NavLink to={appPath('/settings/plan')} className={({ isActive }) => drawerItemClass(isActive)}>
+                <CreditCard className="h-[18px] w-[18px] shrink-0" strokeWidth={1.7} />
+                {t('sidebar.plan_label', { plan: t(`plan.name.${planKey}`) })}
               </NavLink>
 
               {isAdmin && (
@@ -275,6 +290,8 @@ export function MobileBottomNav() {
           </div>
         </div>
       )}
+
+      <ProfileDialog open={profileDialogOpen} onOpenChange={setProfileDialogOpen} />
     </>
   )
 }

@@ -2,12 +2,12 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { supabase } from '@/lib/supabase'
 import type {
   AdminUserRow, AdminCategoryBreakdownRow, AdminMonthlyRow,
-  AdminStatsOverview, AdminSignupRow, AdminDemographicRow, AdminPlanEvolutionRow,
+  AdminStatsOverview, AdminBucketRow, AdminDemographicRow, AdminPlanEvolutionRow,
   PlanType,
 } from '@/lib/database.types'
 
-/** Granularidad de la gráfica de evolución de usuarios por plan (RPC admin_plan_evolution). */
-export type PlanEvolutionGranularity = 'day' | 'week' | 'month'
+/** Granularidad compartida por las gráficas de evolución (plan / altas / conexiones). */
+export type EvolutionGranularity = 'day' | 'week' | 'month'
 
 /** Listado de usuarios (RPC admin-only). */
 export function useAdminUsers() {
@@ -43,23 +43,20 @@ export function useAdminUserActivity(userId: string | null) {
   })
 }
 
-/** KPIs globales: overview + altas por mes + demografía. */
+/** KPIs globales: overview + demografía (altas/conexiones van en sus propios hooks, con granularidad). */
 export function useAdminStats() {
   return useQuery({
     queryKey: ['admin', 'stats'],
     staleTime: 1000 * 60,
     queryFn: async () => {
-      const [overview, signups, demo] = await Promise.all([
+      const [overview, demo] = await Promise.all([
         supabase.rpc('admin_stats_overview'),
-        supabase.rpc('admin_signups_by_month'),
         supabase.rpc('admin_demographics'),
       ])
       if (overview.error) throw overview.error
-      if (signups.error) throw signups.error
       if (demo.error) throw demo.error
       return {
         overview: ((overview.data ?? [])[0] ?? null) as AdminStatsOverview | null,
-        signups: (signups.data ?? []) as AdminSignupRow[],
         demographics: (demo.data ?? []) as AdminDemographicRow[],
       }
     },
@@ -67,7 +64,7 @@ export function useAdminStats() {
 }
 
 /** Evolución de usuarios por plan (RPC admin-only), con granularidad día/semana/mes. */
-export function useAdminPlanEvolution(granularity: PlanEvolutionGranularity) {
+export function useAdminPlanEvolution(granularity: EvolutionGranularity) {
   return useQuery({
     queryKey: ['admin', 'plan_evolution', granularity],
     staleTime: 1000 * 60,
@@ -75,6 +72,36 @@ export function useAdminPlanEvolution(granularity: PlanEvolutionGranularity) {
       const { data, error } = await supabase.rpc('admin_plan_evolution', { p_granularity: granularity })
       if (error) throw error
       return (data ?? []) as AdminPlanEvolutionRow[]
+    },
+  })
+}
+
+/** Altas de usuarios (RPC admin-only), con granularidad día/semana/mes. */
+export function useAdminSignupsEvolution(granularity: EvolutionGranularity) {
+  return useQuery({
+    queryKey: ['admin', 'signups_evolution', granularity],
+    staleTime: 1000 * 60,
+    queryFn: async () => {
+      const { data, error } = await supabase.rpc('admin_signups_by_granularity', { p_granularity: granularity })
+      if (error) throw error
+      return (data ?? []) as AdminBucketRow[]
+    },
+  })
+}
+
+/**
+ * Conexiones de usuarios (RPC admin-only), con granularidad día/semana/mes.
+ * Solo cuenta logins registrados a partir de la migración 046 (login_events)
+ * — no hay histórico previo, auth.users solo guardaba el último login.
+ */
+export function useAdminLoginsEvolution(granularity: EvolutionGranularity) {
+  return useQuery({
+    queryKey: ['admin', 'logins_evolution', granularity],
+    staleTime: 1000 * 60,
+    queryFn: async () => {
+      const { data, error } = await supabase.rpc('admin_logins_by_granularity', { p_granularity: granularity })
+      if (error) throw error
+      return (data ?? []) as AdminBucketRow[]
     },
   })
 }

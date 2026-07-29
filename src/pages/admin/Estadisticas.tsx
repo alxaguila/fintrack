@@ -3,13 +3,30 @@ import { useTranslation } from 'react-i18next'
 import {
   ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid,
 } from 'recharts'
-import { useAdminStats, useAdminPlanEvolution, type PlanEvolutionGranularity } from '@/hooks/useAdminAnalytics'
+import {
+  useAdminStats, useAdminPlanEvolution, useAdminSignupsEvolution, useAdminLoginsEvolution,
+  type EvolutionGranularity,
+} from '@/hooks/useAdminAnalytics'
 import { PLAN_COLORS } from '@/lib/plan'
 import type { AdminDemographicRow, PlanType } from '@/lib/database.types'
 import { AdminHeader } from './AdminHeader'
 
 const PLAN_ORDER: PlanType[] = ['free', 'pro', 'premium']
-const EVOLUTION_GRANULARITIES: PlanEvolutionGranularity[] = ['day', 'week', 'month']
+const EVOLUTION_GRANULARITIES: EvolutionGranularity[] = ['day', 'week', 'month']
+
+/** Recuerda la granularidad elegida por gráfica (localStorage, por navegador) entre visitas a /admin/estadisticas. */
+function usePersistedGranularity(storageKey: string): [EvolutionGranularity, (g: EvolutionGranularity) => void] {
+  const fullKey = `admin_stats_granularity_${storageKey}`
+  const [granularity, setGranularityState] = useState<EvolutionGranularity>(() => {
+    const stored = localStorage.getItem(fullKey)
+    return stored === 'day' || stored === 'week' || stored === 'month' ? stored : 'month'
+  })
+  const setGranularity = (g: EvolutionGranularity) => {
+    setGranularityState(g)
+    localStorage.setItem(fullKey, g)
+  }
+  return [granularity, setGranularity]
+}
 
 export default function Estadisticas() {
   const { t } = useTranslation('admin')
@@ -19,11 +36,6 @@ export default function Estadisticas() {
 
   const pctOnboarding = ov && ov.total_users > 0 ? Math.round((ov.onboarded_users / ov.total_users) * 100) : 0
   const avgTx = ov && ov.total_users > 0 ? Math.round(ov.total_transactions / ov.total_users) : 0
-
-  const signups = useMemo(
-    () => (data?.signups ?? []).map((s) => ({ month: s.month.slice(0, 7), cnt: s.cnt })),
-    [data],
-  )
 
   const demoByDim = useMemo(() => groupDemographics(data?.demographics ?? []), [data])
 
@@ -48,25 +60,21 @@ export default function Estadisticas() {
             <Kpi label={t('stats.avg_tx')} value={avgTx} />
           </div>
 
-          {/* Altas por mes */}
-          <section className="space-y-3 rounded-2xl border border-slate-200 bg-white p-4">
-            <h2 className="text-[15px] font-bold">{t('stats.signups')}</h2>
-            {signups.length === 0 ? (
-              <p className="text-sm text-slate-500">{tc('empty_state.no_data')}</p>
-            ) : (
-              <div className="h-64 w-full">
-                <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={signups} margin={{ top: 8, right: 8, left: -16, bottom: 0 }}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" vertical={false} />
-                    <XAxis dataKey="month" tick={{ fontSize: 11, fill: '#64748b' }} tickLine={false} axisLine={false} />
-                    <YAxis allowDecimals={false} tick={{ fontSize: 11, fill: '#64748b' }} tickLine={false} axisLine={false} />
-                    <Tooltip cursor={{ fill: '#14B8A611' }} contentStyle={{ borderRadius: 12, border: '1px solid #e2e8f0', fontSize: 12 }} />
-                    <Bar dataKey="cnt" name={t('stats.signups')} fill="#14B8A6" radius={[6, 6, 0, 0]} />
-                  </BarChart>
-                </ResponsiveContainer>
-              </div>
-            )}
-          </section>
+          {/* Altas por día/semana/mes */}
+          <BucketEvolutionSection
+            storageKey="signups"
+            titleKey="stats.signups"
+            useEvolution={useAdminSignupsEvolution}
+            color="#14B8A6"
+          />
+
+          {/* Conexiones por día/semana/mes */}
+          <BucketEvolutionSection
+            storageKey="logins"
+            titleKey="stats.logins"
+            useEvolution={useAdminLoginsEvolution}
+            color="#6366F1"
+          />
 
           {/* Evolución de usuarios por plan */}
           <PlanEvolutionSection />
@@ -83,11 +91,69 @@ export default function Estadisticas() {
   )
 }
 
+/** Serie bucket/cnt (altas o conexiones) con selector de granularidad día/semana/mes. */
+function BucketEvolutionSection({
+  storageKey, titleKey, useEvolution, color,
+}: {
+  storageKey: string
+  titleKey: 'stats.signups' | 'stats.logins'
+  useEvolution: (granularity: EvolutionGranularity) => ReturnType<typeof useAdminSignupsEvolution>
+  color: string
+}) {
+  const { t } = useTranslation('admin')
+  const { t: tc } = useTranslation('common')
+  const [granularity, setGranularity] = usePersistedGranularity(storageKey)
+  const { data: rows = [], isLoading } = useEvolution(granularity)
+
+  const chartData = useMemo(
+    () => rows.map((r) => ({ label: granularity === 'month' ? r.bucket.slice(0, 7) : r.bucket, cnt: r.cnt })),
+    [rows, granularity],
+  )
+  const title = t(titleKey)
+
+  return (
+    <section className="space-y-3 rounded-2xl border border-slate-200 bg-white p-4">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <h2 className="text-[15px] font-bold">{title}</h2>
+        <div className="inline-flex rounded-lg border p-0.5 text-xs">
+          {EVOLUTION_GRANULARITIES.map((g) => (
+            <button
+              key={g}
+              onClick={() => setGranularity(g)}
+              className={`rounded-md px-2.5 py-1 transition-colors ${granularity === g ? 'bg-slate-900 text-white' : 'text-slate-500 hover:text-slate-800'}`}
+            >
+              {t(`stats.granularity.${g}`)}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {isLoading ? (
+        <p className="text-sm text-slate-500">{tc('actions.loading')}</p>
+      ) : chartData.length === 0 ? (
+        <p className="text-sm text-slate-500">{tc('empty_state.no_data')}</p>
+      ) : (
+        <div className="h-64 w-full">
+          <ResponsiveContainer width="100%" height="100%">
+            <BarChart data={chartData} margin={{ top: 8, right: 8, left: -16, bottom: 0 }}>
+              <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" vertical={false} />
+              <XAxis dataKey="label" tick={false} tickLine={false} axisLine={false} height={8} />
+              <YAxis allowDecimals={false} tick={{ fontSize: 11, fill: '#64748b' }} tickLine={false} axisLine={false} />
+              <Tooltip cursor={{ fill: `${color}11` }} contentStyle={{ borderRadius: 12, border: '1px solid #e2e8f0', fontSize: 12 }} />
+              <Bar dataKey="cnt" name={title} fill={color} radius={[6, 6, 0, 0]} />
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+      )}
+    </section>
+  )
+}
+
 /** Cuántos usuarios había en cada plan a lo largo del tiempo (RPC admin_plan_evolution). */
 function PlanEvolutionSection() {
   const { t } = useTranslation('admin')
   const { t: tc } = useTranslation('common')
-  const [granularity, setGranularity] = useState<PlanEvolutionGranularity>('month')
+  const [granularity, setGranularity] = usePersistedGranularity('plan_evolution')
   const { data: rows = [], isLoading } = useAdminPlanEvolution(granularity)
 
   const chartData = useMemo(() => {

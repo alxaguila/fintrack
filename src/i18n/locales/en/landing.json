@@ -2,7 +2,6 @@
   "nav": {
     "product": "Product",
     "security": "Security",
-    "pricing": "Pricing",
     "login": "Log in",
     "cta": "Get started free",
     "ctaSticky": "Sign up"
@@ -12,9 +11,9 @@
     "line1": "All your accounts,",
     "line2": "without sharing your",
     "emph": "bank logins.",
-    "sub": "Import the CSV or Excel statement your online bank already gives you, and zafyros instantly organizes all your transactions, categories, net worth and budgets — no bank connection, no access handed to anyone.",
+    "sub": "Upload the CSV or Excel statement your bank already gives you and in seconds your money is organized: accounts, spending and net worth in one place — no bank connection, no credentials handed to anyone.",
     "cta": "Get started free",
-    "note": "Free forever on the Free plan · no card",
+    "note": "Free to start · no card",
     "trust1": "No bank credentials",
     "trust2": "End-to-end encryption",
     "trust3": "Wipe it all in one click"
@@ -33,17 +32,17 @@
     "newLabel": "Total net worth",
     "newStatus": "Updated 2 minutes ago"
   },
-  "features": {
-    "title": "Meet zafyros.",
-    "sub": "A clear picture of your money that catches itself up every time you upload a statement.",
-    "f1title": "Upload your CSV, done",
-    "f1body": "Drag in the statement you export from your online bank. zafyros reads, sorts and classifies it instantly.",
-    "uploadCta": "Sign up free to upload your statement",
-    "uploadFormats": "CSV · XLSX · OFX — from any bank",
-    "f2title": "We never ask for your credentials",
-    "f2body": "We don't connect to your bank or third parties: no credentials to hand over, no doubts about what happens to them.",
-    "f3title": "Automatic classification",
-    "f3body": "A dictionary and your own rules label every transaction for you. You just review."
+  "tour": {
+    "title": "This is zafyros, from the inside.",
+    "s1title": "Your whole net worth, in one place",
+    "s1body": "Upload statements from your accounts and cards, and zafyros aggregates them into a clear Overview: how much you have in total and how it's evolving month to month — no bank connection required.",
+    "s1alt": "Screenshot of zafyros' Overview screen: total net worth aggregated from several accounts and its evolution over time.",
+    "s2title": "Understand where your money goes",
+    "s2body": "Analysis shows income, expenses and monthly balance at a glance, with the month-by-month trend and a breakdown by category — so you can make better decisions without reviewing transaction by transaction.",
+    "s2alt": "Screenshot of zafyros' Analysis screen: monthly income and expenses, monthly trend and spending breakdown by category.",
+    "s3title": "Every transaction, classified on its own",
+    "s3body": "Your own rules and a system that already recognizes thousands of merchants classify every transaction you import. You only fix the odd one out, never classify by hand.",
+    "s3alt": "Screenshot of zafyros' Transactions screen, with transactions already classified by category automatically."
   },
   "steps": {
     "eyebrow": "Three steps",
@@ -84,7 +83,7 @@
     "free": {
       "name": "FREE",
       "desc": "To start tidying up your money",
-      "cta": "Start free",
+      "cta": "Get started free",
       "inherits": "Includes:",
       "features": [
         "1 financial profile",
@@ -146,7 +145,7 @@
     "copy": "© 2026 zafyros · You upload, you’re in control."
   },
   "mock": {
-    "greeting": "Good morning, Marta",
+    "greeting": "Good morning, Toni",
     "subtitle": "Here’s what happened with your money in June 2026.",
     "search": "Search transactions",
     "month": "June 2026",

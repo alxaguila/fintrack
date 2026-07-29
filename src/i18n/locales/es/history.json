@@ -36,7 +36,8 @@
     "confirm": "Reasignar",
     "working": "Reasignando…",
     "done_toast": "Subida reasignada",
-    "duplicate_error": "La cuenta destino ya contiene estos movimientos. No se ha movido nada."
+    "duplicate_error": "La cuenta destino ya contiene estos movimientos. No se ha movido nada.",
+    "delete_link": "Eliminar subida"
   },
   "delete_dialog": {
     "title": "Eliminar subida",

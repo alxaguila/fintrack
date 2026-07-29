@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Shield, Search, Users as UsersIcon, Trash2, AlertTriangle } from 'lucide-react'
+import { Shield, Search, Trash2, AlertTriangle } from 'lucide-react'
 import { useAdminUsers, useAdminUserActivity, useAdminSetPlan, useAdminDeleteUser } from '@/hooks/useAdminAnalytics'
 import type { AdminUserRow, PlanType } from '@/lib/database.types'
 import { PLAN_COLORS } from '@/lib/plan'
@@ -65,35 +65,48 @@ export default function Usuarios() {
       ) : filtered.length === 0 ? (
         <p className="text-sm text-slate-500">{t('users.empty')}</p>
       ) : (
-        <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white">
-          {filtered.map((u) => (
-            <button
-              key={u.user_id}
-              onClick={() => setSelected(u)}
-              className="flex w-full items-center gap-3 border-b border-slate-100 px-4 py-3 text-left transition-colors last:border-b-0 hover:bg-slate-50"
-            >
-              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-teal-500/10 text-teal-600">
-                <UsersIcon className="h-4 w-4" />
-              </span>
-              <div className="min-w-0 flex-1">
-                <p className="flex items-center gap-1.5 truncate font-medium">
-                  {u.full_name || u.email.split('@')[0]}
-                  {u.is_admin && <Shield className="h-3.5 w-3.5 shrink-0 text-indigo-500" />}
-                </p>
-                <p className="truncate text-xs text-slate-500">{u.email}</p>
-              </div>
-              <PlanBadge plan={u.plan} />
-              <div className="hidden shrink-0 text-right sm:block">
-                <p className="text-xs text-slate-500">{t('users.joined', { date: formatDate(u.created_at.slice(0, 10)) })}</p>
-                <p className="text-xs text-slate-400">{t('users.tx_count', { count: u.transactions_count })}</p>
-              </div>
-              {!u.onboarding_completed && (
-                <span className="shrink-0 rounded-full bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-700">
-                  {t('users.pending')}
-                </span>
-              )}
-            </button>
-          ))}
+        <div className="overflow-x-auto rounded-2xl border border-slate-200 bg-white">
+          <table className="w-full min-w-[720px] text-left text-sm">
+            <thead>
+              <tr className="border-b border-slate-200 text-xs font-medium uppercase tracking-wide text-slate-400">
+                <th className="px-4 py-3 font-medium">{t('users.col_user')}</th>
+                <th className="px-4 py-3 font-medium">{t('users.col_plan')}</th>
+                <th className="px-4 py-3 font-medium">{t('users.col_joined')}</th>
+                <th className="px-4 py-3 font-medium">{t('users.col_last_login')}</th>
+                <th className="px-4 py-3 text-right font-medium">{t('users.col_movements')}</th>
+                <th className="px-4 py-3 text-right font-medium">{t('users.col_accounts')}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filtered.map((u) => (
+                <tr
+                  key={u.user_id}
+                  onClick={() => setSelected(u)}
+                  className="cursor-pointer border-b border-slate-100 transition-colors last:border-b-0 hover:bg-slate-50"
+                >
+                  <td className="min-w-0 max-w-xs px-4 py-3">
+                    <p className="flex items-center gap-1.5 truncate font-medium">
+                      {u.full_name || u.email.split('@')[0]}
+                      {u.is_admin && <Shield className="h-3.5 w-3.5 shrink-0 text-indigo-500" />}
+                    </p>
+                    <p className="truncate text-xs text-slate-500">{u.email}</p>
+                    {!u.onboarding_completed && (
+                      <span className="mt-1 inline-block rounded-full bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-700">
+                        {t('users.pending')}
+                      </span>
+                    )}
+                  </td>
+                  <td className="whitespace-nowrap px-4 py-3"><PlanBadge plan={u.plan} /></td>
+                  <td className="whitespace-nowrap px-4 py-3 text-slate-600">{formatDate(u.created_at.slice(0, 10))}</td>
+                  <td className="whitespace-nowrap px-4 py-3 text-slate-600">
+                    {u.last_sign_in_at ? formatDate(u.last_sign_in_at.slice(0, 10)) : t('users.never_connected')}
+                  </td>
+                  <td className="whitespace-nowrap px-4 py-3 text-right tabular-nums text-slate-600">{u.transactions_count}</td>
+                  <td className="whitespace-nowrap px-4 py-3 text-right tabular-nums text-slate-600">{u.accounts_count}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       )}
 

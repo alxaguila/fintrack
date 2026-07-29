@@ -50,13 +50,17 @@ export function AppShell() {
   }, [])
 
   // Single-profile app: auto-create one default profile if the user has none.
+  // Espera a que el onboarding esté completo (rellena first_name/last_name)
+  // para no crear el perfil con el prefijo del email como único dato disponible.
   useEffect(() => {
-    if (!session || profilesLoading || profiles.length > 0 || creatingRef.current) return
+    if (!session || profilesLoading || settingsLoading || profiles.length > 0 || creatingRef.current) return
+    if (!settings?.onboarding_completed) return
     creatingRef.current = true
-    const name = session.user.email?.split('@')[0] || 'Personal'
+    const name = [settings.first_name, settings.last_name].filter(Boolean).join(' ').trim()
+      || session.user.email?.split('@')[0] || 'Personal'
     createProfile.mutateAsync({ name, avatar_color: '#6366f1', is_default: true })
       .catch(() => { creatingRef.current = false })
-  }, [session, profilesLoading, profiles.length])
+  }, [session, profilesLoading, profiles.length, settingsLoading, settings?.onboarding_completed, settings?.first_name, settings?.last_name])
 
   // Cargando sesión
   if (session === undefined || profilesLoading) {

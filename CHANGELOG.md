@@ -2,6 +2,53 @@
 
 Lista de cambios por versión (`APP_VERSION` en `src/lib/version.ts`). Solo se añade una entrada cuando el código de la app cambia.
 
+## v1.978
+- Landing pública: corregido el contraste de los eyebrows "Importa extractos de cualquier banco" y "El problema de siempre" (no llegaban al mínimo de contraste legible sobre el fondo crema). Añadido estado accesible (`aria-pressed`) a los botones de idioma ES/EN del menú y de la cabecera fija, para que un lector de pantalla sepa cuál está activo.
+
+## v1.975
+- Landing pública, tour de producto: la pastilla de texto de Movimientos deja de estar inclinada y con movimiento — vuelve a un formato y tamaño idénticos a los de Posición Global (la inclinación y el balanceo se quedan solo en las capturas, no en el texto).
+- Análisis: en móvil el copy vuelve a aparecer encima de la captura (antes quedaba debajo); en escritorio se mantiene el layout con la captura a la izquierda.
+- Quitado definitivamente el subtítulo del tour de producto ("Sin maquetas: así se ve zafyros...").
+
+## v1.973
+- Landing pública, tour de producto: se quita la barra de navegador falsa de las capturas, cada captura se inclina ligeramente hacia su copy (con un movimiento sutil, no quedan planas), y el texto de cada fila pasa a una "pastilla" navy con formato distinto en cada una para que no sea monótono. Análisis pasa al mismo tamaño que las otras dos filas, en el lado contrario; Movimientos queda en el mismo lado que Posición Global (esto también corrige que en móvil su texto apareciera debajo de la imagen en vez de encima).
+- Landing pública: se intercambia el orden de las secciones "3 pasos" y "Seguridad" — Seguridad ya no queda pegada visualmente al bloque de CTA final (los dos únicos bloques navy grandes de la página dejan de ser consecutivos).
+- Revisión de copy: unificado el CTA a "Empieza gratis" en todos los sitios (antes "Empezar gratis" en el selector de plan), quitada la mención a "en el plan Free"/"para siempre" del subtítulo del hero (habrá planes de pago en el futuro, no procede prometer gratis para siempre), reescrita la frase de "diccionario integrado"/"la comunidad" del tour (jerga interna y posible duda de privacidad) y ajustada la introducción del tour y del hero para ser más directas.
+
+## v1.969
+- Landing pública: la sección de features abstractas (ilustraciones de subida de CSV, bóveda y clasificación) se sustituye por un tour de producto con 3 capturas reales de la app (Posición Global, Análisis y Movimientos), cada una con su propio copy explicando qué resuelve, y apareciendo con scroll-reveal al bajar por la página.
+- El mock decorativo del hero ahora saluda a "Toni" en vez de "Marta".
+
+## v1.965
+- Landing pública: se retira la sección de precios/planes (era prematura sin pasarela de pago). El funnel pasa a: producto → 3 pasos → seguridad → CTA final "Empieza gratis", sin mención de precios. El selector de planes dentro de la app (Ajustes > Plan) no se ve afectado, sigue funcionando igual.
+
+## v1.961
+- Historial de subidas: se quita el botón de eliminar (papelera) de la fila de tabla y de la tarjeta móvil. El borrado sigue disponible, pero ahora dentro del diálogo de editar/reasignar, como un enlace discreto "Eliminar subida" — se oculta un poco más una acción destructiva y poco frecuente.
+- Historial de subidas en móvil: las tarjetas pasan a ser una lista plana separada por líneas finas de lado a lado (en vez de tarjetas individuales con borde y fondo propio).
+
+## v1.956
+- Ajustes > Datos personales: ahora se muestra primero la información guardada en texto plano (sin formulario), con un botón "Editar datos" que abre la pantalla de edición de siempre. Al guardar cambios, o al pulsar "Cancelar", se vuelve automáticamente a la vista de solo lectura.
+
+## v1.954
+- Icono de la pestaña del navegador (favicon): quitado el círculo navy de fondo y ampliado el diamante para aprovechar mejor el espacio; ahora se dibuja en navy sobre fondo transparente en vez de blanco sobre círculo. El isotipo dentro de la app (sidebar, menú móvil) no cambia.
+
+## v1.951
+- Dashboard: el donut de "Distribución del gasto/ingreso" ahora agrega por grupo de categoría en vez de por subcategoría — antes, varias subcategorías de un mismo grupo (p. ej. Supermercado, Restaurantes y Bares dentro de Alimentación) pintaban quesitos del mismo color y eran indistinguibles entre sí. La lista de subcategorías de debajo del donut no cambia, sigue mostrando el detalle tal cual.
+
+## v1.949
+- Corregido que el botón de perfil (sidebar y menú móvil) y el popup de perfiles mostraran el nombre del perfil financiero activo en vez del nombre de la cuenta: al cambiar tu nombre en Ajustes > Perfil no se veía reflejado si tenías un perfil financiero con otro nombre activo. Ahora ese botón siempre muestra el nombre de la cuenta.
+- El perfil por defecto (el que representa al titular de la cuenta) ya no se puede renombrar desde el popup de perfiles — ese nombre solo se cambia desde Ajustes > Perfil. Los demás perfiles (Papá, Mamá, autónomo, empresa...) se siguen renombrando igual que antes.
+
+## v1.928
+- `/admin/estadisticas`: las gráficas de "Altas" y "Conexiones" ahora dibujan todos los días/semanas/meses del rango (antes solo se veían los que tenían algún dato, dejando huecos). Se oculta el eje de fechas (quedaba ilegible con muchos puntos); al pasar el cursor se sigue viendo el día y el valor exacto.
+
+## v1.927
+- `/admin/estadisticas`: cada selector de granularidad (Altas, Conexiones, Evolución por plan) recuerda su última elección en este navegador — antes se perdía al salir y volver a entrar, siempre volvía a "mes".
+
+## v1.925
+- `/admin/usuarios`: la lista de tarjetas pasa a ser una tabla (usuario, plan, fecha de alta, última conexión, movimientos, cuentas).
+- `/admin/estadisticas`: la gráfica de "Altas" gana selector de día/semana/mes (antes solo por mes), y se añade una gráfica nueva de "Conexiones" con el mismo selector — cuenta conexiones reales a partir de ahora (no hay histórico previo, ya que antes solo se guardaba la última conexión de cada usuario).
+
 ## v1.908
 - SEO técnico: corrige un bug real por el que todas las páginas públicas salvo la home (blog, entradas del blog, las 2 calculadoras, las 4 legales) perdían su `<title>` al cargar la URL directamente (justo lo que hace Googlebot al rastrear) — un `useEffect` sin condicionar en `App.tsx` sobreescribía el título de la página con el genérico de la home al montar. Se sustituye por un hook reutilizable (`useSeoMeta`) que fija título, `meta description`, `<link rel="canonical">` y Open Graph por página, y que ya usan todas las páginas públicas afectadas.
 - Añadido JSON-LD `Organization` + `WebSite` en `index.html` (todas las páginas) y `BlogPosting` en cada entrada del blog.
