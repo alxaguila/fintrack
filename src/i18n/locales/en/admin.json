@@ -84,7 +84,9 @@
     "pattern_add": "Add",
     "pattern_duplicate": "This merchant already has that variation.",
     "delete_title": "Delete merchant?",
-    "delete_body": "“{{name}}” will be deleted. This action cannot be undone."
+    "delete_body": "“{{name}}” will be deleted. This action cannot be undone.",
+    "create_rule": "Create classification rule",
+    "rule_linked": "Classified as {{category}} — edit"
   },
   "categories": {
     "title": "Categories",

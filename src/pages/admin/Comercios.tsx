@@ -4,9 +4,13 @@ import { Search, Plus, Trash2, Upload, Loader2, Store, X } from 'lucide-react'
 import { SortHeader, nextSort, type SortDir } from './SortHeader'
 import { useMerchants, useCreateMerchant, useUpdateMerchant, useDeleteMerchant, useMerchantUsageCounts, uploadMerchantLogo, linkMerchantTransactions, addMerchantPatterns, MAX_MERCHANT_LOGO_BYTES } from '@/hooks/useAdminMerchants'
 import { useMerchantPatterns, useAddMerchantPattern, useDeleteMerchantPattern } from '@/hooks/useMerchantPatterns'
-import { normalizePattern } from '@/lib/categoryRules'
+import { useDictionaryRules, useSaveDictionaryRule } from '@/hooks/useDictionaryRules'
+import { useCategories, useCategoryGroups } from '@/hooks/useCategories'
+import { normalizePattern, matchBuiltinCategory } from '@/lib/categoryRules'
 import { merchantFormSchema, merchantPatternSchema, fieldErrors, firstError } from '@/lib/validation'
-import type { Merchant } from '@/lib/database.types'
+import type { Merchant, DictionaryRule } from '@/lib/database.types'
+import { categoryIcon, categoryLabel } from '@/lib/categoryIcons'
+import { WordDialog } from './Reglas'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -29,14 +33,41 @@ export default function Comercios() {
   const { t: tc } = useTranslation('common')
   const { data: merchants = [], isLoading } = useMerchants()
   const { data: usageCounts } = useMerchantUsageCounts()
+  const { data: dictionaryRules = [] } = useDictionaryRules()
+  const { data: categories = [] } = useCategories()
+  const { data: groups = [] } = useCategoryGroups()
   const createM = useCreateMerchant()
   const updateM = useUpdateMerchant()
   const deleteM = useDeleteMerchant()
+  const saveDictRuleM = useSaveDictionaryRule()
 
   const [query, setQuery] = useState('')
   const [sort, setSort] = useState<{ key: MerchantSortKey; dir: SortDir }>({ key: 'use_count', dir: 'desc' })
   const [editing, setEditing] = useState<Merchant | null | undefined>(undefined) // undefined=cerrado, null=nuevo
   const [toDelete, setToDelete] = useState<Merchant | null>(null)
+  // Comercio desde el que se pulsó "+" para crear su regla de clasificación
+  // (mismo diálogo que /admin/reglas, prellenado, sin salir de esta pantalla).
+  const [quickCreateRuleFrom, setQuickCreateRuleFrom] = useState<Merchant | null>(null)
+  // Regla ya enlazada en la que se pulsó la pastilla de categoría, para editarla.
+  const [editingRule, setEditingRule] = useState<DictionaryRule | null>(null)
+
+  const categoryById = useMemo(() => new Map(categories.map((c) => [c.id, c])), [categories])
+  // Regla de diccionario ya enlazada a cada comercio: prioriza el FK explícito
+  // (dictionary_rules.merchant_id) y, para pares antiguos que el backfill no
+  // haya cubierto (p. ej. coinciden solo por comodín), cae a la misma
+  // heurística por texto que ya usa /admin/reglas en el sentido contrario.
+  const ruleByMerchant = useMemo(() => {
+    const map = new Map<string, DictionaryRule>()
+    for (const r of dictionaryRules) {
+      if (r.merchant_id) map.set(r.merchant_id, r)
+    }
+    for (const m of merchants) {
+      if (map.has(m.id)) continue
+      const match = matchBuiltinCategory(m.name, dictionaryRules)
+      if (match) map.set(m.id, match)
+    }
+    return map
+  }, [dictionaryRules, merchants])
 
   const q = normalize(query.trim())
   const filtered = useMemo(
@@ -88,16 +119,22 @@ export default function Comercios() {
               onClick={() => setSort((s) => nextSort(s, 'name', false))}
               className="min-w-0 flex-1"
             />
+            <span className="w-[150px] shrink-0">{t('rules.col_category')}</span>
             <SortHeader
               label={t('comercios.col_usage')}
               active={sort.key === 'use_count'} dir={sort.dir}
               onClick={() => setSort((s) => nextSort(s, 'use_count', true))}
-              className="w-[110px] shrink-0"
+              className="hidden w-[110px] shrink-0 sm:block"
             />
             <span className="w-8 shrink-0" aria-hidden="true" />
           </div>
 
-          {sorted.map((m) => (
+          {sorted.map((m) => {
+            const rule = ruleByMerchant.get(m.id)
+            const cat = rule ? categoryById.get(rule.category_id) : undefined
+            const CatIcon = categoryIcon(cat?.icon)
+            const color = cat?.group?.color ?? '#64748b'
+            return (
             <div
               key={m.id}
               role="button"
@@ -112,7 +149,32 @@ export default function Comercios() {
                   : <Store className="h-4 w-4 text-slate-400" />}
               </span>
               <span className="min-w-0 flex-1 break-words font-medium">{m.name}</span>
-              <div className="w-[110px] shrink-0">
+              <div className="w-[150px] shrink-0">
+                {rule ? (
+                  <button
+                    type="button"
+                    onClick={(e) => { e.stopPropagation(); setEditingRule(rule) }}
+                    title={t('comercios.rule_linked', { category: categoryLabel(cat?.slug, cat?.slug ?? '') })}
+                    aria-label={t('comercios.rule_linked', { category: categoryLabel(cat?.slug, cat?.slug ?? '') })}
+                    className="inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 text-xs font-medium"
+                    style={{ backgroundColor: `${color}1f`, color }}
+                  >
+                    <CatIcon className="h-3.5 w-3.5" />
+                    {categoryLabel(cat?.slug, cat?.slug ?? '')}
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={(e) => { e.stopPropagation(); setQuickCreateRuleFrom(m) }}
+                    aria-label={t('comercios.create_rule')}
+                    title={t('comercios.create_rule')}
+                    className="flex h-6 w-6 items-center justify-center rounded-full text-slate-400 hover:bg-slate-100 hover:text-teal-600"
+                  >
+                    <Plus className="h-3.5 w-3.5" />
+                  </button>
+                )}
+              </div>
+              <div className="hidden w-[110px] shrink-0 sm:block">
                 <span className="inline-flex items-center rounded-full bg-slate-100 px-2 py-0.5 text-xs font-bold tabular-nums text-slate-600">
                   {t('comercios.used_count', { count: usageCounts?.get(m.id) ?? 0 })}
                 </span>
@@ -125,7 +187,8 @@ export default function Comercios() {
                 <Trash2 className="h-4 w-4" />
               </button>
             </div>
-          ))}
+            )
+          })}
         </div>
       )}
 
@@ -162,6 +225,50 @@ export default function Comercios() {
             } catch (err: any) {
               const dup = String(err?.message ?? '').includes('duplicate') || err?.code === '23505'
               toast({ title: dup ? t('comercios.duplicate') : tc('errors.generic'), variant: 'destructive' })
+            }
+          }}
+        />
+      )}
+
+      {quickCreateRuleFrom && (
+        <WordDialog
+          rule={null}
+          categories={categories}
+          groups={groups}
+          existingRules={dictionaryRules}
+          initialPattern={normalizePattern(quickCreateRuleFrom.name)}
+          merchantId={quickCreateRuleFrom.id}
+          saving={saveDictRuleM.isPending}
+          onClose={() => setQuickCreateRuleFrom(null)}
+          onSave={async (values) => {
+            try {
+              await saveDictRuleM.mutateAsync(values)
+              toast({ title: t('rules.dictionary.saved') })
+              setQuickCreateRuleFrom(null)
+            } catch (err: any) {
+              const dup = err?.code === '23505' || String(err?.message ?? '').includes('duplicate')
+              toast({ title: dup ? t('rules.dictionary.duplicate') : tc('errors.generic'), variant: 'destructive' })
+            }
+          }}
+        />
+      )}
+
+      {editingRule && (
+        <WordDialog
+          rule={editingRule}
+          categories={categories}
+          groups={groups}
+          existingRules={dictionaryRules}
+          saving={saveDictRuleM.isPending}
+          onClose={() => setEditingRule(null)}
+          onSave={async (values) => {
+            try {
+              await saveDictRuleM.mutateAsync({ id: editingRule.id, ...values })
+              toast({ title: t('rules.dictionary.saved') })
+              setEditingRule(null)
+            } catch (err: any) {
+              const dup = err?.code === '23505' || String(err?.message ?? '').includes('duplicate')
+              toast({ title: dup ? t('rules.dictionary.duplicate') : tc('errors.generic'), variant: 'destructive' })
             }
           }}
         />

@@ -84,9 +84,9 @@ function DictionaryPanel() {
   const [merchantFilter, setMerchantFilter] = useState<'all' | 'with' | 'without'>('all')
   const [editing, setEditing] = useState<DictionaryRule | null | undefined>(undefined)
   const [toDelete, setToDelete] = useState<DictionaryRule | null>(null)
-  // Palabra desde la que se pulsó "+" (abre el mismo diálogo de creación que
+  // Regla desde la que se pulsó "+" (abre el mismo diálogo de creación que
   // /admin/comercios, prellenado, sin salir de esta pantalla).
-  const [quickCreateFrom, setQuickCreateFrom] = useState<string | null>(null)
+  const [quickCreateFrom, setQuickCreateFrom] = useState<DictionaryRule | null>(null)
   // Comercio ya vinculado en el que se pulsó el logo (mismo diálogo de edición
   // que al hacer clic en su fila en /admin/comercios).
   const [editingMerchant, setEditingMerchant] = useState<Merchant | null>(null)
@@ -254,7 +254,7 @@ function DictionaryPanel() {
                   {!merchant && (
                     <button
                       type="button"
-                      onClick={(e) => { e.stopPropagation(); setQuickCreateFrom(r.pattern) }}
+                      onClick={(e) => { e.stopPropagation(); setQuickCreateFrom(r) }}
                       aria-label={t('rules.dictionary.create_merchant')}
                       title={t('rules.dictionary.create_merchant')}
                       className="flex h-6 w-6 items-center justify-center rounded-full text-slate-400 hover:bg-slate-100 hover:text-teal-600"
@@ -272,7 +272,7 @@ function DictionaryPanel() {
       {quickCreateFrom !== null && (
         <MerchantDialog
           merchant={null}
-          initialName={titleCase(quickCreateFrom)}
+          initialName={titleCase(quickCreateFrom.pattern)}
           saving={createMerchantM.isPending}
           onClose={() => setQuickCreateFrom(null)}
           onSave={async (values) => {
@@ -286,12 +286,25 @@ function DictionaryPanel() {
                 }
               }
               toast({ title: t('comercios.saved') })
+              const originRule = quickCreateFrom
               setQuickCreateFrom(null)
               try {
                 const count = await linkMerchantTransactions(merchant.id)
                 if (count > 0) toast({ title: t('comercios.linked_count', { count }) })
               } catch {
                 toast({ title: t('comercios.link_failed'), variant: 'destructive' })
+              }
+              try {
+                await saveM.mutateAsync({
+                  id: originRule.id,
+                  pattern: originRule.pattern,
+                  category_id: originRule.category_id,
+                  applies_to_bizum: originRule.applies_to_bizum,
+                  sort_order: originRule.sort_order,
+                  merchant_id: merchant.id,
+                })
+              } catch (e) {
+                console.error('No se pudo enlazar la regla de origen con el comercio creado:', e)
               }
             } catch (err: any) {
               const dup = err?.code === '23505' || String(err?.message ?? '').includes('duplicate')
@@ -378,21 +391,27 @@ function DictionaryPanel() {
   )
 }
 
-function WordDialog({
-  rule, categories, groups, existingRules, saving, onClose, onSave,
+/** Exportado para reutilizarlo desde Comercios.tsx (crear la regla de
+ *  clasificación directamente desde un comercio, sin salir de esa pantalla). */
+export function WordDialog({
+  rule, categories, groups, existingRules, initialPattern, merchantId, saving, onClose, onSave,
 }: {
   rule: DictionaryRule | null
   categories: Category[]
   groups: CategoryGroup[]
   existingRules: DictionaryRule[]
+  /** Prellena el patrón al crear (p. ej. desde el nombre de un comercio). Ignorado si `rule` no es null. */
+  initialPattern?: string
+  /** Comercio a enlazar (dictionary_rules.merchant_id). Si no se pasa, se conserva el enlace que ya tuviera `rule`. */
+  merchantId?: string | null
   saving: boolean
   onClose: () => void
-  onSave: (v: { pattern: string; category_id: string; applies_to_bizum: boolean; sort_order: number }) => void
+  onSave: (v: { pattern: string; category_id: string; applies_to_bizum: boolean; sort_order: number; merchant_id: string | null }) => void
 }) {
   const { t } = useTranslation('admin')
   const { t: tc } = useTranslation('common')
   const isEdit = !!rule
-  const [pattern, setPattern] = useState(rule?.pattern ?? '')
+  const [pattern, setPattern] = useState(rule?.pattern ?? initialPattern ?? '')
   const [categoryId, setCategoryId] = useState(rule?.category_id ?? '')
   const [alwaysBizum, setAlwaysBizum] = useState(rule?.applies_to_bizum ?? false)
   const [errors, setErrors] = useState<Record<string, string>>({})
@@ -406,6 +425,7 @@ function WordDialog({
     onSave({
       ...values,
       sort_order: rule ? rule.sort_order : nextDictionarySortOrder(existingRules),
+      merchant_id: merchantId !== undefined ? merchantId : (rule?.merchant_id ?? null),
     })
   }
 

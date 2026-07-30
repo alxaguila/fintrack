@@ -84,7 +84,9 @@
     "pattern_add": "Añadir",
     "pattern_duplicate": "Ese comercio ya tiene esa variación.",
     "delete_title": "¿Eliminar comercio?",
-    "delete_body": "Se eliminará «{{name}}». Esta acción no se puede deshacer."
+    "delete_body": "Se eliminará «{{name}}». Esta acción no se puede deshacer.",
+    "create_rule": "Crear regla de clasificación",
+    "rule_linked": "Clasificado como {{category}} — editar"
   },
   "categories": {
     "title": "Categorías",

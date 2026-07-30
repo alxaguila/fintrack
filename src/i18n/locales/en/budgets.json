@@ -50,6 +50,7 @@
     "amount_label": "Monthly amount",
     "unbudgeted": "Not budgeted",
     "proposed_badge": "Suggested",
+    "accept_suggested_button": "Accept suggested",
     "editing_month": "Editing {{month}}",
     "history_toggle": "Last 12 months",
     "history_avg": "Average: {{amount}}",

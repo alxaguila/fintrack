@@ -2,6 +2,15 @@
 
 Lista de cambios por versión (`APP_VERSION` en `src/lib/version.ts`). Solo se añade una entrada cuando el código de la app cambia.
 
+## v1.990
+- Movimientos: el logo del comercio en cada fila ya no usa un redondeo tan pronunciado (menos que antes) — algunos logos cuadrados (p. ej. Orange) quedaban con el texto cortado por las esquinas muy curvas.
+
+## v1.987
+- Admin, Comercios: ahora se puede crear la regla de clasificación de un comercio directamente desde `/admin/comercios` (pastilla de categoría o botón "+" en cada fila), sin tener que ir aparte a Reglas. De paso, crear un comercio desde una palabra del diccionario en `/admin/reglas` también deja enlazada esa regla automáticamente.
+
+## v1.984
+- Presupuestos, detalle de sobre: la etiqueta "Sugerido" de una subcategoría sin presupuesto confirmado ahora es un botón ("Aceptar sugerido") que fija ese importe como presupuesto real con un click, sin tener que arrastrar el marcador.
+
 ## v1.978
 - Landing pública: corregido el contraste de los eyebrows "Importa extractos de cualquier banco" y "El problema de siempre" (no llegaban al mínimo de contraste legible sobre el fondo crema). Añadido estado accesible (`aria-pressed`) a los botones de idioma ES/EN del menú y de la cabecera fija, para que un lector de pantalla sepa cuál está activo.
 

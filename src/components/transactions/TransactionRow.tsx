@@ -191,7 +191,7 @@ export function TransactionRow({ tx, category, group, account, merchant, entityL
           title={tx.is_reviewed ? undefined : t('row.pending')}
         />
         <span
-          className="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-xl"
+          className="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-lg"
           style={{ backgroundColor: showMerchantLogo ? undefined : `${catColor}1f` }}
         >
           {showMerchantLogo ? (

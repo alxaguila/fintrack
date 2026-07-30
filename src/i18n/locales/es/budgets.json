@@ -50,6 +50,7 @@
     "amount_label": "Importe mensual",
     "unbudgeted": "Sin presupuestar",
     "proposed_badge": "Sugerido",
+    "accept_suggested_button": "Aceptar sugerido",
     "editing_month": "Editando {{month}}",
     "history_toggle": "Últimos 12 meses",
     "history_avg": "Media: {{amount}}",

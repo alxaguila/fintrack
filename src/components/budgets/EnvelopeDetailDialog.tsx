@@ -169,7 +169,16 @@ function SubcategoryEditor({
         </div>
         <div className="shrink-0 text-right">
           <p className="text-sm font-bold tabular-nums text-slate-800">{displayAmount > 0 ? fmtAmount(displayAmount) : '—'}</p>
-          {editSub.isProposed && liveAmount == null && editAmount > 0 && <p className="text-[10px] text-slate-400">{t('detail.proposed_badge')}</p>}
+          {editSub.isProposed && liveAmount == null && editAmount > 0 && (
+            <button
+              type="button"
+              onClick={() => handleCommit(editAmount)}
+              disabled={upsertRule.isPending}
+              className="text-[10px] font-medium text-slate-400 underline decoration-dotted hover:text-slate-600 disabled:opacity-50"
+            >
+              {t('detail.accept_suggested_button')}
+            </button>
+          )}
         </div>
       </div>
 

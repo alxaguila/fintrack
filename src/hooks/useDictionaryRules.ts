@@ -28,6 +28,7 @@ type DictionaryRuleInput = {
   pattern: string
   applies_to_bizum: boolean
   sort_order: number
+  merchant_id: string | null
 }
 
 /** Próximo sort_order al crear: añade la palabra nueva al final del diccionario. */
