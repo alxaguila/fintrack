@@ -300,7 +300,7 @@
       {
         "heading": "11. Cookies and local storage",
         "blocks": [
-          { "p": "zafyros uses only technical and functional browser storage (localStorage), not HTTP cookies, to keep the User signed in and remember their usage preferences. This processing does not require prior consent, in accordance with Article 22.2 LSSI-CE. For full details, see the Cookie Policy, available at www.zafyros.com/cookies." }
+          { "p": "zafyros uses technical and functional browser storage (localStorage), not HTTP cookies, to keep the User signed in and remember their usage preferences; this processing does not require prior consent, in accordance with Article 22.2 LSSI-CE. The public website also uses Google Tag Manager, which may install third-party analytics and/or advertising cookies only if the User gives consent via the banner shown on their first visit. For full details, see the Cookie Policy, available at www.zafyros.com/cookies." }
         ]
       },
       {
@@ -321,7 +321,13 @@
     "metaTitle": "Cookie Policy — zafyros",
     "metaDescription": "Which cookies zafyros uses, what for, and how you can manage or disable them.",
     "pageTitle": "Cookie Policy",
-    "lastUpdated": "Last updated: 24 July 2026",
+    "lastUpdated": "Last updated: 2 August 2026",
+    "cookieBanner": {
+      "message": "We use cookies to improve your experience and analyze site traffic.",
+      "moreInfo": "More information",
+      "acceptButton": "Accept",
+      "rejectButton": "Reject"
+    },
     "sections": [
       {
         "heading": "1. What cookies are, and why this page also covers localStorage",
@@ -346,22 +352,26 @@
         ]
       },
       {
-        "heading": "3. Why no consent is requested for these cookies",
+        "heading": "3. Third-party cookies and User consent",
         "blocks": [
-          { "p": "Under Article 22.2 LSSI-CE, prior User consent is not required when storage is used exclusively to:" },
-          {
-            "list": [
-              "Allow communication between the User's equipment and the network (for example, keeping the session signed in).",
-              "Provide a service expressly requested by the User (for example, remembering the language they themselves chose, or the financial profile they selected)."
-            ]
-          },
-          { "p": "All keys listed in the previous section fall under one of these two cases, so zafyros **does not display a cookie consent banner**: it is enough to inform, which is precisely the purpose of this page." }
+          { "p": "In addition to the above, zafyros uses Google Tag Manager to manage the following third-party tools on the public website: **Google Analytics** (usage analytics), **Microsoft Clarity** (anonymised heatmaps and session recordings) and the **Reddit Ads pixel** (measuring the effectiveness of advertising campaigns on Reddit). All of them help understand website usage and, where applicable, measure campaigns." },
+          { "p": "These tools do install non-essential cookies in the User's browser. In accordance with Article 22.2 LSSI-CE and the GDPR, zafyros requests the User's prior consent via a banner shown on the first visit to the public website, with two equally accessible options: **Accept** or **Reject**. No non-essential cookie is installed until the User clicks «Accept»; if they click «Reject», or do not interact, these cookies remain disabled." },
+          { "p": "The banner does not appear inside the app (after signing in): Google Tag Manager and no third-party cookie are used there, only on the public website (zafyros.com)." },
+          { "p": "The User can change their mind at any time by clearing the site's browsing data from their browser settings; the banner will be shown again on the next visit." }
         ]
       },
       {
-        "heading": "4. If third-party analytics are added in the future",
+        "heading": "4. Which cookies these third parties may activate after consent",
         "blocks": [
-          { "p": "If zafyros were to incorporate analytics tools that do require consent in the future (for example, Google Analytics, which uses third-party cookies to distinguish users), this Policy will be updated before they are activated and the User will be shown a granular prior-consent panel, with the option to accept, reject or customise each category of non-essential cookies. No non-essential cookie will be installed before the User gives their express consent." }
+          { "p": "If the User accepts the banner, Google Tag Manager may activate, among others, the following cookies (this list is indicative and may change over time; see each provider's policy for up-to-date detail):" },
+          {
+            "list": [
+              "Google Analytics: `_ga`, `_ga_*`, `_gid` — usage analytics (pages visited, time spent). See policies.google.com/technologies/cookies.",
+              "Microsoft Clarity: `_clck`, `_clsk`, `CLID`, `MUID`, `SM` — anonymised heatmaps and session recording. See privacy.microsoft.com/en-us/privacystatement.",
+              "Reddit Ads: cookies from reddit.com / redditstatic.com — measuring the effectiveness of advertising campaigns. See reddit.com/policies/cookies."
+            ]
+          },
+          { "p": "zafyros does not use this information to individually identify the User beyond what these tools themselves allow on an aggregated or pseudonymised basis." }
         ]
       },
       {

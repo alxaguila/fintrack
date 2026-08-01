@@ -2,8 +2,9 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { ComposedChart, Bar, XAxis, YAxis, Tooltip, PieChart, Pie, Cell, Sector } from 'recharts'
-import { ArrowUp, ArrowDown, Minus, Eye, Check, Info, TriangleAlert, ChevronLeft, ChevronDown } from 'lucide-react'
+import { ArrowUp, ArrowDown, Eye, Check, Info, TriangleAlert, ChevronLeft, ChevronDown } from 'lucide-react'
 import { useProfile } from '@/contexts/ProfileContext'
+import { DeltaPill, BarSpark, trendColor, C_INCOME, C_EXPENSE, C_NEUTRAL, C_TASA } from '@/components/dashboard/KpiTrend'
 import { useDashboardTotals, useDashboardBreakdown, useDashboardCategorySeries, useTransactionCounts } from '@/hooks/useTransactions'
 import { useCategories } from '@/hooks/useCategories'
 import { usePlan } from '@/hooks/usePlan'
@@ -17,12 +18,15 @@ import { bucketKey, bucketLabel, bucketRange, type Granularity } from '@/lib/per
 import { categoryIcon, categoryLabel } from '@/lib/categoryIcons'
 import type { TransactionType } from '@/lib/database.types'
 import { appPath } from '@/lib/appUrl'
+import { getPersistedGranularity, persistGranularity } from '@/lib/granularity'
+import { useSessionState } from '@/hooks/useSessionState'
 
 const BAR_PX = 76 // ancho por periodo en escritorio (para el scroll horizontal)
 const BAR_PX_M = 54 // ancho por periodo en la tira compacta móvil
 const CHART_H = 232 // alto del cash flow en escritorio
 const CHART_H_M = 160 // alto de la tira compacta móvil (más espacio liberado al comprimir el resto)
 const VISIBLE_BARS = 12 // ventana visible por defecto (grupos de columnas)
+const CASHFLOW_SCROLL_KEY = 'zafyros:scrollX:dashboard-cashflow'
 const BAR_OVERLAP = 7 // px que el ingreso se superpone al gasto, en escritorio
 const BAR_OVERLAP_M = 6 // ídem en la tira compacta móvil
 
@@ -30,13 +34,6 @@ const BAR_OVERLAP_M = 6 // ídem en la tira compacta móvil
 // el toggle de tipo encima, que ahora vive en la propia pastilla, cabe más chico).
 const DONUT = 224, DCX = 112, DCY = 112, D_INNER = 62, D_OUTER = 90, D_ICON_R = 102
 const DONUT_M = 168, DCX_M = 84, DCY_M = 84, D_INNER_M = 44, D_OUTER_M = 64, D_ICON_R_M = 72
-
-// Paleta. Ingreso = navy azul (más azul que negro); gasto rosa palo; balance
-// neutro; navy oscuro del sidebar para la tarjeta de tasa. Sin semáforo.
-const C_INCOME = '#1F4E8C'   // navy azul — ingresos
-const C_EXPENSE = '#CB6391'  // rosa palo — gastos
-const C_NEUTRAL = '#64748b'  // gris pizarra — balance
-const C_TASA = '#0A2540'     // navy del sidebar — fondo tarjeta/banda de tasa
 
 function pastel(hex: string): string {
   const h = hex?.replace('#', '')
@@ -54,12 +51,6 @@ function prevPeriodKey(key: string, g: Granularity): string {
   }
   const [y, m] = key.split('-')
   return Number(m) === 1 ? `${Number(y) - 1}-12` : `${y}-${String(Number(m) - 1).padStart(2, '0')}`
-}
-
-function trendColor(diff: number, positiveIsGood: boolean): string {
-  if (Math.abs(diff) < 1e-9) return '#475569'
-  const good = diff > 0 ? positiveIsGood : !positiveIsGood
-  return good ? '#0F766E' : '#A03A66'
 }
 
 // ── SVG de las columnas del cash flow ─────────────────────────────────────────
@@ -101,51 +92,6 @@ function makeBarShape(color: string, dataKey: string, cap: number, activeKey: st
   }
 }
 
-// Pastilla compacta de variación vs periodo anterior: flecha + % + importe absoluto.
-function DeltaPill({ current, previous, positiveIsGood }: { current: number; previous: number; positiveIsGood: boolean }) {
-  if (!isFinite(previous) || previous <= 0) return null
-  const diff = current - previous
-  const pct = (diff / previous) * 100
-  const flat = Math.abs(pct) < 0.5
-  const Arrow = flat ? Minus : diff > 0 ? ArrowUp : ArrowDown
-  return (
-    <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-slate-100 px-2 py-0.5 text-xs font-semibold" style={{ color: trendColor(diff, positiveIsGood) }}>
-      <Arrow className="h-3 w-3" />{Math.abs(pct).toFixed(0)}% · {fmtAmount(Math.abs(diff))}
-    </span>
-  )
-}
-
-// Mini-barras de tendencia con leyenda flotante al hover. Base central si hay
-// negativos. Resalta el mes activo (o el último si no hay selección).
-function BarSpark({ data, color, inactiveOp = 0.3, activeIndex }: { data: { label: string; value: number }[]; color: string; inactiveOp?: number; activeIndex?: number }) {
-  const [hi, setHi] = useState<number | null>(null)
-  if (data.length < 2) return null
-  const maxAbs = Math.max(...data.map(d => Math.abs(d.value)), 1)
-  const anyNeg = data.some(d => d.value < 0)
-  const baseHi = activeIndex != null && activeIndex >= 0 ? activeIndex : data.length - 1
-  return (
-    <div className="relative">
-      <div className="flex h-9 items-stretch gap-[3px]">
-        {data.map((d, i) => {
-          const h = Math.max(6, (Math.abs(d.value) / maxAbs) * 100)
-          const pos = d.value >= 0
-          const op = hi == null ? (i === baseHi ? 1 : inactiveOp) : (hi === i ? 1 : inactiveOp * 0.6)
-          return (
-            <div key={i} className="relative min-w-[3px] flex-1" onMouseEnter={() => setHi(i)} onMouseLeave={() => setHi(null)}>
-              <div className="absolute left-0 right-0 rounded-[2px]" style={{ backgroundColor: color, opacity: op, height: `${anyNeg ? h / 2 : h}%`, ...(anyNeg ? (pos ? { bottom: '50%' } : { top: '50%' }) : { bottom: 0 }) }} />
-            </div>
-          )
-        })}
-      </div>
-      {hi != null && (
-        <div className="pointer-events-none absolute bottom-full z-20 mb-1 -translate-x-1/2 whitespace-nowrap rounded-lg border bg-card px-2 py-1 text-[11px] shadow-lg" style={{ left: `${((hi + 0.5) / data.length) * 100}%` }}>
-          <span className="text-muted-foreground">{data[hi].label} · </span><span className="font-semibold tabular-nums">{fmtAmount(data[hi].value)}</span>
-        </div>
-      )}
-    </div>
-  )
-}
-
 function renderActiveShape(props: any) {
   const { cx, cy, innerRadius, outerRadius, startAngle, endAngle, fill } = props
   return <Sector cx={cx} cy={cy} innerRadius={innerRadius} outerRadius={outerRadius + 8} startAngle={startAngle} endAngle={endAngle} fill={fill} />
@@ -181,25 +127,26 @@ export default function Dashboard() {
   // hueco superior móvil (MobileTopBar, componente distinto sin estado
   // compartido) y esta página lean/escriban la misma fuente de verdad.
   const [searchParams, setSearchParams] = useSearchParams()
-  const granularity = (searchParams.get('granularity') as Granularity) || 'month'
+  const granularity = (searchParams.get('granularity') as Granularity) || getPersistedGranularity() || 'month'
   function setGranularity(g: Granularity) {
+    persistGranularity(g)
     setSearchParams(prev => {
       const next = new URLSearchParams(prev)
       next.set('granularity', g)
       return next
     }, { replace: true })
   }
-  const [selectedPeriod, setSelectedPeriod] = useState<string | null>(null)
+  const [selectedPeriod, setSelectedPeriod] = useSessionState<string | null>('zafyros:dash:selectedPeriod', null)
   // Mes bajo el ratón en el cash flow de escritorio (para el tooltip flotante
   // propio, posicionado al lado del grupo de columnas — no el que trae Recharts).
   const [hoverKey, setHoverKey] = useState<string | null>(null)
   const [hoverX, setHoverX] = useState<number | null>(null)
-  const [breakdownType, setBreakdownType] = useState<TransactionType>('gasto')
+  const [breakdownType, setBreakdownType] = useSessionState<TransactionType>('zafyros:dash:breakdownType', 'gasto')
   const [donutActive, setDonutActive] = useState<number | null>(null)
   const [donutXY, setDonutXY] = useState<{ x: number; y: number } | null>(null)
   // Selección del donut en móvil: por tap (persistente), no por hover como en escritorio.
   const [donutActiveMobile, setDonutActiveMobile] = useState<number | null>(null)
-  const [selectedCat, setSelectedCat] = useState<{ key: string; categoryId: string | null; name: string } | null>(null)
+  const [selectedCat, setSelectedCat] = useSessionState<{ key: string; categoryId: string | null; name: string } | null>('zafyros:dash:selectedCat', null)
   // "Ver más análisis" (móvil): pliega Cambios relevantes + Insights por defecto.
   const [showMoreMobile, setShowMoreMobile] = useState(false)
 
@@ -463,10 +410,28 @@ export default function Dashboard() {
     return max > second * 1.7 ? second * 1.15 : max * 1.02
   }, [chartData, isFiltered])
 
+  // Al montar restaura la posición horizontal guardada (si la hay); a partir de
+  // ahí, un cambio de granularidad (acción explícita) sigue saltando al extremo
+  // derecho (último periodo) como siempre.
+  const restoredCashflowScrollRef = useRef(false)
   useEffect(() => {
     const el = scrollRef.current
-    if (el) el.scrollLeft = el.scrollWidth
+    if (!el) return
+    if (!restoredCashflowScrollRef.current) {
+      restoredCashflowScrollRef.current = true
+      const saved = sessionStorage.getItem(CASHFLOW_SCROLL_KEY)
+      if (saved != null) { el.scrollLeft = Number(saved) || 0; return }
+    }
+    el.scrollLeft = el.scrollWidth
   }, [chartWidth, chartWidthMobile, granularity, isMobile])
+
+  useEffect(() => {
+    const el = scrollRef.current
+    if (!el) return
+    const onScroll = () => { try { sessionStorage.setItem(CASHFLOW_SCROLL_KEY, String(el.scrollLeft)) } catch { /* ignore */ } }
+    el.addEventListener('scroll', onScroll, { passive: true })
+    return () => el.removeEventListener('scroll', onScroll)
+  }, [])
 
   function openSubcategory(categoryId: string | null) {
     if (!activeKey) return

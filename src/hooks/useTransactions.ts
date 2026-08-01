@@ -30,6 +30,11 @@ export interface TransactionFilters {
   // Ids de (sub)categorías cuyo nombre casa con la búsqueda (resueltos en el
   // cliente, porque el nombre es i18n). La búsqueda casa concepto OR categoría.
   searchCategoryIds?: string[]
+  // Congela el resultado a este conjunto de ids (snapshot tomado al activar el
+  // filtro "No leídos"), ignorando el resto de condiciones. Así un movimiento
+  // que se marca leído mientras se revisa no desaparece de la vista hasta que
+  // se vuelva a pulsar el filtro. Ver Transactions.tsx (setStatusFilter).
+  pinnedIds?: string[]
 }
 
 const PAGE_SIZE = 50
@@ -73,6 +78,8 @@ function applyConceptSearch(q: any, search: string, categoryIds: string[] = []):
  * ambos comparten los mismos métodos de filtro (.eq/.gte/.lte/.ilike/.is).
  */
 function applyTransactionFilters(query: any, filters: TransactionFilters): any {
+  // Congelado: se ignora cualquier otra condición, solo importan los ids del snapshot.
+  if (filters.pinnedIds) return query.in('id', filters.pinnedIds)
   let q = query
   if (filters.accountId)        q = q.eq('account_id', filters.accountId)
   if (filters.categoryId)       q = q.eq('category_id', filters.categoryId)
@@ -85,6 +92,19 @@ function applyTransactionFilters(query: any, filters: TransactionFilters): any {
   if (filters.uncategorized)    q = q.is('category_id', null)
   if (filters.search)           q = applyConceptSearch(q, filters.search, filters.searchCategoryIds)
   return q
+}
+
+/**
+ * Trae TODOS los ids que encajan con los filtros (sin paginar), para congelar
+ * un snapshot al activar el filtro "No leídos" (ver setStatusFilter en
+ * Transactions.tsx). No se usa con `pinnedIds` (no tendría sentido).
+ */
+export async function fetchAllMatchingIds(profileId: string, filters: TransactionFilters): Promise<string[]> {
+  let query = supabase.from('transactions').select('id').eq('profile_id', profileId)
+  query = applyTransactionFilters(query, filters)
+  const { data, error } = await query
+  if (error) throw error
+  return (data as { id: string }[]).map(r => r.id)
 }
 
 export function useTransactions(profileId?: string, filters: TransactionFilters = {}, page = 0) {

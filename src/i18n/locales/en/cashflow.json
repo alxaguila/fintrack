@@ -1,0 +1,24 @@
+{
+  "title": "Cash flow",
+  "subtitle": "Where your money comes from and where it goes.",
+  "net_savings": "Net savings",
+  "pending_income": "Pending income",
+  "deficit": "Deficit covered",
+  "no_category": "Uncategorized",
+  "others_expense": "Other grouped expenses",
+  "others_income": "Other grouped income",
+  "legend": {
+    "income": "Received income",
+    "pending": "Pending income",
+    "expense": "Expenses"
+  },
+  "no_data": {
+    "title": "No transactions in this period",
+    "description": "Import a statement to see your cash flow."
+  },
+  "no_profile": {
+    "title": "Create your first profile",
+    "description": "Profiles let you manage finances for different people independently.",
+    "action": "Create profile"
+  }
+}

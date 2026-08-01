@@ -45,6 +45,29 @@ export function TransactionsList({
   const relativeGroups = useMemo(() => groupByRelativeDate(transactions), [transactions])
   const dayGroups = useMemo(() => groupByDay(transactions), [transactions])
 
+  // En escritorio la lista scrollea en su propio contenedor (independiente del
+  // <main> de AppShell) — se recuerda esa posición igual que el resto de la app.
+  const scrollRef = useRef<HTMLDivElement>(null)
+  const SCROLL_KEY = 'zafyros:scrollY:transactions-list'
+  useEffect(() => {
+    if (!scrollable) return
+    const el = scrollRef.current
+    if (!el) return
+    const restore = () => {
+      const saved = sessionStorage.getItem(SCROLL_KEY)
+      if (saved != null) el.scrollTop = Number(saved) || 0
+    }
+    // El contenido tarda en alcanzar su alto final (skeleton → datos reales),
+    // así que se reintenta un par de veces en vez de restaurar una sola vez.
+    restore()
+    const t1 = setTimeout(restore, 120)
+    const t2 = setTimeout(restore, 350)
+    const onScroll = () => { try { sessionStorage.setItem(SCROLL_KEY, String(el.scrollTop)) } catch { /* ignore */ } }
+    el.addEventListener('scroll', onScroll, { passive: true })
+    return () => { clearTimeout(t1); clearTimeout(t2); el.removeEventListener('scroll', onScroll) }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [scrollable])
+
   // Animación de ejemplo del swipe (móvil): se decide una sola vez por montaje
   // de esta lista (una visita a la pantalla), sobre el primer movimiento.
   const hintDecidedRef = useRef(false)
@@ -88,7 +111,7 @@ export function TransactionsList({
   }
 
   return (
-    <div className={scrollable ? 'flex-1 min-h-0 overflow-auto pr-1' : ''}>
+    <div ref={scrollRef} className={scrollable ? 'flex-1 min-h-0 overflow-auto pr-1' : ''}>
       {/* Cabecera de columnas: en móvil se quita (el día ya vive en el separador
           de grupo y no hay columnas de detalle que etiquetar) */}
       {!isMobile && (

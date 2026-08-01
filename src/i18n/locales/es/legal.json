@@ -300,7 +300,7 @@
       {
         "heading": "11. Cookies y almacenamiento local",
         "blocks": [
-          { "p": "zafyros utiliza únicamente almacenamiento técnico y funcional en el navegador (localStorage), no cookies HTTP, para mantener al Usuario identificado tras iniciar sesión y recordar sus preferencias de uso. Este tratamiento no requiere consentimiento previo, conforme al artículo 22.2 de la LSSI-CE. Para el detalle completo, consulte la Política de Cookies, disponible en www.zafyros.com/cookies." }
+          { "p": "zafyros utiliza almacenamiento técnico y funcional en el navegador (localStorage), no cookies HTTP, para mantener al Usuario identificado tras iniciar sesión y recordar sus preferencias de uso; este tratamiento no requiere consentimiento previo, conforme al artículo 22.2 de la LSSI-CE. La web pública utiliza además Google Tag Manager, que puede instalar cookies de terceros de analítica y/o publicidad solo si el Usuario da su consentimiento mediante el banner que se muestra en su primera visita. Para el detalle completo, consulte la Política de Cookies, disponible en www.zafyros.com/cookies." }
         ]
       },
       {
@@ -321,7 +321,13 @@
     "metaTitle": "Política de Cookies — zafyros",
     "metaDescription": "Qué cookies usa zafyros, con qué finalidad y cómo puedes gestionarlas o desactivarlas.",
     "pageTitle": "Política de Cookies",
-    "lastUpdated": "Última actualización: 24 de julio de 2026",
+    "lastUpdated": "Última actualización: 2 de agosto de 2026",
+    "cookieBanner": {
+      "message": "Utilizamos cookies para mejorar tu experiencia y analizar el tráfico de la web.",
+      "moreInfo": "Más información",
+      "acceptButton": "Aceptar",
+      "rejectButton": "Rechazar"
+    },
     "sections": [
       {
         "heading": "1. Qué son las cookies y por qué esta página también habla de localStorage",
@@ -346,22 +352,26 @@
         ]
       },
       {
-        "heading": "3. Por qué no se pide consentimiento para estas cookies",
+        "heading": "3. Cookies de terceros y consentimiento del Usuario",
         "blocks": [
-          { "p": "Conforme al artículo 22.2 de la LSSI-CE, no es necesario solicitar el consentimiento previo del Usuario cuando el almacenamiento se utiliza exclusivamente para:" },
-          {
-            "list": [
-              "Permitir la comunicación entre el equipo del Usuario y la red (por ejemplo, mantener la sesión iniciada).",
-              "Prestar un servicio expresamente solicitado por el Usuario (por ejemplo, recordar el idioma que él mismo ha elegido, o el perfil financiero que ha seleccionado)."
-            ]
-          },
-          { "p": "Todas las claves listadas en el apartado anterior encajan en alguno de estos dos supuestos, por lo que zafyros **no muestra un banner de consentimiento de cookies**: basta con informar, que es precisamente la finalidad de esta página." }
+          { "p": "Además de lo anterior, zafyros utiliza Google Tag Manager para gestionar, en la web pública, estas herramientas de terceros: **Google Analytics** (analítica de uso), **Microsoft Clarity** (mapas de calor y grabaciones de sesión anonimizadas) y el **píxel de Reddit Ads** (medición de la efectividad de campañas publicitarias en Reddit). Todas ayudan a entender el uso de la web y, en su caso, a medir campañas." },
+          { "p": "Estas herramientas sí instalan cookies no esenciales en el navegador del Usuario. Conforme al artículo 22.2 de la LSSI-CE y al RGPD, zafyros solicita el consentimiento previo del Usuario mediante un banner que se muestra en la primera visita a la web pública, con dos opciones igual de accesibles: **Aceptar** o **Rechazar**. Ninguna cookie no esencial se instala hasta que el Usuario pulsa «Aceptar»; si pulsa «Rechazar», o no interactúa, estas cookies permanecen desactivadas." },
+          { "p": "El banner no aparece dentro de la aplicación (tras iniciar sesión): ahí no se utiliza Google Tag Manager ni ninguna cookie de terceros, solo en la web pública (zafyros.com)." },
+          { "p": "El Usuario puede cambiar de opinión en cualquier momento borrando los datos de navegación del sitio desde la configuración de su navegador; el banner volverá a mostrarse en la siguiente visita." }
         ]
       },
       {
-        "heading": "4. Si en el futuro se incorpora analítica de terceros",
+        "heading": "4. Qué cookies pueden activar estos terceros tras el consentimiento",
         "blocks": [
-          { "p": "Si zafyros incorporase en el futuro herramientas de analítica que sí requieran consentimiento (por ejemplo, Google Analytics, que utiliza cookies de terceros para distinguir usuarios), esta Política se actualizará antes de activarlas y se mostrará al Usuario un panel de consentimiento previo, granular, con la opción de aceptar, rechazar o personalizar cada categoría de cookies no esenciales. Ninguna cookie no esencial se instalará antes de que el Usuario dé su consentimiento expreso." }
+          { "p": "Si el Usuario acepta el banner, Google Tag Manager puede activar, entre otras, las siguientes cookies (la lista es orientativa y puede variar con el tiempo; consulte la política de cada proveedor para el detalle actualizado):" },
+          {
+            "list": [
+              "Google Analytics: `_ga`, `_ga_*`, `_gid` — analítica de uso (páginas visitadas, tiempo de permanencia). Ver policies.google.com/technologies/cookies.",
+              "Microsoft Clarity: `_clck`, `_clsk`, `CLID`, `MUID`, `SM` — mapas de calor y grabación de sesión anonimizada. Ver privacy.microsoft.com/es-es/privacystatement.",
+              "Reddit Ads: cookies de reddit.com / redditstatic.com — medición de la efectividad de campañas publicitarias. Ver reddit.com/policies/cookies."
+            ]
+          },
+          { "p": "zafyros no utiliza esta información para identificar individualmente al Usuario más allá de lo que las propias herramientas permiten de forma agregada o pseudonimizada." }
         ]
       },
       {

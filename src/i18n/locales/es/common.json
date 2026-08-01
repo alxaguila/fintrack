@@ -5,6 +5,7 @@
   "nav": {
     "home": "Posición Global",
     "analysis": "Análisis",
+    "cash_flow": "Flujo de caja",
     "budgets": "Presupuestos",
     "transactions": "Movimientos",
     "rules": "Reglas de clasificación",

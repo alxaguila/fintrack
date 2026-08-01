@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react'
 import { NavLink, useLocation, useSearchParams } from 'react-router-dom'
-import { Home, BarChart3, ArrowLeftRight, Wallet, Tags, FileClock, Upload, Shield, X, Calculator, ChevronDown, ChevronsUpDown, Settings, CreditCard } from 'lucide-react'
+import { Home, BarChart3, ArrowLeftRight, Wallet, Tags, FileClock, Upload, Shield, X, Calculator, ChevronDown, ChevronsUpDown, Settings, CreditCard, Waypoints } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { cn } from '@/lib/utils'
 import { appPath } from '@/lib/appUrl'
 import { APP_VERSION } from '@/lib/version'
 import type { Granularity } from '@/lib/periods'
+import { getPersistedGranularity, persistGranularity } from '@/lib/granularity'
 import { useIsAdmin } from '@/hooks/useIsAdmin'
 import { useUnreviewedBankCount } from '@/hooks/useAdminBankEntities'
 import { useUserSettings } from '@/hooks/useUserSettings'
@@ -212,6 +213,11 @@ export function MobileBottomNav() {
                 {t('nav.analysis')}
               </NavLink>
 
+              <NavLink to={appPath('/cash-flow')} className={({ isActive }) => drawerItemClass(isActive)}>
+                <Waypoints className="h-[18px] w-[18px] shrink-0" strokeWidth={1.7} />
+                {t('nav.cash_flow')}
+              </NavLink>
+
               <DrawerBudgetsItem />
 
               <NavLink to={appPath('/transactions')} className={({ isActive }) => drawerItemClass(isActive)}>
@@ -314,8 +320,9 @@ export function MobileTopBar() {
   // dashboard real: el selector de periodo no pinta nada ahí (OnboardingGate.tsx).
   if (hasStatements === false) return null
 
-  const granularity = (searchParams.get('granularity') as Granularity) || 'month'
+  const granularity = (searchParams.get('granularity') as Granularity) || getPersistedGranularity() || 'month'
   function setGranularity(g: string) {
+    persistGranularity(g as Granularity)
     setSearchParams(prev => {
       const next = new URLSearchParams(prev)
       next.set('granularity', g)

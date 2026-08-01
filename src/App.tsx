@@ -4,6 +4,8 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { AppShell } from '@/components/layout/AppShell'
 import { Toaster } from '@/components/ui/toaster'
+import { GtmLoader } from '@/components/GtmLoader'
+import { CookieBanner } from '@/components/CookieBanner'
 import Landing from '@/pages/Landing'
 import Register from '@/pages/Register'
 import ResetPassword from '@/pages/ResetPassword'
@@ -18,6 +20,7 @@ import Blog from '@/pages/Blog'
 import BlogPost from '@/pages/blog/Post'
 import Home from '@/pages/Home'
 import Dashboard from '@/pages/Dashboard'
+import CashFlow from '@/pages/CashFlow'
 import Budgets from '@/pages/Budgets'
 import Transactions from '@/pages/Transactions'
 import ClassificationRules from '@/pages/ClassificationRules'
@@ -52,6 +55,7 @@ function appChildren() {
     <>
       <Route index element={<Home />} />
       <Route path="analysis" element={<Dashboard />} />
+      <Route path="cash-flow" element={<CashFlow />} />
       <Route path="budgets" element={<Budgets />} />
       <Route path="transactions" element={<Transactions />} />
       <Route path="transactions/rules" element={<ClassificationRules />} />
@@ -91,6 +95,8 @@ export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
+        <GtmLoader />
+        <CookieBanner />
         <Routes>
           {isAppHost ? (
             <>

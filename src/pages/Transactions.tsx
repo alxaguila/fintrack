@@ -5,7 +5,8 @@ import { useSearchParams } from 'react-router-dom'
 import { useQueryClient } from '@tanstack/react-query'
 import { supabase } from '@/lib/supabase'
 import { useProfile } from '@/contexts/ProfileContext'
-import { useTransactions, useTransactionCounts, useMarkFilteredAsRead, type TransactionFilters } from '@/hooks/useTransactions'
+import { useTransactions, useTransactionCounts, useMarkFilteredAsRead, fetchAllMatchingIds, type TransactionFilters } from '@/hooks/useTransactions'
+import { useSessionState } from '@/hooks/useSessionState'
 import { useAccounts } from '@/hooks/useAccounts'
 import { useCategories, useCategoryGroups } from '@/hooks/useCategories'
 import { useMerchants } from '@/hooks/useMerchants'
@@ -69,7 +70,11 @@ export default function Transactions() {
   const qc = useQueryClient()
   const { activeProfile } = useProfile()
   const [searchParams] = useSearchParams()
-  const [filters, setFilters] = useState<TransactionFilters>(() => {
+  // Filtros que llegan explícitos por querystring (enlaces desde Dashboard,
+  // Home o notificaciones). Si hay alguno, ganan sobre lo guardado en sesión
+  // y lo sobreescriben, para que la próxima visita sin querystring recuerde
+  // este filtro explícito en vez de uno viejo.
+  const urlFilters = useMemo<TransactionFilters>(() => {
     const f: TransactionFilters = {}
     const cat = searchParams.get('categoryId'); if (cat) f.categoryId = cat
     const df = searchParams.get('dateFrom'); if (df) f.dateFrom = df
@@ -79,7 +84,18 @@ export default function Transactions() {
     if (searchParams.get('uncategorized') === 'true') f.uncategorized = true
     if (searchParams.get('unread') === 'true') f.isReviewed = false
     return f
-  })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+  const hasUrlFilters = Object.keys(urlFilters).length > 0
+  const [filters, setFilters] = useSessionState<TransactionFilters>('zafyros:tx:filters', hasUrlFilters ? urlFilters : {})
+  const [search, setSearch] = useSessionState<string>('zafyros:tx:search', '')
+  const [page, setPage] = useSessionState<number>('zafyros:tx:page', 0)
+  // Un enlace con filtro explícito (querystring) es una intención nueva: no
+  // arrastra un texto de búsqueda o página guardados de una visita anterior.
+  useEffect(() => {
+    if (hasUrlFilters) { setFilters(urlFilters); setSearch(''); setPage(0) }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
   const isMobile = useIsMobile()
   const [showFilters, setShowFilters] = useState(false)
   // Bloque superior fijo en móvil: se mide su alto real (cambia con los
@@ -95,8 +111,6 @@ export default function Transactions() {
     ro.observe(el)
     return () => ro.disconnect()
   }, [isMobile])
-  const [page, setPage] = useState(0)
-  const [search, setSearch] = useState('')
   const [categoryTx, setCategoryTx] = useState<Transaction | null>(null)
   const [selGroupId, setSelGroupId] = useState('')
   const [selCategoryId, setSelCategoryId] = useState('')
@@ -161,33 +175,71 @@ export default function Transactions() {
       .map(c => c.id)
   }, [search, categories, groups, tcat])
 
-  const { data: result, isLoading } = useTransactions(
-    activeProfile?.id,
-    { ...filters, search: search || undefined, searchCategoryIds: searchCategoryIds.length ? searchCategoryIds : undefined },
-    page,
-  )
-
-  const transactions = result?.transactions ?? []
-  const total = result?.total ?? 0
-
   // Estado de filtro excluyente: Todos / No leídos / Sin categoría (isReviewed +
   // uncategorized ya no son combinables, seleccionar uno limpia el otro).
   const statusFilter: 'all' | 'unreviewed' | 'uncategorized' =
     filters.uncategorized ? 'uncategorized' : filters.isReviewed === false ? 'unreviewed' : 'all'
 
-  function setStatusFilter(mode: 'all' | 'unreviewed' | 'uncategorized') {
-    setFilters(f => ({
-      ...f,
+  // Congelado de "No leídos": snapshot de ids tomado al activar el filtro, para
+  // que un movimiento que se marca leído mientras se revisa (o se categoriza)
+  // no desaparezca de la vista. Solo pulsar un pill de estado (o cambiar de
+  // perfil) recalcula el snapshot — el resto de campos de filtro no lo tocan.
+  const [pinnedIds, setPinnedIds] = useState<string[] | null>(null)
+  const pinRequestRef = useRef(0)
+
+  useEffect(() => {
+    if (!activeProfile) return
+    pinRequestRef.current++
+    if (filters.isReviewed !== false) { setPinnedIds(null); return }
+    const reqId = pinRequestRef.current
+    setPinnedIds(null)
+    fetchAllMatchingIds(activeProfile.id, {
+      ...filters,
+      search: search || undefined,
+      searchCategoryIds: searchCategoryIds.length ? searchCategoryIds : undefined,
+    }).then(ids => { if (pinRequestRef.current === reqId) setPinnedIds(ids) })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeProfile?.id])
+
+  const effectiveFilters: TransactionFilters =
+    statusFilter === 'unreviewed' && pinnedIds
+      ? { pinnedIds }
+      : { ...filters, search: search || undefined, searchCategoryIds: searchCategoryIds.length ? searchCategoryIds : undefined }
+
+  const { data: result, isLoading } = useTransactions(activeProfile?.id, effectiveFilters, page)
+
+  const transactions = result?.transactions ?? []
+  const total = result?.total ?? 0
+
+  async function setStatusFilter(mode: 'all' | 'unreviewed' | 'uncategorized') {
+    const nextFilters: TransactionFilters = {
+      ...filters,
       isReviewed: mode === 'unreviewed' ? false : undefined,
       uncategorized: mode === 'uncategorized' ? true : undefined,
-    }))
+    }
+    setFilters(nextFilters)
     setPage(0)
+    if (mode !== 'unreviewed' || !activeProfile) {
+      pinRequestRef.current++
+      setPinnedIds(null)
+      return
+    }
+    const reqId = ++pinRequestRef.current
+    setPinnedIds(null)
+    const ids = await fetchAllMatchingIds(activeProfile.id, {
+      ...nextFilters,
+      search: search || undefined,
+      searchCategoryIds: searchCategoryIds.length ? searchCategoryIds : undefined,
+    })
+    if (pinRequestRef.current === reqId) setPinnedIds(ids)
   }
 
   function clearFilters() {
     setFilters({})
     setSearch('')
     setPage(0)
+    pinRequestRef.current++
+    setPinnedIds(null)
   }
 
   // ¿Hay algún filtro activo? (para habilitar "Limpiar filtros")
@@ -413,7 +465,7 @@ export default function Transactions() {
   async function handleMarkAllRead() {
     if (!activeProfile) return
     try {
-      await markAllRead.mutateAsync({ profileId: activeProfile.id, filters: { ...filters, search: search || undefined, searchCategoryIds: searchCategoryIds.length ? searchCategoryIds : undefined } })
+      await markAllRead.mutateAsync({ profileId: activeProfile.id, filters: effectiveFilters })
       toast({ variant: 'success', title: t('mark_all_read.done') })
     } catch (err: any) {
       toast({ variant: 'destructive', title: tc('errors.save_failed'), description: err?.message })

@@ -1,0 +1,24 @@
+{
+  "title": "Flujo de caja",
+  "subtitle": "De dónde viene tu dinero y adónde va.",
+  "net_savings": "Ahorro neto",
+  "pending_income": "Pendiente de cobrar",
+  "deficit": "Déficit cubierto",
+  "no_category": "Sin categoría",
+  "others_expense": "Otros gastos agrupados",
+  "others_income": "Otros ingresos agrupados",
+  "legend": {
+    "income": "Ingresos cobrados",
+    "pending": "Pendiente de cobrar",
+    "expense": "Gastos"
+  },
+  "no_data": {
+    "title": "Sin movimientos en este periodo",
+    "description": "Importa un extracto para ver tu flujo de caja."
+  },
+  "no_profile": {
+    "title": "Crea tu primer perfil",
+    "description": "Los perfiles te permiten gestionar las finanzas de distintas personas de forma independiente.",
+    "action": "Crear perfil"
+  }
+}

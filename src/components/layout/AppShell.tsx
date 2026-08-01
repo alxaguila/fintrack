@@ -1,4 +1,4 @@
-import { Navigate } from 'react-router-dom'
+import { Navigate, useLocation } from 'react-router-dom'
 import { useEffect, useRef, useState } from 'react'
 import { supabase } from '@/lib/supabase'
 import { consumeSessionHandoff } from '@/lib/sessionHandoff'
@@ -18,6 +18,8 @@ import type { Session } from '@supabase/supabase-js'
 
 export function AppShell() {
   const [session, setSession] = useState<Session | null | undefined>(undefined)
+  const location = useLocation()
+  const mainRef = useRef<HTMLElement>(null)
   // enabled: !!session -> evita que estas consultas se disparen antes de que el
   // hand-off de sesión (zafyros.com -> app.zafyros.com) haya terminado; si no,
   // arrancan sin autenticación, fallan, y quedan reintentando con backoff
@@ -61,6 +63,33 @@ export function AppShell() {
     createProfile.mutateAsync({ name, avatar_color: '#6366f1', is_default: true })
       .catch(() => { creatingRef.current = false })
   }, [session, profilesLoading, profiles.length, settingsLoading, settings?.onboarding_completed, settings?.first_name, settings?.last_name])
+
+  // Recuerda el scroll vertical de cada pantalla (sessionStorage, por ruta) para
+  // restaurarlo al volver navegando dentro de la SPA. El contenido de la ruta
+  // (listas, gráficas) puede tardar en alcanzar su alto final tras el cambio de
+  // ruta, así que se reintenta un par de veces en vez de una sola restauración.
+  useEffect(() => {
+    const el = mainRef.current
+    if (!el) return
+    const key = `zafyros:scrollY:${location.pathname}`
+    const restore = () => {
+      const saved = sessionStorage.getItem(key)
+      if (saved != null) el.scrollTop = Number(saved) || 0
+    }
+    restore()
+    const t1 = setTimeout(restore, 120)
+    const t2 = setTimeout(restore, 350)
+    return () => { clearTimeout(t1); clearTimeout(t2) }
+  }, [location.pathname])
+
+  useEffect(() => {
+    const el = mainRef.current
+    if (!el) return
+    const key = `zafyros:scrollY:${location.pathname}`
+    const onScroll = () => { try { sessionStorage.setItem(key, String(el.scrollTop)) } catch { /* ignore */ } }
+    el.addEventListener('scroll', onScroll, { passive: true })
+    return () => el.removeEventListener('scroll', onScroll)
+  }, [location.pathname])
 
   // Cargando sesión
   if (session === undefined || profilesLoading) {
@@ -107,7 +136,13 @@ export function AppShell() {
         <Sidebar />
         <div className="flex flex-1 flex-col overflow-hidden">
           <MobileTopBar />
-          <main className="flex-1 overflow-y-auto">
+          {/* sm:pr-16 reserva hueco a la derecha para la campana (fixed, flota
+              por encima de TODAS las pantallas) — sin esto, cualquier cabecera
+              de página con controles alineados a la derecha (selector de
+              periodo, etc.) puede acabar tapada por ella en cuanto deja de
+              apilarse en columna (>= sm). Se aplica aquí una sola vez en vez
+              de en cada página para que cubra a todas por igual. */}
+          <main ref={mainRef} className="flex-1 overflow-y-auto sm:pr-16">
             <OnboardingGate />
           </main>
           <MobileBottomNav />

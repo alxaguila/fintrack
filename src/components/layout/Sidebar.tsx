@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { NavLink, Link, useLocation } from 'react-router-dom'
 import {
   Home, BarChart3, ArrowLeftRight, Upload, Wallet, Tags, FileClock, Shield, ShieldCheck, Calculator,
-  Settings, CreditCard, Landmark, Users, Vote, Store, MessageSquare, ChevronsUpDown,
+  Settings, CreditCard, Landmark, Users, Vote, Store, MessageSquare, ChevronsUpDown, Waypoints,
 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { cn } from '@/lib/utils'
@@ -23,6 +23,7 @@ import {
 const navItemsTop = [
   { to: appPath(),             icon: Home,           label: 'nav.home' },
   { to: appPath('/analysis'),  icon: BarChart3,      label: 'nav.analysis' },
+  { to: appPath('/cash-flow'), icon: Waypoints,      label: 'nav.cash_flow' },
 ]
 const navItemsBottom = [
   { to: appPath('/transactions'), icon: ArrowLeftRight, label: 'nav.transactions' },

@@ -76,7 +76,10 @@ export function TransactionRow({ tx, category, group, account, merchant, entityL
   const catColor = group?.color ?? '#94a3b8'
   const avatar = resolveEntityAvatar(account, entityLogoByName)
   const showMerchantLogo = !!merchant?.logo_url && !merchantLogoError
-  const amountColor = tx.transaction_type === 'ingreso' ? 'text-income' : 'text-foreground'
+  const amountColor =
+    tx.transaction_type === 'ingreso' ? 'text-income' :
+    tx.transaction_type === 'gasto' ? 'text-expense' :
+    'text-foreground'
   const { int, dec } = splitAmount(formatCurrency(tx.amount))
 
   // Swipe (solo móvil): izquierda = marcar leído/no leído, derecha = reclasificar
@@ -173,13 +176,13 @@ export function TransactionRow({ tx, category, group, account, merchant, entityL
 
       <div
         className={cn(
-          'grid items-center gap-2 px-4 py-3 cursor-pointer sm:gap-3 sm:bg-transparent',
+          'grid items-center gap-2 px-4 py-3 cursor-pointer sm:gap-3',
           !dragging && 'transition-[transform,opacity,background-color] duration-200',
           dragging && 'opacity-90',
           TX_ROW_GRID_COLS,
           tx.is_reviewed
             ? 'bg-muted/30 text-muted-foreground hover:bg-muted/50'
-            : 'bg-card hover:bg-muted/20',
+            : 'bg-card hover:bg-muted/20 sm:bg-transparent',
         )}
         style={isMobile ? { transform: `translateX(${dx}px)` } : undefined}
         onClick={onClick}
@@ -277,7 +280,7 @@ export function TransactionRow({ tx, category, group, account, merchant, entityL
       {/* Importe */}
       <div className={cn('text-right text-[15px] font-semibold tabular-nums', amountColor)}>
         {int}
-        <span className="text-[11.5px] font-normal text-muted-foreground/70">{dec}</span>
+        <span className="text-[11.5px] font-normal opacity-70">{dec}</span>
       </div>
 
       {/* Leído / No leído (sm+ solamente: en móvil se sustituye por el swipe) */}

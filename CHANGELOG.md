@@ -2,6 +2,99 @@
 
 Lista de cambios por versión (`APP_VERSION` en `src/lib/version.ts`). Solo se añade una entrada cuando el código de la app cambia.
 
+## v1.1071
+- Ampliada la Política de Cookies (es/en) para nombrar, además de Google Analytics, a Microsoft Clarity y al píxel de Reddit Ads como terceros que pueden activarse tras aceptar el banner, con sus cookies orientativas y enlaces a la política de cada proveedor.
+
+## v1.1064
+- Ajustado el texto del banner de cookies a una redacción más estándar y neutra ("Utilizamos cookies para mejorar tu experiencia y analizar el tráfico de la web").
+
+## v1.1063
+- Añadido banner de consentimiento de cookies (aceptar/rechazar) en la landing pública: Google Tag Manager ya no carga hasta que el Usuario acepta, y se guarda la decisión para no volver a preguntar. Reescrita la Política de Cookies (y el apartado de cookies de la Política de Privacidad) en español e inglés para reflejar el nuevo banner y las cookies de Google que pueden activarse tras el consentimiento.
+
+## v1.1058
+- Añadido soporte para Google Tag Manager en la landing pública, activable con la variable de entorno `VITE_GTM_ID` (vacía por defecto, no carga nada). No se carga nunca dentro de la app autenticada.
+
+## v1.1056
+- Corregido: la campana de notificaciones (flotante, fija arriba a la derecha en toda la app) podía quedar tapada por controles alineados a la derecha en la cabecera de una página (p. ej. el selector de periodo de Flujo de Caja) en cuanto la cabecera deja de apilarse en columna. Se reserva ahora un hueco a su medida en el contenido principal (una sola vez, a nivel de `AppShell`) para que ninguna pantalla pueda invadir su espacio.
+
+## v1.1053
+- Corregido: el diagrama de flujo de caja se quedaba con un alto fijo pequeño (~420px) sin importar cuánto espacio dejara la tarjeta — el `ResizeObserver` que mide el hueco disponible se enganchaba solo una vez al montar, y como el div a medir no existía todavía mientras cargaban los datos, nunca llegaba a activarse. Ahora ese div siempre está presente desde el primer render, así que el diagrama ocupa correctamente todo el alto real de la tarjeta.
+
+## v1.1051
+- Flujo de caja: cuando hay ahorro o déficit, las ramas reales que sí llegan hasta la columna final (gastos o ingresos) ya no dejan hueco vacío debajo — se reescalan para ocupar el 100% del alto disponible entre ellas, manteniendo su proporción relativa. El hub pasa a ocupar siempre el 100% del alto. La banda de ahorro/déficit se acerca aún más al centro (antes ~20% del trayecto, ahora ~8%) y su etiqueta pasa a ir debajo de la banda en vez de al lado, como en el ejemplo de referencia.
+
+## v1.1046
+- Flujo de caja: el nodo insertado (pendiente/déficit/ahorro) se acerca más al centro (antes a mitad de camino, ahora ~20% del trayecto), como en el ejemplo de referencia. Se quita el tramo recto forzado de las ramas reales — cada una se curva de forma natural e independiente, sin cruzarse nunca entre sí porque conservan el mismo orden en ambos extremos.
+
+## v1.1043
+- Flujo de caja: las ramas reales del lado de ingresos vuelven a ser rectas desde el hub hasta el borde izquierdo del nodo insertado (pendiente/déficit) — antes curvaban en todo el trayecto — y solo curvan a partir de ese punto para alcanzar su posición en la columna de la izquierda.
+
+## v1.1041
+- Flujo de caja: el diagrama pasa de un alto fijo a ojo (que dejaba media pantalla en blanco) a ocupar todo el hueco vertical real disponible en la tarjeta — se mide con `ResizeObserver` en vez de adivinar un número de píxeles, así que se ajusta solo al tamaño real de la ventana/tarjeta.
+
+## v1.1039
+- Flujo de caja: rehecho el cálculo del diagrama desde cero con un modelo distinto que evita el solape por construcción, en vez de intentar esquivarlo con curvas. El hub pasa a representar solo la parte "confirmada" (el menor de ingreso/gasto), sale más bajo que las columnas laterales y va anclado arriba del todo (no centrado). Las columnas laterales usan una escala € → px única para todo el diagrama, así que las categorías reales + el nodo de cierre (pendiente/déficit/ahorro) siempre suman exactamente el alto disponible, sin solaparse nunca entre sí.
+- El contenedor pasa a tener un alto FIJO (ya no crece con el número de categorías) — con muchas categorías de gasto, cada rama se estrecha para que quepa siempre entre arriba y abajo. Las ramas demasiado finas para su etiqueta de dos líneas se quedan sin nombre visible en el gráfico (el hover lo sigue mostrando).
+
+## v1.1037
+- Flujo de caja: la curva "plana hasta pasar el nodo de cierre" del cambio anterior no era realmente plana (la aproximación con curva Bezier seguía desviándose y cruzaba por encima de "Déficit cubierto"/"Pendiente de cobrar") — ahora el tramo previo es un segmento recto de verdad, sin desviación de altura, y solo curva en el tramo final tras dejar atrás el nodo insertado.
+- Se reduce más el alto mínimo por rama, el hueco entre ramas y el tamaño de letra de las etiquetas para que el diagrama quepa en el scroll normal de la página sin dispararse de alto (antes se pasaba de la pantalla visible con muchas categorías de gasto).
+
+## v1.1025
+- Movimientos: la parte decimal y el símbolo € del importe ya heredan el color del importe (verde/coral/neutro) en vez de quedarse siempre en gris neutro — antes solo la parte entera llevaba el color.
+
+## v1.1023
+- Corregido: al entrar en Movimientos desde un enlace con filtro explícito (p. ej. "ver movimientos" de un mes/categoría desde Análisis), ya no se quedaban los filtros de la visita anterior guardados en sesión — ahora el filtro explícito del enlace siempre gana y se aplica de verdad.
+
+## v1.1022
+- Movimientos: el importe de un gasto ahora se pinta en coral (mismo tono que ya se usaba en la pastilla de tipo "Gasto"), antes se mostraba en el mismo color neutro que "No computable". Los importes de ingreso (verde) y no computable (neutro) no cambian.
+
+## v1.1020
+- Flujo de caja: el diagrama reduce su alto mínimo (menos margen por rama) para que quepa de un vistazo con el scroll normal de la página, sin necesitar scroll vertical propio.
+- Las ramas reales que comparten lado con un nodo de cierre (pendiente/déficit/ahorro) ya no cruzan por encima de su rectángulo — se mantienen planas mientras pasan por delante de él y solo curvan hacia el hub una vez lo han dejado atrás (y viceversa en el lado de gastos, curvan nada más salir del hub y se mantienen planas el resto del trayecto).
+- La tolerancia de agrupación en "Otros" se mantiene al 1%, ahora con más sitio para que quepan más ramas individuales sin que el gráfico se dispare de alto.
+
+## v1.1018
+- Flujo de caja: corregido un fallo real del cambio anterior — cada lado calculaba su alto por separado, así que cuando un lado necesitaba mucho más sitio que el otro (p. ej. muchas categorías de gasto), el nodo de cierre del lado corto (pendiente/déficit/ahorro) se quedaba pegado a SU propio presupuesto en vez del alto final compartido, apareciendo flotando a media altura y con su banda cruzando por encima de las demás. Ahora se mide primero cuánto necesita cada lado y se usa el mayor como presupuesto común para reconstruir los dos — así el hub y las dos columnas laterales terminan siempre con el mismo alto exacto, y el nodo de cierre queda pegado al borde inferior real de esa altura compartida.
+
+## v1.1016
+- Flujo de caja: corregido que las categorías reales dejaban un hueco vacío antes del nodo de cierre (pendiente/déficit/ahorro) en vez de llegar hasta abajo del todo — ahora las ramas reales siempre ocupan la columna completa y el nodo de cierre se dibuja aparte, pegado al borde inferior con su alto real; la última rama real se curva para encajar en su tramo real del hub.
+- Se amplía la separación entre las columnas de fuera y el centro para que esas curvas tengan sitio de sobra.
+- La tolerancia para agrupar en "Otros [ingresos/gastos] agrupados" baja del 3% al 1% del total — antes se agrupaban demasiadas categorías de gasto.
+
+## v1.1014
+- Flujo de caja: el hub vuelve a tener el mismo alto que las columnas laterales (antes era más pequeño y centrado). El lado de gastos baja de grupo a subcategoría, cada una con su propio tono dentro del color de su grupo — igual que ya hacía el de ingresos — y ambos lados agrupan en "Otros [ingresos/gastos] agrupados" las subcategorías con menos del 3% del total; "Otros ingresos agrupados" usa un tono verde en vez del gris neutro.
+- Al pasar el cursor sobre una cinta, se resalta en un color más intenso y aparece una leyenda flotante con el nombre, el importe y el porcentaje sobre el total.
+- Las ramas de categorías reales se apilan para llenar todo el alto de su columna; el nodo de cierre (pendiente/déficit/ahorro) se coloca después, con su alto real (no forzado), de modo que nunca se solapan y solo él se queda corto — el resto de bandas sí llegan hasta abajo del todo.
+
+## v1.1012
+- Flujo de caja: segunda pasada de ajuste fino sobre el diagrama — el hub central pasa a tener un alto fijo y centrado (ya no se estira con las columnas de fuera), el contenedor y las alturas mínimas crecen para dar más aire, las cintas van más transparentes y las barras de los extremos más estrechas. Los nodos "Pendiente de cobrar" / "Déficit cubierto" / "Ahorro neto" arrancan ahora a mitad de camino entre su columna y el hub (en vez de al ras), para distinguirlos de las ramas de categorías reales. "Otros [ingresos/gastos] agrupados" queda siempre el último de la lista en vez de ordenarse por importe. Se quita la nota al pie sobre qué categorías se agrupan.
+- Las tarjetas KPI de arriba (Ingresos/Gastos/Balance/Tasa de ahorro) pasan a ser exactamente las mismas que las de Análisis (mismo componente, mismos colores, minigráfico de tendencia y comparación con el periodo anterior) — antes eran una versión propia con otro estilo. `DeltaPill`, `BarSpark` y la paleta de las KPI se extraen a un componente compartido (`src/components/dashboard/KpiTrend.tsx`) usado ahora por ambas pantallas.
+
+## v1.1010
+- Flujo de caja: rediseño del diagrama a partir de la maqueta del equipo — las cintas pasan de líneas finas a bandas rellenas (más fieles al boceto), la rama "Pendiente de cobrar" se distingue con relleno más claro y borde discontinuo, y las categorías con menos del 3% del total se agrupan en un nodo "Otros" por lado (con nota al pie detallando qué categorías incluye) para que el gráfico se lea de un vistazo.
+- La tarjeta de "Ahorro neto" cambia de color según el estado: gris informativo si el periodo sigue en curso y solo falta por cobrar, o de aviso si el periodo ya cerró con gasto real por encima del ingreso — con su explicación debajo.
+- Encima del diagrama se añade el total del periodo, el desglose (ingresado vs. pendiente/cubierto) y una leyenda de colores.
+
+## v1.1007
+- Flujo de caja: cada rama tiene ahora un alto mínimo legible, así que las etiquetas de ramas pequeñas (que antes se solapaban entre sí cuando había muchas categorías de poco importe) ya no se pisan. Como consecuencia, las columnas de ingreso/gasto pueden acabar más altas que el nodo central "Entradas" cuando hace falta sitio — el propio gráfico crece para acomodarlas en vez de recortar texto.
+
+## v1.1005
+- Flujo de caja: el diagrama pasa a calcular su propio layout (antes delegaba en el `Sankey` de recharts) para que las columnas de ingreso y gasto terminen siempre a la misma altura que el nodo central, la gráfica se centre en la pantalla y las cintas de ingreso usen el color de su propia rama en vez de salir en gris.
+- El nodo central ya no se llama "Ingresos" (chocaba visualmente con el grupo de ingreso del mismo nombre) — pasa a llamarse "Entradas" / "Inflows".
+- El lado de ingresos pasa de mostrarse por grupo a mostrarse por subcategoría, con un tono de luminosidad distinto por subcategoría dentro del color de su grupo (`src/lib/categoryColor.ts`) para que sean distinguibles entre sí sin salirse de su familia de color.
+
+## v1.1003
+- Nueva pantalla "Flujo de caja" (`/cash-flow`, entrada propia en el menú): diagrama Sankey de ingresos → gastos por grupo de categoría, con selector de periodo (mes/trimestre/año, igual que Presupuestos) y KPIs de ingresos, gastos, ahorro neto y tasa de ahorro.
+- Cuando el gasto del periodo supera al ingreso, el diagrama añade un nodo de cierre para que cuadre visualmente: si el periodo sigue en curso (p. ej. la nómina del mes aún no ha entrado) se muestra en gris como "Pendiente de cobrar"; si el periodo ya cerró, se muestra en rosa como "Déficit cubierto" — así no se confunde un simple desfase de fechas con un gasto real por encima de los ingresos.
+
+## v1.999
+- Movimientos: al revisar la lista con el filtro "No leídos", abrir un movimiento para categorizarlo (o marcarlo leído a mano) ya no lo hace desaparecer de la vista — la lista se congela hasta que se vuelve a pulsar un filtro de estado (Todos/No leídos/Sin categoría).
+- Movimientos y Análisis recuerdan ahora los filtros aplicados (cuenta, tipo, fechas, importe, búsqueda, estado, granularidad, mes/trimestre y categoría seleccionados), la página y la posición de scroll al volver a la pantalla tras navegar por otra parte de la app (se pierden al cerrar la pestaña).
+
+## v1.997
+- Movimientos, escritorio: las filas marcadas como leídas ahora tienen un fondo gris tenue (igual que en móvil) para distinguirlas de las no leídas; antes se veían todas iguales. El hover sigue destacando por encima de ese fondo.
+
 ## v1.990
 - Movimientos: el logo del comercio en cada fila ya no usa un redondeo tan pronunciado (menos que antes) — algunos logos cuadrados (p. ej. Orange) quedaban con el texto cortado por las esquinas muy curvas.
 

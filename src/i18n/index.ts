@@ -19,6 +19,7 @@ import esLegal from './locales/es/legal.json'
 import esCalculators from './locales/es/calculators.json'
 import esBlog from './locales/es/blog.json'
 import esNotifications from './locales/es/notifications.json'
+import esCashflow from './locales/es/cashflow.json'
 
 import enCommon from './locales/en/common.json'
 import enAuth from './locales/en/auth.json'
@@ -37,6 +38,7 @@ import enLegal from './locales/en/legal.json'
 import enCalculators from './locales/en/calculators.json'
 import enBlog from './locales/en/blog.json'
 import enNotifications from './locales/en/notifications.json'
+import enCashflow from './locales/en/cashflow.json'
 
 i18n
   .use(LanguageDetector)
@@ -64,6 +66,7 @@ i18n
         calculators: esCalculators,
         blog: esBlog,
         notifications: esNotifications,
+        cashflow: esCashflow,
       },
       en: {
         common: enCommon,
@@ -83,6 +86,7 @@ i18n
         calculators: enCalculators,
         blog: enBlog,
         notifications: enNotifications,
+        cashflow: enCashflow,
       },
     },
     interpolation: { escapeValue: false },
