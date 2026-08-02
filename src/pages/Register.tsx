@@ -13,6 +13,8 @@ import { GoogleButton, OrDivider } from '@/components/auth/GoogleButton'
 import { toast } from '@/hooks/useToast'
 import { BRAND, BrandMark } from '@/components/landing/brand'
 import { redirectToAppWithSession } from '@/lib/sessionHandoff'
+import { getCookieConsent } from '@/lib/cookieConsent'
+import { sha256Hex } from '@/lib/hash'
 
 const RESEND_COOLDOWN = 60
 const OTP_MIN = 6
@@ -101,6 +103,16 @@ export default function Register() {
       await supabase
         .from('user_settings')
         .upsert({ user_id: data.user.id, preferred_language: lang, updated_at: new Date().toISOString() })
+
+      const hashedEmail = await sha256Hex(data.user.email!.trim().toLowerCase())
+      ;((window as any).dataLayer = (window as any).dataLayer || []).push({
+        event: 'sign_up_completed',
+        user_id: data.user.id,
+        hashed_email: hashedEmail,
+      })
+      if (getCookieConsent() === 'accepted') {
+        supabase.functions.invoke('reddit-capi').catch(() => {})
+      }
     }
   }
 

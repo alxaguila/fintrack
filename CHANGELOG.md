@@ -2,6 +2,9 @@
 
 Lista de cambios por versión (`APP_VERSION` en `src/lib/version.ts`). Solo se añade una entrada cuando el código de la app cambia.
 
+## v1.1093
+- Añadido evento de conversión al completar el registro (`sign_up_completed`), compartido para Reddit Ads (píxel + nueva Conversion API server-side) y preparado para Google Ads (Enhanced Conversions). El email se hashea (SHA-256) antes de exponerse a la capa de datos; la llamada server-side a Reddit solo se hace si el Usuario aceptó el banner de cookies.
+
 ## v1.1071
 - Ampliada la Política de Cookies (es/en) para nombrar, además de Google Analytics, a Microsoft Clarity y al píxel de Reddit Ads como terceros que pueden activarse tras aceptar el banner, con sus cookies orientativas y enlaces a la política de cada proveedor.
 
