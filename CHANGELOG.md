@@ -2,6 +2,19 @@
 
 Lista de cambios por versión (`APP_VERSION` en `src/lib/version.ts`). Solo se añade una entrada cuando el código de la app cambia.
 
+## v1.1132
+- Corrección: el ticker de notificaciones dejaba ver (borroso) el contenido de la página detrás, así que el fondo cambiaba de claro a oscuro según lo que hubiera debajo y el texto blanco perdía contraste. Ahora tiene un fondo sólido y opaco, siempre legible.
+
+## v1.1126
+- Cambiado el horario del email de inactividad: en vez de las 09:00 UTC fijas, ahora se manda siempre a las 7h hora de Madrid (ajustándose solo al cambio de horario de verano/invierno).
+
+## v1.1110
+- Suavizado el copy del email de inactividad en su primer aviso (15 días): tono menos "alerta de sistema" y más "mira en qué se ha ido tu dinero". El de 30 días se mantiene igual. El botón del email ahora lleva directo a la pantalla de importar, no a la home de la app.
+- El email de inactividad ahora agrupa las cuentas del usuario por cercanía (cuentas con 3 días o menos de diferencia entre sí) y espera a que la cuenta menos desactualizada del grupo llegue también a 15 días antes de enviar, para no mandar varios emails seguidos según cada cuenta va cruzando el umbral por separado.
+
+## v1.1108
+- Añadido email de aviso (vía Resend) para cuentas sin actualizar más de 15/30 días, con el mismo umbral que la campanita de notificaciones in-app, para llegar también a usuarios que no han vuelto a abrir la app. Envío diario automático (pg_cron), agrupado por usuario. Nuevo toggle en Ajustes para desactivar estos avisos por email.
+
 ## v1.1093
 - Añadido evento de conversión al completar el registro (`sign_up_completed`), compartido para Reddit Ads (píxel + nueva Conversion API server-side) y preparado para Google Ads (Enhanced Conversions). El email se hashea (SHA-256) antes de exponerse a la capa de datos; la llamada server-side a Reddit solo se hace si el Usuario aceptó el banner de cookies.
 

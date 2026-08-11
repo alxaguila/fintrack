@@ -103,16 +103,21 @@ export function NotificationTicker() {
   return (
     <>
       <div
-        className="fixed z-30 flex h-10 items-center gap-2 overflow-hidden rounded-full border border-white/10 bg-[var(--brand-ink)]/80 px-3 text-white shadow-lg backdrop-blur-sm"
-        style={{ left: '66.6667vw', right: '64px', top: 'calc(env(safe-area-inset-top, 0px) + 12px)' }}
+        className="fixed z-30 flex h-10 select-none items-center gap-2 overflow-hidden rounded-full border border-white/10 px-3 text-white shadow-lg"
+        style={{
+          left: '66.6667vw',
+          right: '64px',
+          top: 'calc(env(safe-area-inset-top, 0px) + 12px)',
+          backgroundColor: 'var(--brand-ink)',
+        }}
         aria-hidden="true"
       >
         <Radio className="h-4 w-4 shrink-0 text-[var(--brand-primary-3)]" strokeWidth={1.8} />
         <div
           className="relative h-full min-w-0 flex-1 overflow-hidden"
           style={{
-            WebkitMaskImage: 'linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent)',
-            maskImage: 'linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent)',
+            WebkitMaskImage: 'linear-gradient(90deg,transparent,#000 3%,#000 97%,transparent)',
+            maskImage: 'linear-gradient(90deg,transparent,#000 3%,#000 97%,transparent)',
           }}
         >
           <div
