@@ -6,6 +6,7 @@
     "security": "Login & password",
     "plan": "My plan",
     "feedback": "Feedback & support",
+    "notifications": "Notifications",
     "logout": "Sign out"
   },
   "security": {
@@ -121,6 +122,9 @@
   "language": {
     "title": "App language",
     "saved": "Language saved"
+  },
+  "notifications": {
+    "stale_accounts": "Stale accounts"
   },
   "plan": {
     "title": "My plan",

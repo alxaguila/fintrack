@@ -27,6 +27,8 @@ export type UserSettings = {
   // Plan de suscripción (migración 022). No auto-asignable: solo is_admin()
   // puede cambiarlo (trigger `prevent_plan_self_change`).
   plan: PlanType
+  // Opt-out del email de "cuentas sin actualizar" (migración 048).
+  notify_inactivity_email: boolean
   created_at: string
   updated_at: string
 }

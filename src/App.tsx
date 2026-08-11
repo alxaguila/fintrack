@@ -32,6 +32,7 @@ import SettingsProfile from '@/pages/settings/Profile'
 import SettingsSecurity from '@/pages/settings/Security'
 import SettingsPlan from '@/pages/settings/Plan'
 import SettingsFeedback from '@/pages/settings/Feedback'
+import SettingsNotifications from '@/pages/settings/Notifications'
 import Admin from '@/pages/Admin'
 import AdminBancos from '@/pages/admin/Bancos'
 import AdminCategorias from '@/pages/admin/Categorias'
@@ -67,6 +68,7 @@ function appChildren() {
       <Route path="settings/security" element={<SettingsSecurity />} />
       <Route path="settings/plan" element={<SettingsPlan />} />
       <Route path="settings/feedback" element={<SettingsFeedback />} />
+      <Route path="settings/notifications" element={<SettingsNotifications />} />
       <Route path="admin" element={<AdminRoute><Admin /></AdminRoute>} />
       <Route path="admin/bancos" element={<AdminRoute><AdminBancos /></AdminRoute>} />
       <Route path="admin/categorias" element={<AdminRoute><AdminCategorias /></AdminRoute>} />

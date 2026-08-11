@@ -6,6 +6,7 @@
     "security": "Login y contraseña",
     "plan": "Mi plan",
     "feedback": "Feedback y soporte",
+    "notifications": "Notificaciones",
     "logout": "Cerrar sesión"
   },
   "security": {
@@ -121,6 +122,9 @@
   "language": {
     "title": "Idioma de la aplicación",
     "saved": "Idioma guardado"
+  },
+  "notifications": {
+    "stale_accounts": "Cuentas sin actualizar"
   },
   "plan": {
     "title": "Mi plan",

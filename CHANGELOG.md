@@ -2,6 +2,9 @@
 
 Lista de cambios por versión (`APP_VERSION` en `src/lib/version.ts`). Solo se añade una entrada cuando el código de la app cambia.
 
+## v1.1134
+- Movido el toggle de avisos por email a una nueva sección "Notificaciones" dentro de Ajustes (antes era una fila suelta en el menú principal), con un interruptor real para "Cuentas sin actualizar".
+
 ## v1.1132
 - Corrección: el ticker de notificaciones dejaba ver (borroso) el contenido de la página detrás, así que el fondo cambiaba de claro a oscuro según lo que hubiera debajo y el texto blanco perdía contraste. Ahora tiene un fondo sólido y opaco, siempre legible.
 
