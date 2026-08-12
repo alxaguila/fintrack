@@ -35,6 +35,7 @@ export function SiteFooter() {
           <div style={{ display: 'flex', flexDirection: 'column', gap: 12, font: `400 14px ${BRAND.sans}`, color: '#586470' }}>
             <a href="/#producto">{t('nav.product')}</a>
             <a href="/#seguridad">{t('nav.security')}</a>
+            <a href="/demo">{t('footer.demo')}</a>
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 12, font: `400 14px ${BRAND.sans}`, color: '#586470' }}>
             <a href="/blog">{t('footer.blog')}</a>

@@ -4,10 +4,12 @@ import { useNavigate, useSearchParams } from 'react-router-dom'
 import { ComposedChart, Bar, XAxis, YAxis, Tooltip, PieChart, Pie, Cell, Sector } from 'recharts'
 import { ArrowUp, ArrowDown, Eye, Check, Info, TriangleAlert, ChevronLeft, ChevronDown } from 'lucide-react'
 import { useProfile } from '@/contexts/ProfileContext'
+import { useDemoMode } from '@/contexts/DemoModeContext'
 import { DeltaPill, BarSpark, trendColor, C_INCOME, C_EXPENSE, C_NEUTRAL, C_TASA } from '@/components/dashboard/KpiTrend'
 import { useDashboardTotals, useDashboardBreakdown, useDashboardCategorySeries, useTransactionCounts } from '@/hooks/useTransactions'
 import { useCategories } from '@/hooks/useCategories'
 import { usePlan } from '@/hooks/usePlan'
+import { DEMO_DASHBOARD_TOTALS, DEMO_DASHBOARD_BREAKDOWN, DEMO_TRANSACTION_COUNTS, DEMO_CATEGORIES, getDemoCategorySeries } from '@/lib/demoData'
 import { useIsMobile } from '@/hooks/useIsMobile'
 import { UpgradeHintDialog } from '@/components/plan/UpgradeHintDialog'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -120,6 +122,7 @@ export default function Dashboard() {
   const { t: tcommon } = useTranslation('common')
   const { t: tcat } = useTranslation('categories')
   const { activeProfile } = useProfile()
+  const isDemo = useDemoMode()
   const navigate = useNavigate()
   const isMobile = useIsMobile()
 
@@ -150,9 +153,16 @@ export default function Dashboard() {
   // "Ver más análisis" (móvil): pliega Cambios relevantes + Insights por defecto.
   const [showMoreMobile, setShowMoreMobile] = useState(false)
 
-  const { data: totals = [], isLoading } = useDashboardTotals(activeProfile?.id)
-  const { data: counts } = useTransactionCounts(activeProfile?.id)
-  const { data: categories = [] } = useCategories()
+  const totalsQuery = useDashboardTotals(isDemo ? undefined : activeProfile?.id)
+  const totals = isDemo ? DEMO_DASHBOARD_TOTALS : (totalsQuery.data ?? [])
+  const isLoading = isDemo ? false : totalsQuery.isLoading
+
+  const countsQuery = useTransactionCounts(isDemo ? undefined : activeProfile?.id)
+  const counts = isDemo ? DEMO_TRANSACTION_COUNTS : countsQuery.data
+
+  const categoriesQuery = useCategories()
+  const categories = isDemo ? DEMO_CATEGORIES : (categoriesQuery.data ?? [])
+
   const { plan, limits: planLimits } = usePlan()
   const monthNames = t('charts.months', { returnObjects: true }) as string[]
   const scrollRef = useRef<HTMLDivElement>(null)
@@ -205,7 +215,7 @@ export default function Dashboard() {
   // Tope de histórico del Dashboard según el plan (NULL = ilimitado). Se recorta
   // aquí, antes de agrupar en periodos, para que ningún bloque posterior (KPIs,
   // sparkline, desglose) llegue a ver meses fuera del rango permitido.
-  const historyMonths = planLimits?.dashboard_history_months ?? null
+  const historyMonths = isDemo ? null : (planLimits?.dashboard_history_months ?? null)
   const visibleTotals = useMemo(() => {
     if (historyMonths == null) return totals
     const cutoff = new Date()
@@ -257,8 +267,16 @@ export default function Dashboard() {
 
   const activeRange = useMemo(() => (activeKey ? bucketRange(activeKey, granularity) : undefined), [activeKey, granularity])
   const prevRange = useMemo(() => (activeKey ? bucketRange(prevPeriodKey(activeKey, granularity), granularity) : undefined), [activeKey, granularity])
-  const { data: breakdownRows = [], isLoading: breakdownLoading } = useDashboardBreakdown(activeProfile?.id, activeRange)
-  const { data: prevBreakdownRows = [] } = useDashboardBreakdown(activeProfile?.id, prevRange)
+  const breakdownQuery = useDashboardBreakdown(isDemo ? undefined : activeProfile?.id, activeRange)
+  const breakdownRows = isDemo
+    ? DEMO_DASHBOARD_BREAKDOWN.filter(r => !activeRange || (r.month >= activeRange.from && r.month <= activeRange.to))
+    : (breakdownQuery.data ?? [])
+  const breakdownLoading = isDemo ? false : breakdownQuery.isLoading
+
+  const prevBreakdownQuery = useDashboardBreakdown(isDemo ? undefined : activeProfile?.id, prevRange)
+  const prevBreakdownRows = isDemo
+    ? DEMO_DASHBOARD_BREAKDOWN.filter(r => !prevRange || (r.month >= prevRange.from && r.month <= prevRange.to))
+    : (prevBreakdownQuery.data ?? [])
 
   const categoryById = useMemo(() => {
     const m = new Map<string, any>()
@@ -364,15 +382,16 @@ export default function Dashboard() {
     return obs.slice(0, 4)
   }, [income, savingsRate, balance, breakdownType, breakdown, movers, counts, t])
 
-  const catSeries = useDashboardCategorySeries(activeProfile?.id, selectedCat?.categoryId ?? null, breakdownType, !!selectedCat)
+  const catSeriesQuery = useDashboardCategorySeries(isDemo ? undefined : activeProfile?.id, selectedCat?.categoryId ?? null, breakdownType, !!selectedCat)
+  const catSeriesData = isDemo ? getDemoCategorySeries(selectedCat?.categoryId ?? null, breakdownType) : (catSeriesQuery.data ?? [])
   const catByPeriod = useMemo(() => {
     const map = new Map<string, number>()
-    for (const row of catSeries.data ?? []) {
+    for (const row of catSeriesData) {
       const k = bucketKey(row.month, granularity)
       map.set(k, (map.get(k) ?? 0) + row.total_abs)
     }
     return map
-  }, [catSeries.data, granularity])
+  }, [catSeriesData, granularity])
 
   const isFiltered = !!selectedCat
   const filterColor = breakdownType === 'ingreso' ? C_INCOME : breakdownType === 'gasto' ? C_EXPENSE : C_NEUTRAL
@@ -434,6 +453,7 @@ export default function Dashboard() {
   }, [])
 
   function openSubcategory(categoryId: string | null) {
+    if (isDemo) return
     if (!activeKey) return
     const { from, to } = bucketRange(activeKey, granularity)
     const params = new URLSearchParams({ dateFrom: from, dateTo: to, transactionType: breakdownType })
@@ -555,7 +575,7 @@ export default function Dashboard() {
 
         {/* Aviso de movimientos sin categoría */}
         {!!counts?.uncategorized && (
-          <button onClick={() => navigate(appPath('/transactions?uncategorized=true'))}
+          <button onClick={isDemo ? () => {} : () => navigate(appPath('/transactions?uncategorized=true'))}
             className="flex items-center gap-[11px] rounded-xl border border-[#EDDCA8] bg-[#FBF3DC] px-4 py-[9px] text-left transition-colors hover:bg-[#F8ECC8]">
             <svg width="17" height="17" viewBox="0 0 20 20" className="shrink-0"><path d="M10 2 L18.5 17 H1.5 Z" fill="none" stroke="#B5842E" strokeWidth="1.6" strokeLinejoin="round" /><line x1="10" y1="8" x2="10" y2="12" stroke="#B5842E" strokeWidth="1.7" strokeLinecap="round" /><circle cx="10" cy="14.5" r="1" fill="#B5842E" /></svg>
             <span className="text-[13.5px] text-[#6B5A2B]"><span className="font-semibold text-[#4A3D18]">{t('uncategorized.count', { count: counts.uncategorized })}</span></span>
@@ -568,7 +588,7 @@ export default function Dashboard() {
         <div className="flex flex-col items-center justify-center gap-3 py-16 text-center">
           <p className="text-lg font-medium">{t('no_data.title')}</p>
           <p className="text-muted-foreground text-sm">{t('no_data.description')}</p>
-          <Button onClick={() => navigate(appPath('/import'))}>{t('no_data.action')}</Button>
+          <Button onClick={isDemo ? () => {} : () => navigate(appPath('/import'))}>{t('no_data.action')}</Button>
         </div>
       ) : isMobile ? (
         // ── Vista móvil — inspirada en Fintonic, con nuestra marca ──────────

@@ -5,7 +5,12 @@ import { useSearchParams } from 'react-router-dom'
 import { useQueryClient } from '@tanstack/react-query'
 import { supabase } from '@/lib/supabase'
 import { useProfile } from '@/contexts/ProfileContext'
+import { useDemoMode } from '@/contexts/DemoModeContext'
 import { useTransactions, useTransactionCounts, useMarkFilteredAsRead, fetchAllMatchingIds, type TransactionFilters } from '@/hooks/useTransactions'
+import {
+  DEMO_ACCOUNTS, DEMO_CATEGORIES, DEMO_CATEGORY_GROUPS, DEMO_MERCHANTS, DEMO_BANK_ENTITIES,
+  DEMO_TRANSACTIONS, DEMO_TRANSACTION_COUNTS, filterDemoTransactions,
+} from '@/lib/demoData'
 import { useSessionState } from '@/hooks/useSessionState'
 import { useAccounts } from '@/hooks/useAccounts'
 import { useCategories, useCategoryGroups } from '@/hooks/useCategories'
@@ -69,6 +74,7 @@ export default function Transactions() {
   const { t: tcat } = useTranslation('categories')
   const qc = useQueryClient()
   const { activeProfile } = useProfile()
+  const isDemo = useDemoMode()
   const [searchParams] = useSearchParams()
   // Filtros que llegan explícitos por querystring (enlaces desde Dashboard,
   // Home o notificaciones). Si hay alguno, ganan sobre lo guardado en sesión
@@ -132,14 +138,20 @@ export default function Transactions() {
 
   const NOTE_MAX = 50
 
-  const { data: counts } = useTransactionCounts(activeProfile?.id)
+  const countsQuery = useTransactionCounts(isDemo ? undefined : activeProfile?.id)
+  const counts = isDemo ? DEMO_TRANSACTION_COUNTS : countsQuery.data
   // Incluimos archivadas para poder etiquetar movimientos de cuentas ya ocultas;
   // el desplegable de filtro solo lista las activas (ver más abajo).
-  const { data: accounts = [] } = useAccounts(activeProfile?.id, { includeArchived: true })
-  const { data: categories = [] } = useCategories()
-  const { data: groups = [] } = useCategoryGroups()
-  const { data: merchants = [] } = useMerchants()
-  const { data: bankEntities = [] } = useBankEntities()
+  const accountsQuery = useAccounts(isDemo ? undefined : activeProfile?.id, { includeArchived: true })
+  const accounts = isDemo ? DEMO_ACCOUNTS : (accountsQuery.data ?? [])
+  const categoriesQuery = useCategories()
+  const categories = isDemo ? DEMO_CATEGORIES : (categoriesQuery.data ?? [])
+  const groupsQuery = useCategoryGroups()
+  const groups = isDemo ? DEMO_CATEGORY_GROUPS : (groupsQuery.data ?? [])
+  const merchantsQuery = useMerchants()
+  const merchants = isDemo ? DEMO_MERCHANTS : (merchantsQuery.data ?? [])
+  const bankEntitiesQuery = useBankEntities()
+  const bankEntities = isDemo ? DEMO_BANK_ENTITIES : (bankEntitiesQuery.data ?? [])
   const updateTx = useUpdateTransaction()
   const markAllRead = useMarkFilteredAsRead()
 
@@ -188,6 +200,7 @@ export default function Transactions() {
   const pinRequestRef = useRef(0)
 
   useEffect(() => {
+    if (isDemo) return
     if (!activeProfile) return
     pinRequestRef.current++
     if (filters.isReviewed !== false) { setPinnedIds(null); return }
@@ -206,10 +219,14 @@ export default function Transactions() {
       ? { pinnedIds }
       : { ...filters, search: search || undefined, searchCategoryIds: searchCategoryIds.length ? searchCategoryIds : undefined }
 
-  const { data: result, isLoading } = useTransactions(activeProfile?.id, effectiveFilters, page)
-
-  const transactions = result?.transactions ?? []
-  const total = result?.total ?? 0
+  const txQuery = useTransactions(isDemo ? undefined : activeProfile?.id, effectiveFilters, page)
+  const demoFiltered = useMemo(
+    () => isDemo ? filterDemoTransactions(DEMO_TRANSACTIONS, effectiveFilters, search) : [],
+    [isDemo, effectiveFilters, search],
+  )
+  const transactions = isDemo ? demoFiltered.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE) : (txQuery.data?.transactions ?? [])
+  const total = isDemo ? demoFiltered.length : (txQuery.data?.total ?? 0)
+  const isLoading = isDemo ? false : txQuery.isLoading
 
   async function setStatusFilter(mode: 'all' | 'unreviewed' | 'uncategorized') {
     const nextFilters: TransactionFilters = {
@@ -219,7 +236,7 @@ export default function Transactions() {
     }
     setFilters(nextFilters)
     setPage(0)
-    if (mode !== 'unreviewed' || !activeProfile) {
+    if (isDemo || mode !== 'unreviewed' || !activeProfile) {
       pinRequestRef.current++
       setPinnedIds(null)
       return
@@ -623,16 +640,18 @@ export default function Transactions() {
             </button>
           ))}
         </div>
-        <Button
-          variant="outline"
-          size="sm"
-          className={isMobile ? 'self-end hover:border-income/50 hover:text-income' : 'ml-auto hover:border-income/50 hover:text-income'}
-          onClick={handleMarkAllRead}
-          disabled={!counts?.unread || markAllRead.isPending}
-        >
-          <CheckCheck className="h-4 w-4" />
-          {t('mark_all_read.button')}
-        </Button>
+        {!isDemo && (
+          <Button
+            variant="outline"
+            size="sm"
+            className={isMobile ? 'self-end hover:border-income/50 hover:text-income' : 'ml-auto hover:border-income/50 hover:text-income'}
+            onClick={handleMarkAllRead}
+            disabled={!counts?.unread || markAllRead.isPending}
+          >
+            <CheckCheck className="h-4 w-4" />
+            {t('mark_all_read.button')}
+          </Button>
+        )}
       </div>
       </div>
 
@@ -644,8 +663,8 @@ export default function Transactions() {
         merchants={merchants}
         entityLogoByName={entityLogoByName}
         isLoading={isLoading}
-        onRowClick={openCategoryDialog}
-        onToggleReviewed={toggleReviewed}
+        onRowClick={isDemo ? () => toast({ title: t('demo_readonly_hint') }) : openCategoryDialog}
+        onToggleReviewed={isDemo ? () => toast({ title: t('demo_readonly_hint') }) : toggleReviewed}
         scrollable={!isMobile}
       />
 

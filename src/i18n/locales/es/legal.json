@@ -174,7 +174,7 @@
     "metaTitle": "Política de Privacidad — zafyros",
     "metaDescription": "Cómo trata zafyros tus datos personales y financieros: qué recogemos, para qué y con quién lo compartimos.",
     "pageTitle": "Política de Privacidad",
-    "lastUpdated": "Última actualización: 24 de julio de 2026",
+    "lastUpdated": "Última actualización: 12 de agosto de 2026",
     "sections": [
       {
         "heading": "1. Responsable del tratamiento",
@@ -204,7 +204,8 @@
               "**Datos financieros**: los movimientos bancarios que el Usuario importa manualmente (fecha, importe, concepto y categoría asignada), las cuentas y su saldo, los distintos perfiles financieros que el Usuario cree dentro de su cuenta, las reglas de clasificación personalizadas y los presupuestos configurados.",
               "**Archivos**: el logotipo que el Usuario puede subir voluntariamente para identificar cada cuenta.",
               "**Comunicaciones del Usuario**: el contenido de los mensajes que el Usuario envía a través del formulario de sugerencias o incidencias.",
-              "**Datos técnicos**: dirección IP, tipo de navegador y dispositivo, y una cookie técnica de sesión necesaria para mantener al Usuario identificado tras iniciar sesión."
+              "**Datos técnicos**: dirección IP, tipo de navegador y dispositivo, y una cookie técnica de sesión necesaria para mantener al Usuario identificado tras iniciar sesión.",
+              "**Datos de interacción con correos electrónicos**: cuando el Usuario abre un correo electrónico transaccional enviado por zafyros o hace clic en alguno de sus enlaces, se registra dicha apertura o clic, junto con la dirección IP y el tipo de dispositivo, con el único fin de medir la entrega y utilidad de estas comunicaciones."
             ]
           },
           { "p": "zafyros no recoge datos de acceso a la banca online (usuario, contraseña o claves) de ninguna entidad financiera del Usuario, ni se conecta directamente a sus bancos: toda la información financiera procede de los archivos que el propio Usuario importa manualmente." }
@@ -222,7 +223,7 @@
               ["Responder a las consultas, sugerencias o incidencias enviadas a través del formulario de feedback", "Ejecución del contrato e interés legítimo en atender al Usuario (art. 6.1.b y 6.1.f RGPD)"],
               ["Garantizar la seguridad de la aplicación y prevenir usos fraudulentos", "Interés legítimo del Titular (art. 6.1.f RGPD)"],
               ["Cumplir obligaciones fiscales y contables cuando existan funcionalidades de pago", "Cumplimiento de una obligación legal (art. 6.1.c RGPD)"],
-              ["Enviar al Usuario comunicaciones por correo electrónico relacionadas con el uso de la aplicación y de la cuenta (por ejemplo, mensajes de bienvenida, recordatorios de uso o confirmaciones asociadas a la suscripción). Estas comunicaciones no incluyen campañas de marketing ni publicidad de terceros", "Ejecución del contrato e interés legítimo del Titular en el correcto uso del servicio (art. 6.1.b y 6.1.f RGPD)"]
+              ["Enviar al Usuario comunicaciones por correo electrónico relacionadas con el uso de la aplicación y de la cuenta (por ejemplo, mensajes de bienvenida, recordatorios de uso o confirmaciones asociadas a la suscripción), y medir si dichas comunicaciones se abren o se interactúa con ellas (apertura y clics), para evaluar su utilidad y evitar enviar avisos innecesarios. Estas comunicaciones no incluyen campañas de marketing ni publicidad de terceros", "Ejecución del contrato e interés legítimo del Titular en el correcto uso del servicio (art. 6.1.b y 6.1.f RGPD)"]
             ]
           },
           { "p": "zafyros no utiliza los datos del onboarding para personalizar automáticamente el contenido o las funcionalidades que se muestran a cada Usuario dentro de la aplicación: hoy esa información solo se emplea de forma agregada, como se indica en la tabla anterior. Si en el futuro se incorporase algún tratamiento adicional —como la elaboración de estudios o informes estadísticos destinados a terceros—, esta Política se actualizará antes de activarlo y se solicitará el consentimiento específico del Usuario cuando la normativa lo exija." }
@@ -244,7 +245,7 @@
               ["Supabase", "Alojamiento de la base de datos y autenticación. Almacena los datos de cuenta y todos los datos financieros del Usuario."],
               ["Vercel", "Alojamiento del frontend de la aplicación. Sirve la aplicación web al navegador del Usuario."],
               ["Google LLC", "Inicio de sesión mediante cuenta de Google, solo si el Usuario elige registrarse con Google."],
-              ["Resend", "Envío de correos electrónicos transaccionales y de uso del servicio (no publicitarios). Recibe la dirección de correo electrónico del Usuario y el contenido del mensaje enviado. Datos alojados en la Unión Europea (Irlanda)."]
+              ["Resend", "Envío de correos electrónicos transaccionales y de uso del servicio (no publicitarios). Recibe la dirección de correo electrónico del Usuario y el contenido del mensaje enviado. También registra, mediante un píxel y el reescrito de enlaces, si el Usuario abre el correo o hace clic en él (incluyendo IP y tipo de dispositivo en ese momento), únicamente con fines de medición de entrega. Datos alojados en la Unión Europea (Irlanda)."]
             ]
           },
           { "p": "Ninguno de estos proveedores está autorizado a utilizar los datos del Usuario para fines propios." }

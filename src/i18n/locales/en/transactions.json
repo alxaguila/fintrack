@@ -1,6 +1,7 @@
 {
   "title": "Transactions",
   "subtitle": "All your transactions, classified automatically.",
+  "demo_readonly_hint": "Demo mode: sign up for free to edit your transactions",
   "filters": {
     "all_accounts": "All accounts",
     "all_categories": "All categories",

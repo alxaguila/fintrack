@@ -6,6 +6,7 @@ import {
 } from 'recharts'
 import { ChevronDown, CreditCard, Pencil, Wallet } from 'lucide-react'
 import { useProfile } from '@/contexts/ProfileContext'
+import { useDemoMode } from '@/contexts/DemoModeContext'
 import { useUserSettings } from '@/hooks/useUserSettings'
 import { useAccounts } from '@/hooks/useAccounts'
 import { useBankEntities } from '@/hooks/useBankEntities'
@@ -14,6 +15,9 @@ import {
   useAccountBalanceHistory,
   useCardSpending30Days,
 } from '@/hooks/useHomeOverview'
+import {
+  DEMO_ACCOUNTS, DEMO_BANK_ENTITIES, DEMO_ACCOUNT_BALANCES, DEMO_ACCOUNT_BALANCE_HISTORY, DEMO_CARD_SPENDING_30D,
+} from '@/lib/demoData'
 import { AccountFormDialog } from '@/components/accounts/AccountForm'
 import { BankLogo } from '@/components/BankLogo'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -120,7 +124,7 @@ function accountSub(a: Account, typeLabel: string): string {
 }
 
 // ── Tile de cuenta ────────────────────────────────────────────────────────────
-function AccountTile({ account, logoUrl, amount, daysSinceImport, isLoading, typeLabel, updatedText, onClick, onEdit }: {
+function AccountTile({ account, logoUrl, amount, daysSinceImport, isLoading, typeLabel, updatedText, onClick, onEdit, editable = true }: {
   account: Account
   logoUrl: string | null
   amount: number | null
@@ -130,6 +134,7 @@ function AccountTile({ account, logoUrl, amount, daysSinceImport, isLoading, typ
   updatedText: string
   onClick: () => void
   onEdit: () => void
+  editable?: boolean
 }) {
   return (
     <div
@@ -137,12 +142,14 @@ function AccountTile({ account, logoUrl, amount, daysSinceImport, isLoading, typ
       className="group/tile relative flex min-w-[150px] flex-1 cursor-pointer flex-col rounded-2xl border border-[#ECE7DD] bg-white p-[14px_14px_12px] shadow-[0_4px_14px_rgba(10,37,64,0.04)] transition-shadow hover:shadow-[0_6px_18px_rgba(10,37,64,0.08)]"
     >
       {/* Editar — solo en hover */}
-      <button
-        onClick={(e) => { e.stopPropagation(); onEdit() }}
-        className="absolute right-2 top-2 rounded-md p-1 opacity-0 transition-opacity hover:bg-black/5 group-hover/tile:opacity-100"
-      >
-        <Pencil className="h-3 w-3 text-[#94A3B8]" />
-      </button>
+      {editable && (
+        <button
+          onClick={(e) => { e.stopPropagation(); onEdit() }}
+          className="absolute right-2 top-2 rounded-md p-1 opacity-0 transition-opacity hover:bg-black/5 group-hover/tile:opacity-100"
+        >
+          <Pencil className="h-3 w-3 text-[#94A3B8]" />
+        </button>
+      )}
 
       <div className="flex items-center gap-2 pr-5">
         <BankLogo entity={account.entity} color={account.color} logoUrl={logoUrl} size={28} />
@@ -198,6 +205,7 @@ export default function Home() {
   const { t } = useTranslation('home')
   const { t: tc } = useTranslation('common')
   const { activeProfile } = useProfile()
+  const isDemo = useDemoMode()
   const { data: settings } = useUserSettings()
   const navigate = useNavigate()
 
@@ -207,17 +215,37 @@ export default function Home() {
   const [editAccount, setEditAccount] = useState<Account | null>(null)
   const [editOpen, setEditOpen] = useState(false)
   // Series activas en la gráfica: por defecto solo el Total; las cuentas se añaden.
-  const [activeSeries, setActiveSeries] = useState<Set<string>>(loadSeries)
+  // En demo arrancan todas seleccionadas (Total + cuentas), para que la gráfica
+  // luzca completa sin necesidad de interactuar.
+  const [activeSeries, setActiveSeries] = useState<Set<string>>(() =>
+    isDemo
+      ? new Set(['__total__', ...DEMO_ACCOUNTS.filter(a => a.type === 'cuenta_corriente' || a.type === 'ahorro').map(a => a.id)])
+      : loadSeries(),
+  )
 
-  // Persistir las preferencias de visualizado al cambiarlas.
-  useEffect(() => { try { localStorage.setItem(LS_RANGE, chartRange) } catch { /* ignore */ } }, [chartRange])
-  useEffect(() => { try { localStorage.setItem(LS_SERIES, JSON.stringify([...activeSeries])) } catch { /* ignore */ } }, [activeSeries])
+  // Persistir las preferencias de visualizado al cambiarlas (no en demo: no debe
+  // pisar las preferencias guardadas de una sesión real en el mismo navegador).
+  useEffect(() => { if (!isDemo) try { localStorage.setItem(LS_RANGE, chartRange) } catch { /* ignore */ } }, [chartRange, isDemo])
+  useEffect(() => { if (!isDemo) try { localStorage.setItem(LS_SERIES, JSON.stringify([...activeSeries])) } catch { /* ignore */ } }, [activeSeries, isDemo])
 
-  const { data: accounts = [], isLoading: accountsLoading } = useAccounts(activeProfile?.id)
-  const { data: bankEntities = [] } = useBankEntities()
-  const { data: balances, isLoading: balancesLoading }      = useAccountBalances(activeProfile?.id, accounts)
-  const { data: balanceHistory, isLoading: historyLoading } = useAccountBalanceHistory(activeProfile?.id, accounts)
-  const { data: card30d, isLoading: card30dLoading }        = useCardSpending30Days(activeProfile?.id, accounts)
+  const accountsQuery = useAccounts(isDemo ? undefined : activeProfile?.id)
+  const accounts = isDemo ? DEMO_ACCOUNTS : (accountsQuery.data ?? [])
+  const accountsLoading = isDemo ? false : accountsQuery.isLoading
+
+  const bankEntitiesQuery = useBankEntities()
+  const bankEntities = isDemo ? DEMO_BANK_ENTITIES : (bankEntitiesQuery.data ?? [])
+
+  const balancesQuery = useAccountBalances(isDemo ? undefined : activeProfile?.id, isDemo ? [] : accounts)
+  const balances = isDemo ? DEMO_ACCOUNT_BALANCES : balancesQuery.data
+  const balancesLoading = isDemo ? false : balancesQuery.isLoading
+
+  const balanceHistoryQuery = useAccountBalanceHistory(isDemo ? undefined : activeProfile?.id, isDemo ? [] : accounts)
+  const balanceHistory = isDemo ? DEMO_ACCOUNT_BALANCE_HISTORY : balanceHistoryQuery.data
+  const historyLoading = isDemo ? false : balanceHistoryQuery.isLoading
+
+  const card30dQuery = useCardSpending30Days(isDemo ? undefined : activeProfile?.id, isDemo ? [] : accounts)
+  const card30d = isDemo ? DEMO_CARD_SPENDING_30D : card30dQuery.data
+  const card30dLoading = isDemo ? false : card30dQuery.isLoading
 
   const bankAccounts   = useMemo(() => accounts.filter(a => a.type === 'cuenta_corriente' || a.type === 'ahorro'), [accounts])
   const creditAccounts = useMemo(() => accounts.filter(a => a.type === 'tarjeta_credito'), [accounts])
@@ -413,8 +441,9 @@ export default function Home() {
               isLoading={balancesLoading}
               typeLabel={tc(`account_type.${acc.type}`)}
               updatedText={updatedText(balances?.get(acc.id)?.daysSinceImport ?? null)}
-              onClick={() => navigate(appPath(`/transactions?accountId=${acc.id}`))}
+              onClick={isDemo ? () => {} : () => navigate(appPath(`/transactions?accountId=${acc.id}`))}
               onEdit={() => openEdit(acc)}
+              editable={!isDemo}
             />
           ))}
         </div>
@@ -434,7 +463,7 @@ export default function Home() {
           {creditOpen && (
             <div className="flex flex-col gap-3 px-[18px] pb-4 md:flex-row">
               {creditSorted.map(c => (
-                <div key={c.id} onClick={() => navigate(appPath(`/transactions?accountId=${c.id}`))} className="flex flex-1 cursor-pointer items-center gap-[10px] rounded-xl border border-[#EFEBE2] bg-[#FAF7F1] p-[11px_13px]">
+                <div key={c.id} onClick={isDemo ? () => {} : () => navigate(appPath(`/transactions?accountId=${c.id}`))} className="flex flex-1 cursor-pointer items-center gap-[10px] rounded-xl border border-[#EFEBE2] bg-[#FAF7F1] p-[11px_13px]">
                   <BankLogo entity={c.entity} color={c.color} logoUrl={logoFor(c)} size={26} radius={7} />
                   <div className="min-w-0 flex-1 leading-[1.2]">
                     <div className="truncate text-[12px] font-semibold text-[#0A2540]">{accountLabel(c)}</div>
@@ -546,13 +575,15 @@ export default function Home() {
       </div>
 
       {/* Diálogo de edición de cuenta */}
-      <AccountFormDialog
-        open={editOpen}
-        onOpenChange={setEditOpen}
-        profileId={activeProfile.id}
-        editing={editAccount}
-        sortOrder={accounts.length}
-      />
+      {!isDemo && (
+        <AccountFormDialog
+          open={editOpen}
+          onOpenChange={setEditOpen}
+          profileId={activeProfile.id}
+          editing={editAccount}
+          sortOrder={accounts.length}
+        />
+      )}
     </div>
   )
 }

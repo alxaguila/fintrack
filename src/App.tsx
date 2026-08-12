@@ -18,6 +18,7 @@ import CompoundInterest from '@/pages/calculators/CompoundInterest'
 import RetirementSavings from '@/pages/calculators/RetirementSavings'
 import Blog from '@/pages/Blog'
 import BlogPost from '@/pages/blog/Post'
+import Demo from '@/pages/demo/Demo'
 import Home from '@/pages/Home'
 import Dashboard from '@/pages/Dashboard'
 import CashFlow from '@/pages/CashFlow'
@@ -123,6 +124,7 @@ export default function App() {
               <Route path="/calculators/retirement-savings" element={<RetirementSavings />} />
               <Route path="/blog" element={<Blog />} />
               <Route path="/blog/:slug" element={<BlogPost />} />
+              <Route path="/demo" element={<Demo />} />
               {/* Compatibilidad con enlaces antiguos a /auth */}
               <Route path="/auth" element={<Navigate to="/" replace />} />
 

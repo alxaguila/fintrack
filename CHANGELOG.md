@@ -2,6 +2,44 @@
 
 Lista de cambios por versión (`APP_VERSION` en `src/lib/version.ts`). Solo se añade una entrada cuando el código de la app cambia.
 
+## v1.1162
+- Activado el registro de aperturas y clics en los emails enviados por Resend, y actualizada la Política de Privacidad (es/en) para reflejarlo: nuevo dato recogido ("interacción con correos electrónicos"), finalidad de medición añadida a la fila de comunicaciones por email, y detalle del mecanismo (píxel + reescrito de enlaces) en la fila de Resend.
+
+## v1.1157
+- Corregido el email de inactividad: cuando el usuario tiene dos cuentas del mismo banco sin alias propio, ya no salen ambas con el mismo nombre repetido — ahora se distingue mostrando "Entidad - Tipo de cuenta" (mismo criterio que ya usaba la campanita in-app).
+
+## v1.1163
+- Demo pública: añadido un enlace "← Volver" debajo de la cabecera fija, a la izquierda, para no depender solo del logo a la hora de volver a la landing.
+
+## v1.1161
+- Corregido el bug principal de la demo: la gráfica de "Posición Global" salía vacía y muy comprimida — el contenedor que limita el ancho de la vista (para que las tarjetas no se estiraran de más) rompía la altura que las páginas reales necesitan para dibujarse bien.
+- Permutados los saldos de las cuentas de ejemplo: la cuenta de ahorro (ING) pasa a tener el saldo alto y la corriente (BBVA) uno modesto, más realista.
+- Añadida una cuenta de ahorro más (Openbank) para que las tarjetas de cuenta no se vean tan anchas, igual que en la app real con varias cuentas.
+
+## v1.1156
+- Demo pública: el faldón de "estás viendo una demo" vuelve a verse sin hacer scroll (cabecera + pestañas + visor + faldón caben ya en una sola pantalla).
+- Las tarjetas de cuenta (ING/BBVA) en la demo ya no se estiran de más: el visor limita el ancho de contenido al mismo que tendría con la barra lateral de la app real.
+- Franja de pestañas de la demo, justo debajo de la cabecera: mismo crema que el resto de la página (antes quedaba un bloque blanco descolocado) y colores de la pestaña activa invertidos para que se note que es seleccionable.
+- En la gráfica de "Posición Global" de la demo, todas las cuentas salen seleccionadas por defecto (antes solo el Total).
+- La pestaña de la demo que mostraba "Resumen" ahora se llama "Posición Global", igual que en la app real.
+
+## v1.1153
+- Corregido el email de inactividad: no se estaba enviando porque la Edge Function se desplegó sin `--no-verify-jwt`, así que Supabase la bloqueaba con 401 antes de ejecutar nada (el cron server-to-server no lleva JWT de usuario, autentica con un secreto propio). Redesplegada con el flag correcto; probado en producción con envío real.
+
+## v1.1148
+- Ajustado el layout de la demo pública: el "visor" de la app recupera altura (antes se había quedado muy bajo), el aviso de "estás viendo una demo" pasa a ir debajo de la pantalla y antes del footer (ya no ocupa sitio dentro del visor), y el encabezado sticky vuelve a tener el mismo fondo que en el resto de la landing (el de la página, no un bloque navy sólido).
+
+## v1.1147
+- Demo pública (`/demo`): añadido el mismo encabezado fijo del resto de la puerta de entrada (con vuelta a la landing) y el mismo pie de página, enlazada además desde el directorio del footer y desde el `sitemap.xml`.
+- Corregido el gráfico de Análisis en la demo, que se quedaba vacío al filtrar por una subcategoría.
+- Corregido el botón "Ver demo" del hero, que al pasar el ratón por encima se quedaba en blanco (fondo y texto casi del mismo color) — y añadido también junto al CTA final de la landing.
+- Reordenadas las secciones de la landing: "Tres pasos" pasa a ir justo después de las capturas de producto, y "Planes" justo antes del CTA final.
+- Cambiado el nombre del perfil de ejemplo en la demo de "Alex" a "Toni".
+
+## v1.1146
+- Recuperada la sección de precios en la landing pública (planes Free/Pro/Premium), enlazada desde un nuevo botón "Ver demo" en el hero.
+- Nueva demo pública en `/demo`: navega por Posición Global, Análisis y Movimientos con datos ficticios, sin necesidad de registrarte y sin poder editar nada (solo lectura).
+
 ## v1.1134
 - Movido el toggle de avisos por email a una nueva sección "Notificaciones" dentro de Ajustes (antes era una fila suelta en el menú principal), con un interruptor real para "Cuentas sin actualizar".
 

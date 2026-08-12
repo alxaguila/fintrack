@@ -1,6 +1,7 @@
 {
   "title": "Movimientos",
   "subtitle": "Todos tus movimientos, clasificados automáticamente.",
+  "demo_readonly_hint": "Modo demo: regístrate gratis para poder editar tus movimientos",
   "filters": {
     "all_accounts": "Todas las cuentas",
     "all_categories": "Todas las categorías",

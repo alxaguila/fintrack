@@ -9,6 +9,7 @@ import shotGlobal from '@/assets/landing/screenshot-posicion-global.png'
 import shotAnalysis from '@/assets/landing/screenshot-analisis.png'
 import shotMovements from '@/assets/landing/screenshot-movimientos.png'
 import { LoginDialog } from '@/components/auth/LoginDialog'
+import { PricingCards } from '@/components/landing/PricingCards'
 import { SiteHeader } from '@/components/landing/SiteHeader'
 import { SiteFooter } from '@/components/landing/SiteFooter'
 import { redirectToAppWithSession } from '@/lib/sessionHandoff'
@@ -25,6 +26,8 @@ const CSS = `
 .ftl-primary:hover{background:${BRAND.accentHover}!important}
 .ftl-ghost{transition:background .2s ease}
 .ftl-ghost:hover{background:#EAF4FA!important}
+.ftl-ghost-dark{transition:background .2s ease}
+.ftl-ghost-dark:hover{background:rgba(255,255,255,.18)!important}
 .ftl-card{transition:transform .3s ease,box-shadow .3s ease}
 .ftl-card:hover{transform:translateY(-6px);box-shadow:0 22px 48px rgba(10,37,64,.1)}
 .ftl-seg{transition:all .2s ease}
@@ -118,6 +121,7 @@ export default function Landing() {
   const [searchParams, setSearchParams] = useSearchParams()
   const [loginOpen, setLoginOpen] = useState(false)
   const [showStickyNav, setShowStickyNav] = useState(false)
+  const [pricingAnnual, setPricingAnnual] = useState(false)
   const rootRef = useRef<HTMLDivElement>(null)
   const heroSentinelRef = useRef<HTMLDivElement>(null)
 
@@ -281,9 +285,12 @@ export default function Landing() {
                 <span style={{ fontFamily: BRAND.serif, fontWeight: 500, fontStyle: 'italic', letterSpacing: '-.02em', color: accent }}>{t('hero.emph')}</span>
               </h1>
               <p className="ftl-up" style={{ margin: '26px 0 0', maxWidth: 468, font: `400 18px/1.6 ${BRAND.sans}`, color: '#9FBAC9', animationDelay: '.22s' }}>{t('hero.sub')}</p>
-              <div className="ftl-up" style={{ display: 'flex', alignItems: 'center', gap: 20, marginTop: 34, animationDelay: '.32s' }}>
+              <div className="ftl-up" style={{ display: 'flex', alignItems: 'center', gap: 14, marginTop: 34, animationDelay: '.32s', flexWrap: 'wrap' }}>
                 <button onClick={goRegister} className="ftl-primary" style={{ display: 'inline-flex', alignItems: 'center', gap: 13, background: accent, color: '#fff', font: `600 17px ${BRAND.sans}`, padding: '8px 8px 8px 27px', borderRadius: 999, border: 'none', cursor: 'pointer' }}>
                   {t('hero.cta')}{arrowBtn}
+                </button>
+                <button onClick={() => navigate('/demo')} className="ftl-ghost-dark" style={{ background: 'rgba(255,255,255,.08)', border: '1px solid rgba(255,255,255,.22)', color: '#EAF4FA', font: `600 15px ${BRAND.sans}`, padding: '13px 24px', borderRadius: 999, cursor: 'pointer' }}>
+                  {t('hero.ctaDemo')}
                 </button>
               </div>
               <div className="ftl-up" style={{ marginTop: 30, font: `400 13px ${BRAND.sans}`, color: '#6E8FA2', animationDelay: '.42s' }}>{t('hero.note')}</div>
@@ -430,26 +437,6 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* ==================== SECURITY ==================== */}
-      <section id="seguridad" style={{ maxWidth: 1408, margin: '0 auto', padding: '70px 34px', boxSizing: 'border-box' }}>
-        <div className="ftl-sec-inner ftl-reveal" style={{ background: BRAND.ink, borderRadius: 26, padding: '64px 60px', position: 'relative', overflow: 'hidden' }}>
-          <div style={{ position: 'absolute', left: -120, top: -120, width: 420, height: 420, borderRadius: '50%', background: 'radial-gradient(circle,rgba(10,123,174,.3),transparent 70%)' }} />
-          <div style={{ position: 'relative', maxWidth: 760 }}>
-            <div style={{ font: `500 12px ${BRAND.sans}`, letterSpacing: '.16em', textTransform: 'uppercase', color: '#5F9DBE' }}>{t('security.eyebrow')}</div>
-            <h2 className="ftl-h2" style={{ margin: '18px 0 0', font: `500 46px/1.12 ${BRAND.display}`, letterSpacing: '-.035em', color: '#EAF4FA' }}>{t('security.title')}</h2>
-            <p style={{ margin: '20px 0 0', font: `400 18px/1.6 ${BRAND.sans}`, color: '#9FBAC9' }}>{t('security.sub')}</p>
-          </div>
-          <div className="ftl-sec-grid" style={{ position: 'relative', display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 20, marginTop: 48 }}>
-            {[1, 2, 3].map((n) => (
-              <div key={n} style={{ borderTop: '1px solid rgba(255,255,255,.14)', paddingTop: 22 }}>
-                <div style={{ font: `600 15px ${BRAND.sans}`, color: '#7ED6E7' }}>{t(`security.s${n}t`)}</div>
-                <div style={{ marginTop: 9, font: `400 15px/1.55 ${BRAND.sans}`, color: '#8FA9B8' }}>{t(`security.s${n}d`)}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* ==================== 3 STEPS ==================== */}
       <section style={{ maxWidth: 1408, margin: '0 auto', padding: '80px 34px 40px', boxSizing: 'border-box' }}>
         <div className="ftl-reveal" style={{ textAlign: 'center', maxWidth: 620, margin: '0 auto 60px' }}>
@@ -476,6 +463,38 @@ export default function Landing() {
         </div>
       </section>
 
+      {/* ==================== SECURITY ==================== */}
+      <section id="seguridad" style={{ maxWidth: 1408, margin: '0 auto', padding: '70px 34px', boxSizing: 'border-box' }}>
+        <div className="ftl-sec-inner ftl-reveal" style={{ background: BRAND.ink, borderRadius: 26, padding: '64px 60px', position: 'relative', overflow: 'hidden' }}>
+          <div style={{ position: 'absolute', left: -120, top: -120, width: 420, height: 420, borderRadius: '50%', background: 'radial-gradient(circle,rgba(10,123,174,.3),transparent 70%)' }} />
+          <div style={{ position: 'relative', maxWidth: 760 }}>
+            <div style={{ font: `500 12px ${BRAND.sans}`, letterSpacing: '.16em', textTransform: 'uppercase', color: '#5F9DBE' }}>{t('security.eyebrow')}</div>
+            <h2 className="ftl-h2" style={{ margin: '18px 0 0', font: `500 46px/1.12 ${BRAND.display}`, letterSpacing: '-.035em', color: '#EAF4FA' }}>{t('security.title')}</h2>
+            <p style={{ margin: '20px 0 0', font: `400 18px/1.6 ${BRAND.sans}`, color: '#9FBAC9' }}>{t('security.sub')}</p>
+          </div>
+          <div className="ftl-sec-grid" style={{ position: 'relative', display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 20, marginTop: 48 }}>
+            {[1, 2, 3].map((n) => (
+              <div key={n} style={{ borderTop: '1px solid rgba(255,255,255,.14)', paddingTop: 22 }}>
+                <div style={{ font: `600 15px ${BRAND.sans}`, color: '#7ED6E7' }}>{t(`security.s${n}t`)}</div>
+                <div style={{ marginTop: 9, font: `400 15px/1.55 ${BRAND.sans}`, color: '#8FA9B8' }}>{t(`security.s${n}d`)}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ==================== PRICING ==================== */}
+      <section id="precios" style={{ maxWidth: 1408, margin: '0 auto', padding: '80px 34px 40px', boxSizing: 'border-box' }}>
+        <div className="ftl-reveal" style={{ maxWidth: 640, margin: '0 auto 56px', textAlign: 'center' }}>
+          <div style={{ font: `500 12px ${BRAND.sans}`, letterSpacing: '.16em', textTransform: 'uppercase', color: '#5A6B77' }}>{t('pricing.eyebrow')}</div>
+          <h2 className="ftl-h2" style={{ margin: '16px 0 0', font: `500 48px/1.08 ${BRAND.display}`, letterSpacing: '-.035em', color: BRAND.ink }}>{t('pricing.title')}</h2>
+          <p style={{ margin: '20px auto 0', font: `400 18px/1.6 ${BRAND.sans}`, color: '#5A6B77' }}>{t('pricing.sub')}</p>
+        </div>
+        <div className="ftl-reveal">
+          <PricingCards annual={pricingAnnual} onAnnualChange={setPricingAnnual} variant="marketing" onFreeCta={goRegister} onProCta={goRegister} />
+        </div>
+      </section>
+
       {/* ==================== CTA FINAL ==================== */}
       <section style={{ maxWidth: 1408, margin: '0 auto', padding: '60px 34px 80px', boxSizing: 'border-box' }}>
         <div className="ftl-cta-inner ftl-reveal" style={{ background: BRAND.ink, borderRadius: 26, padding: '72px 40px', textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
@@ -483,9 +502,14 @@ export default function Landing() {
           <div style={{ position: 'relative' }}>
             <h2 className="ftl-h2" style={{ margin: 0, font: `500 48px/1.08 ${BRAND.display}`, letterSpacing: '-.04em', color: '#EAF4FA' }}>{t('cta.title')}</h2>
             <p style={{ margin: '18px auto 0', maxWidth: 480, font: `400 18px/1.55 ${BRAND.sans}`, color: '#9FBAC9' }}>{t('cta.sub')}</p>
-            <button onClick={goRegister} className="ftl-primary" style={{ display: 'inline-flex', alignItems: 'center', gap: 13, marginTop: 34, background: accent, color: '#fff', font: `600 17px ${BRAND.sans}`, padding: '9px 9px 9px 28px', borderRadius: 999, border: 'none', cursor: 'pointer' }}>
-              {t('cta.btn')}{arrowBtn}
-            </button>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 14, marginTop: 34, flexWrap: 'wrap' }}>
+              <button onClick={goRegister} className="ftl-primary" style={{ display: 'inline-flex', alignItems: 'center', gap: 13, background: accent, color: '#fff', font: `600 17px ${BRAND.sans}`, padding: '9px 9px 9px 28px', borderRadius: 999, border: 'none', cursor: 'pointer' }}>
+                {t('cta.btn')}{arrowBtn}
+              </button>
+              <button onClick={() => navigate('/demo')} className="ftl-ghost-dark" style={{ background: 'rgba(255,255,255,.08)', border: '1px solid rgba(255,255,255,.22)', color: '#EAF4FA', font: `600 15px ${BRAND.sans}`, padding: '13px 24px', borderRadius: 999, cursor: 'pointer' }}>
+                {t('hero.ctaDemo')}
+              </button>
+            </div>
             <div style={{ marginTop: 20, font: `400 13px ${BRAND.sans}`, color: '#6E8FA2' }}>{t('cta.note')}</div>
           </div>
         </div>

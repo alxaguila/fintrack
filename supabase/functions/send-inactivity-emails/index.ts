@@ -18,7 +18,11 @@
 //      llama, a diferencia de la función original de 041).
 //   3. Lee notifications con type='account_stale', resolved_at IS NULL,
 //      emailed_at IS NULL, agrupadas por user_id (una cuenta puede generar
-//      varias filas; se manda un único email por usuario).
+//      varias filas; se manda un único email por usuario), con la cuenta
+//      (accounts.name/entity/type) embebida en vivo para poder mostrar
+//      "Entidad - Tipo" cuando el alias de la cuenta está vacío — si no, dos
+//      cuentas del mismo banco sin alias saldrían repetidas en el email
+//      (mismo criterio que accountDisplayLabel() en src/lib/notifications.ts).
 //   4. Filtra por user_settings.notify_inactivity_email = true (opt-out).
 //   5. Para cada usuario, resuelve email + idioma (Auth Admin API +
 //      user_settings.preferred_language, mismo fallback a 'es' que
@@ -32,7 +36,11 @@
 // usuario no aborta el resto del lote.
 //
 // Despliegue:
-//   supabase functions deploy send-inactivity-emails
+//   supabase functions deploy send-inactivity-emails --no-verify-jwt
+// (imprescindible el --no-verify-jwt: la invoca pg_cron server-to-server,
+// sin JWT de usuario — autentica con X-Cron-Secret, no con JWT. Sin el
+// flag, el gateway de Supabase devuelve 401 antes de que nuestro código
+// llegue a ejecutarse.)
 // Secrets requeridos (supabase secrets set ...):
 //   RESEND_API_KEY — igual que send-auth-email.
 //   CRON_SECRET    — mismo valor que el guardado en Supabase Vault como
@@ -45,11 +53,45 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
 type Lang = 'es' | 'en'
 
+type AccountInfo = { name: string; entity: string; type: string }
+
 type StaleItem = {
+  account: AccountInfo | null
   account_name: string
   profile_name: string
   days_since: number
   severity: 'warning' | 'critical'
+}
+
+// Tipos de cuenta (mismo texto que common.account_type en el frontend).
+const ACCOUNT_TYPE_LABELS: Record<Lang, Record<string, string>> = {
+  es: {
+    cuenta_corriente: 'Cuenta corriente',
+    ahorro: 'Cuenta de ahorro',
+    tarjeta_credito: 'Tarjeta de crédito',
+    tarjeta_debito: 'Tarjeta de débito',
+    valores: 'Cuenta de valores',
+  },
+  en: {
+    cuenta_corriente: 'Checking account',
+    ahorro: 'Savings account',
+    tarjeta_credito: 'Credit card',
+    tarjeta_debito: 'Debit card',
+    valores: 'Securities account',
+  },
+}
+
+// Mismo criterio que accountDisplayLabel() en src/lib/notifications.ts: si el
+// alias guardado es igual a la entidad, el usuario no puso alias de verdad
+// (se rellenó por defecto al crear la cuenta) — en ese caso se muestra
+// "Entidad - Tipo" en vez del nombre, para no repetir "Eurocaja Rural" en
+// dos cuentas distintas del mismo banco.
+function accountDisplayLabel(item: StaleItem, lang: Lang): string {
+  if (!item.account) return item.account_name
+  const hasAlias = item.account.name.trim().toLowerCase() !== item.account.entity.trim().toLowerCase()
+  if (hasAlias) return item.account.name
+  const typeLabel = ACCOUNT_TYPE_LABELS[lang][item.account.type] ?? item.account.type
+  return `${item.account.entity} - ${typeLabel}`
 }
 
 type UserGroup = {
@@ -82,7 +124,7 @@ Deno.serve(async (req) => {
 
   const { data: pending, error: pendingError } = await admin
     .from('notifications')
-    .select('id, user_id, severity, payload')
+    .select('id, user_id, severity, payload, accounts(name, entity, type)')
     .eq('type', 'account_stale')
     .is('resolved_at', null)
     .is('emailed_at', null)
@@ -103,6 +145,11 @@ Deno.serve(async (req) => {
     }
     group.notification_ids.push(row.id)
     group.items.push({
+      // account puede venir null si la cuenta se borró entre la generación
+      // del aviso y el envío del email (raro, pero el FK no es obligatorio
+      // aquí porque notifications.account_id permite NULL) — se cae al
+      // nombre guardado en el payload en ese caso.
+      account: row.accounts ?? null,
       account_name: row.payload?.account_name ?? '',
       profile_name: row.payload?.profile_name ?? '',
       days_since: row.payload?.days_since ?? 0,
@@ -249,7 +296,7 @@ function layout(c: (typeof COPY)['es'], severityCopy: SeverityCopy, items: Stale
       (item) => `
         <tr>
           <td style="padding:12px 0;border-bottom:1px solid #EBEBE5;">
-            <div style="font:600 14px ${font};color:${ink};">${escapeHtml(item.account_name)}</div>
+            <div style="font:600 14px ${font};color:${ink};">${escapeHtml(accountDisplayLabel(item, lang))}</div>
             <div style="font:400 12px ${font};color:#8A97A3;">${escapeHtml(item.profile_name)} · ${escapeHtml(c.itemDays(item.days_since))}</div>
           </td>
         </tr>`

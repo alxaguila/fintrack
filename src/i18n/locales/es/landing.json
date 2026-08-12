@@ -13,6 +13,7 @@
     "emph": "de tu banco.",
     "sub": "Sube el CSV o Excel que ya te da tu banco y en segundos tienes tu dinero ordenado: cuentas, gastos y patrimonio en un mismo sitio — sin conectar tu banco ni dar tus claves a nadie.",
     "cta": "Empieza gratis",
+    "ctaDemo": "Ver demo",
     "note": "Gratis para empezar · sin tarjeta",
     "trust1": "Sin claves bancarias",
     "trust2": "Cifrado de extremo a extremo",
@@ -20,6 +21,18 @@
   },
   "marquee": {
     "label": "Importa extractos de cualquier banco"
+  },
+  "demo": {
+    "back": "Volver",
+    "banner": "Estás viendo una demo con datos ficticios",
+    "cta": "Crear cuenta gratis",
+    "tabs": {
+      "overview": "Posición Global",
+      "analysis": "Análisis",
+      "transactions": "Movimientos"
+    },
+    "seoTitle": "Demo — zafyros",
+    "seoDescription": "Prueba zafyros con datos de ejemplo, sin registrarte."
   },
   "excel": {
     "eyebrow": "El problema de siempre",
@@ -135,6 +148,7 @@
   },
   "footer": {
     "tagline": "Organiza tus cuentas sin dar las claves de tu banco a nadie.",
+    "demo": "Demo",
     "blog": "Blog",
     "calculators": "Calculadoras financieras",
     "legalNotice": "Aviso legal",

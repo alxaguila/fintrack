@@ -13,6 +13,7 @@
     "emph": "bank logins.",
     "sub": "Upload the CSV or Excel statement your bank already gives you and in seconds your money is organized: accounts, spending and net worth in one place — no bank connection, no credentials handed to anyone.",
     "cta": "Get started free",
+    "ctaDemo": "See demo",
     "note": "Free to start · no card",
     "trust1": "No bank credentials",
     "trust2": "End-to-end encryption",
@@ -20,6 +21,18 @@
   },
   "marquee": {
     "label": "Import statements from any bank"
+  },
+  "demo": {
+    "back": "Back",
+    "banner": "You're viewing a demo with fictional data",
+    "cta": "Create free account",
+    "tabs": {
+      "overview": "Global Position",
+      "analysis": "Analysis",
+      "transactions": "Transactions"
+    },
+    "seoTitle": "Demo — zafyros",
+    "seoDescription": "Try zafyros with sample data, no sign-up required."
   },
   "excel": {
     "eyebrow": "The same old problem",
@@ -135,6 +148,7 @@
   },
   "footer": {
     "tagline": "Organize your accounts without handing your bank logins to anyone.",
+    "demo": "Demo",
     "blog": "Blog",
     "calculators": "Financial calculators",
     "legalNotice": "Legal notice",
