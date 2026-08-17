@@ -2,6 +2,12 @@
 
 Lista de cambios por versión (`APP_VERSION` en `src/lib/version.ts`). Solo se añade una entrada cuando el código de la app cambia.
 
+## v1.1231
+- Retirados el nombre completo, NIF y domicilio particular del titular de las tablas de identificación en Aviso Legal y Política de Privacidad (ES/EN); se mantiene solo el contacto (email, sitio web, aplicación web). **Aviso legal**: esto deja la web sin cumplir estrictamente el deber de identificación del art. 10 LSSI-CE mientras preste el servicio — decisión tomada a petición expresa del titular, asumiendo ese riesgo.
+
+## v1.1229
+- Corregida una contradicción en la Política de Privacidad (ES/EN): el §2 ("Qué datos recogemos") seguía hablando de una "cookie técnica de sesión", cuando el resto del documento (§11) y la Política de Cookies dejan claro que zafyros usa `localStorage`, no cookies HTTP. Ahora las dos secciones dicen lo mismo.
+
 ## v1.1200
 - Política de Cookies (ES/EN) actualizada para declarar la etiqueta de conversión de Google Ads como herramienta de terceros gestionada vía Google Tag Manager, igual que ya se declaraba el píxel de Reddit Ads — necesario en cuanto se active dicha etiqueta dentro del contenedor GTM.
 

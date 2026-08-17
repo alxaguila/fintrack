@@ -12,9 +12,6 @@
           { "p": "In compliance with the information duty set out in Article 10 of Spanish Act 34/2002, of 11 July, on Information Society Services and Electronic Commerce (hereinafter, \"LSSI-CE\"), the following identifying details of the owner of this website are made available to users:" },
           {
             "table": [
-              ["Owner", "ALEX DEL AGUILA ARCOS"],
-              ["Spanish Tax ID (NIF)", "46718103C"],
-              ["Registered address", "C. Alfons XII 5, 5º-2ª, 08006 Barcelona"],
               ["Email", "zafyros@gmail.com"],
               ["Website", "www.zafyros.com"],
               ["Web application", "app.zafyros.com"],
@@ -174,7 +171,7 @@
     "metaTitle": "Privacy Policy — zafyros",
     "metaDescription": "How zafyros handles your personal and financial data: what we collect, why, and who we share it with.",
     "pageTitle": "Privacy Policy",
-    "lastUpdated": "Last updated: 12 August 2026",
+    "lastUpdated": "Last updated: 17 August 2026",
     "sections": [
       {
         "heading": "1. Data controller",
@@ -182,9 +179,6 @@
           { "p": "The controller responsible for the personal data collected through zafyros is:" },
           {
             "table": [
-              ["Owner", "ALEX DEL AGUILA ARCOS"],
-              ["Spanish Tax ID (NIF)", "46718103C"],
-              ["Registered address", "C. Alfons XII 5, 5º-2ª, 08006 Barcelona"],
               ["Email", "zafyros@gmail.com"],
               ["Website", "www.zafyros.com"],
               ["Web application", "app.zafyros.com"]
@@ -204,7 +198,7 @@
               "**Financial data**: bank transactions manually imported by the User (date, amount, description and assigned category), accounts and their balance, the different financial profiles the User creates within their account, custom classification rules and configured budgets.",
               "**Files**: the logo the User may voluntarily upload to identify each account.",
               "**User communications**: the content of messages the User sends through the suggestions or feedback form.",
-              "**Technical data**: IP address, browser and device type, and a technical session cookie needed to keep the User signed in.",
+              "**Technical data**: IP address, browser and device type, and technical browser storage (localStorage) needed to keep the User signed in.",
               "**Email interaction data**: when the User opens a transactional email sent by zafyros or clicks one of its links, that opening or click is recorded, together with the IP address and device type, solely to measure the delivery and usefulness of these communications."
             ]
           },

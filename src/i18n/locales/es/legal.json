@@ -12,9 +12,6 @@
           { "p": "En cumplimiento del deber de información recogido en el artículo 10 de la Ley 34/2002, de 11 de julio, de Servicios de la Sociedad de la Información y de Comercio Electrónico (en adelante, «LSSI-CE»), se ponen a disposición de los usuarios los siguientes datos identificativos del titular de este sitio web:" },
           {
             "table": [
-              ["Titular", "ALEX DEL AGUILA ARCOS"],
-              ["NIF", "46718103C"],
-              ["Domicilio", "C. Alfons XII 5, 5º-2ª, 08006 Barcelona"],
               ["Correo electrónico", "zafyros@gmail.com"],
               ["Sitio web", "www.zafyros.com"],
               ["Aplicación web", "app.zafyros.com"],
@@ -174,7 +171,7 @@
     "metaTitle": "Política de Privacidad — zafyros",
     "metaDescription": "Cómo trata zafyros tus datos personales y financieros: qué recogemos, para qué y con quién lo compartimos.",
     "pageTitle": "Política de Privacidad",
-    "lastUpdated": "Última actualización: 12 de agosto de 2026",
+    "lastUpdated": "Última actualización: 17 de agosto de 2026",
     "sections": [
       {
         "heading": "1. Responsable del tratamiento",
@@ -182,9 +179,6 @@
           { "p": "El responsable del tratamiento de los datos personales recogidos a través de zafyros es:" },
           {
             "table": [
-              ["Titular", "ALEX DEL AGUILA ARCOS"],
-              ["NIF", "46718103C"],
-              ["Domicilio", "C. Alfons XII 5, 5º-2ª, 08006 Barcelona"],
               ["Correo electrónico", "zafyros@gmail.com"],
               ["Sitio web", "www.zafyros.com"],
               ["Aplicación web", "app.zafyros.com"]
@@ -204,7 +198,7 @@
               "**Datos financieros**: los movimientos bancarios que el Usuario importa manualmente (fecha, importe, concepto y categoría asignada), las cuentas y su saldo, los distintos perfiles financieros que el Usuario cree dentro de su cuenta, las reglas de clasificación personalizadas y los presupuestos configurados.",
               "**Archivos**: el logotipo que el Usuario puede subir voluntariamente para identificar cada cuenta.",
               "**Comunicaciones del Usuario**: el contenido de los mensajes que el Usuario envía a través del formulario de sugerencias o incidencias.",
-              "**Datos técnicos**: dirección IP, tipo de navegador y dispositivo, y una cookie técnica de sesión necesaria para mantener al Usuario identificado tras iniciar sesión.",
+              "**Datos técnicos**: dirección IP, tipo de navegador y dispositivo, y almacenamiento técnico en el navegador (localStorage) necesario para mantener al Usuario identificado tras iniciar sesión.",
               "**Datos de interacción con correos electrónicos**: cuando el Usuario abre un correo electrónico transaccional enviado por zafyros o hace clic en alguno de sus enlaces, se registra dicha apertura o clic, junto con la dirección IP y el tipo de dispositivo, con el único fin de medir la entrega y utilidad de estas comunicaciones."
             ]
           },
