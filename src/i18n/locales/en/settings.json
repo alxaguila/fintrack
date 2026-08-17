@@ -136,7 +136,8 @@
       "accounts": "Connected accounts",
       "imports": "Imports this month",
       "movements": "Transactions this month",
-      "rules": "Classification rules"
+      "rules": "Classification rules",
+      "budgets": "Budgeted categories"
     },
     "compare_title": "Compare plans",
     "payment_note": "Online payment will be available soon. To change your plan, contact support."

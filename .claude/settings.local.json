@@ -50,7 +50,8 @@
       "Bash(curl -s -o /dev/null -w \"HTTP %{http_code}\\\\n\" http://localhost:5173/)",
       "Bash(awk -F= '/^VITE_/ {key=$1; val=substr\\($0, length\\(key\\)+2\\); print key \" => \" length\\(val\\) \" chars\"}' .env.local)",
       "PowerShell(npx tsc -b --pretty false 2>&1 | Select-Object -First 30; \"exit=$LASTEXITCODE\")",
-      "PowerShell(npm run build)"
+      "PowerShell(npm run build)",
+      "Bash(graphify query *)"
     ]
   },
   "hooks": {

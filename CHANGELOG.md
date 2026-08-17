@@ -2,6 +2,40 @@
 
 Lista de cambios por versión (`APP_VERSION` en `src/lib/version.ts`). Solo se añade una entrada cuando el código de la app cambia.
 
+## v1.1200
+- Política de Cookies (ES/EN) actualizada para declarar la etiqueta de conversión de Google Ads como herramienta de terceros gestionada vía Google Tag Manager, igual que ya se declaraba el píxel de Reddit Ads — necesario en cuanto se active dicha etiqueta dentro del contenedor GTM.
+
+## v1.1191
+- Corregido el mismo bug de cuentas archivadas en `/admin/usuarios`: la columna CUENTAS ya no cuenta cuentas archivadas por el usuario (afectaba también al panel de administración, no solo a "Mi plan").
+- La tabla de `/admin/usuarios` ahora se puede ordenar por columna (clic en la cabecera), igual que el resto de tablas del backoffice.
+
+## v1.1190
+- Corregido el desplegable rápido de "Administración" en el sidebar: le faltaba la entrada de "Códigos" (llevaba su propio listado duplicado del hub `/admin`, que sí la tenía). Ahora ambos comparten una única lista, para que no se puedan volver a desincronizar.
+- Los códigos promocionales (`/admin/codigos`) ya admiten una segunda forma de recompensa además de conceder un plan: un descuento en % o importe fijo sobre el precio de la suscripción (ej. campañas tipo Black Friday). Sigue siendo solo infraestructura de administración — no hay ningún checkout todavía que aplique el descuento.
+
+## v1.1180
+- Nueva sección interna "Códigos promocionales" en `/admin/codigos`: infraestructura para futuras promociones (alta de usuario, invitación entre usuarios, campañas de email), con tipo, vigencia, límite y contador de usos. Solo visible/gestionable desde el backoffice de administración; todavía no se puede introducir ningún código como usuario.
+
+## v1.1178
+- Corregida la exportación a CSV de Movimientos: al abrir el fichero con doble clic, Excel usaba el separador de listas de Windows (coma) en vez del `;` que forzábamos, y algunos conceptos con comas descuadraban las columnas. Se vuelve al separador estándar (coma), con entrecomillado automático de cualquier campo que contenga una coma (importe con decimal en coma incluido), que es lo que evita la ambigüedad.
+- Corregidos los colores de fila en la exportación a Excel: la categoría ya no se tiñe con el color propio de cada categoría (salían verdes/morados ajenos a la marca) — ahora toda la fila se tiñe suavemente en teal/rosa/gris según el tipo de movimiento (ingreso/gasto/no computable), igual que el resto de la app.
+
+## v1.1177
+- Exportación a Excel de Movimientos: añadida una fila de marca ("zafyros", fondo teal) encima de la cabecera de columnas, que también pasa a ir en su propia fila.
+
+## v1.1176
+- Corregido el formato de importe en la exportación a CSV de Movimientos: ahora siempre muestra 2 decimales (antes salían 0, 1 o 2 según el movimiento) y usa coma decimal + `;` como separador de columnas en español, para que Excel lo reconozca como número real y no como texto.
+
+## v1.1175
+- Nueva función PRO: exportar movimientos a CSV o Excel desde la pantalla de Movimientos, respetando los filtros activos en pantalla. El Excel incluye estética de marca (cabecera teal, importe coloreado según ingreso/gasto, categoría con su color). En plan FREE, el botón "Exportar" muestra un aviso de mejora de plan en vez de descargar el fichero.
+
+## v1.1173
+- Corregida la fila de presupuestos en Mi plan: pasa a llamarse "Categorías presupuestadas" y en PRO/PREMIUM muestra "Ilimitado" en vez de un tope falso de 5 (esos planes permiten presupuestar cualquier grupo de categorías, sin límite; solo FREE está capado a 3 fijas).
+
+## v1.1171
+- Corregido el consumo de "Cuentas conectadas" en Mi plan: las cuentas archivadas ya no cuentan para el límite del plan (solo se computan las activas).
+- Añadida la fila "Sobres de presupuesto" en Mi plan, mostrando cuántos sobres de presupuesto incluye tu plan actual (3 en FREE, 5 en PRO/PREMIUM).
+
 ## v1.1162
 - Activado el registro de aperturas y clics en los emails enviados por Resend, y actualizada la Política de Privacidad (es/en) para reflejarlo: nuevo dato recogido ("interacción con correos electrónicos"), finalidad de medición añadida a la fila de comunicaciones por email, y detalle del mecanismo (píxel + reescrito de enlaces) en la fila de Resend.
 

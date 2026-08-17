@@ -243,6 +243,52 @@ export const merchantFormSchema = z.object({
   logo_url: safeUrlSchema,
 })
 
+const PROMO_CODE_TYPES = ['signup', 'referral', 'campaign'] as const
+const PROMO_CODE_REWARD_PLANS = ['free', 'pro', 'premium'] as const
+const PROMO_CODE_DISCOUNT_TYPES = ['percent', 'fixed'] as const
+
+/** Código promocional (admin, migración 043): mayúsculas, números, guion y guion bajo. */
+export const promoCodeSchema = z
+  .string()
+  .trim()
+  .toUpperCase()
+  .min(3, 'too_short')
+  .max(40, 'too_long')
+  .regex(/^[A-Z0-9_-]+$/, 'invalid_code')
+
+/** Formulario de código promocional (admin, migración 043). */
+export const promoCodeFormSchema = z
+  .object({
+    code: promoCodeSchema,
+    type: z.enum(PROMO_CODE_TYPES, { errorMap: () => ({ message: 'required' }) }),
+    description: z.string().trim().max(200, 'too_long'),
+    owner_user_id: z.union([z.string().uuid(), z.literal('')]),
+    reward_plan: z.union([z.enum(PROMO_CODE_REWARD_PLANS), z.literal('')]),
+    reward_days: z.number().int('invalid').positive('invalid').nullable(),
+    discount_type: z.union([z.enum(PROMO_CODE_DISCOUNT_TYPES), z.literal('')]),
+    discount_value: z.number().positive('invalid').nullable(),
+    starts_at: z.string().nullable(),
+    ends_at: z.string().nullable(),
+    max_uses: z.number().int('invalid').positive('invalid').nullable(),
+    is_active: z.boolean(),
+  })
+  .refine(
+    (d) => !d.starts_at || !d.ends_at || d.ends_at >= d.starts_at,
+    { path: ['ends_at'], message: 'range_inverted' },
+  )
+  .refine(
+    (d) => d.type === 'referral' || !d.owner_user_id,
+    { path: ['owner_user_id'], message: 'owner_only_referral' },
+  )
+  .refine(
+    (d) => !d.reward_plan || !d.discount_type,
+    { path: ['discount_type'], message: 'reward_conflict' },
+  )
+  .refine(
+    (d) => d.discount_type !== 'percent' || (d.discount_value != null && d.discount_value <= 100),
+    { path: ['discount_value'], message: 'out_of_range' },
+  )
+
 const labelEsEn = {
   label_es: z.string().trim().min(1, 'required').max(ADMIN_LIMITS.catLabel, 'too_long'),
   label_en: z.string().trim().min(1, 'required').max(ADMIN_LIMITS.catLabel, 'too_long'),

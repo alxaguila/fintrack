@@ -136,7 +136,8 @@
       "accounts": "Cuentas conectadas",
       "imports": "Importaciones este mes",
       "movements": "Movimientos este mes",
-      "rules": "Reglas de clasificación"
+      "rules": "Reglas de clasificación",
+      "budgets": "Categorías presupuestadas"
     },
     "compare_title": "Compara los planes",
     "payment_note": "El pago online estará disponible próximamente. Para cambiar de plan, contacta con soporte."

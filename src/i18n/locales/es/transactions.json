@@ -35,6 +35,15 @@
     "button": "Marcar todo como leído",
     "done": "Movimientos marcados como leídos"
   },
+  "export": {
+    "button": "Exportar",
+    "as_csv": "Exportar a CSV",
+    "as_excel": "Exportar a Excel",
+    "generating": "Generando…",
+    "empty": "No hay movimientos que exportar con los filtros actuales",
+    "error": "No se ha podido generar el fichero",
+    "filename": "movimientos"
+  },
   "groups": {
     "today": "Hoy",
     "yesterday": "Ayer",

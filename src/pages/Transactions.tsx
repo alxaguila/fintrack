@@ -1,12 +1,15 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Search, FilterX, Filter, Check, CheckCheck, Euro } from 'lucide-react'
+import { Search, FilterX, Filter, Check, CheckCheck, Euro, Download } from 'lucide-react'
 import { useSearchParams } from 'react-router-dom'
 import { useQueryClient } from '@tanstack/react-query'
 import { supabase } from '@/lib/supabase'
 import { useProfile } from '@/contexts/ProfileContext'
 import { useDemoMode } from '@/contexts/DemoModeContext'
-import { useTransactions, useTransactionCounts, useMarkFilteredAsRead, fetchAllMatchingIds, type TransactionFilters } from '@/hooks/useTransactions'
+import {
+  useTransactions, useTransactionCounts, useMarkFilteredAsRead, fetchAllMatchingIds,
+  fetchAllTransactionsForExport, type TransactionFilters,
+} from '@/hooks/useTransactions'
 import {
   DEMO_ACCOUNTS, DEMO_CATEGORIES, DEMO_CATEGORY_GROUPS, DEMO_MERCHANTS, DEMO_BANK_ENTITIES,
   DEMO_TRANSACTIONS, DEMO_TRANSACTION_COUNTS, filterDemoTransactions,
@@ -20,9 +23,11 @@ import { useUpdateTransaction, invalidateTransactionData } from '@/hooks/useTran
 import { useIsMobile } from '@/hooks/useIsMobile'
 import { useCreateKeywordRule } from '@/hooks/useKeywordRules'
 import { useLimitGate } from '@/hooks/usePlan'
+import { useExportGate } from '@/hooks/useExportGate'
 import { upsertCommunityVote, ruleCommunityKey } from '@/hooks/useCommunityRules'
 import { merchantKey } from '@/lib/categoryRules'
 import { categoryLabel } from '@/lib/categoryIcons'
+import { exportToCSV, exportToExcel } from '@/lib/exportTransactions'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select'
@@ -31,8 +36,10 @@ import { Label } from '@/components/ui/label'
 import { Separator } from '@/components/ui/separator'
 import { DatePickerField } from '@/components/ui/date-picker-field'
 import { CategoryCombobox } from '@/components/ui/category-combobox'
+import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from '@/components/ui/dropdown-menu'
 import { TransactionsList } from '@/components/transactions/TransactionsList'
 import { LimitReachedDialog } from '@/components/plan/LimitReachedDialog'
+import { UpgradeHintDialog } from '@/components/plan/UpgradeHintDialog'
 import { toast } from '@/hooks/useToast'
 import { keywordSchema, firstError, LIMITS } from '@/lib/validation'
 import type { Transaction, TransactionType } from '@/lib/database.types'
@@ -135,6 +142,9 @@ export default function Transactions() {
   const createRule = useCreateKeywordRule()
   const rulesLimit = useLimitGate('rules')
   const [showRuleLimitDialog, setShowRuleLimitDialog] = useState(false)
+  const hasExport = useExportGate()
+  const [exportHintOpen, setExportHintOpen] = useState(false)
+  const [exporting, setExporting] = useState(false)
 
   const NOTE_MAX = 50
 
@@ -489,6 +499,29 @@ export default function Transactions() {
     }
   }
 
+  // Exporta exactamente lo que cuadra con los filtros activos en pantalla (no
+  // solo la página de 50 filas visible). Gate de plan: si no hay `has_export`,
+  // abre el teaser de mejora sin llegar a lanzar ninguna consulta.
+  async function handleExport(fmt: 'csv' | 'excel') {
+    if (!hasExport) { setExportHintOpen(true); return }
+    if (!activeProfile) return
+    setExporting(true)
+    try {
+      const rows = await fetchAllTransactionsForExport(activeProfile.id, effectiveFilters)
+      if (rows.length === 0) {
+        toast({ title: t('export.empty') })
+        return
+      }
+      const filenameBase = `${t('export.filename')}_${new Date().toISOString().slice(0, 10)}`
+      if (fmt === 'csv') exportToCSV(rows, categories, filenameBase)
+      else await exportToExcel(rows, categories, filenameBase)
+    } catch (err: any) {
+      toast({ variant: 'destructive', title: t('export.error'), description: err?.message })
+    } finally {
+      setExporting(false)
+    }
+  }
+
   async function toggleReviewed(tx: Transaction, e?: React.MouseEvent) {
     e?.stopPropagation()
     try {
@@ -529,17 +562,33 @@ export default function Transactions() {
             )}
           </p>
         </div>
-        {isMobile ? (
-          <Button className="mr-14" variant="ghost" size="sm" onClick={() => setShowFilters(v => !v)}>
-            <Filter className="h-4 w-4" />
-            {t(showFilters ? 'filters.hide_filters' : 'filters.show_filters')}
-          </Button>
-        ) : (
-          <Button className="mr-14" variant="ghost" size="sm" onClick={clearFilters} disabled={!hasActiveFilters}>
-            <FilterX className="h-4 w-4" />
-            {t('filters.clear_filters')}
-          </Button>
-        )}
+        <div className="mr-14 flex items-center gap-1">
+          {!isDemo && (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="sm" disabled={exporting}>
+                  <Download className="h-4 w-4" />
+                  {exporting ? t('export.generating') : t('export.button')}
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="rounded-xl">
+                <DropdownMenuItem onClick={() => handleExport('csv')}>{t('export.as_csv')}</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => handleExport('excel')}>{t('export.as_excel')}</DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          )}
+          {isMobile ? (
+            <Button variant="ghost" size="sm" onClick={() => setShowFilters(v => !v)}>
+              <Filter className="h-4 w-4" />
+              {t(showFilters ? 'filters.hide_filters' : 'filters.show_filters')}
+            </Button>
+          ) : (
+            <Button variant="ghost" size="sm" onClick={clearFilters} disabled={!hasActiveFilters}>
+              <FilterX className="h-4 w-4" />
+              {t('filters.clear_filters')}
+            </Button>
+          )}
+        </div>
       </div>
 
       {filtersVisible && (
@@ -829,6 +878,13 @@ export default function Transactions() {
           limit={rulesLimit.limit}
         />
       )}
+
+      <UpgradeHintDialog
+        open={exportHintOpen}
+        onOpenChange={setExportHintOpen}
+        title={tc('export.hint_title')}
+        description={tc('export.hint_body')}
+      />
     </div>
   )
 }

@@ -129,6 +129,30 @@ export type Merchant = {
   patterns?: { pattern: string }[]
 }
 
+export type PromoCodeType = 'signup' | 'referral' | 'campaign'
+
+// Infraestructura de códigos promocionales (migración 043). Solo admin por
+// ahora: sin RPC de canje, use_count nunca se incrementa todavía.
+export type PromoCode = {
+  id: string
+  code: string
+  type: PromoCodeType
+  description: string | null
+  owner_user_id: string | null
+  reward_plan: PlanType | null
+  reward_days: number | null
+  discount_type: 'percent' | 'fixed' | null
+  discount_value: number | null
+  starts_at: string | null
+  ends_at: string | null
+  max_uses: number | null
+  use_count: number
+  is_active: boolean
+  created_by: string | null
+  created_at: string
+  updated_at: string
+}
+
 // Variación de concepto asociada a un comercio (migración 036).
 export type MerchantPattern = {
   id: string
@@ -446,6 +470,7 @@ export type Database = {
       accounts: { Row: Account; Insert: Omit<Account, 'id' | 'created_at' | 'updated_at' | 'logo_url' | 'opening_balance'> & { logo_url?: string | null; opening_balance?: number | null }; Update: Partial<Account>; Relationships: [] }
       bank_entities: { Row: BankEntity; Insert: Omit<BankEntity, 'id' | 'created_at' | 'sort_order' | 'reviewed' | 'created_by'> & { sort_order?: number; reviewed?: boolean; created_by?: string | null }; Update: Partial<BankEntity>; Relationships: [] }
       merchants: { Row: Merchant; Insert: Omit<Merchant, 'id' | 'created_at' | 'patterns'>; Update: Partial<Omit<Merchant, 'patterns'>>; Relationships: [] }
+      promo_codes: { Row: PromoCode; Insert: Omit<PromoCode, 'id' | 'use_count' | 'created_at' | 'updated_at'> & { use_count?: number }; Update: Partial<Omit<PromoCode, 'id' | 'created_at'>>; Relationships: [] }
       merchant_patterns: { Row: MerchantPattern; Insert: Omit<MerchantPattern, 'id' | 'created_at'>; Update: Partial<MerchantPattern>; Relationships: [] }
       category_groups: { Row: CategoryGroup; Insert: Omit<CategoryGroup, 'id'>; Update: Partial<CategoryGroup>; Relationships: [] }
       categories: { Row: Category; Insert: Omit<Category, 'id' | 'group'>; Update: Partial<Omit<Category, 'group'>>; Relationships: [] }

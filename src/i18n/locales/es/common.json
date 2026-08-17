@@ -73,7 +73,11 @@
     "invalid_icon": "Nombre de icono no válido (kebab-case)",
     "invalid_color": "Color no válido",
     "invalid_url": "URL no válida",
-    "out_of_range": "Fuera de rango"
+    "out_of_range": "Fuera de rango",
+    "invalid_code": "Solo mayúsculas, números, guion y guion bajo",
+    "range_inverted": "La fecha de fin no puede ser anterior a la de inicio",
+    "owner_only_referral": "Solo aplica a códigos de invitación",
+    "reward_conflict": "Un código no puede conceder plan y descuento a la vez"
   },
   "confirm_delete": {
     "title": "¿Eliminar?",
@@ -110,6 +114,10 @@
   "budgets": {
     "hint_title": "Mantén tus gastos bajo control con presupuestos",
     "hint_body": "Pon un límite mensual a tus categorías y evita sorpresas a fin de mes. Esta función está disponible en los planes PRO y PREMIUM."
+  },
+  "export": {
+    "hint_title": "Exporta tus movimientos a CSV o Excel",
+    "hint_body": "Descarga tus movimientos filtrados para llevarlos a tu propia hoja de cálculo. Esta función está disponible en los planes PRO y PREMIUM."
   },
   "plan": {
     "name": { "free": "FREE", "pro": "PRO", "premium": "PREMIUM" },

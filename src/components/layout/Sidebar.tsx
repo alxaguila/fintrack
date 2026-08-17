@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { NavLink, Link, useLocation } from 'react-router-dom'
 import {
   Home, BarChart3, ArrowLeftRight, Upload, Wallet, Tags, FileClock, Shield, ShieldCheck, Calculator,
-  Settings, CreditCard, Landmark, Users, Vote, Store, MessageSquare, ChevronsUpDown, Waypoints,
+  Settings, CreditCard, ChevronsUpDown, Waypoints,
 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { cn } from '@/lib/utils'
@@ -13,6 +13,7 @@ import { useUnreviewedBankCount } from '@/hooks/useAdminBankEntities'
 import { useUnreadFeedbackCount } from '@/hooks/useAdminFeedback'
 import { useUserSettings } from '@/hooks/useUserSettings'
 import { useBudgetsGate } from '@/hooks/useBudgetsGate'
+import { ADMIN_NAV_ITEMS, type AdminNavKey } from '@/lib/adminNav'
 import { Logo } from '@/components/Logo'
 import { ProfileDialog } from '@/components/layout/ProfileDialog'
 import { UpgradeHintDialog } from '@/components/plan/UpgradeHintDialog'
@@ -158,16 +159,7 @@ function AdminMenu() {
   const { data: pendingEntities = 0 } = useUnreviewedBankCount(true)
   const { data: unreadFeedback = 0 } = useUnreadFeedbackCount(true)
   const isActive = location.pathname.startsWith(appPath('/admin'))
-
-  const items = [
-    { to: appPath('/admin/bancos'), icon: Landmark, label: tAdmin('hub.banks'), dot: pendingEntities > 0 },
-    { to: appPath('/admin/categorias'), icon: Tags, label: tAdmin('hub.categories') },
-    { to: appPath('/admin/usuarios'), icon: Users, label: tAdmin('hub.users') },
-    { to: appPath('/admin/estadisticas'), icon: BarChart3, label: tAdmin('hub.stats') },
-    { to: appPath('/admin/reglas'), icon: Vote, label: tAdmin('hub.rules') },
-    { to: appPath('/admin/comercios'), icon: Store, label: tAdmin('hub.merchants') },
-    { to: appPath('/admin/feedback'), icon: MessageSquare, label: tAdmin('hub.feedback'), dot: unreadFeedback > 0 },
-  ]
+  const dots: Partial<Record<AdminNavKey, boolean>> = { bancos: pendingEntities > 0, feedback: unreadFeedback > 0 }
 
   return (
     <DropdownMenu>
@@ -182,12 +174,12 @@ function AdminMenu() {
         </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent side="right" align="end" className="w-56">
-        {items.map(({ to, icon: Icon, label, dot }) => (
-          <DropdownMenuItem key={to} asChild>
+        {ADMIN_NAV_ITEMS.map(({ key, to, icon: Icon, labelKey }) => (
+          <DropdownMenuItem key={key} asChild>
             <Link to={to} className="flex items-center gap-2.5">
               <Icon className="h-4 w-4 shrink-0" />
-              <span className="flex-1 truncate">{label}</span>
-              {dot && <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--brand-accent)]" />}
+              <span className="flex-1 truncate">{tAdmin(labelKey)}</span>
+              {dots[key] && <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--brand-accent)]" />}
             </Link>
           </DropdownMenuItem>
         ))}

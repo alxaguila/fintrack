@@ -73,7 +73,11 @@
     "invalid_icon": "Invalid icon name (kebab-case)",
     "invalid_color": "Invalid color",
     "invalid_url": "Invalid URL",
-    "out_of_range": "Out of range"
+    "out_of_range": "Out of range",
+    "invalid_code": "Uppercase letters, numbers, hyphen and underscore only",
+    "range_inverted": "End date can't be before the start date",
+    "owner_only_referral": "Only applies to referral codes",
+    "reward_conflict": "A code can't grant a plan and a discount at the same time"
   },
   "confirm_delete": {
     "title": "Are you sure?",
@@ -110,6 +114,10 @@
   "budgets": {
     "hint_title": "Keep your spending under control with budgets",
     "hint_body": "Set a monthly limit for your categories and avoid surprises at the end of the month. This feature is available on the PRO and PREMIUM plans."
+  },
+  "export": {
+    "hint_title": "Export your transactions to CSV or Excel",
+    "hint_body": "Download your filtered transactions to bring them into your own spreadsheet. This feature is available on the PRO and PREMIUM plans."
   },
   "plan": {
     "name": { "free": "FREE", "pro": "PRO", "premium": "PREMIUM" },

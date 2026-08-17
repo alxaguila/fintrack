@@ -35,6 +35,15 @@
     "button": "Mark all as read",
     "done": "Transactions marked as read"
   },
+  "export": {
+    "button": "Export",
+    "as_csv": "Export as CSV",
+    "as_excel": "Export as Excel",
+    "generating": "Generating…",
+    "empty": "No transactions to export with the current filters",
+    "error": "Couldn't generate the file",
+    "filename": "transactions"
+  },
   "groups": {
     "today": "Today",
     "yesterday": "Yesterday",

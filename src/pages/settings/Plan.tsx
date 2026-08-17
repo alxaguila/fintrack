@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { usePlan } from '@/hooks/usePlan'
 import { checkLimit, type LimitDimension } from '@/lib/plan'
+import { FREE_BUDGET_GROUP_SLUGS } from '@/lib/budgets'
 import { Card, CardContent } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 import { cn } from '@/lib/utils'
@@ -56,6 +57,25 @@ export default function SettingsPlan() {
                   </div>
                 )
               })}
+              {(() => {
+                const isFreePlan = plan === 'free'
+                const categoryCount = FREE_BUDGET_GROUP_SLUGS.length
+                return (
+                  <div className="space-y-1.5 rounded-xl bg-slate-50 p-3">
+                    <div className="flex items-center justify-between text-xs text-slate-500">
+                      <span>{t('plan.usage.budgets')}</span>
+                      <span className="font-semibold text-slate-700 tabular-nums">
+                        {isFreePlan ? `${categoryCount}/${categoryCount}` : t('plan.unlimited')}
+                      </span>
+                    </div>
+                    {isFreePlan && (
+                      <div className="h-1.5 overflow-hidden rounded-full bg-slate-200">
+                        <div className="h-full w-full rounded-full bg-[#14B8A6]" />
+                      </div>
+                    )}
+                  </div>
+                )
+              })()}
             </div>
           )}
         </CardContent>

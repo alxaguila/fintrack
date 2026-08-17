@@ -355,7 +355,7 @@
       {
         "heading": "3. Third-party cookies and User consent",
         "blocks": [
-          { "p": "In addition to the above, zafyros uses Google Tag Manager to manage the following third-party tools on the public website: **Google Analytics** (usage analytics), **Microsoft Clarity** (anonymised heatmaps and session recordings) and the **Reddit Ads pixel** (measuring the effectiveness of advertising campaigns on Reddit). All of them help understand website usage and, where applicable, measure campaigns." },
+          { "p": "In addition to the above, zafyros uses Google Tag Manager to manage the following third-party tools on the public website: **Google Analytics** (usage analytics), **Microsoft Clarity** (anonymised heatmaps and session recordings), the **Reddit Ads pixel** (measuring the effectiveness of advertising campaigns on Reddit) and the **Google Ads conversion tag** (measuring the effectiveness of advertising campaigns on Google Ads). All of them help understand website usage and, where applicable, measure campaigns." },
           { "p": "These tools do install non-essential cookies in the User's browser. In accordance with Article 22.2 LSSI-CE and the GDPR, zafyros requests the User's prior consent via a banner shown on the first visit to the public website, with two equally accessible options: **Accept** or **Reject**. No non-essential cookie is installed until the User clicks «Accept»; if they click «Reject», or do not interact, these cookies remain disabled." },
           { "p": "The banner does not appear inside the app (after signing in): Google Tag Manager and no third-party cookie are used there, only on the public website (zafyros.com)." },
           { "p": "The User can change their mind at any time by clearing the site's browsing data from their browser settings; the banner will be shown again on the next visit." }
@@ -369,7 +369,8 @@
             "list": [
               "Google Analytics: `_ga`, `_ga_*`, `_gid` — usage analytics (pages visited, time spent). See policies.google.com/technologies/cookies.",
               "Microsoft Clarity: `_clck`, `_clsk`, `CLID`, `MUID`, `SM` — anonymised heatmaps and session recording. See privacy.microsoft.com/en-us/privacystatement.",
-              "Reddit Ads: cookies from reddit.com / redditstatic.com — measuring the effectiveness of advertising campaigns. See reddit.com/policies/cookies."
+              "Reddit Ads: cookies from reddit.com / redditstatic.com — measuring the effectiveness of advertising campaigns. See reddit.com/policies/cookies.",
+              "Google Ads: cookies from doubleclick.net / google.com — measuring advertising campaign conversions. See policies.google.com/technologies/ads."
             ]
           },
           { "p": "zafyros does not use this information to individually identify the User beyond what these tools themselves allow on an aggregated or pseudonymised basis." }

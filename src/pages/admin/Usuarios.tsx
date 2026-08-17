@@ -4,6 +4,7 @@ import { Shield, Search, Trash2, AlertTriangle } from 'lucide-react'
 import { useAdminUsers, useAdminUserActivity, useAdminSetPlan, useAdminDeleteUser } from '@/hooks/useAdminAnalytics'
 import type { AdminUserRow, PlanType } from '@/lib/database.types'
 import { PLAN_COLORS } from '@/lib/plan'
+import { SortHeader, nextSort, type SortDir } from './SortHeader'
 import { categoryLabel } from '@/lib/categoryIcons'
 import { formatCurrency, formatDate } from '@/lib/utils'
 import { cn } from '@/lib/utils'
@@ -19,6 +20,7 @@ import { AdminHeader } from './AdminHeader'
 
 const typeColor = (t: string | null) => (t === 'ingreso' ? '#14B8A6' : t === 'gasto' ? '#CB6391' : '#64748b')
 const PLAN_ORDER: PlanType[] = ['free', 'pro', 'premium']
+type UserSortKey = 'user' | 'plan' | 'joined' | 'last_login' | 'movements' | 'accounts'
 // Palabra que hay que teclear para confirmar el borrado (igual en ES/EN, ver Settings.tsx).
 const DELETE_WORD = 'delete'
 
@@ -39,6 +41,7 @@ export default function Usuarios() {
   const [q, setQ] = useState('')
   const [selected, setSelected] = useState<AdminUserRow | null>(null)
   const [myUserId, setMyUserId] = useState<string | null>(null)
+  const [sort, setSort] = useState<{ key: UserSortKey; dir: SortDir }>({ key: 'joined', dir: 'desc' })
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data: { user } }) => setMyUserId(user?.id ?? null))
@@ -50,6 +53,35 @@ export default function Usuarios() {
     return users.filter((u) =>
       u.email.toLowerCase().includes(needle) || (u.full_name ?? '').toLowerCase().includes(needle))
   }, [users, q])
+
+  const sorted = useMemo(() => {
+    const arr = [...filtered]
+    arr.sort((a, b) => {
+      let cmp: number
+      switch (sort.key) {
+        case 'user':
+          cmp = (a.full_name || a.email).localeCompare(b.full_name || b.email)
+          break
+        case 'plan':
+          cmp = PLAN_ORDER.indexOf(a.plan) - PLAN_ORDER.indexOf(b.plan)
+          break
+        case 'joined':
+          cmp = a.created_at.localeCompare(b.created_at)
+          break
+        case 'last_login':
+          cmp = (a.last_sign_in_at ?? '').localeCompare(b.last_sign_in_at ?? '')
+          break
+        case 'movements':
+          cmp = a.transactions_count - b.transactions_count
+          break
+        case 'accounts':
+          cmp = a.accounts_count - b.accounts_count
+          break
+      }
+      return sort.dir === 'asc' ? cmp : -cmp
+    })
+    return arr
+  }, [filtered, sort])
 
   return (
     <div className="mx-auto max-w-4xl p-6 space-y-6">
@@ -69,16 +101,34 @@ export default function Usuarios() {
           <table className="w-full min-w-[720px] text-left text-sm">
             <thead>
               <tr className="border-b border-slate-200 text-xs font-medium uppercase tracking-wide text-slate-400">
-                <th className="px-4 py-3 font-medium">{t('users.col_user')}</th>
-                <th className="px-4 py-3 font-medium">{t('users.col_plan')}</th>
-                <th className="px-4 py-3 font-medium">{t('users.col_joined')}</th>
-                <th className="px-4 py-3 font-medium">{t('users.col_last_login')}</th>
-                <th className="px-4 py-3 text-right font-medium">{t('users.col_movements')}</th>
-                <th className="px-4 py-3 text-right font-medium">{t('users.col_accounts')}</th>
+                <th className="px-4 py-3 font-medium">
+                  <SortHeader label={t('users.col_user')} active={sort.key === 'user'} dir={sort.dir}
+                    onClick={() => setSort((s) => nextSort(s, 'user', false))} />
+                </th>
+                <th className="px-4 py-3 font-medium">
+                  <SortHeader label={t('users.col_plan')} active={sort.key === 'plan'} dir={sort.dir}
+                    onClick={() => setSort((s) => nextSort(s, 'plan', true))} />
+                </th>
+                <th className="px-4 py-3 font-medium">
+                  <SortHeader label={t('users.col_joined')} active={sort.key === 'joined'} dir={sort.dir}
+                    onClick={() => setSort((s) => nextSort(s, 'joined', true))} />
+                </th>
+                <th className="px-4 py-3 font-medium">
+                  <SortHeader label={t('users.col_last_login')} active={sort.key === 'last_login'} dir={sort.dir}
+                    onClick={() => setSort((s) => nextSort(s, 'last_login', true))} />
+                </th>
+                <th className="px-4 py-3 text-right font-medium">
+                  <SortHeader label={t('users.col_movements')} active={sort.key === 'movements'} dir={sort.dir}
+                    onClick={() => setSort((s) => nextSort(s, 'movements', true))} className="justify-end" />
+                </th>
+                <th className="px-4 py-3 text-right font-medium">
+                  <SortHeader label={t('users.col_accounts')} active={sort.key === 'accounts'} dir={sort.dir}
+                    onClick={() => setSort((s) => nextSort(s, 'accounts', true))} className="justify-end" />
+                </th>
               </tr>
             </thead>
             <tbody>
-              {filtered.map((u) => (
+              {sorted.map((u) => (
                 <tr
                   key={u.user_id}
                   onClick={() => setSelected(u)}

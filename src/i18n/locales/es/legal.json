@@ -355,7 +355,7 @@
       {
         "heading": "3. Cookies de terceros y consentimiento del Usuario",
         "blocks": [
-          { "p": "Además de lo anterior, zafyros utiliza Google Tag Manager para gestionar, en la web pública, estas herramientas de terceros: **Google Analytics** (analítica de uso), **Microsoft Clarity** (mapas de calor y grabaciones de sesión anonimizadas) y el **píxel de Reddit Ads** (medición de la efectividad de campañas publicitarias en Reddit). Todas ayudan a entender el uso de la web y, en su caso, a medir campañas." },
+          { "p": "Además de lo anterior, zafyros utiliza Google Tag Manager para gestionar, en la web pública, estas herramientas de terceros: **Google Analytics** (analítica de uso), **Microsoft Clarity** (mapas de calor y grabaciones de sesión anonimizadas), el **píxel de Reddit Ads** (medición de la efectividad de campañas publicitarias en Reddit) y la **etiqueta de conversión de Google Ads** (medición de la efectividad de campañas publicitarias en Google Ads). Todas ayudan a entender el uso de la web y, en su caso, a medir campañas." },
           { "p": "Estas herramientas sí instalan cookies no esenciales en el navegador del Usuario. Conforme al artículo 22.2 de la LSSI-CE y al RGPD, zafyros solicita el consentimiento previo del Usuario mediante un banner que se muestra en la primera visita a la web pública, con dos opciones igual de accesibles: **Aceptar** o **Rechazar**. Ninguna cookie no esencial se instala hasta que el Usuario pulsa «Aceptar»; si pulsa «Rechazar», o no interactúa, estas cookies permanecen desactivadas." },
           { "p": "El banner no aparece dentro de la aplicación (tras iniciar sesión): ahí no se utiliza Google Tag Manager ni ninguna cookie de terceros, solo en la web pública (zafyros.com)." },
           { "p": "El Usuario puede cambiar de opinión en cualquier momento borrando los datos de navegación del sitio desde la configuración de su navegador; el banner volverá a mostrarse en la siguiente visita." }
@@ -369,7 +369,8 @@
             "list": [
               "Google Analytics: `_ga`, `_ga_*`, `_gid` — analítica de uso (páginas visitadas, tiempo de permanencia). Ver policies.google.com/technologies/cookies.",
               "Microsoft Clarity: `_clck`, `_clsk`, `CLID`, `MUID`, `SM` — mapas de calor y grabación de sesión anonimizada. Ver privacy.microsoft.com/es-es/privacystatement.",
-              "Reddit Ads: cookies de reddit.com / redditstatic.com — medición de la efectividad de campañas publicitarias. Ver reddit.com/policies/cookies."
+              "Reddit Ads: cookies de reddit.com / redditstatic.com — medición de la efectividad de campañas publicitarias. Ver reddit.com/policies/cookies.",
+              "Google Ads: cookies de doubleclick.net / google.com — medición de conversiones de campañas publicitarias. Ver policies.google.com/technologies/ads."
             ]
           },
           { "p": "zafyros no utiliza esta información para identificar individualmente al Usuario más allá de lo que las propias herramientas permiten de forma agregada o pseudonimizada." }

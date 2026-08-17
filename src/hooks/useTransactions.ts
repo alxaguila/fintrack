@@ -107,6 +107,36 @@ export async function fetchAllMatchingIds(profileId: string, filters: Transactio
   return (data as { id: string }[]).map(r => r.id)
 }
 
+/**
+ * Trae TODAS las filas (no solo ids) que encajan con los filtros, paginando en
+ * bloques de 1000 (tope real de PostgREST) hasta agotar resultados. Se usa para
+ * exportar exactamente lo que el usuario ve filtrado en pantalla, sin el tope de
+ * PAGE_SIZE=50 de la lista.
+ */
+export async function fetchAllTransactionsForExport(
+  profileId: string, filters: TransactionFilters,
+): Promise<Transaction[]> {
+  const BATCH = 1000
+  let all: Transaction[] = []
+  let from = 0
+  for (;;) {
+    let query = supabase
+      .from('transactions')
+      .select('*, account:accounts(id,name,entity,color,type), category:categories(id,slug,group_id)')
+      .eq('profile_id', profileId)
+      .order('date', { ascending: false })
+      .order('created_at', { ascending: false })
+      .range(from, from + BATCH - 1)
+    query = applyTransactionFilters(query, filters)
+    const { data, error } = await query
+    if (error) throw error
+    all = all.concat(data as Transaction[])
+    if (!data || data.length < BATCH) break
+    from += BATCH
+  }
+  return all
+}
+
 export function useTransactions(profileId?: string, filters: TransactionFilters = {}, page = 0) {
   return useQuery({
     queryKey: ['transactions', profileId, filters, page],
